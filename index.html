@@ -121,75 +121,128 @@
 	
     //Antaria
 	var an_capital = L.marker([31.315741, -42.49273], {icon: capital}).bindPopup('<b>Antaria</b> <br /><i>Capital</i> <br />The capital of the Holy Antarian Enpire');
-	var an_archtree = L.marker([45.04985, -79.242103], {icon: important}).bindPopup('<b>Antarian Arch-Tree</b>');
+	//Important
+	var an_archtree = L.marker([45.04985, -79.242103], {icon: important}).bindPopup('<b>Antarian Arch-Tree</b> <br /><i>Important Location</i>');
+	//Big Cities
+	//Small Cities
+	//Towns
+	var an_town = L.marker([-1.841265, -73.559396], {icon: town}).bindPopup('<b>Antarian Town</b> <br /><i>Town</i>');
+	//Nature
 	
 	//Odrheim
 	var od_capital = L.marker([45.334447, 28.582981], {icon: capital}).bindPopup('<b>Odrheim Capital</b> <br /><i>Capital</i> <br />The capital of Odrheim');
+	//Important
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
 	
 	//Tunglheimr
 	var th_capital = L.marker([41.364997, 70.145929], {icon: capital}).bindPopup('<b>Tunglheimr Capital</b> <br /><i>Capital</i> <br />The capital of Tunglheimr');
+	//Important
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
 	
 	//Rheinland
 	var rh_capital = L.marker([15.641359, 138.427261], {icon: capital}).bindPopup('<b>Rheinland Capital</b> <br /><i>Capital</i> <br />The capital of Rheinland');
-	var rh_archtree = L.marker([27.803884, 131.965833], {icon: important}).bindPopup('<b>Rheinland Arch-Tree</b>');
+	//Important
+	var rh_archtree = L.marker([27.803884, 131.965833], {icon: important}).bindPopup('<b>Rheinland Arch-Tree</b> <br /><i>Important Location</i>');
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
 	
 	//Golden Order
 	
+	//Important
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
 	
 	//Azurith
 	var az_capital = L.marker([-23.271278, 104.100923], {icon: capital}).bindPopup('<b>Azurith Capital</b> <br /><i>Capital</i> <br />The capital of Azurith');
+	//Important
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
 	
 	//Tsuki
 	var ts_capital = L.marker([-26.786247, 10.234271], {icon: capital}).bindPopup('<b>Getsuyōsei</b> <br /><i>Capital</i> <br />The capital of Tsuki Ōkoku');
 	//Important
-	var ts_archtree = L.marker([-17.677522, 10.600598], {icon: important}).bindPopup('<b>Tsuki Arch-Tree</b>');
+	var ts_archtree = L.marker([-17.677522, 10.600598], {icon: important}).bindPopup('<b>Tsuki Arch-Tree</b> <br /><i>Important Location</i>');
 	//Big Cities
-	var ts_sōgenshima = L.marker([-13.88388, 37.332231], {icon: cityBig}).bindPopup('<b>Sōgenshima</b>');
-	var ts_kinshū = L.marker([-60.418733, 26.314855], {icon: cityBig}).bindPopup('<b>Kinshū</b>');
-	var ts_hikari = L.marker([-48.91312, 67.832965], {icon: cityBig}).bindPopup('<b>Hikari no Toshi</b>');
+	var ts_sōgenshima = L.marker([-13.88388, 37.332231], {icon: cityBig}).bindPopup('<b>Sōgenshima</b> <br /><i>Large City</i>');
+	var ts_kinshū = L.marker([-60.418733, 26.314855], {icon: cityBig}).bindPopup('<b>Kinshū</b> <br /><i>Large City</i>');
+	var ts_hikari = L.marker([-48.91312, 67.832965], {icon: cityBig}).bindPopup('<b>Hikari no Toshi</b> <br /><i>Large City</i>');
 	//Small Cities
-	var ts_amagumo = L.marker([-32.556313, 28.080238], {icon: citySmall}).bindPopup('<b>Amagumo</b>');
-	var ts_yozora = L.marker([-34.127172, -11.480145], {icon: citySmall}).bindPopup('<b>Yozora</b>');
-	var ts_kōun = L.marker([-17.927417, 65.51944], {icon: citySmall}).bindPopup('<b>Kōun</b>');
-	var ts_shingetsu = L.marker([-35.440072, 48.867281], {icon: citySmall}).bindPopup('<b>Shingetsu</b>');
-	var ts_engetsu = L.marker([-45.070751, 14.763658], {icon: citySmall}).bindPopup('<b>Engetsu</b>');
-	var ts_tsukimiya = L.marker([-40.933431, 81.082085], {icon: citySmall}).bindPopup('<b>Tsukimiya</b>');
+	var ts_amagumo = L.marker([-32.556313, 28.080238], {icon: citySmall}).bindPopup('<b>Amagumo</b> <br /><i>Small City</i>');
+	var ts_yozora = L.marker([-34.127172, -11.480145], {icon: citySmall}).bindPopup('<b>Yozora</b> <br /><i>Small City</i>');
+	var ts_kōun = L.marker([-17.927417, 65.51944], {icon: citySmall}).bindPopup('<b>Kōun</b> <br /><i>Small City</i>');
+	var ts_shingetsu = L.marker([-35.440072, 48.867281], {icon: citySmall}).bindPopup('<b>Shingetsu</b> <br /><i>Small City</i>');
+	var ts_engetsu = L.marker([-45.070751, 14.763658], {icon: citySmall}).bindPopup('<b>Engetsu</b> <br /><i>Small City</i>');
+	var ts_tsukimiya = L.marker([-40.933431, 81.082085], {icon: citySmall}).bindPopup('<b>Tsukimiya</b> <br /><i>Small City</i>');
 	//Towns
 	//Nature
-	var ts_hanabira = L.marker([-52.306608, 37.804889], {icon: nature}).bindPopup('<b>Hanabira Nagare</b>');
+	var ts_hanabira = L.marker([-52.306608, 37.804889], {icon: nature}).bindPopup('<b>Hanabira Nagare</b> <br /><i>Lake</i>');
 	var ts_yama = L.marker([-36.031332, 57.919922], {icon: nature}).bindPopup('<b>Yama no Kyōfū</b> <br /><i>Mountain</i> <br />The largest mountain range in Tsuki Ōkoku');
-	var ts_gekkōzan  = L.marker([-30.524413, 37.705078], {icon: nature}).bindPopup('<b>Gekkōzan</b>');
-	var ts_hikarinomori  = L.marker([-22.755921, -4.658203], {icon: nature}).bindPopup('<b>Hikari no Mori</b>');
-	var ts_mizuhanabira  = L.marker([-50.176898, 50.712891], {icon: nature}).bindPopup('<b>Mizu Hanabira no Mori</b>');
-	var ts_kori  = L.marker([-63.726971, 54.595624], {icon: nature}).bindPopup('<b>Kōri Kaisen</b>');
-	//Characters
+	var ts_gekkōzan  = L.marker([-30.524413, 37.705078], {icon: nature}).bindPopup('<b>Gekkōzan</b> <br /><i>Mountain</i>');
+	var ts_hikarinomori  = L.marker([-22.755921, -4.658203], {icon: nature}).bindPopup('<b>Hikari no Mori</b> <br /><i>Forest</i>');
+	var ts_mizuhanabira  = L.marker([-50.176898, 50.712891], {icon: nature}).bindPopup('<b>Mizu Hanabira no Mori</b> <br /><i>Forest</i>');
+	var ts_kori  = L.marker([-63.726971, 54.595624], {icon: nature}).bindPopup('<b>Kōri Kaisen</b> <br /><i>Shore</i>');
 	
 	//Primoria
 	var pr_capital = L.marker([-42.163403, -52.207031], {icon: capital}).bindPopup('<b>Primorian Capital</b> <br /><i>Capital</i> <br />The capital of Primoria');
-	var pr_archtree = L.marker([-56.703904, -69.146122], {icon: important}).bindPopup('<b>Primorian Arch-Tree</b><br />The Arch-Tree in Primoria');
+	//Important
+	var pr_archtree = L.marker([-56.703904, -69.146122], {icon: important}).bindPopup('<b>Primorian Arch-Tree</b> <br /><i>Important Location</i> <br />The Arch-Tree in Primoria');
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
 	
 	//Dryadalis
 	var dr_capital = L.marker([-38.47628, -138.929306], {icon: capital}).bindPopup('<b>Aeternum</b> <br /><i>Capital</i> <br />The capital of Dryadalis');
+	//Important
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
 	
 	//Trade Company
 	
+	//Important
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
 	
 	//Gigantoria
-	
+
+	//Important
+	//Big Cities
+	//Small Cities
+	//Towns
+	//Nature
+
+	//Characters
+	var an_gerhard = L.marker([-2.372369, -72.685547], {icon: character}).bindPopup('<b>Gerhard von Eichenwald</b> <br /><i>Character</i> <br />Gerhards temporary camp in a small town in the Holy Antarian Empire');
 	
 	//Marker Groups
 	var mg_capitals = L.layerGroup([an_capital, od_capital, ts_capital, dr_capital, th_capital, rh_capital, pr_capital, az_capital]).addTo(map);
 	var mg_citiesBig = L.layerGroup([ts_sōgenshima, ts_kinshū, ts_hikari]).addTo(map);
 	var mg_citiesSmall = L.layerGroup([ts_amagumo, ts_yozora, ts_kōun, ts_shingetsu, ts_engetsu, ts_tsukimiya]).addTo(map);
-	var mg_towns = L.layerGroup([]);
+	var mg_towns = L.layerGroup([an_town]);
 	var mg_nature = L.layerGroup([ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori]).addTo(map);
 	var mg_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree]).addTo(map);
-	var mg_characters = L.layerGroup([]).addTo(map);
+	var mg_characters = L.layerGroup([an_gerhard]).addTo(map);
 	var mg_coord = L.layerGroup([marker]);
 	//Marker Overlay
 	var overlays={
 		"Capitals" : mg_capitals,
-		"Big Cities" : mg_citiesBig,
+		"Large Cities" : mg_citiesBig,
 		"Small Cities" : mg_citiesSmall,
 		"Towns" : mg_towns,
 		"Nature" : mg_nature,
