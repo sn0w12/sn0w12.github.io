@@ -83,7 +83,7 @@
     //Coordinate Finder
     var marker = L.marker([0, 0], {
 		draggable: true,
-    }).addTo(map);
+    });
     marker.bindPopup('LatLng Marker').openPopup();
     marker.on('dragend', function(e) {
 		marker.getPopup().setContent(marker.getLatLng().toString()).openOn(map);
@@ -131,12 +131,14 @@
 	var mg_cities = L.layerGroup([]).addTo(map);
 	var mg_nature = L.layerGroup([]).addTo(map);
 	var mg_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree]).addTo(map);
+	var mg_coord = L.layerGroup([marker]);
 	//Marker Overlay
 	var overlays={
 		"Capitals" : mg_capitals,
 		"Cities" : mg_cities,
 		"Nature" : mg_nature,
 		"Important Locations" : mg_important,
+		"Coordinate Finder" : mg_coord,
     }
 	//GROUP CONTROLS
 	L.control.layers(null, overlays).addTo(map);
