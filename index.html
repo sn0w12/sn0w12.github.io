@@ -31,12 +31,18 @@
 		zoomDelta: 0.5,
 		wheelPxPerZoomLevel: 120,
 	}).setView([0, 0], 0);
-    L.tileLayer('map/{z}/{x}/{y}.png', {
+    var mapText = L.tileLayer('map/{z}/{x}/{y}.png', {
 		continuousWorld: false,
 		noWrap: true,  
 		minZoom: 2.75,
 		maxZoom: 5.5,
     }).addTo(map);
+	var mapClean = L.tileLayer('mapClean/{z}/{x}/{y}.png', {
+		continuousWorld: false,
+		noWrap: true,  
+		minZoom: 2.75,
+		maxZoom: 5.5,
+    });
 	
 	//Icons
 	var capital = L.icon({
@@ -174,10 +180,11 @@
 	var ts_capital = L.marker([-26.786247, 10.234271], {icon: capital}).bindPopup('<b>Getsuyōsei</b> <br /><i>Capital</i> <br />The capital of Tsuki Ōkoku');
 	//Important
 	var ts_archtree = L.marker([-17.677522, 10.600598], {icon: important}).bindPopup('<b>Tsuki Arch-Tree</b> <br /><i>Important Location</i>');
+	var ts_mizunoiwaya = L.marker([-52.329725, 58.377932], {icon: important}).bindPopup('<b>Mizu-no-Iwaya</b> <br /><i>Important Location</i> <br />The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.');
 	//Big Cities
 	var ts_sōgenshima = L.marker([-13.88388, 37.332231], {icon: cityBig}).bindPopup('<b>Sōgenshima</b> <br /><i>Large City</i>');
 	var ts_kinshū = L.marker([-60.418733, 26.314855], {icon: cityBig}).bindPopup('<b>Kinshū</b> <br /><i>Large City</i>');
-	var ts_hikari = L.marker([-48.91312, 67.832965], {icon: cityBig}).bindPopup('<b>Hikari no Toshi</b> <br /><i>Large City</i>');
+	var ts_hikari = L.marker([-52.186242, 64.453702], {icon: cityBig}).bindPopup('<b>Hikari no Toshi</b> <br /><i>Large City</i>');
 	//Small Cities
 	var ts_amagumo = L.marker([-32.556313, 28.080238], {icon: citySmall}).bindPopup('<b>Amagumo</b> <br /><i>Small City</i>');
 	var ts_yozora = L.marker([-34.127172, -11.480145], {icon: citySmall}).bindPopup('<b>Yozora</b> <br /><i>Small City</i>');
@@ -186,6 +193,10 @@
 	var ts_engetsu = L.marker([-45.070751, 14.763658], {icon: citySmall}).bindPopup('<b>Engetsu</b> <br /><i>Small City</i>');
 	var ts_tsukimiya = L.marker([-40.933431, 81.082085], {icon: citySmall}).bindPopup('<b>Tsukimiya</b> <br /><i>Small City</i>');
 	//Towns
+	var ts_asahi = L.marker([-1.52557, 55.842131], {icon: town}).bindPopup('<b>Asahi</b> <br /><i>Town</i>');
+	var ts_yūnagi = L.marker([-38.316604, 56.327448], {icon: town}).bindPopup('<b>Yūnagi</b> <br /><i>Town</i>');
+	var ts_tsukiakari = L.marker([-38.837327, 4.772362], {icon: town}).bindPopup('<b>Tsukiakari</b> <br /><i>Town</i>');
+	var ts_suzuran = L.marker([-55.861359, 44.071459], {icon: town}).bindPopup('<b>Suzuran</b> <br /><i>Town</i>');
 	//Nature
 	var ts_hanabira = L.marker([-52.306608, 37.804889], {icon: nature}).bindPopup('<b>Hanabira Nagare</b> <br /><i>Lake</i>');
 	var ts_yama = L.marker([-36.031332, 57.919922], {icon: nature}).bindPopup('<b>Yama no Kyōfū</b> <br /><i>Mountain</i> <br />The largest mountain range in Tsuki Ōkoku');
@@ -227,6 +238,8 @@
 	//Towns
 	//Nature
 
+	//Oceans
+
 	//Characters
 	var an_gerhard = L.marker([-2.372369, -72.685547], {icon: character}).bindPopup('<b>Gerhard von Eichenwald</b> <br /><i>Character</i> <br />Gerhards temporary camp in a small town in the Holy Antarian Empire');
 	
@@ -234,9 +247,9 @@
 	var mg_capitals = L.layerGroup([an_capital, od_capital, ts_capital, dr_capital, th_capital, rh_capital, pr_capital, az_capital]).addTo(map);
 	var mg_citiesBig = L.layerGroup([ts_sōgenshima, ts_kinshū, ts_hikari]).addTo(map);
 	var mg_citiesSmall = L.layerGroup([ts_amagumo, ts_yozora, ts_kōun, ts_shingetsu, ts_engetsu, ts_tsukimiya]).addTo(map);
-	var mg_towns = L.layerGroup([an_town]);
+	var mg_towns = L.layerGroup([an_town, ts_asahi, ts_yūnagi, ts_tsukiakari, ts_suzuran]).addTo(map);
 	var mg_nature = L.layerGroup([ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori]).addTo(map);
-	var mg_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree]).addTo(map);
+	var mg_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree, ts_mizunoiwaya]).addTo(map);
 	var mg_characters = L.layerGroup([an_gerhard]).addTo(map);
 	var mg_coord = L.layerGroup([marker]);
 	//Marker Overlay
@@ -250,8 +263,12 @@
 		"Characters" : mg_characters,
 		"Coordinate Finder" : mg_coord,
     }
+	var mapLayers={
+		"Normal Map" : mapText,
+		"Clean Map" : mapClean,
+    }
 	//GROUP CONTROLS
-	L.control.layers(null, overlays).addTo(map);
+	L.control.layers(mapLayers, overlays).addTo(map);
     </script>
   </body>
 </html>
