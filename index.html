@@ -116,7 +116,8 @@
     marker.on('dragend', function(e) {
 		marker.getPopup().setContent(marker.getLatLng().toString()).openOn(map);
     });
-	
+
+	//Arathia	
     //Antaria
 	var an_capital = L.marker([31.315741, -42.49273], {icon: capital}).bindPopup('<b>Antaria</b> <br /><i>Capital</i> <br />The capital of the Holy Antarian Enpire');
 	//Important
@@ -177,11 +178,11 @@
 	var ts_mizunoiwaya = L.marker([-52.329725, 58.377932], {icon: important}).bindPopup('<b>Mizu-no-Iwaya</b> <br /><i>Important Location</i> <br />The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.');
 	//Big Cities
 	var ts_sōgenshima = L.marker([-13.88388, 37.332231], {icon: cityBig}).bindPopup('<b>Sōgenshima</b> <br /><i>Large City</i>');
-	var ts_kinshū = L.marker([-60.418733, 26.314855], {icon: cityBig}).bindPopup('<b>Kinshū</b> <br /><i>Large City</i>');
+	var ts_kinshū = L.marker([-34.127172, -11.480145], {icon: cityBig}).bindPopup('<b>Kinshū</b> <br /><i>Large City</i> <br />A trading city, main trading partners are Trade Company and Primoria.');
 	var ts_hikari = L.marker([-52.186242, 64.453702], {icon: cityBig}).bindPopup('<b>Hikari no Toshi</b> <br /><i>Large City</i>');
 	//Small Cities
 	var ts_amagumo = L.marker([-32.556313, 28.080238], {icon: citySmall}).bindPopup('<b>Amagumo</b> <br /><i>Small City</i>');
-	var ts_yozora = L.marker([-34.127172, -11.480145], {icon: citySmall}).bindPopup('<b>Yozora</b> <br /><i>Small City</i> <br />A trading city, main trading partners are Trade Company and Primoria.');
+	var ts_yozora = L.marker([-60.418733, 26.314855], {icon: citySmall}).bindPopup('<b>Yozora</b> <br /><i>Small City</i>');
 	var ts_kōun = L.marker([-17.927417, 65.51944], {icon: citySmall}).bindPopup('<b>Kōun</b> <br /><i>Small City</i>');
 	var ts_shingetsu = L.marker([-35.440072, 48.867281], {icon: citySmall}).bindPopup('<b>Shingetsu</b> <br /><i>Small City</i>');
 	var ts_engetsu = L.marker([-45.070751, 14.763658], {icon: citySmall}).bindPopup('<b>Engetsu</b> <br /><i>Small City</i>');
@@ -216,9 +217,16 @@
 	var dr_capital = L.marker([-38.47628, -138.929306], {icon: capital}).bindPopup('<b>Aeternum</b> <br /><i>Capital</i> <br />The capital of Dryadalis');
 	//Important
 	//Big Cities
+	var dr_eldorath = L.marker([-51.123378, -128.277507], {icon: cityBig}).bindPopup('<b>Eldorath</b> <br /><i>Large City</i>');
 	//Small Cities
+	var dr_faerwyn = L.marker([-49.111661, -155.112608], {icon: citySmall}).bindPopup('<b>Faerwyn</b> <br /><i>Small City</i>');
 	//Towns
+	var dr_elaris = L.marker([-46.664566, -142.44974], {icon: town}).bindPopup('<b>Elaris</b> <br /><i>Town</i>');
+	var dr_galadrim = L.marker([-57.328012, -139.768383], {icon: town}).bindPopup('<b>Galadrim</b> <br /><i>Town</i>');
 	//Nature
+	var dr_feywood  = L.marker([-41.435969, -150.186067], {icon: nature}).bindPopup('<b>Feywood</b> <br /><i>Forest</i>');
+	var dr_lacus = L.marker([-49.323654, -150.75126], {icon: nature}).bindPopup('<b>Lacus Serenus</b> <br /><i>Lake</i>');
+	var dr_verdantis  = L.marker([-41.318969, -140.859323], {icon: nature}).bindPopup('<b>Verdantis Mons</b> <br /><i>Mountain</i>');
 	
 	//Trade Company
 	
@@ -244,12 +252,14 @@
 	var an_aurumoria = L.marker([17.768594, -114.376119], {icon: character}).bindPopup('<b>Aurumoria, the Gilded Guardian</b> <br /><i>Character</i> <br />Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.');
 	var ts_reiko = L.marker([-25.403585, 12.744141], {icon: character}).bindPopup('<b>Miyamoto Reiko</b> <br /><i>Character</i> <br />The current leader of Tsuki Ōkoku');
 
+	//Hell
+
 	//Marker Groups
 	var ar_capitals = L.layerGroup([an_capital, od_capital, ts_capital, dr_capital, th_capital, rh_capital, pr_capital, az_capital]).addTo(map);
-	var ar_citiesBig = L.layerGroup([ts_sōgenshima, ts_kinshū, ts_hikari, an_city]).addTo(map);
-	var ar_citiesSmall = L.layerGroup([ts_amagumo, ts_yozora, ts_kōun, ts_shingetsu, ts_engetsu, ts_tsukimiya]).addTo(map);
-	var ar_towns = L.layerGroup([an_town, an_town2, ts_asahi, ts_yūnagi, ts_tsukiakari, ts_suzuran, ts_yūdachi, ts_haruka, ts_kōri]).addTo(map);
-	var ar_nature = L.layerGroup([ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori, ts_tsukiakari]).addTo(map);
+	var ar_citiesBig = L.layerGroup([ts_sōgenshima, ts_kinshū, ts_hikari, an_city, dr_eldorath]).addTo(map);
+	var ar_citiesSmall = L.layerGroup([ts_amagumo, ts_yozora, ts_kōun, ts_shingetsu, ts_engetsu, ts_tsukimiya, dr_faerwyn]).addTo(map);
+	var ar_towns = L.layerGroup([an_town, an_town2, ts_asahi, ts_yūnagi, ts_tsukiakari, ts_suzuran, ts_yūdachi, ts_haruka, ts_kōri, dr_elaris, dr_galadrim]).addTo(map);
+	var ar_nature = L.layerGroup([ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori, ts_tsukiakari, dr_feywood, dr_lacus, dr_verdantis]).addTo(map);
 	var ar_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree, ts_mizunoiwaya]).addTo(map);
 	var ar_characters = L.layerGroup([an_gerhard, ts_nihil, an_aurumoria, ts_reiko]).addTo(map);
 	var dv_coord = L.layerGroup([marker]);
@@ -266,6 +276,9 @@
 		},
 		"Developer" : {
 			"Coordinate Finder" : dv_coord,
+		},
+		"Hell" : {
+			
 		}
     };
 	var options = {
