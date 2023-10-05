@@ -4,7 +4,7 @@ Welcome to the official repository for Arathia's world map. This repository cont
 
 ## Map Overview
 
-![Arathia Map Preview]([link_to_preview_image.png](https://i.imgur.com/FKYG47l.jpg))
+![Arathia Map Preview]([https://i.imgur.com/FKYG47l.jpg])
 
 ## Features
 
