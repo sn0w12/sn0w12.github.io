@@ -3,22 +3,14 @@
   <head>
     <title>Arathia World Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<style>
-    #map {
-        height: 600px;
-        border: 1px solid #ccc;
-    }
-
-	.myCss{
-	text-align:center;
-	}
-	</style>
     <link rel="stylesheet" href="scripts/leaflet.css">
+	<link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
     <script src="scripts/leaflet.js"></script>
   </head>
   
   <body style="height: 100%;margin: 0;">
     <div id="map" style="width: 100%; height: 100%; background: #e9bf82;"></div>
+	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
     <script type="text/javascript">
 	var southWest = L.latLng(-70, -170),
 		northEast = L.latLng(70, 170),
@@ -35,7 +27,7 @@
 		continuousWorld: false,
 		noWrap: true,  
 		minZoom: 2.75,
-		maxZoom: 5.5,
+		maxZoom: 5,
     }).addTo(map);
 	var mapClean = L.tileLayer('mapClean/{z}/{x}/{y}.png', {
 		continuousWorld: false,
@@ -134,7 +126,7 @@
 	//Small Cities
 	//Towns
 	var an_town = L.marker([-1.841265, -73.559396], {icon: town}).bindPopup('<b>Antarian Town</b> <br /><i>Town</i>');
-	var an_town2 = L.marker([17.693698, -115.356925], {icon: town}).bindPopup('<b>Antarian Town</b> <br /><i>Town</i>');
+	var an_town2 = L.marker([18.293698, -115.356925], {icon: town}).bindPopup('<b>Antarian Town</b> <br /><i>Town</i>');
 	//Nature
 	
 	//Odrheim
@@ -193,7 +185,7 @@
 	var ts_kōun = L.marker([-17.927417, 65.51944], {icon: citySmall}).bindPopup('<b>Kōun</b> <br /><i>Small City</i>');
 	var ts_shingetsu = L.marker([-35.440072, 48.867281], {icon: citySmall}).bindPopup('<b>Shingetsu</b> <br /><i>Small City</i>');
 	var ts_engetsu = L.marker([-45.070751, 14.763658], {icon: citySmall}).bindPopup('<b>Engetsu</b> <br /><i>Small City</i>');
-	var ts_tsukimiya = L.marker([-40.933431, 81.082085], {icon: citySmall}).bindPopup('<b>Tsukimiya</b> <br /><i>Small City</i> <br />Small city, mainly for comunication and trade with eastern and northen countries');
+	var ts_tsukimiya = L.marker([-40.933431, 81.082085], {icon: citySmall}).bindPopup('<b>Tsukimiya</b> <br /><i>Small City</i> <br />Small city, mainly for communication and trade with eastern and northen countries');
 	//Towns
 	var ts_asahi = L.marker([-1.52557, 55.842131], {icon: town}).bindPopup('<b>Asahi</b> <br /><i>Town</i> <br />A small town, disproportionately big military presence compared to its civilian population due to its proximity to the HAE');
 	var ts_yūnagi = L.marker([-38.316604, 56.327448], {icon: town}).bindPopup('<b>Yūnagi</b> <br /><i>Town</i>');
@@ -253,31 +245,39 @@
 	var ts_reiko = L.marker([-25.403585, 12.744141], {icon: character}).bindPopup('<b>Miyamoto Reiko</b> <br /><i>Character</i> <br />The current leader of Tsuki Ōkoku');
 
 	//Marker Groups
-	var mg_capitals = L.layerGroup([an_capital, od_capital, ts_capital, dr_capital, th_capital, rh_capital, pr_capital, az_capital]).addTo(map);
-	var mg_citiesBig = L.layerGroup([ts_sōgenshima, ts_kinshū, ts_hikari, an_city]).addTo(map);
-	var mg_citiesSmall = L.layerGroup([ts_amagumo, ts_yozora, ts_kōun, ts_shingetsu, ts_engetsu, ts_tsukimiya]).addTo(map);
-	var mg_towns = L.layerGroup([an_town, an_town2, ts_asahi, ts_yūnagi, ts_tsukiakari, ts_suzuran, ts_yūdachi, ts_haruka, ts_kōri]).addTo(map);
-	var mg_nature = L.layerGroup([ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori, ts_tsukiakari]).addTo(map);
-	var mg_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree, ts_mizunoiwaya]).addTo(map);
-	var mg_characters = L.layerGroup([an_gerhard, ts_nihil, an_aurumoria, ts_reiko]).addTo(map);
-	var mg_coord = L.layerGroup([marker]);
+	var ar_capitals = L.layerGroup([an_capital, od_capital, ts_capital, dr_capital, th_capital, rh_capital, pr_capital, az_capital]).addTo(map);
+	var ar_citiesBig = L.layerGroup([ts_sōgenshima, ts_kinshū, ts_hikari, an_city]).addTo(map);
+	var ar_citiesSmall = L.layerGroup([ts_amagumo, ts_yozora, ts_kōun, ts_shingetsu, ts_engetsu, ts_tsukimiya]).addTo(map);
+	var ar_towns = L.layerGroup([an_town, an_town2, ts_asahi, ts_yūnagi, ts_tsukiakari, ts_suzuran, ts_yūdachi, ts_haruka, ts_kōri]).addTo(map);
+	var ar_nature = L.layerGroup([ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori, ts_tsukiakari]).addTo(map);
+	var ar_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree, ts_mizunoiwaya]).addTo(map);
+	var ar_characters = L.layerGroup([an_gerhard, ts_nihil, an_aurumoria, ts_reiko]).addTo(map);
+	var dv_coord = L.layerGroup([marker]);
 	//Marker Overlay
 	var overlays={
-		"Capitals" : mg_capitals,
-		"Large Cities" : mg_citiesBig,
-		"Small Cities" : mg_citiesSmall,
-		"Towns" : mg_towns,
-		"Nature" : mg_nature,
-		"Important Locations" : mg_important,
-		"Characters" : mg_characters,
-		"Coordinate Finder" : mg_coord,
-    }
+		"Arathia" : {
+			"Capitals" : ar_capitals,
+			"Large Cities" : ar_citiesBig,
+			"Small Cities" : ar_citiesSmall,
+			"Towns" : ar_towns,
+			"Nature" : ar_nature,
+			"Important Locations" : ar_important,
+			"Characters" : ar_characters,
+		},
+		"Developer" : {
+			"Coordinate Finder" : dv_coord,
+		}
+    };
+	var options = {
+        groupCheckboxes: true
+    };
 	var mapLayers={
 		"Normal Map" : mapText,
 		"Clean Map" : mapClean,
     }
+	
 	//GROUP CONTROLS
-	L.control.layers(mapLayers, overlays).addTo(map);
+	L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
     </script>
   </body>
 </html>
