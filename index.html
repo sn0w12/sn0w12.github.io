@@ -3,6 +3,16 @@
   <head>
     <title>Arathia World Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+    #map {
+        height: 600px;
+        border: 1px solid #ccc;
+    }
+
+	.myCss{
+	text-align:center;
+	}
+	</style>
     <link rel="stylesheet" href="scripts/leaflet.css">
     <script src="scripts/leaflet.js"></script>
   </head>
@@ -105,7 +115,7 @@
 	
 	//Primoria
 	
-	var pr_archtree = L.marker([-56.703904, -69.146122], {icon: important}).bindPopup('<b>Primorian Arch-Tree</b>');
+	var pr_archtree = L.marker([-56.703904, -69.146122], {icon: important}).bindPopup('<b>Primorian Arch-Tree</b><br />The Arch-Tree in Primoria');
 	
 	//Dryadalis
 	var dr_aeternum = L.marker([-38.47628, -138.929306], {icon: capital}).bindPopup('<b>Aeternum</b>');
