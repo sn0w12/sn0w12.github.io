@@ -278,6 +278,14 @@
 	
 	//GROUP CONTROLS
 	L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
+
+	document.addEventListener('DOMContentLoaded', function () {
+    // Find the checkbox element
+    var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
+
+    // Set the checkbox as checked
+    checkbox.checked = true;
+	});
     </script>
   </body>
 </html>
