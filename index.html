@@ -19,18 +19,24 @@
 
 		//Creating the Map
 		var map = L.map('map', {
-			maxBounds: bounds,   // Then add it here..
+			maxBounds: bounds,
 			zoomSnap: 0.1,
 			zoomDelta: 0.5,
 			wheelPxPerZoomLevel: 120,
 		}).setView([0, 0], 0);
-		var mapText = L.tileLayer('map/{z}/{x}/{y}.png', {
+		var arathia = L.tileLayer('maps/arathia/{z}/{x}/{y}.png', {
 			continuousWorld: false,
 			noWrap: true,
 			minZoom: 2.75,
 			maxZoom: 5,
 		}).addTo(map);
-		var mapClean = L.tileLayer('mapClean/{z}/{x}/{y}.png', {
+		var arathiaClean = L.tileLayer('maps/arathiaClean/{z}/{x}/{y}.png', {
+			continuousWorld: false,
+			noWrap: true,
+			minZoom: 2.75,
+			maxZoom: 5.5,
+		});
+		var morturia = L.tileLayer('maps/morturia/{z}/{x}/{y}.png', {
 			continuousWorld: false,
 			noWrap: true,
 			minZoom: 2.75,
@@ -263,7 +269,12 @@
 		var ar_nature = L.layerGroup([ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori, ts_tsukiakari, dr_feywood, dr_lacus, dr_verdantis]).addTo(map);
 		var ar_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree, ts_mizunoiwaya]).addTo(map);
 		var ar_characters = L.layerGroup([an_gerhard, ts_nihil, an_aurumoria, ts_reiko]).addTo(map);
+
 		var dv_coord = L.layerGroup([marker]);
+
+		var mo_capitals = L.layerGroup([]);
+		var mo_important = L.layerGroup([]);
+		var mo_characters = L.layerGroup([]);
 		//Marker Overlay
 		var overlays = {
 			"Arathia": {
@@ -278,20 +289,73 @@
 			"Developer": {
 				"Coordinate Finder": dv_coord,
 			},
-			"Hell": {
-
+			"Morturia": {
+				"Capitals": mo_capitals,
+				"Important Locations": mo_important,
+				"Characters": mo_characters,
 			}
 		};
 		var options = {
 			groupCheckboxes: true
 		};
 		var mapLayers = {
-			"Arathia": mapText,
-			"Arathia Clean": mapClean,
+			"Arathia": arathia,
+			"Arathia Clean": arathiaClean,
+			"Morturia": morturia,
 		}
 
 		//GROUP CONTROLS
 		L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
+
+		document.addEventListener('change', function (event) {
+			var radioButton = event.target;
+
+			// Check if the changed element is a radio button
+			if (radioButton.classList.contains('leaflet-control-layers-selector')) {
+				// Check which radio button is selected
+				if (radioButton.nextSibling.textContent.trim() === 'Arathia' || radioButton.nextSibling.textContent.trim() === 'Arathia Clean') {
+					map.getContainer().style.backgroundColor = '#e9bf82';
+
+					map.removeLayer(mo_capitals);
+					map.removeLayer(mo_characters);
+					map.removeLayer(mo_important);
+
+					map.addLayer(ar_capitals);
+					map.addLayer(ar_characters);
+					map.addLayer(ar_citiesBig);
+					map.addLayer(ar_citiesSmall);
+					map.addLayer(ar_important);
+					map.addLayer(ar_nature);
+					map.addLayer(ar_towns);
+
+					// Find the checkbox element
+					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
+
+					// Set the checkbox as checked
+					arathiaCheckbox.checked = true;
+				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia' || radioButton.nextSibling.textContent.trim() === 'Morturia Clean') {
+					map.getContainer().style.backgroundColor = '#211b16';
+
+					map.removeLayer(ar_capitals);
+					map.removeLayer(ar_characters);
+					map.removeLayer(ar_citiesBig);
+					map.removeLayer(ar_citiesSmall);
+					map.removeLayer(ar_important);
+					map.removeLayer(ar_nature);
+					map.removeLayer(ar_towns);
+
+					map.addLayer(mo_capitals);
+					map.addLayer(mo_characters);
+					map.addLayer(mo_important);
+
+					// Find the Morturia checkbox element
+					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
+
+					// Set the Morturia checkbox as checked
+					morturiaCheckbox.checked = true;
+				}
+			}
+		});
 
 		document.addEventListener('DOMContentLoaded', function () {
 			// Find the checkbox element
