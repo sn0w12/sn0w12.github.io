@@ -259,7 +259,20 @@
 		var an_aurumoria = L.marker([17.768594, -114.376119], { icon: character }).bindPopup('<b>Aurumoria, the Gilded Guardian</b> <br /><i>Character</i> <br />Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.');
 		var ts_reiko = L.marker([-25.403585, 12.744141], { icon: character }).bindPopup('<b>Miyamoto Reiko</b> <br /><i>Character</i> <br />The current leader of Tsuki Ōkoku');
 
-		//Hell
+		//Morturia
+		//Scientia
+		var sc_capital = L.marker([39.994442, 89.15887], { icon: capital }).bindPopup('<b>Scienta Capital</b> <br /><i>Capital</i> <br />The capital of Scientia');
+		//Important
+
+		//Ardeat
+		
+		//Important
+
+		//Gelida
+		
+		//Important
+
+		//Characters
 
 		//Marker Groups
 		var ar_capitals = L.layerGroup([an_capital, od_capital, ts_capital, dr_capital, th_capital, rh_capital, pr_capital, az_capital]).addTo(map);
@@ -272,7 +285,7 @@
 
 		var dv_coord = L.layerGroup([marker]);
 
-		var mo_capitals = L.layerGroup([]);
+		var mo_capitals = L.layerGroup([sc_capital]);
 		var mo_important = L.layerGroup([]);
 		var mo_characters = L.layerGroup([]);
 		//Marker Overlay
@@ -328,10 +341,8 @@
 					map.addLayer(ar_nature);
 					map.addLayer(ar_towns);
 
-					// Find the checkbox element
+					// Check the main checkbox
 					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
-
-					// Set the checkbox as checked
 					arathiaCheckbox.checked = true;
 				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia' || radioButton.nextSibling.textContent.trim() === 'Morturia Clean') {
 					map.getContainer().style.backgroundColor = '#211b16';
@@ -348,20 +359,16 @@
 					map.addLayer(mo_characters);
 					map.addLayer(mo_important);
 
-					// Find the Morturia checkbox element
+					// Check the main checkbox
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
-
-					// Set the Morturia checkbox as checked
 					morturiaCheckbox.checked = true;
 				}
 			}
 		});
 
 		document.addEventListener('DOMContentLoaded', function () {
-			// Find the checkbox element
+			// Check the main checkbox
 			var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
-
-			// Set the checkbox as checked
 			checkbox.checked = true;
 		});
 	</script>
