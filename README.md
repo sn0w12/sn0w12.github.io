@@ -5,4 +5,4 @@ An interactive map for the world of Arathia
 
 ## Map Overview
 
-![Full Resolution Map](https://i.imgur.com/FKYG47l.jpg)
+![Full Resolution Map](https://i.imgur.com/Q7NEex3.jpg)
