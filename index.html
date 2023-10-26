@@ -3,6 +3,7 @@
 
 <head>
 	<title>Arathia World Map</title>
+	<link rel="icon" href="icons/arathia.png">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="scripts/leaflet.css">
 	<link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
@@ -11,7 +12,7 @@
 
 <body style="height: 100%;margin: 0;">
 	<div id="map" style="width: 100%; height: 100%; background: #e9bf82;"></div>
-	<a class="leaflet-control-zoom-out" href="https://arathia.tiddlyhost.com/" title="Zoom out" role="button"
+	<a class="leaflet-control-zoom-out" href="arathia.html" title="Zoom out" role="button"
         aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
 	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
 	<script type="text/javascript">
@@ -128,9 +129,9 @@
 
 		//Arathia	
 		//Antaria
-		var an_capital = L.marker([32.720989, -41.187598], { icon: capital }).bindPopup('<b><a href="https://arathia.tiddlyhost.com/#Antaria" target="_blank">Antaria</a></b> <br /><i>Capital</i> <br />The capital of the Holy Antarian Enpire');
+		var an_capital = L.marker([32.720989, -41.187598], { icon: capital }).bindPopup('<b><a href="arathia.html#Antaria" target="_blank">Antaria</a></b> <br /><i>Capital</i> <br />The capital of the Holy Antarian Enpire');
 		//Important
-		var an_archtree = L.marker([45.04985, -79.242103], { icon: important }).bindPopup('<b>Antarian Arch-Tree</b> <br /><i>Important Location</i>');
+		var an_archtree = L.marker([45.04985, -79.242103], { icon: important }).bindPopup('<b><a href="arathia.html#Arch-Trees" target="_blank">Antarian Arch-Tree</a></b> <br /><i>Important Location</i>');
 		//Big Cities
 		var an_city = L.marker([12.640338, -35.859375], { icon: cityBig }).bindPopup('<b>Antarian Port City</b> <br /><i>Large City</i> <br />A trade city in the HAE with a large port');
 		//Small Cities
@@ -158,7 +159,7 @@
 		//Rheinland
 		var rh_capital = L.marker([15.641359, 138.427261], { icon: capital }).bindPopup('<b>Rheinland Capital</b> <br /><i>Capital</i> <br />The capital of Rheinland');
 		//Important
-		var rh_archtree = L.marker([27.803884, 131.965833], { icon: important }).bindPopup('<b>Rheinland Arch-Tree</b> <br /><i>Important Location</i>');
+		var rh_archtree = L.marker([27.803884, 131.965833], { icon: important }).bindPopup('<b><a href="arathia.html#Arch-Trees" target="_blank">Rheinland Arch-Tree</a></b> <br /><i>Important Location</i>');
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -181,9 +182,9 @@
 		//Nature
 
 		//Tsuki
-		var ts_capital = L.marker([-26.786247, 10.234271], { icon: capital }).bindPopup('<b><a href="https://arathia.tiddlyhost.com/#Getsuy%C5%8Dsei" target="_blank">Getsuyōsei</b></a> <br /><i>Capital</i> <br />The capital of Tsuki Ōkoku');
+		var ts_capital = L.marker([-26.786247, 10.234271], { icon: capital }).bindPopup('<b><a href="arathia.html#Getsuy%C5%8Dsei" target="_blank">Getsuyōsei</b></a> <br /><i>Capital</i> <br />The capital of Tsuki Ōkoku');
 		//Important
-		var ts_archtree = L.marker([-17.677522, 10.600598], { icon: important }).bindPopup('<b>Tsuki Arch-Tree</b> <br /><i>Important Location</i> <br />The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.');
+		var ts_archtree = L.marker([-17.677522, 10.600598], { icon: important }).bindPopup('<b><a href="arathia.html#Arch-Trees" target="_blank">Tsuki Arch-Tree</a></b> <br /><i>Important Location</i> <br />The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.');
 		var ts_mizunoiwaya = L.marker([-52.329725, 58.377932], { icon: important }).bindPopup('<b>Mizu-no-Iwaya</b> <br /><i>Important Location</i> <br />The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.');
 		//Big Cities
 		var ts_sōgenshima = L.marker([-13.88388, 37.332231], { icon: cityBig }).bindPopup('<b>Sōgenshima</b> <br /><i>Large City</i>');
@@ -216,7 +217,7 @@
 		//Primoria
 		var pr_capital = L.marker([-26.181457, -61.49786], { icon: capital }).bindPopup('<b>Primorian Capital</b> <br /><i>Capital</i> <br />The capital of Primoria');
 		//Important
-		var pr_archtree = L.marker([-56.703904, -69.146122], { icon: important }).bindPopup('<b>Primorian Arch-Tree</b> <br /><i>Important Location</i> <br />The Arch-Tree in Primoria');
+		var pr_archtree = L.marker([-56.703904, -69.146122], { icon: important }).bindPopup('<b><a href="arathia.html#Arch-Trees" target="_blank">Primorian Arch-Tree</a></b> <br /><i>Important Location</i> <br />The Arch-Tree in Primoria');
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -256,10 +257,10 @@
 		//Oceans
 
 		//Characters
-		var an_gerhard = L.marker([-2.372369, -72.685547], { icon: character }).bindPopup('<b><a href="https://arathia.tiddlyhost.com/#Gerhard%20von%20Eichenwald" target="_blank">Gerhard von Eichenwald</b></a> <br /><i>Character</i> <br />Gerhards temporary camp in a small town in the Holy Antarian Empire');
-		var ts_nihil = L.marker([-41.980887, 32.348339], { icon: character }).bindPopup('<b>Nihil, the Eternal</b> <br /><i>Character</i> <br />Currently in hiding after the great dragon purge.');
-		var an_aurumoria = L.marker([17.768594, -114.376119], { icon: character }).bindPopup('<b>Aurumoria, the Gilded Guardian</b> <br /><i>Character</i> <br />Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.');
-		var ts_reiko = L.marker([-25.403585, 12.744141], { icon: character }).bindPopup('<b><a href="https://arathia.tiddlyhost.com/#Miyamoto%20Reiko" target="_blank">Miyamoto Reiko</a></b> <br /><i>Character</i> <br />The current leader of Tsuki Ōkoku');
+		var an_gerhard = L.marker([-2.372369, -72.685547], { icon: character }).bindPopup('<b><a href="arathia.html#Gerhard%20von%20Eichenwald" target="_blank">Gerhard von Eichenwald</b></a> <br /><i>Character</i> <br />Gerhards temporary camp in a small town in the Holy Antarian Empire');
+		var ts_nihil = L.marker([-41.980887, 32.348339], { icon: character }).bindPopup('<b><a href="arathia.html#Nihil%2C%20the%20Eternal" target="_blank">Nihil, the Eternal</a></b> <br /><i>Character</i> <br />Currently in hiding after the great dragon purge.');
+		var an_aurumoria = L.marker([17.768594, -114.376119], { icon: character }).bindPopup('<b><a href="arathia.html#Aurumoria%2C%20the%20Gilded%20Guardian" target="_blank">Aurumoria, the Gilded Guardian</a></b> <br /><i>Character</i> <br />Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.');
+		var ts_reiko = L.marker([-25.403585, 12.744141], { icon: character }).bindPopup('<b><a href="arathia.html#Miyamoto%20Reiko" target="_blank">Miyamoto Reiko</a></b> <br /><i>Character</i> <br />The current leader of Tsuki Ōkoku');
 
 		//Morturia
 		//Scientia
@@ -409,28 +410,28 @@
 			var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
 			checkbox.checked = true;
 		});
-	</script>
-	<script>
-		// Creating the Zoom Out Button
-		var zoomOutButton = L.Control.extend({
-			options: {
-				position: 'topright'
-			},
-	
-			onAdd: function (map) {
-				var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-	
-				// Replace the icon URL with the actual URL of the icon you want to use
-				container.innerHTML = '<a class="leaflet-control-zoom-out" href="https://arathia.tiddlyhost.com/" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false" style="display: flex; justify-content: center; align-items: center;"><img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" alt="Zoom out" style="max-width: 16px; max-height: 16px;"></a>';
-	
-				return container;
-			}
-		});
-	
+
 		// Injecting the new button into the existing zoom control
 		var zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
 		// Replace the icon URL with the actual URL of the icon you want to use
-		zoomControl.innerHTML += '<a class="leaflet-control-zoom-out" href="https://arathia.tiddlyhost.com/" title="Wiki" role="button" aria-label="Zoom out" aria-disabled="false" style="display: flex; justify-content: center; align-items: center;"><img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" alt="Zoom out" style="max-width: 16px; max-height: 16px;"></a>';
+		const wikiButton = document.createElement('a');
+		wikiButton.className = 'leaflet-control-zoom-out';
+		wikiButton.href = 'arathia.html';
+		wikiButton.target = '_blank';
+		wikiButton.title = 'Wiki';
+		wikiButton.role = 'button';
+		wikiButton.style.display = 'flex';
+		wikiButton.style.justifyContent = 'center';
+		wikiButton.style.alignItems = 'center';
+
+		const img = document.createElement('img');
+		img.src = 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png';
+		img.style.maxWidth = '16px';
+		img.style.maxHeight = '16px';
+
+		wikiButton.appendChild(img);
+
+		zoomControl.insertAdjacentElement('beforeend', wikiButton);
 	</script>		
 </body>
 
