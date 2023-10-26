@@ -55,3 +55,14 @@ This icon signifies various crucial locations significant to the world or the un
 
 **Character:** <img src="https://github.com/sn0w12/sn0w12.github.io/blob/main/icons/character.png?raw=true" height="22.22"> <br>
 The character icon designates where characters are currently residing. It helps track the locations of key individuals within the narrative, providing a visual reference for their movements and interactions throughout the world.
+
+## Resources
+### Map Framework
+The Arathia world map is powered by [Leaflet](https://github.com/Leaflet/Leaflet), an open-source JavaScript library for interactive maps. Leaflet provides a flexible and easy-to-use platform for displaying geographical data. A [plugin](https://github.com/ismyrnow/leaflet-groupedlayercontrol) is also used for grouped layer control.
+
+### Base Maps
+The base maps for Arathia and Morturia were created using [Wonderdraft](https://www.wonderdraft.net/) using custom icons.
+
+### Development Tools
+- **[Leaflet:](https://leafletjs.com/)** An open-source JavaScript library for creating interactive maps.
+- **[GitHub Pages:](https://pages.github.com/)** Used for hosting the interactive map.
