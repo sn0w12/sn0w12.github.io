@@ -326,7 +326,7 @@
 			// Check if the changed element is a radio button
 			if (radioButton.classList.contains('leaflet-control-layers-selector')) {
 				// Check which radio button is selected
-				if (radioButton.nextSibling.textContent.trim() === 'Arathia' || radioButton.nextSibling.textContent.trim() === 'Arathia Clean') {
+				if (radioButton.nextSibling.textContent.trim() === 'Arathia') {
 					map.getContainer().style.backgroundColor = '#e9bf82';
 
 					map.removeLayer(mo_capitals);
@@ -344,7 +344,25 @@
 					// Check the main checkbox
 					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
 					arathiaCheckbox.checked = true;
-				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia' || radioButton.nextSibling.textContent.trim() === 'Morturia Clean') {
+				} else if (radioButton.nextSibling.textContent.trim() === 'Arathia Clean') {
+					map.getContainer().style.backgroundColor = '#e9bf82';
+
+					map.removeLayer(mo_capitals);
+					map.removeLayer(mo_characters);
+					map.removeLayer(mo_important);
+
+					map.removeLayer(ar_capitals);
+					map.removeLayer(ar_characters);
+					map.removeLayer(ar_citiesBig);
+					map.removeLayer(ar_citiesSmall);
+					map.removeLayer(ar_important);
+					map.removeLayer(ar_nature);
+					map.removeLayer(ar_towns);
+
+					// Uncheck the main checkbox
+					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
+					arathiaCheckbox.checked = false;
+				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia') {
 					map.getContainer().style.backgroundColor = '#211b16';
 
 					map.removeLayer(ar_capitals);
@@ -362,6 +380,24 @@
 					// Check the main checkbox
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
 					morturiaCheckbox.checked = true;
+				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia Clean') {
+					map.getContainer().style.backgroundColor = '#211b16';
+
+					map.removeLayer(ar_capitals);
+					map.removeLayer(ar_characters);
+					map.removeLayer(ar_citiesBig);
+					map.removeLayer(ar_citiesSmall);
+					map.removeLayer(ar_important);
+					map.removeLayer(ar_nature);
+					map.removeLayer(ar_towns);
+
+					map.removeLayer(mo_capitals);
+					map.removeLayer(mo_characters);
+					map.removeLayer(mo_important);
+
+					// Uncheck the main checkbox
+					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
+					morturiaCheckbox.checked = false;
 				}
 			}
 		});
