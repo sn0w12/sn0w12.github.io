@@ -5,7 +5,7 @@ An interactive map for the world of Arathia
 
 ## Map Overview
 ### Arathia
-![Full Resolution Map](https://github.com/sn0w12/sn0w12.github.io/blob/main/maps/Arathia.png?raw=true)
+![Full Resolution Map](https://github.com/sn0w12/sn0w12.github.io/blob/main/maps/ArathiaWeb.png?raw=true)
 #### Key Features:
 - **Major Countries:** <br>
 A country with significant geopolitical influence, economic power, large population, and substantial territorial size. <br>
@@ -20,7 +20,7 @@ Various crucial locations significant to the world or the unfolding story. It co
 **Examples:** The four Arch-trees
   
 ### Morturia
-![Full Resolution Map](https://github.com/sn0w12/sn0w12.github.io/blob/main/maps/Morturia.png?raw=true)
+![Full Resolution Map](https://github.com/sn0w12/sn0w12.github.io/blob/main/maps/MorturiaWeb.png?raw=true)
 #### Key Features:
 - **Major Countries:** <br>
 A country with significant geopolitical influence, economic power, large population, and substantial territorial size. <br>
