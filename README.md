@@ -1,8 +1,8 @@
 # Arathia - World Map 
 
 An interactive map for the world of Arathia                                                                                    
-**Interactive Map:** [sn0w12.github.io/](https://sn0w12.github.io/) <br>
-**Wiki:** [arathia.tiddlyhost.com/](https://arathia.tiddlyhost.com/)
+**Interactive Map:** [sn0w12.github.io](https://sn0w12.github.io/) <br>
+**Wiki:** [https://sn0w12.github.io/arathia](https://sn0w12.github.io/arathia)
 
 ## Map Overview
 ### Arathia
@@ -65,3 +65,4 @@ The base maps for Arathia and Morturia were created using [Wonderdraft](https://
 ### Development Tools
 - **[Leaflet:](https://leafletjs.com/)** An open-source JavaScript library for creating interactive maps.
 - **[GitHub Pages:](https://pages.github.com/)** Used for hosting the interactive map.
+- **[TiddlyWiki](https://tiddlywiki.com/)** A unique non-linear notebook for capturing, organising and sharing complex information.
