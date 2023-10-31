@@ -74,6 +74,7 @@
 			border-radius:4px;
 			background: var(--background);
 			color: var(--foreground);
+			margin-top:8px;
         }
 
         .custom-input {
@@ -117,18 +118,25 @@
         .custom-button {
             width: 97.5%;
             margin:2px;
-			padding:2px 4px;
+			padding: 5px;
+			margin-top:8px;
 			display:block;
             box-sizing: border-box;
 			color:var(--foreground);
 			background: var(--background);
 			border-radius:4px;
+			border: none;
+			outline: none;
+			border-bottom: 1px solid var(--foreground);
+			border-left: 1px solid var(--foreground);
+			border-right: 1px solid var(--foreground);
+			height: 26px;
         }
 
 		.custom-title {
             width: 97.5%;
             margin:2px;
-			padding:2px 4px;
+			padding: 5px;
 			display:block;
             box-sizing: border-box;
 			color:var(--foreground);
@@ -191,16 +199,28 @@
 			return popupContent;
 		}
 
-		function generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords) {
-			var an_capital = L.marker([32.720989, -41.187598], { icon: capital, title: 'Antaria' }).bindPopup(generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
-
+		function generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId) {
 			coords = coords.replace('LatLng','');
 			coords = coords.replace('(','[');
 			coords = coords.replace(')',']');
 
 			var firstTitle = title.replace(/ .*/,'');
+			var newId = id + '_'; 
+			if (customId) {
+				newId += customId;
+			} else {
+				newId += firstTitle.toLowerCase();
+			}
 
-			var output = 'var ' + id + '_' + firstTitle.toLowerCase() + ' = (' + coords + ', { icon: ' + icon + ', title: ' + title + ' }).generatePopupContent(' + "'" + title + "', '" + category + "', '" + description + "', ";
+			var output = 'var ' + id + '_'; 
+			if (customId) {
+				output += customId;
+			} else {
+				output += firstTitle.toLowerCase();
+			}
+			
+			output += ' = (' + coords + ', { icon: ' + icon + ", title: '" + title + "', id: " + "'" + newId  + "' }).bindPopup(generatePopupContent('" + title + "', '" + category + "', '" + description + "', ";
+
 			if (linkEnabled) {
 				output += 'true';
 			} else {
@@ -213,6 +233,100 @@
 				output += "));"
 			}
 			console.log(output)
+			return output;
+		}
+
+		function generate(output, layers, newId) {
+			var layersFinal = ""
+				for (var i = 0; i < layers.length; i++) {
+					layersFinal += layers[i].options.id + ", ";
+				}
+				output += layersFinal + newId + "]).addTo(map);";
+				console.log(output);
+		}
+
+		function generateGroups(id, title, customId, icon) {
+			var newId = id + '_'; 
+			var firstTitle = title.replace(/ .*/,'');
+			if (customId) {
+				newId += customId;
+			} else {
+				newId += firstTitle.toLowerCase();
+			}
+
+			var output = "";
+
+			if (id == 'ar' | 'od' | 'th' | 'rh' | 'az' | 'ts' | 'pr' | 'dr' | 'tc' | 'gi') {
+				switch(icon) {
+					case 'capital':
+						output += "var ar_capitals = L.layerGroup([";
+						var layers = ar_capitals.getLayers();
+						output = generate(output, layers, newId);
+						break;
+					case 'citiesBig':
+						output += "var ar_citiesBig = L.layerGroup([";
+						var layers = ar_citiesBig.getLayers();
+						output = generate(output, layers, newId);
+						break;
+					case 'citiesSmall':
+						output += "var ar_citiesSmall = L.layerGroup([";
+						var layers = ar_citiesSmall.getLayers();
+						output = generate(output, layers, newId);
+						break;
+					case 'towns':
+						output += "var ar_towns = L.layerGroup([";
+						var layers = ar_towns.getLayers();
+						output = generate(output, layers, newId);
+						break;
+					case 'important':
+						output += "var ar_important = L.layerGroup([";
+						var layers = ar_important.getLayers();
+						output = generate(output, layers, newId);
+						break;
+					case 'characters':
+						output += "var ar_characters = L.layerGroup([";
+						var layers = ar_characters.getLayers();
+						output = generate(output, layers, newId);
+						break;
+					default:
+						// code block
+					}
+				} else {
+					switch(icon) {
+						case 'capital':
+							output += "var mo_capitals = L.layerGroup([";
+							var layers = mo_capitals.getLayers();
+							output = generate(output, layers, newId);
+							break;
+						case 'citiesBig':
+							output += "var mo_citiesBig = L.layerGroup([";
+							var layers = mo_citiesBig.getLayers();
+							output = generate(output, layers, newId);
+							break;
+						case 'citiesSmall':
+							output += "var mo_citiesSmall = L.layerGroup([";
+							var layers = mo_citiesSmall.getLayers();
+							output = generate(output, layers, newId);
+							break;
+						case 'towns':
+							output += "var mo_towns = L.layerGroup([";
+							var layers = mo_towns.getLayers();
+							output = generate(output, layers, newId);
+							break;
+						case 'important':
+							output += "var mo_important = L.layerGroup([";
+							var layers = mo_important.getLayers();
+							output = generate(output, layers, newId);
+							break;
+						case 'characters':
+							output += "var mo_characters = L.layerGroup([";
+							var layers = mo_characters.getLayers();
+							output = generate(output, layers, newId);
+							break;
+						default:
+							// code block
+						}
+				}
 			return output;
 		}
 
@@ -236,7 +350,7 @@
 		var arathiaClean = L.tileLayer('maps/arathiaClean/{z}/{x}/{y}.png', {
 			continuousWorld: false,
 			noWrap: true,
-			minZoom: 2.75,
+			minZoom: 1.5,
 			maxZoom: 5.5,
 		});
 		var morturia = L.tileLayer('maps/morturia/{z}/{x}/{y}.png', {
@@ -245,6 +359,8 @@
 			minZoom: 2.75,
 			maxZoom: 5.5,
 		});
+
+		map.setView([0, 0], 2.75);
 
 		//Icons
 		var capital = L.icon({
@@ -359,8 +475,10 @@
 					<label for="Link">Link?</label>
 				</div>
 				<input class="custom-input" type="text" id="LinkText" placeholder="Link Text (optional)"></input>
+				<input class="custom-input" type="text" id="CustomId" placeholder="Custom id name (optional)"></input>
 				<button class="custom-button" id="DevButton">Generate</button>
 				<input class="custom-input" type="text" id="Output" placeholder="Output"></input>
+				<input class="custom-input" type="text" id="LayerGroupOutput" placeholder="Layer group output"></input>
 			</div>
 			`;
 		marker.bindPopup(formHTML).openPopup();
@@ -374,32 +492,35 @@
 				var description = document.getElementById('Description').value;
 				var linkEnabled = document.getElementById('Link').checked;
 				var linkTitle = document.getElementById('LinkText').value;
+				var customId = document.getElementById('CustomId').value;
 				var coords = marker.getLatLng().toString();
 
 				// Call the generatePopupContent function
-				var output = generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords);
+				var output = generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId);
+				var groupOutput = generateGroups(id, title, customId, icon);
 
 				// Display the output in the 'Output' input field
 				document.getElementById('Output').value = output;
-				console.log(coords);
+				document.getElementById('LayerGroupOutput').value = groupOutput;
 			});
 		});
-
+		
 		//Arathia	
 		//Antaria
-		var an_capital = L.marker([32.720989, -41.187598], { icon: capital, title: 'Antaria' }).bindPopup(generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
+		var an_capital = L.marker([32.720989, -41.187598], { icon: capital, title: 'Antaria', id: 'an_capital' }).bindPopup(generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
 		//Important
-		var an_archtree = L.marker([45.04985, -79.242103], { icon: important, title: 'Antarian Arch-Tree' }).bindPopup(generatePopupContent('Antarian Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
+		var an_archtree = L.marker([45.04985, -79.242103], { icon: important, title: 'Antarian Arch-Tree', id: 'an_archtree' }).bindPopup(generatePopupContent('Antarian Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
 		//Big Cities
-		var an_city = L.marker([12.640338, -35.859375], { icon: cityBig, title: 'Antarian Port City' }).bindPopup(generatePopupContent('Antarian Port City', 'Large City', 'A trade city in the HAE with a large port', false));
+		var an_city = L.marker([12.640338, -35.859375], { icon: cityBig, title: 'Antarian Port City', id: 'an_city' }).bindPopup(generatePopupContent('Antarian Port City', 'Large City', 'A trade city in the HAE with a large port', false));
 		//Small Cities
 		//Towns
-		var an_town = L.marker([-1.841265, -73.559396], { icon: town, title: 'Antarian Town' }).bindPopup(generatePopupContent('Antarian Town', 'Town', '', false));
-		var an_town2 = L.marker([18.293698, -115.356925], { icon: town, title: 'Antarian Town' }).bindPopup(generatePopupContent('Antarian Town', 'Town', '', false));
+		var an_town = L.marker([-1.841265, -73.559396], { icon: town, title: 'Antarian Town', id: 'an_town' }).bindPopup(generatePopupContent('Antarian Town', 'Town', '', false));
+		var an_town2 = L.marker([18.293698, -115.356925], { icon: town, title: 'Antarian Town', id: 'an_town2' }).bindPopup(generatePopupContent('Antarian Town', 'Town', '', false));
 		//Nature
+		
 
 		//Odrheim
-		var od_capital = L.marker([46.588506, 33.414077], { icon: capital, title: 'Odrheim Capital' }).bindPopup(generatePopupContent('Odrheim Capital', 'Capital', 'The capital of Odrheim', false));
+		var od_capital = L.marker([46.588506, 33.414077], { icon: capital, title: 'Odrheim Capital', id: 'od_capital' }).bindPopup(generatePopupContent('Odrheim Capital', 'Capital', 'The capital of Odrheim', false));
 		//Important
 		//Big Cities
 		//Small Cities
@@ -407,7 +528,7 @@
 		//Nature
 
 		//Tunglheimr
-		var th_capital = L.marker([41.364997, 70.145929], { icon: capital, title: 'Tungleheimr Capital' }).bindPopup(generatePopupContent('Tungleheimr Capital', 'Capital', 'The capital of Tunglheimr', false));
+		var th_capital = L.marker([41.364997, 70.145929], { icon: capital, title: 'Tungleheimr Capital', id: 'th_capital' }).bindPopup(generatePopupContent('Tungleheimr Capital', 'Capital', 'The capital of Tunglheimr', false));
 		//Important
 		//Big Cities
 		//Small Cities
@@ -415,9 +536,9 @@
 		//Nature
 
 		//Rheinland
-		var rh_capital = L.marker([15.641359, 138.427261], { icon: capital, title: 'Rheinland Capital' }).bindPopup(generatePopupContent('Rheinland Capital', 'Capital', 'The capital of Rheinland', false));
+		var rh_capital = L.marker([15.641359, 138.427261], { icon: capital, title: 'Rheinland Capital', id: 'rh_capital' }).bindPopup(generatePopupContent('Rheinland Capital', 'Capital', 'The capital of Rheinland', false));
 		//Important
-		var rh_archtree = L.marker([27.803884, 131.965833], { icon: important, title: 'Rheinland' }).bindPopup(generatePopupContent('Rheinland', 'Important Location', '', true, 'Arch-Trees'));
+		var rh_archtree = L.marker([27.803884, 131.965833], { icon: important, title: 'Rheinland', id: 'rh_archtree' }).bindPopup(generatePopupContent('Rheinland', 'Important Location', '', true, 'Arch-Trees'));
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -432,7 +553,7 @@
 		//Nature
 
 		//Azurith
-		var az_capital = L.marker([-23.271278, 104.100923], { icon: capital, title: 'Azurith Capital' }).bindPopup(generatePopupContent('Azurith Capital', 'Capital', 'The capital of Azurith', false));
+		var az_capital = L.marker([-23.271278, 104.100923], { icon: capital, title: 'Azurith Capital', id: 'az_capital' }).bindPopup(generatePopupContent('Azurith Capital', 'Capital', 'The capital of Azurith', false));
 		//Important
 		//Big Cities
 		//Small Cities
@@ -440,61 +561,61 @@
 		//Nature
 
 		//Tsuki
-		var ts_capital = L.marker([-26.786247, 10.234271], { icon: capital, title: 'Getsuyōsei' }).bindPopup(generatePopupContent('Getsuyōsei', 'Capital', 'The capital of Tsuki Ōkoku', true));
+		var ts_capital = L.marker([-26.786247, 10.234271], { icon: capital, title: 'Getsuyōsei', id: 'ts_capital' }).bindPopup(generatePopupContent('Getsuyōsei', 'Capital', 'The capital of Tsuki Ōkoku', true));
 		//Important
-		var ts_archtree = L.marker([-17.677522, 10.600598], { icon: important, title: 'Tsuki Arch-Tree' }).bindPopup(generatePopupContent('Tsuki Arch-Tree', 'Important Location', 'The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.', true, 'Arch-Trees'));
-		var ts_mizunoiwaya = L.marker([-52.329725, 58.377932], { icon: important, title: 'Mizu-no-Iwaya' }).bindPopup(generatePopupContent('Mizu-no-Iwaya', 'Important Location', 'The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.', false));
+		var ts_archtree = L.marker([-17.677522, 10.600598], { icon: important, title: 'Tsuki Arch-Tree', id: 'ts_archtree' }).bindPopup(generatePopupContent('Tsuki Arch-Tree', 'Important Location', 'The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.', true, 'Arch-Trees'));
+		var ts_mizunoiwaya = L.marker([-52.329725, 58.377932], { icon: important, title: 'Mizu-no-Iwaya', id: 'ts_mizunoiwaya' }).bindPopup(generatePopupContent('Mizu-no-Iwaya', 'Important Location', 'The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.', false));
 		//Big Cities
-		var ts_sōgenshima = L.marker([-13.88388, 37.332231], { icon: cityBig, title: 'Sōgenshima' }).bindPopup(generatePopupContent('Sōgenshima', 'Large City', '', false));
-		var ts_kinshū = L.marker([-34.127172, -11.480145], { icon: cityBig, title: 'Kinshū' }).bindPopup(generatePopupContent('Kinshū', 'Large City', 'A trading city, main trading partners are Trade Company and Primoria.', false));
-		var ts_hikari = L.marker([-50.232027, 66.709798], { icon: cityBig, title: 'Hikari no Toshi' }).bindPopup(generatePopupContent('Hikari no Toshi', 'Large City', '', false));
+		var ts_sōgenshima = L.marker([-13.88388, 37.332231], { icon: cityBig, title: 'Sōgenshima', id: 'ts_sōgenshima' }).bindPopup(generatePopupContent('Sōgenshima', 'Large City', '', false));
+		var ts_kinshū = L.marker([-34.127172, -11.480145], { icon: cityBig, title: 'Kinshū', id: 'ts_kinshū' }).bindPopup(generatePopupContent('Kinshū', 'Large City', 'A trading city, main trading partners are Trade Company and Primoria.', false));
+		var ts_hikari = L.marker([-50.232027, 66.709798], { icon: cityBig, title: 'Hikari no Toshi', id: 'ts_hikari' }).bindPopup(generatePopupContent('Hikari no Toshi', 'Large City', '', false));
 		//Small Cities
-		var ts_amagumo = L.marker([-32.556313, 28.080238], { icon: citySmall, title: 'Amagumo' }).bindPopup(generatePopupContent('Amagumo', 'Small City', '', false));
-		var ts_yozora = L.marker([-60.418733, 26.314855], { icon: citySmall, title: 'Yozora' }).bindPopup(generatePopupContent('Yozora', 'Small City', '', false));
-		var ts_kōun = L.marker([-17.927417, 65.51944], { icon: citySmall, title: 'Kōun' }).bindPopup(generatePopupContent('Kōun', 'Small City', '', false));
-		var ts_shingetsu = L.marker([-35.440072, 48.867281], { icon: citySmall, title: 'Shingetsu' }).bindPopup(generatePopupContent('Shingetsu', 'Small City', '', false));
-		var ts_engetsu = L.marker([-45.070751, 14.763658], { icon: citySmall, title: 'Engetsu' }).bindPopup(generatePopupContent('Engetsu', 'Small City', '', false));
-		var ts_tsukimiya = L.marker([-40.933431, 81.082085], { icon: citySmall, title: 'Tsukimiya' }).bindPopup(generatePopupContent('Tsukimiya', 'Small City', 'Small city, mainly for communication and trade with eastern and northen countries', false));
+		var ts_amagumo = L.marker([-32.556313, 28.080238], { icon: citySmall, title: 'Amagumo', id: 'ts_amagumo' }).bindPopup(generatePopupContent('Amagumo', 'Small City', '', false));
+		var ts_yozora = L.marker([-60.418733, 26.314855], { icon: citySmall, title: 'Yozora', id: 'ts_yozora' }).bindPopup(generatePopupContent('Yozora', 'Small City', '', false));
+		var ts_kōun = L.marker([-17.927417, 65.51944], { icon: citySmall, title: 'Kōun', id: 'ts_kōun' }).bindPopup(generatePopupContent('Kōun', 'Small City', '', false));
+		var ts_shingetsu = L.marker([-35.440072, 48.867281], { icon: citySmall, title: 'Shingetsu', id: 'ts_shingetsu' }).bindPopup(generatePopupContent('Shingetsu', 'Small City', '', false));
+		var ts_engetsu = L.marker([-45.070751, 14.763658], { icon: citySmall, title: 'Engetsu', id: 'ts_engetsu' }).bindPopup(generatePopupContent('Engetsu', 'Small City', '', false));
+		var ts_tsukimiya = L.marker([-40.933431, 81.082085], { icon: citySmall, title: 'Tsukimiya', id: 'ts_tsukimiya' }).bindPopup(generatePopupContent('Tsukimiya', 'Small City', 'Small city, mainly for communication and trade with eastern and northen countries', false));
 		//Towns
-		var ts_asahi = L.marker([-1.52557, 55.842131], { icon: town, title: 'Asahi' }).bindPopup(generatePopupContent('Asahi', 'Town', 'A small town, disproportionately big military presence compared to its civilian population due to its proximity to the HAE', false));
-		var ts_yūnagi = L.marker([-38.316604, 56.327448], { icon: town, title: 'Yūnagi' }).bindPopup(generatePopupContent('Yūnagi', 'Town', '', false));
-		var ts_tsukiakari = L.marker([-38.837327, 4.772362], { icon: town, title: 'Tsukiakari' }).bindPopup(generatePopupContent('Tsukiakari', 'Town', '', false));
-		var ts_suzuran = L.marker([-55.861359, 44.071459], { icon: town, title: 'Suzuran' }).bindPopup(generatePopupContent('Suzuran', 'Town', '', false));
-		var ts_yūdachi = L.marker([-40.044885, 3.08464], { icon: town, title: 'Yūdachi' }).bindPopup(generatePopupContent('Yūdachi', 'Town', '', false));
-		var ts_haruka = L.marker([-28.800823, 72.574947], { icon: town, title: 'Haruka' }).bindPopup(generatePopupContent('Haruka', 'Town', '', false));
-		var ts_kōri = L.marker([-62.13469, 65.332354], { icon: town, title: 'Kōri' }).bindPopup(generatePopupContent('Kōri', 'Town', '', false));
+		var ts_asahi = L.marker([-1.52557, 55.842131], { icon: town, title: 'Asahi', id: 'ts_asahi' }).bindPopup(generatePopupContent('Asahi', 'Town', 'A small town, disproportionately big military presence compared to its civilian population due to its proximity to the HAE', false));
+		var ts_yūnagi = L.marker([-38.316604, 56.327448], { icon: town, title: 'Yūnagi', id: 'ts_yūnagi' }).bindPopup(generatePopupContent('Yūnagi', 'Town', '', false));
+		var ts_tsukiakari = L.marker([-38.837327, 4.772362], { icon: town, title: 'Tsukiakari', id: 'ts_tsukiakari' }).bindPopup(generatePopupContent('Tsukiakari', 'Town', '', false));
+		var ts_suzuran = L.marker([-55.861359, 44.071459], { icon: town, title: 'Suzuran', id: 'ts_suzuran' }).bindPopup(generatePopupContent('Suzuran', 'Town', '', false));
+		var ts_yūdachi = L.marker([-40.044885, 3.08464], { icon: town, title: 'Yūdachi', id: 'ts_yūdachi' }).bindPopup(generatePopupContent('Yūdachi', 'Town', '', false));
+		var ts_haruka = L.marker([-28.800823, 72.574947], { icon: town, title: 'Haruka', id: 'ts_haruka' }).bindPopup(generatePopupContent('Haruka', 'Town', '', false));
+		var ts_kōri = L.marker([-62.13469, 65.332354], { icon: town, title: 'Kōri', id: 'ts_kōri' }).bindPopup(generatePopupContent('Kōri', 'Town', '', false));
 		//Nature
-		var ts_hanabira = L.marker([-52.306608, 37.804889], { icon: nature, title: 'Hanabira Nagare' }).bindPopup(generatePopupContent('Hanabira Nagare', 'Lake', '', false));
-		var ts_yama = L.marker([-36.031332, 57.919922], { icon: nature, title: 'Yama no Kyōfū' }).bindPopup(generatePopupContent('Yama no Kyōfū', 'Mountain', 'The largest mountain range in Tsuki Ōkoku', false));
-		var ts_gekkōzan = L.marker([-30.524413, 37.705078], { icon: nature, title: 'Gekkōzan' }).bindPopup(generatePopupContent('Gekkōzan', 'Mountain', '', false));
-		var ts_hikarinomori = L.marker([-16.910568, 0.642627], { icon: nature, title: 'Hikari no Mori' }).bindPopup(generatePopupContent('Hikari no Mori', 'Forest', '', false));
-		var ts_mizuhanabira = L.marker([-50.176898, 50.712891], { icon: nature, title: 'Mizu Hanabira no Mori' }).bindPopup(generatePopupContent('Mizu Hanabira no Mori', 'Forest', '', false));
-		var ts_tsukiakari = L.marker([-18.452263, 32.228559], { icon: nature, title: 'Tsukiakari' }).bindPopup(generatePopupContent('Tsukiakari', 'Forest', '', false));
-		var ts_kori = L.marker([-63.726971, 54.595624], { icon: nature, title: 'Kōri Kaisen' }).bindPopup(generatePopupContent('Kōri Kaisen', 'Shore', '', false));
+		var ts_hanabira = L.marker([-52.306608, 37.804889], { icon: nature, title: 'Hanabira Nagare', id: 'ts_hanabira' }).bindPopup(generatePopupContent('Hanabira Nagare', 'Lake', '', false));
+		var ts_yama = L.marker([-36.031332, 57.919922], { icon: nature, title: 'Yama no Kyōfū', id: 'ts_yama' }).bindPopup(generatePopupContent('Yama no Kyōfū', 'Mountain', 'The largest mountain range in Tsuki Ōkoku', false));
+		var ts_gekkōzan = L.marker([-30.524413, 37.705078], { icon: nature, title: 'Gekkōzan', id: 'ts_gekkōzan' }).bindPopup(generatePopupContent('Gekkōzan', 'Mountain', '', false));
+		var ts_hikarinomori = L.marker([-16.910568, 0.642627], { icon: nature, title: 'Hikari no Mori', id: 'ts_hikarinomori' }).bindPopup(generatePopupContent('Hikari no Mori', 'Forest', '', false));
+		var ts_mizuhanabira = L.marker([-50.176898, 50.712891], { icon: nature, title: 'Mizu Hanabira no Mori', id: 'ts_mizuhanabira' }).bindPopup(generatePopupContent('Mizu Hanabira no Mori', 'Forest', '', false));
+		var ts_tsukiakari = L.marker([-18.452263, 32.228559], { icon: nature, title: 'Tsukiakari', id: 'ts_tsukiakari' }).bindPopup(generatePopupContent('Tsukiakari', 'Forest', '', false));
+		var ts_kori = L.marker([-63.726971, 54.595624], { icon: nature, title: 'Kōri Kaisen', id: 'ts_kori' }).bindPopup(generatePopupContent('Kōri Kaisen', 'Shore', '', false));
 
 		//Primoria
-		var pr_capital = L.marker([-26.181457, -61.49786], { icon: capital, title: 'Primorian Capital' }).bindPopup(generatePopupContent('Primorian Capital', 'Capital', 'The capital of Primoria', false));
+		var pr_capital = L.marker([-26.181457, -61.49786], { icon: capital, title: 'Primorian Capital', id: 'pr_capital' }).bindPopup(generatePopupContent('Primorian Capital', 'Capital', 'The capital of Primoria', false));
 		//Important
-		var pr_archtree = L.marker([-56.703904, -69.146122], { icon: important, title: 'Primorian Arch-Tree' }).bindPopup(generatePopupContent('Primorian Arch-Tree', 'Important Location', 'The Arch-Tree in Primoria', true, 'Arch-Trees'));
+		var pr_archtree = L.marker([-56.703904, -69.146122], { icon: important, title: 'Primorian Arch-Tree', id: 'pr_archtree' }).bindPopup(generatePopupContent('Primorian Arch-Tree', 'Important Location', 'The Arch-Tree in Primoria', true, 'Arch-Trees'));
 		//Big Cities
 		//Small Cities
 		//Towns
 		//Nature
 
 		//Dryadalis
-		var dr_capital = L.marker([-39.842286, -136.933594], { icon: capital, title: 'Aeternum' }).bindPopup(generatePopupContent('Aeternum', 'Capital ', 'The capital of Dryadalis', false));
+		var dr_capital = L.marker([-39.842286, -136.933594], { icon: capital, title: 'Aeternum', id: 'dr_capital' }).bindPopup(generatePopupContent('Aeternum', 'Capital ', 'The capital of Dryadalis', false));
 		//Important
 		//Big Cities
-		var dr_eldorath = L.marker([-51.123378, -128.277507], { icon: cityBig, title: 'Eldorath' }).bindPopup(generatePopupContent('Eldorath', 'Large City', '', false));
+		var dr_eldorath = L.marker([-51.123378, -128.277507], { icon: cityBig, title: 'Eldorath', id: 'dr_eldorath' }).bindPopup(generatePopupContent('Eldorath', 'Large City', '', false));
 		//Small Cities
-		var dr_faerwyn = L.marker([-49.111661, -155.112608], { icon: citySmall, title: 'Faerwyn' }).bindPopup(generatePopupContent('Faerwyn', 'Small City', '', false));
+		var dr_faerwyn = L.marker([-49.111661, -155.112608], { icon: citySmall, title: 'Faerwyn', id: 'dr_faerwyn' }).bindPopup(generatePopupContent('Faerwyn', 'Small City', '', false));
 		//Towns
-		var dr_elaris = L.marker([-46.664566, -142.44974], { icon: town, title: 'Elaris' }).bindPopup(generatePopupContent('Elaris', 'Town', '', false));
-		var dr_galadrim = L.marker([-57.328012, -139.768383], { icon: town, title: 'Galadrim' }).bindPopup(generatePopupContent('Galadrim', 'Town', '', false));
+		var dr_elaris = L.marker([-46.664566, -142.44974], { icon: town, title: 'Elaris', id: 'dr_elaris' }).bindPopup(generatePopupContent('Elaris', 'Town', '', false));
+		var dr_galadrim = L.marker([-57.328012, -139.768383], { icon: town, title: 'Galadrim', id: 'dr_galadrim' }).bindPopup(generatePopupContent('Galadrim', 'Town', '', false));
 		//Nature
-		var dr_feywood = L.marker([-41.435969, -150.186067], { icon: nature, title: 'Feywood' }).bindPopup(generatePopupContent('Feywood', 'Forest', '', false));
-		var dr_lacus = L.marker([-49.323654, -150.75126], { icon: nature, title: 'Lacus Serenus' }).bindPopup(generatePopupContent('Lacus Serenus', 'Lake', '', false));
-		var dr_verdantis = L.marker([-42.875964, -142.119141], { icon: nature, title: 'Verdantis Mons' }).bindPopup(generatePopupContent('Verdantis Mons', 'Mountain', '', false));
+		var dr_feywood = L.marker([-41.435969, -150.186067], { icon: nature, title: 'Feywood', id: 'dr_feywood' }).bindPopup(generatePopupContent('Feywood', 'Forest', '', false));
+		var dr_lacus = L.marker([-49.323654, -150.75126], { icon: nature, title: 'Lacus Serenus', id: 'dr_lacus' }).bindPopup(generatePopupContent('Lacus Serenus', 'Lake', '', false));
+		var dr_verdantis = L.marker([-42.875964, -142.119141], { icon: nature, title: 'Verdantis Mons', id: 'dr_verdantis' }).bindPopup(generatePopupContent('Verdantis Mons', 'Mountain', '', false));
 
 		//Trade Company
 
@@ -515,14 +636,14 @@
 		//Oceans
 
 		//Characters
-		var an_gerhard = L.marker([-2.372369, -72.685547], { icon: character, title: 'Gerhard von Eichenwald' }).bindPopup(generatePopupContent('Gerhard von Eichenwald', 'Character', 'Gerhards temporary camp in a small town in the Holy Antarian Empire', true, ));
-		var ts_nihil = L.marker([-41.980887, 32.348339], { icon: character, title: 'Nihil, the Eternal' }).bindPopup(generatePopupContent('Nihil, the Eternal', 'Character ', 'Currently in hiding after the great dragon purge.', true));
-		var an_aurumoria = L.marker([17.768594, -114.376119], { icon: character, title: 'Aurumoria, the Gilded Guardian' }).bindPopup(generatePopupContent('Aurumoria, the Gilded Guardian', 'Character ', 'Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.', true));
-		var ts_reiko = L.marker([-25.403585, 12.744141], { icon: character, title: 'Miyamoto Reiko' }).bindPopup(generatePopupContent('Miyamoto Reiko', 'Character', 'The current leader of Tsuki Ōkoku', true));
+		var an_gerhard = L.marker([-2.372369, -72.685547], { icon: character, title: 'Gerhard von Eichenwald', id: 'an_gerhard' }).bindPopup(generatePopupContent('Gerhard von Eichenwald', 'Character', 'Gerhards temporary camp in a small town in the Holy Antarian Empire', true, ));
+		var ts_nihil = L.marker([-41.980887, 32.348339], { icon: character, title: 'Nihil, the Eternal', id: 'ts_nihil' }).bindPopup(generatePopupContent('Nihil, the Eternal', 'Character ', 'Currently in hiding after the great dragon purge.', true));
+		var an_aurumoria = L.marker([17.768594, -114.376119], { icon: character, title: 'Aurumoria, the Gilded Guardian', id: 'an_aurumoria' }).bindPopup(generatePopupContent('Aurumoria, the Gilded Guardian', 'Character ', 'Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.', true));
+		var ts_reiko = L.marker([-25.403585, 12.744141], { icon: character, title: 'Miyamoto Reiko', id: 'ts_reiko' }).bindPopup(generatePopupContent('Miyamoto Reiko', 'Character', 'The current leader of Tsuki Ōkoku', true));
 
 		//Morturia
 		//Scientia
-		var sc_capital = L.marker([39.994442, 89.15887], { icon: capital, title: 'Scienta Capital' }).bindPopup(generatePopupContent('Scienta Capital', 'Capital', 'The capital of Scientia', false));
+		var sc_capital = L.marker([39.994442, 89.15887], { icon: capital, title: 'Scienta Capital', id: 'sc_capital' }).bindPopup(generatePopupContent('Scienta Capital', 'Capital', 'The capital of Scientia', false));
 		//Important
 
 		//Ardeat
@@ -549,10 +670,14 @@
 		var dv_coord = L.layerGroup([marker]);
 
 		var mo_capitals = L.layerGroup([sc_capital]);
+		var mo_citiesBig = L.layerGroup([])
+		var mo_citiesSmall = L.layerGroup([])
+		var mo_towns = L.layerGroup([])
+		var mo_nature = L.layerGroup([])
 		var mo_important = L.layerGroup([]);
 		var mo_characters = L.layerGroup([]);
 
-		var mo_all_layers = L.layerGroup([mo_capitals, mo_important, mo_characters]);
+		var mo_all_layers = L.layerGroup([mo_capitals, mo_citiesBig, mo_citiesSmall, mo_towns, mo_nature,  mo_important, mo_characters]);
 		
 		//Marker Overlay
 		var overlays = {
@@ -570,6 +695,10 @@
 			},
 			"Morturia": {
 				"Capitals": mo_capitals,
+				"Large Cities": mo_citiesBig,
+				"Small Cities": mo_citiesSmall,
+				"Towns": mo_towns,
+				"Nature": mo_nature,
 				"Important Locations": mo_important,
 				"Characters": mo_characters,
 			}
