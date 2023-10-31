@@ -18,6 +18,7 @@
             --foreground: #9f957e;
             --highlight: #ffe7ab;
 			--highlight2: #ddbc6a;
+			--highlight-background: #ddbd6a50;
         }
 
 	/* css to customize Leaflet default styles  */
@@ -286,7 +287,7 @@
 
 			var output = "";
 
-			if (id == 'ar' | 'od' | 'th' | 'rh' | 'az' | 'ts' | 'pr' | 'dr' | 'tc' | 'gi') {
+			if (id == "ar" || id == "od" || id == "th" || id == "rh" || id == "az" || id == "ts" || id == "pr" || id == "dr" || id == "tc" || id == "gi") {
 				switch(icon) {
 					case 'capital':
 						output += "var ar_capitals = L.layerGroup([";
@@ -610,7 +611,7 @@
 		//Rheinland
 		var rh_capital = L.marker([15.641359, 138.427261], { icon: capital, title: 'Rheinland Capital', id: 'rh_capital' }).bindPopup(generatePopupContent('Rheinland Capital', 'Capital', 'The capital of Rheinland', false));
 		//Important
-		var rh_archtree = L.marker([27.803884, 131.965833], { icon: important, title: 'Rheinland', id: 'rh_archtree' }).bindPopup(generatePopupContent('Rheinland', 'Important Location', '', true, 'Arch-Trees'));
+		var rh_archtree = L.marker([27.803884, 131.965833], { icon: important, title: 'Rheinland Arch-Tree', id: 'rh_archtree' }).bindPopup(generatePopupContent('Rheinland Arch-Tree', 'Important Location', '', false, 'Arch-Trees'));
 		//Big Cities
 		//Small Cities
 		//Towns
