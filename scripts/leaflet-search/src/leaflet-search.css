@@ -12,11 +12,23 @@
 	z-index:1000;	
 	margin-left: 10px;
 	margin-top: 10px;
+
+	border: 7px solid transparent;
+	border-image-source: url(https://eldenring.wiki.fextralife.com/file/Elden-Ring/elden-ring-wiki-guide-infobox-border.png);
+	border-image-width: 20px 40px;
+	border-image-repeat: round;
+	border-image-slice: 30 50 fill;
 }
 .leaflet-control-search.search-exp {/*expanded*/
 	background: #100f0feb;
 	border: 2px solid rgba(0,0,0,0.2);
 	background-clip: padding-box;	
+
+	border: 12px solid transparent;
+	border-image-source: url(https://eldenring.wiki.fextralife.com/file/Elden-Ring/elden-ring-wiki-guide-infobox-border.png);
+	border-image-width: 20px 40px;
+	border-image-repeat: round;
+	border-image-slice: 30 50 fill;
 }
 .leaflet-control-search .search-input {
 	display:block;

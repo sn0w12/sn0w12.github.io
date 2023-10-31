@@ -24,6 +24,12 @@
 	.leaflet-popup-content-wrapper {
 		background: var(--background);
 		color: var(--foreground);
+		border: 7px solid var(--background);
+		border-image-source: url(icons/border.png);
+		border-image-width: 20px 40px;
+		border-image-repeat: round;
+		border-image-slice: 30 50 fill;
+		border-radius: 4px;
 	}
 	.leaflet-popup-content-wrapper a:link {
 		color: var(--highlight);
@@ -68,11 +74,34 @@
 	.leaflet-control-layers-separator {
 		border-top: 1px solid var(--foreground);
 	}
+	.leaflet-control-zoom.leaflet-bar.leaflet-control {
+		border: 7px solid transparent;
+		border-image-source: url(icons/border.png);
+		border-image-width: 20px 40px;
+		border-image-repeat: round;
+		border-image-slice: 30 50 fill;
+	}
+	.leaflet-control-layers.leaflet-control {
+		border: 9px solid transparent;
+		border-image-source: url(icons/border.png);
+		border-image-width: 20px 40px;
+		border-image-repeat: round;
+		border-image-slice: 30 50 fill;
+	}
+	.leaflet-control-layers.leaflet-control.leaflet-control-layers-expanded {
+		border: 11px solid transparent;
+		border-image-source: url(icons/border.png);
+		border-image-width: 20px 40px;
+		border-image-repeat: round;
+		border-image-slice: 30 50 fill;
+	}
+	.leaflet-popup-close-button {
+		display: none;
+	}
 
 	.custom-container {
 			padding:5px;
 			border-radius:4px;
-			background: var(--background);
 			color: var(--foreground);
 			margin-top:8px;
         }
