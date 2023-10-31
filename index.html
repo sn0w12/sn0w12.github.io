@@ -41,6 +41,7 @@
 	.leaflet-bar a {
 		background: var(--background);
 		color: var(--foreground);
+		border-bottom: 1px solid var(--foreground);
 	}
 	.leaflet-bar a:hover {
 		background: var(--foreground);
@@ -62,12 +63,15 @@
 	}
 	.leaflet-popup-tip {
 		background: var(--background);
+		height: 95%;
+	}
+	.leaflet-control-layers-separator {
+		border-top: 1px solid var(--foreground);
 	}
 
 	.custom-container {
-            align-items: center;
-			margin:2px;
 			padding:5px;
+			border-radius:4px;
 			background: var(--background);
 			color: var(--foreground);
         }
@@ -95,6 +99,7 @@
 
         .custom-checkbox {
             margin-right: 5px;
+			accent-color: var(--highlight);
         }
 
         .custom-select {
@@ -110,6 +115,17 @@
         }
 
         .custom-button {
+            width: 97.5%;
+            margin:2px;
+			padding:2px 4px;
+			display:block;
+            box-sizing: border-box;
+			color:var(--foreground);
+			background: var(--background);
+			border-radius:4px;
+        }
+
+		.custom-title {
             width: 97.5%;
             margin:2px;
 			padding:2px 4px;
@@ -167,7 +183,7 @@
 				popupContent += '</a>';
 			}
 
-			var img1 = '<img style="height:20px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">'
+			var img1 = '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">'
 			var img2 = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">'
 			
 			popupContent += img1 + ' <i><font size="+0.5">' + category + '</font></i> ' + img2 + ' <br />' + description;
@@ -309,7 +325,8 @@
 
 		var formHTML = `
 			<div class="custom-container">
-				<span class="custom-input">Marker Maker</span>
+				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
+				<img style="height:3px;width: 100%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 0px; margin-top: 0px;" src="icons/divider_small.png" alt="map popup divider">
 				<select class="custom-select" name="Id" id="Id">
 					<option value="ar">Antaria</option>
 					<option value="od">Odrheim</option>
@@ -598,10 +615,7 @@
 					map.addControl(controlSearchAr);
 					map.removeControl(controlSearchMo);
 
-					map.removeLayer(mo_capitals);
-					map.removeLayer(mo_characters);
-					map.removeLayer(mo_important);
-
+					map.removeLayer(mo_all_layers);
 					map.addLayer(ar_all_layers);
 
 					// Check the main checkbox
@@ -613,10 +627,7 @@
 					map.addControl(controlSearchAr);
 					map.removeControl(controlSearchMo);
 
-					map.removeLayer(mo_capitals);
-					map.removeLayer(mo_characters);
-					map.removeLayer(mo_important);
-
+					map.removeLayer(mo_all_layers);
 					map.removeLayer(ar_all_layers);
 
 					// Uncheck the main checkbox
@@ -629,10 +640,7 @@
 					map.addControl(controlSearchMo);
 
 					map.removeLayer(ar_all_layers);
-
-					map.addLayer(mo_capitals);
-					map.addLayer(mo_characters);
-					map.addLayer(mo_important);
+					map.addLayer(mo_all_layers);
 
 					// Check the main checkbox
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
@@ -644,10 +652,7 @@
 					map.addControl(controlSearchMo);
 
 					map.removeLayer(ar_all_layers);
-
-					map.removeLayer(mo_capitals);
-					map.removeLayer(mo_characters);
-					map.removeLayer(mo_important);
+					map.removeLayer(mo_all_layers);
 
 					// Uncheck the main checkbox
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
