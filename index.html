@@ -89,7 +89,7 @@
 		border-image-slice: 30 50 fill;
 	}
 	.leaflet-control-layers.leaflet-control.leaflet-control-layers-expanded {
-		border: 11px solid transparent;
+		border: 12px solid transparent;
 		border-image-source: url(icons/border.png);
 		border-image-width: 20px 40px;
 		border-image-repeat: round;
@@ -248,7 +248,7 @@
 				output += firstTitle.toLowerCase();
 			}
 			
-			output += ' = (' + coords + ', { icon: ' + icon + ", title: '" + title + "', id: " + "'" + newId  + "' }).bindPopup(generatePopupContent('" + title + "', '" + category + "', '" + description + "', ";
+			output += ' = L.marker(' + coords + ', { icon: ' + icon + ", title: '" + title + "', id: " + "'" + newId  + "' }).bindPopup(generatePopupContent('" + title + "', '" + category + "', '" + description + "', ";
 
 			if (linkEnabled) {
 				output += 'true';
@@ -272,6 +272,7 @@
 				}
 				output += layersFinal + newId + "]).addTo(map);";
 				console.log(output);
+				document.getElementById('LayerGroupOutput').value = output;
 		}
 
 		function generateGroups(id, title, customId, icon) {
@@ -290,32 +291,37 @@
 					case 'capital':
 						output += "var ar_capitals = L.layerGroup([";
 						var layers = ar_capitals.getLayers();
-						output = generate(output, layers, newId);
+						generate(output, layers, newId);
 						break;
 					case 'citiesBig':
 						output += "var ar_citiesBig = L.layerGroup([";
 						var layers = ar_citiesBig.getLayers();
-						output = generate(output, layers, newId);
+						generate(output, layers, newId);
 						break;
 					case 'citiesSmall':
 						output += "var ar_citiesSmall = L.layerGroup([";
 						var layers = ar_citiesSmall.getLayers();
-						output = generate(output, layers, newId);
+						generate(output, layers, newId);
 						break;
 					case 'towns':
 						output += "var ar_towns = L.layerGroup([";
 						var layers = ar_towns.getLayers();
-						output = generate(output, layers, newId);
+						generate(output, layers, newId);
+						break;
+					case 'nature':
+						output += "var ar_nature = L.layerGroup([";
+						var layers = ar_nature.getLayers();
+						generate(output, layers, newId);
 						break;
 					case 'important':
 						output += "var ar_important = L.layerGroup([";
 						var layers = ar_important.getLayers();
-						output = generate(output, layers, newId);
+						generate(output, layers, newId);
 						break;
 					case 'characters':
 						output += "var ar_characters = L.layerGroup([";
 						var layers = ar_characters.getLayers();
-						output = generate(output, layers, newId);
+						generate(output, layers, newId);
 						break;
 					default:
 						// code block
@@ -325,32 +331,37 @@
 						case 'capital':
 							output += "var mo_capitals = L.layerGroup([";
 							var layers = mo_capitals.getLayers();
-							output = generate(output, layers, newId);
+							generate(output, layers, newId);
 							break;
 						case 'citiesBig':
 							output += "var mo_citiesBig = L.layerGroup([";
 							var layers = mo_citiesBig.getLayers();
-							output = generate(output, layers, newId);
+							generate(output, layers, newId);
 							break;
 						case 'citiesSmall':
 							output += "var mo_citiesSmall = L.layerGroup([";
 							var layers = mo_citiesSmall.getLayers();
-							output = generate(output, layers, newId);
+							generate(output, layers, newId);
 							break;
 						case 'towns':
 							output += "var mo_towns = L.layerGroup([";
 							var layers = mo_towns.getLayers();
-							output = generate(output, layers, newId);
+							generate(output, layers, newId);
+							break;
+						case 'nature':
+							output += "var mo_nature = L.layerGroup([";
+							var layers = mo_nature.getLayers();
+							generate(output, layers, newId);
 							break;
 						case 'important':
 							output += "var mo_important = L.layerGroup([";
 							var layers = mo_important.getLayers();
-							output = generate(output, layers, newId);
+							generate(output, layers, newId);
 							break;
 						case 'characters':
 							output += "var mo_characters = L.layerGroup([";
 							var layers = mo_characters.getLayers();
-							output = generate(output, layers, newId);
+							generate(output, layers, newId);
 							break;
 						default:
 							// code block
@@ -467,10 +478,38 @@
 		var marker = L.marker([0, 0], {
 			draggable: true,
 		});
+		marker.on('dragend', function() {
+			marker.openPopup();
+			var coords = marker.getLatLng().toString();
+			coords = coords.replace('LatLng','');
+			coords = coords.replace('(','');
+			coords = coords.replace(')','');
+			var customId = document.getElementById('Coords').value = coords;
+			document.getElementById('DevButton').addEventListener('click', function() {
+				// Get values from input fields
+				var id = document.getElementById('Id').value;
+				var title = document.getElementById('Title').value;
+				var category = document.getElementById('Category').value;
+				var icon = document.getElementById('Icon').value;
+				var description = document.getElementById('Description').value;
+				var linkEnabled = document.getElementById('Link').checked;
+				var linkTitle = document.getElementById('LinkText').value;
+				var customId = document.getElementById('CustomId').value;
+				var coords = marker.getLatLng().toString();
+
+				// Call the generatePopupContent function
+				var output = generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId);
+				var groupOutput = generateGroups(id, title, customId, icon);
+
+				// Display the output in the 'Output' input field
+				document.getElementById('Output').value = output;
+			});
+		});
 
 		var formHTML = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
+				<input class="custom-input" type="text" id="Coords" placeholder="Coords"></input>
 				<img style="height:3px;width: 100%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 0px; margin-top: 0px;" src="icons/divider_small.png" alt="map popup divider">
 				<select class="custom-select" name="Id" id="Id">
 					<option value="ar">Antaria</option>
@@ -512,6 +551,11 @@
 			`;
 		marker.bindPopup(formHTML).openPopup();
 		marker.on('click', function(e) {
+			var coords = marker.getLatLng().toString();
+			coords = coords.replace('LatLng','');
+			coords = coords.replace('(','');
+			coords = coords.replace(')','');
+			var customId = document.getElementById('Coords').value = coords;
 			document.getElementById('DevButton').addEventListener('click', function() {
 				// Get values from input fields
 				var id = document.getElementById('Id').value;
@@ -530,7 +574,6 @@
 
 				// Display the output in the 'Output' input field
 				document.getElementById('Output').value = output;
-				document.getElementById('LayerGroupOutput').value = groupOutput;
 			});
 		});
 		
@@ -546,7 +589,7 @@
 		var an_town = L.marker([-1.841265, -73.559396], { icon: town, title: 'Antarian Town', id: 'an_town' }).bindPopup(generatePopupContent('Antarian Town', 'Town', '', false));
 		var an_town2 = L.marker([18.293698, -115.356925], { icon: town, title: 'Antarian Town', id: 'an_town2' }).bindPopup(generatePopupContent('Antarian Town', 'Town', '', false));
 		//Nature
-		
+		var ar_mountain = L.marker([27.302636, -81.285998], { icon: nature, title: 'Antarian Mountain Range', id: 'ar_mountain' }).bindPopup(generatePopupContent('Antarian Mountain Range', 'Mountain', 'The largest mountain range in Antaria', false));
 
 		//Odrheim
 		var od_capital = L.marker([46.588506, 33.414077], { icon: capital, title: 'Odrheim Capital', id: 'od_capital' }).bindPopup(generatePopupContent('Odrheim Capital', 'Capital', 'The capital of Odrheim', false));
@@ -690,7 +733,7 @@
 		var ar_citiesBig = L.layerGroup([ts_sōgenshima, ts_kinshū, ts_hikari, an_city, dr_eldorath]).addTo(map);
 		var ar_citiesSmall = L.layerGroup([ts_amagumo, ts_yozora, ts_kōun, ts_shingetsu, ts_engetsu, ts_tsukimiya, dr_faerwyn]).addTo(map);
 		var ar_towns = L.layerGroup([an_town, an_town2, ts_asahi, ts_yūnagi, ts_tsukiakari, ts_suzuran, ts_yūdachi, ts_haruka, ts_kōri, dr_elaris, dr_galadrim]).addTo(map);
-		var ar_nature = L.layerGroup([ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori, ts_tsukiakari, dr_feywood, dr_lacus, dr_verdantis]).addTo(map);
+		var ar_nature = L.layerGroup([ts_tsukiakari, ts_hanabira, ts_yama, ts_gekkōzan, ts_hikarinomori, ts_mizuhanabira, ts_kori, dr_feywood, dr_lacus, dr_verdantis, ar_mountain]).addTo(map);
 		var ar_important = L.layerGroup([ts_archtree, rh_archtree, an_archtree, pr_archtree, ts_mizunoiwaya]).addTo(map);
 		var ar_characters = L.layerGroup([an_gerhard, ts_nihil, an_aurumoria, ts_reiko]).addTo(map);
 
