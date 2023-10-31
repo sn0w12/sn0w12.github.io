@@ -12,69 +12,132 @@
 </head>
 
 <style>
+	/* colors  */
+	:root {
+            --background: #100f0feb;
+            --foreground: #9f957e;
+            --highlight: #ffe7ab;
+			--highlight2: #ddbc6a;
+        }
+
 	/* css to customize Leaflet default styles  */
 	.leaflet-popup-content-wrapper {
-		background: #100f0feb;
-		color: #9f957e;
+		background: var(--background);
+		color: var(--foreground);
 	}
 	.leaflet-popup-content-wrapper a:link {
-		color: #ffe7ab;
+		color: var(--highlight);
 	}
 	.leaflet-popup-content-wrapper a:visited {
-		color: #ddbc6a;
+		color: var(--highlight2);
 	}
 	.leaflet-control-layers {
-		background: #100f0feb;
-		color: #9f957e;
+		background: var(--background);
+		color: var(--foreground);
 	}
 	.leaflet-top .leaflet-left {
 		margin-top: 10px;
 	}
 	.leaflet-bar a {
-		background: #100f0feb;
-		color: #9f957e;
+		background: var(--background);
+		color: var(--foreground);
 	}
 	.leaflet-bar a:hover {
-		background: #9f957e;
-		color: #100f0feb;
+		background: var(--foreground);
+		color: var(--background);
 	}
 	.leaflet-control-layers-toggle {
 		background-image: url(icons/layers.png);
 		background-size: 30px 30px;
 	}
 	.leaflet-bar a.leaflet-disabled {
-		background: #100f0feb;
-		color: #9f957e;
+		background: var(--background);
+		color: var(--foreground);
 	}
 	.leaflet-control-layers-selector {
-		accent-color: #ffe7ab;
+		accent-color: var(--highlight);
 	}
 	.leaflet-control-layers-group-selector {
-		accent-color: #ddbc6a;
+		accent-color: var(--highlight2);
+	}
+	.leaflet-popup-tip {
+		background: var(--background);
 	}
 
-	/* width */
+	.custom-container {
+            align-items: center;
+			margin:2px;
+			padding:5px;
+			background: var(--background);
+			color: var(--foreground);
+        }
+
+        .custom-input {
+            margin:2px;
+			padding:5px;
+			display:block;
+			color:var(--foreground);
+			background: var(--background);
+			border-radius:4px;
+			text-decoration:none;	
+			white-space:nowrap;
+			width:245px;
+			accent-color: var(--highlight);
+			border: none;
+			outline: none;
+			border-bottom: 1px solid var(--foreground);
+        }
+
+		.custom-checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-checkbox {
+            margin-right: 5px;
+        }
+
+        .custom-select {
+			margin:2px;
+            width: 97.5%;
+            padding: 5px;
+			color:var(--foreground);
+			background: var(--background);
+			border-radius:4px;
+			border: none;
+			outline: none;
+			border-bottom: 1px solid var(--foreground);
+        }
+
+        .custom-button {
+            width: 97.5%;
+            margin:2px;
+			padding:2px 4px;
+			display:block;
+            box-sizing: border-box;
+			color:var(--foreground);
+			background: var(--background);
+			border-radius:4px;
+        }
+
+	/* scrollbar */
 	::-webkit-scrollbar {
 		width: 10px;
 	}
 
-	/* Track */
 	::-webkit-scrollbar-track {
-		background: #100f0feb;
+		background: var(--background);
 		border-radius: 4px;
 	}
 
-	/* Handle */
 	::-webkit-scrollbar-thumb {
-		background: #9f957e;
+		background: var(--foreground);
 		border-radius: 4px;
 	}
 
-	/* Handle on hover */
 	::-webkit-scrollbar-thumb:hover {
 		background: #555;
 	}
-
 	</style>
 
 <body style="height: 100%;margin: 0;overflow-y: hidden;overflow-x: hidden;">
@@ -111,6 +174,32 @@
 
 			return popupContent;
 		}
+
+		function generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords) {
+			var an_capital = L.marker([32.720989, -41.187598], { icon: capital, title: 'Antaria' }).bindPopup(generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
+
+			coords = coords.replace('LatLng','');
+			coords = coords.replace('(','[');
+			coords = coords.replace(')',']');
+
+			var firstTitle = title.replace(/ .*/,'');
+
+			var output = 'var ' + id + '_' + firstTitle.toLowerCase() + ' = (' + coords + ', { icon: ' + icon + ', title: ' + title + ' }).generatePopupContent(' + "'" + title + "', '" + category + "', '" + description + "', ";
+			if (linkEnabled) {
+				output += 'true';
+			} else {
+				output += 'false';
+			}
+
+			if (linkTitle) {
+				output += ", '" + linkTitle + "'));";
+			} else {
+				output += "));"
+			}
+			console.log(output)
+			return output;
+		}
+
 		var southWest = L.latLng(-70, -170),
 			northEast = L.latLng(70, 170),
 			bounds = L.latLngBounds(southWest, northEast);
@@ -217,9 +306,66 @@
 		var marker = L.marker([0, 0], {
 			draggable: true,
 		});
-		marker.bindPopup('LatLng Marker').openPopup();
-		marker.on('dragend', function (e) {
-			marker.getPopup().setContent(marker.getLatLng().toString()).openOn(map);
+
+		var formHTML = `
+			<div class="custom-container">
+				<span class="custom-input">Marker Maker</span>
+				<select class="custom-select" name="Id" id="Id">
+					<option value="ar">Antaria</option>
+					<option value="od">Odrheim</option>
+					<option value="th">Tunglheimr</option>
+					<option value="rh">Rheinland</option>
+					<option value="az">Azurith</option>
+					<option value="ts">Tsuki</option>
+					<option value="pr">Primoria</option>
+					<option value="dr">Dryadalis</option>
+					<option value="tc">Trade Company</option>
+					<option value="gi">Gigantoria</option>
+					<option value="ad">Ardeat</option>
+					<option value="ge">Gelida</option>
+					<option value="sc">Scientia</option>
+				</select>
+				<input class="custom-input" type="text" id="Title" placeholder="Title"></input>
+				<input class="custom-input" type="text" id="Category" placeholder="Category"></input>
+				<select class="custom-select" name="Icon" id="Icon">
+					<option value="capital">Capital</option>
+					<option value="citiesBig">Big City</option>
+					<option value="citiesSmall">Small City</option>
+					<option value="towns">Town</option>
+					<option value="nature">Nature</option>
+					<option value="important">Important Location</option>
+					<option value="characters">Character</option>
+				</select>
+				<input class="custom-input" type="text" id="Description" placeholder="Description"></input>
+				<div class="custom-checkbox-container">
+					<input class="custom-checkbox" type="checkbox" id="Link">
+					<label for="Link">Link?</label>
+				</div>
+				<input class="custom-input" type="text" id="LinkText" placeholder="Link Text (optional)"></input>
+				<button class="custom-button" id="DevButton">Generate</button>
+				<input class="custom-input" type="text" id="Output" placeholder="Output"></input>
+			</div>
+			`;
+		marker.bindPopup(formHTML).openPopup();
+		marker.on('click', function(e) {
+			document.getElementById('DevButton').addEventListener('click', function() {
+				// Get values from input fields
+				var id = document.getElementById('Id').value;
+				var title = document.getElementById('Title').value;
+				var category = document.getElementById('Category').value;
+				var icon = document.getElementById('Icon').value;
+				var description = document.getElementById('Description').value;
+				var linkEnabled = document.getElementById('Link').checked;
+				var linkTitle = document.getElementById('LinkText').value;
+				var coords = marker.getLatLng().toString();
+
+				// Call the generatePopupContent function
+				var output = generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords);
+
+				// Display the output in the 'Output' input field
+				document.getElementById('Output').value = output;
+				console.log(coords);
+			});
 		});
 
 		//Arathia	
