@@ -18,17 +18,21 @@
 	border-image-width: 20px 40px;
 	border-image-repeat: round;
 	border-image-slice: 30 50 fill;
+
+	border-radius: 10px;
 }
 .leaflet-control-search.search-exp {/*expanded*/
 	background: #100f0feb;
 	border: 2px solid rgba(0,0,0,0.2);
 	background-clip: padding-box;	
 
-	border: 10px solid transparent;
+	border: 11px solid transparent;
 	border-image-source: url(https://github.com/sn0w12/sn0w12.github.io/blob/main/icons/border.png?raw=true);
 	border-image-width: 20px 40px;
 	border-image-repeat: round;
 	border-image-slice: 30 50 fill;
+
+	border-radius: 13px;
 }
 .leaflet-control-search .search-input {
 	display:block;
