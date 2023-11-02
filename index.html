@@ -213,7 +213,7 @@
 
 <body style="height: 100%;margin: 0;overflow-y: hidden;overflow-x: hidden;">
 	<div id="map" style="width: 100%; height: 100%; background: #31565a;"></div>
-	<a class="leaflet-control-zoom-out" href="arathia" title="Zoom out" role="button"
+	<a class="leaflet-control-zoom-out" href="index" title="Zoom out" role="button"
         aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
 	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
 	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
@@ -224,9 +224,9 @@
 			// Add link if linkEnabled is true
 			if (linkEnabled) {
 				if (linkTitle) {
-					var link = '<a href="arathia#' + encodeURIComponent(linkTitle) + '" target="_blank">';
+					var link = '<a href="wiki#' + encodeURIComponent(linkTitle) + '" target="_blank">';
 				} else {
-					var link = '<a href="arathia#' + encodeURIComponent(title) + '" target="_blank">';
+					var link = '<a href="wiki#' + encodeURIComponent(title) + '" target="_blank">';
 				}
 				
 				popupContent += link;
@@ -1050,7 +1050,7 @@
 		// Replace the icon URL with the actual URL of the icon you want to use
 		const wikiButton = document.createElement('a');
 		wikiButton.className = 'leaflet-control-zoom-out';
-		wikiButton.href = 'arathia';
+		wikiButton.href = 'wiki';
 		wikiButton.target = '_blank';
 		wikiButton.title = 'Wiki';
 		wikiButton.role = 'button';
