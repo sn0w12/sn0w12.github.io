@@ -937,6 +937,7 @@
 					arathiaCheckbox.checked = true;
 					break;
 				case 'Arathia Clean':
+					map.addLayer(ar_all_layers);
 					map.removeLayer(ar_all_layers);
 					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
 					arathiaCheckbox.checked = false;
@@ -948,6 +949,7 @@
 					morturiaCheckbox.checked = true;
 					break;
 				case 'Morturia Clean':
+					map.addLayer(mo_all_layers);
 					map.removeLayer(mo_all_layers);
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
 					morturiaCheckbox.checked = false;
