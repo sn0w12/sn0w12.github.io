@@ -212,7 +212,7 @@
 	</style>
 
 <body style="height: 100%;margin: 0;overflow-y: hidden;overflow-x: hidden;">
-	<div id="map" style="width: 100%; height: 100%; background: #e9bf82;"></div>
+	<div id="map" style="width: 100%; height: 100%; background: #31565a;"></div>
 	<a class="leaflet-control-zoom-out" href="arathia" title="Zoom out" role="button"
         aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
 	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
@@ -399,24 +399,41 @@
 			zoomDelta: 0.5,
 			wheelPxPerZoomLevel: 120,
 		}).setView([0, 0], 0);
+
+		map.createPane('basePane');
+		map.createPane('backgroundPane');
+
+		map.getPane('basePane').style.zIndex = 220;
+		map.getPane('backgroundPane').style.zIndex = 150;
+
 		var arathia = L.tileLayer('maps/arathia/{z}/{x}/{y}.png', {
 			continuousWorld: false,
 			noWrap: true,
 			minZoom: 2.75,
 			maxZoom: 5,
+			pane: 'basePane',
 		}).addTo(map);
 		var arathiaClean = L.tileLayer('maps/arathiaClean/{z}/{x}/{y}.png', {
 			continuousWorld: false,
 			noWrap: true,
 			minZoom: 2.75,
 			maxZoom: 5.5,
+			pane: 'basePane',
 		});
 		var morturia = L.tileLayer('maps/morturia/{z}/{x}/{y}.png', {
 			continuousWorld: false,
 			noWrap: true,
 			minZoom: 2.75,
 			maxZoom: 5.5,
+			pane: 'basePane',
 		});
+		var arathiaBackground = L.tileLayer('maps/arathiaBackground/{z}/{x}/{y}.png', {
+			continuousWorld: false,
+			noWrap: false,
+			minZoom: 2.75,
+			maxZoom: 5.5,
+			pane: 'backgroundPane',
+		}).addTo(map);
 
 		//Icons
 		var capital = L.icon({
@@ -684,7 +701,7 @@
 		//Primoria
 		var pr_capital = L.marker([-26.181457, -61.49786], { icon: capital, title: 'Primorian Capital', id: 'pr_capital' }).bindPopup(generatePopupContent('Primorian Capital', 'Capital', 'The capital of Primoria', false));
 		//Important
-		var pr_archtree = L.marker([-56.703904, -69.146122], { icon: important, title: 'Primorian Arch-Tree', id: 'pr_archtree' }).bindPopup(generatePopupContent('Primorian Arch-Tree', 'Important Location', 'The Arch-Tree in Primoria', true, 'Arch-Trees'));
+		var pr_archtree = L.marker([-54.521081, -69.169922], { icon: important, title: 'Primorian Arch-Tree', id: 'pr_archtree' }).bindPopup(generatePopupContent('Primorian Arch-Tree', 'Important Location', 'The Arch-Tree in Primoria', true, 'Arch-Trees'));
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -831,7 +848,7 @@
 				// Check which radio button is selected
 				if (radioButton.nextSibling.textContent.trim() === 'Arathia') {
 					currentMap = radioButton.nextSibling.textContent.trim();
-					map.getContainer().style.backgroundColor = '#e9bf82';
+					map.getContainer().style.backgroundColor = '#31565a';
 
 					map.addControl(controlSearchAr);
 					map.removeControl(controlSearchMo);
@@ -839,19 +856,23 @@
 					map.removeLayer(mo_all_layers);
 					map.addLayer(ar_all_layers);
 
+					map.addLayer(arathiaBackground);
+
 					// Check the main checkbox
 					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
 					arathiaCheckbox.checked = true;
 					addRadioButtons(iconChecked)
 				} else if (radioButton.nextSibling.textContent.trim() === 'Arathia Clean') {
 					currentMap = radioButton.nextSibling.textContent.trim();
-					map.getContainer().style.backgroundColor = '#e9bf82';
+					map.getContainer().style.backgroundColor = '#31565a';
 
 					map.addControl(controlSearchAr);
 					map.removeControl(controlSearchMo);
 
 					map.removeLayer(mo_all_layers);
 					map.removeLayer(ar_all_layers);
+
+					map.addLayer(arathiaBackground);
 
 					// Uncheck the main checkbox
 					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
@@ -867,6 +888,8 @@
 					map.removeLayer(ar_all_layers);
 					map.addLayer(mo_all_layers);
 
+					map.removeLayer(arathiaBackground);
+
 					// Check the main checkbox
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
 					morturiaCheckbox.checked = true;
@@ -880,6 +903,8 @@
 
 					map.removeLayer(ar_all_layers);
 					map.removeLayer(mo_all_layers);
+
+					map.removeLayer(arathiaBackground);
 
 					// Uncheck the main checkbox
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
