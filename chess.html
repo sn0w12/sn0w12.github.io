@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<style>
+	:root {
+				--background: #100f0feb;
+				--foreground: #9f957e;
+				--highlight: #ffe7ab;
+				--highlight2: #ddbc6a;
+				--highlight-background: #ddbd6a50;
+        }
+
+	.chess {
+		padding-left: 0;
+		padding-right: 0;
+		margin: auto;
+		margin-top: 4%;
+		display: block;
+		width: 800px;
+		border: 16px solid transparent;
+		border-image-source: url(icons/border.png);
+		border-image-width: 20px 40px;
+		border-image-repeat: round;
+		border-image-slice: 30 50 fill;
+	}
+</style>
+
+<html>
+<head>
+	<title>Antarian</title>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="chesscreator.js"></script>
+	<!-- <script type="text/javascript" src="chesscreator_xiangqi.js"></script> -->
+	<!-- <script type="text/javascript" src="chesscreator.js"></script> -->
+</head>
+<body style="background-color: #100f0feb;">
+	<canvas id="chesscreator" class="chess" width="10000" height="10000">Canvas is not supported.</canvas>
+</body>
+</html>
+
+
+
+
+
