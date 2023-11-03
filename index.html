@@ -191,6 +191,17 @@
 			border-radius:4px;
         }
 
+		.custom-subtitle {
+            width: 97.5%;
+            margin-left:2px;
+			padding-top: 5px;
+			display:block;
+            box-sizing: border-box;
+			color:var(--foreground);
+			border-radius:4px;
+			text-align: left;
+        }
+
 	/* scrollbar */
 	::-webkit-scrollbar {
 		width: 10px;
@@ -247,6 +258,8 @@
 		}
 
 		function generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId) {
+			console.log(category);
+
 			coords = coords.replace('LatLng','');
 			coords = coords.replace('(','[');
 			coords = coords.replace(')',']');
@@ -513,6 +526,10 @@
 		});
 		marker.on('dragend', function() {
 			marker.openPopup();
+			markerMaker();
+		});
+
+		function markerMaker() {
 			var coords = marker.getLatLng().toString();
 			coords = coords.replace('LatLng','');
 			coords = coords.replace('(','');
@@ -522,8 +539,9 @@
 				// Get values from input fields
 				var id = document.getElementById('Id').value;
 				var title = document.getElementById('Title').value;
-				var category = document.getElementById('Category').value;
-				var icon = document.getElementById('Icon').value;
+				var icon = document.getElementById('Category').value;
+				var selectedCategory = document.getElementById('Category'); // not working
+				var category = selectedCategory.options[selectedCategory.selectedIndex].id;
 				var description = document.getElementById('Description').value;
 				var linkEnabled = document.getElementById('Link').checked;
 				var linkTitle = document.getElementById('LinkText').value;
@@ -536,14 +554,16 @@
 
 				// Display the output in the 'Output' input field
 				document.getElementById('Output').value = output;
-			});
-		});
+			})
+		}
 
 		var formHTML = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
+				<span class="custom-subtitle"><font size="-1">Coords</font></span>
 				<input class="custom-input" type="text" id="Coords" placeholder="Coords"></input>
 				<img style="height:3px;width: 100%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 0px; margin-top: 0px;" src="icons/divider_small.png" alt="map popup divider">
+				<span class="custom-subtitle"><font size="-1">Country</font></span>
 				<select class="custom-select" name="Id" id="Id">
 					<option value="ar">Antaria</option>
 					<option value="od">Odrheim</option>
@@ -560,25 +580,17 @@
 					<option value="sc">Scientia</option>
 				</select>
 				<input class="custom-input" type="text" id="Title" placeholder="Title"></input>
-				<select class="custom-select" name="Icon" id="Icon">
-					<option value="capital">Capital</option>
-					<option value="citiesBig">Big City</option>
-					<option value="citiesSmall">Small City</option>
-					<option value="towns">Town</option>
-					<option value="nature">Nature</option>
-					<option value="important">Important Location</option>
-					<option value="characters">Character</option>
-					</select>
+				<span class="custom-subtitle"><font size="-1">Category</font></span>
 				<select class="custom-select" name="Category" id="Category">
-					<option value="capital">Capital</option>
-					<option value="citiesBig">Big City</option>
-					<option value="citiesSmall">Small City</option>
-					<option value="towns">Town</option>
-					<option value="nature">Forest</option>
-					<option value="nature">Mountain</option>
-					<option value="nature">Cave</option>
-					<option value="important">Important Location</option>
-					<option value="characters">Character</option>
+					<option value="capital" id="Capital">Capital</option>
+					<option value="citiesBig" id="Big City">Big City</option>
+					<option value="citiesSmall" id="Small City">Small City</option>
+					<option value="towns"id="Town">Town</option>
+					<option value="nature" id="Forest">Forest</option>
+					<option value="nature" id="Mountain">Mountain</option>
+					<option value="nature" id="Cave">Cave</option>
+					<option value="important" id="Important Location">Important Location</option>
+					<option value="characters" id="Character">Character</option>
 					</select>
 				<input class="custom-input" type="text" id="Description" placeholder="Description"></input>
 				<div class="custom-checkbox-container">
@@ -593,49 +605,9 @@
 			</div>
 			`;
 
-		// Function to update the options of the "Category" dropdown
-		function updateCategoryOptions() {
-			var selectedIcon = iconDropdown.value;
-			var options = categoryOptions[selectedIcon] || [];
-
-			// Clear existing options
-			categoryDropdown.innerHTML = "";
-
-			// Add new options
-			options.forEach(function (option) {
-				var optionElement = document.createElement("option");
-				optionElement.value = option;
-				optionElement.textContent = option;
-				categoryDropdown.appendChild(optionElement);
-			});
-		}
-
 		marker.bindPopup(formHTML).openPopup();
 		marker.on('click', function(e) {
-			var coords = marker.getLatLng().toString();
-			coords = coords.replace('LatLng','');
-			coords = coords.replace('(','');
-			coords = coords.replace(')','');
-			var customId = document.getElementById('Coords').value = coords;
-			document.getElementById('DevButton').addEventListener('click', function() {
-				// Get values from input fields
-				var id = document.getElementById('Id').value;
-				var title = document.getElementById('Title').value;
-				var icon = document.getElementById('Category').value;
-				var category = document.getElementById('Category').text; // not working
-				var description = document.getElementById('Description').value;
-				var linkEnabled = document.getElementById('Link').checked;
-				var linkTitle = document.getElementById('LinkText').value;
-				var customId = document.getElementById('CustomId').value;
-				var coords = marker.getLatLng().toString();
-
-				// Call the generatePopupContent function
-				var output = generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId);
-				var groupOutput = generateGroups(id, title, customId, icon);
-
-				// Display the output in the 'Output' input field
-				document.getElementById('Output').value = output;
-			});
+			markerMaker();
 		});
 		
 		//Arathia	
