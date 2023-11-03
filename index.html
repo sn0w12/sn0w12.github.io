@@ -560,7 +560,6 @@
 					<option value="sc">Scientia</option>
 				</select>
 				<input class="custom-input" type="text" id="Title" placeholder="Title"></input>
-				<input class="custom-input" type="text" id="Category" placeholder="Category"></input>
 				<select class="custom-select" name="Icon" id="Icon">
 					<option value="capital">Capital</option>
 					<option value="citiesBig">Big City</option>
@@ -569,7 +568,18 @@
 					<option value="nature">Nature</option>
 					<option value="important">Important Location</option>
 					<option value="characters">Character</option>
-				</select>
+					</select>
+				<select class="custom-select" name="Category" id="Category">
+					<option value="capital">Capital</option>
+					<option value="citiesBig">Big City</option>
+					<option value="citiesSmall">Small City</option>
+					<option value="towns">Town</option>
+					<option value="nature">Forest</option>
+					<option value="nature">Mountain</option>
+					<option value="nature">Cave</option>
+					<option value="important">Important Location</option>
+					<option value="characters">Character</option>
+					</select>
 				<input class="custom-input" type="text" id="Description" placeholder="Description"></input>
 				<div class="custom-checkbox-container">
 					<input class="custom-checkbox" type="checkbox" id="Link">
@@ -582,6 +592,24 @@
 				<input class="custom-input" type="text" id="LayerGroupOutput" placeholder="Layer group output"></input>
 			</div>
 			`;
+
+		// Function to update the options of the "Category" dropdown
+		function updateCategoryOptions() {
+			var selectedIcon = iconDropdown.value;
+			var options = categoryOptions[selectedIcon] || [];
+
+			// Clear existing options
+			categoryDropdown.innerHTML = "";
+
+			// Add new options
+			options.forEach(function (option) {
+				var optionElement = document.createElement("option");
+				optionElement.value = option;
+				optionElement.textContent = option;
+				categoryDropdown.appendChild(optionElement);
+			});
+		}
+
 		marker.bindPopup(formHTML).openPopup();
 		marker.on('click', function(e) {
 			var coords = marker.getLatLng().toString();
@@ -593,8 +621,8 @@
 				// Get values from input fields
 				var id = document.getElementById('Id').value;
 				var title = document.getElementById('Title').value;
-				var category = document.getElementById('Category').value;
-				var icon = document.getElementById('Icon').value;
+				var icon = document.getElementById('Category').value;
+				var category = document.getElementById('Category').text; // not working
 				var description = document.getElementById('Description').value;
 				var linkEnabled = document.getElementById('Link').checked;
 				var linkTitle = document.getElementById('LinkText').value;
