@@ -2,7 +2,7 @@
 
 An interactive map for the world of Arathia                                                                                    
 **Interactive Map:** [sn0w12.github.io](https://sn0w12.github.io/) <br>
-**Wiki:** [https://sn0w12.github.io/arathia](https://sn0w12.github.io/arathia)
+**Wiki:** [https://sn0w12.github.io/wiki](https://sn0w12.github.io/wiki)
 
 ## Map Overview
 ### Arathia
