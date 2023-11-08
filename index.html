@@ -447,6 +447,13 @@
 			maxZoom: 5.4,
 			pane: 'backgroundPane',
 		}).addTo(map);
+		var morturiaBackground = L.tileLayer('maps/morturiaBackground/{z}/{x}/{y}.png', {
+			continuousWorld: false,
+			noWrap: false,
+			minZoom: 2.75,
+			maxZoom: 5.4,
+			pane: 'backgroundPane',
+		});
 
 		//Icons
 		var capital = L.icon({
@@ -856,6 +863,7 @@
 					map.removeLayer(mo_all_layers);
 					map.addLayer(ar_all_layers);
 
+					map.removeLayer(morturiaBackground);
 					map.addLayer(arathiaBackground);
 
 					// Check the main checkbox
@@ -872,6 +880,7 @@
 					map.removeLayer(mo_all_layers);
 					map.removeLayer(ar_all_layers);
 
+					map.removeLayer(morturiaBackground);
 					map.addLayer(arathiaBackground);
 
 					// Uncheck the main checkbox
@@ -880,7 +889,7 @@
 					addRadioButtons(iconChecked)
 				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia') {
 					currentMap = radioButton.nextSibling.textContent.trim();
-					map.getContainer().style.backgroundColor = '#211b16';
+					map.getContainer().style.backgroundColor = '#374539';
 
 					map.removeControl(controlSearchAr);
 					map.addControl(controlSearchMo);
@@ -889,6 +898,7 @@
 					map.addLayer(mo_all_layers);
 
 					map.removeLayer(arathiaBackground);
+					map.addLayer(morturiaBackground);
 
 					// Check the main checkbox
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
@@ -896,7 +906,7 @@
 					addRadioButtons(iconChecked)
 				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia Clean') {
 					currentMap = radioButton.nextSibling.textContent.trim();
-					map.getContainer().style.backgroundColor = '#211b16';
+					map.getContainer().style.backgroundColor = '#374539';
 
 					map.removeControl(controlSearchAr);
 					map.addControl(controlSearchMo);
@@ -905,6 +915,7 @@
 					map.removeLayer(mo_all_layers);
 
 					map.removeLayer(arathiaBackground);
+					map.addLayer(morturiaBackground);
 
 					// Uncheck the main checkbox
 					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
