@@ -233,67 +233,25 @@
 			var popupContent = '';
 
 			// Add link if linkEnabled is true
-			if (linkEnabled) {
-				if (linkTitle) {
-					var link = '<a href="wiki#' + encodeURIComponent(linkTitle) + '" target="_blank">';
-				} else {
-					var link = '<a href="wiki#' + encodeURIComponent(title) + '" target="_blank">';
-				}
-				
-				popupContent += link;
-			}
-			popupContent += '<b><font size="+0.5">' + title + '</font></b> <br />';
-
-			// Close link tag if linkEnabled is true
-			if (linkEnabled) {
-				popupContent += '</a>';
-			}
+			popupContent += linkEnabled 
+				? `<a href="wiki#${encodeURIComponent(linkTitle || title)}" target="_blank"><b><font size="+0.5">${title}</font></b> <br /></a>`
+				: `<b><font size="+0.5">${title}</font></b> <br />`;
 
 			var img1 = '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">'
 			var img2 = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">'
 			
-			popupContent += img1 + ' <i><font size="+0.5">' + category + '</font></i> ' + img2 + ' <br />' + description;
+			popupContent += `${img1}<i><font size="+0.5">${category}</font></i>${img2}<br />${description}`;
 
 			return popupContent;
 		}
 
 		function generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId) {
-			console.log(category);
+			coords = coords.replace('LatLng','').replace('(','[').replace(')',']');
 
-			coords = coords.replace('LatLng','');
-			coords = coords.replace('(','[');
-			coords = coords.replace(')',']');
+			var firstTitle = title.split(' ')[0].toLowerCase();
+			var newId = `${id}_${customId || firstTitle}`;
 
-			var firstTitle = title.replace(/ .*/,'');
-			var newId = id + '_'; 
-			if (customId) {
-				newId += customId;
-			} else {
-				newId += firstTitle.toLowerCase();
-			}
-
-			var output = 'var ' + id + '_'; 
-			if (customId) {
-				output += customId;
-			} else {
-				output += firstTitle.toLowerCase();
-			}
-			
-			output += ' = L.marker(' + coords + ', { icon: ' + icon + ", title: '" + title + "', id: " + "'" + newId  + "' }).bindPopup(generatePopupContent('" + title + "', '" + category + "', '" + description + "', ";
-
-			if (linkEnabled) {
-				output += 'true';
-			} else {
-				output += 'false';
-			}
-
-			if (linkTitle) {
-				output += ", '" + linkTitle + "'));";
-			} else {
-				output += "));"
-			}
-			console.log(output)
-			return output;
+			return `var ${newId} = L.marker(${coords}, { icon: ${icon}, title: '${title}', id: '${newId}' }).bindPopup(generatePopupContent('${title}', '${category}', '${description}', ${linkEnabled}, '${linkTitle || ''}'));`;
 		}
 
 		function generate(output, layers, newId) {
@@ -301,103 +259,41 @@
 				for (var i = 0; i < layers.length; i++) {
 					layersFinal += layers[i].options.id + ", ";
 				}
-				output += layersFinal + newId + "]).addTo(map);";
-				console.log(output);
-				document.getElementById('LayerGroupOutput').value = output;
+				document.getElementById('LayerGroupOutput').value = output += layersFinal + newId + "]).addTo(map);";
 		}
 
 		function generateGroups(id, title, customId, icon) {
-			var newId = id + '_'; 
-			var firstTitle = title.replace(/ .*/,'');
-			if (customId) {
-				newId += customId;
-			} else {
-				newId += firstTitle.toLowerCase();
-			}
-
+			var newId = id + '_' + (customId ? customId : title.split(' ')[0].toLowerCase());
 			var output = "";
 
-			if (id == "ar" || id == "od" || id == "th" || id == "rh" || id == "az" || id == "ts" || id == "pr" || id == "dr" || id == "tc" || id == "gi") {
-				switch(icon) {
-					case 'capital':
-						output += "var ar_capitals = L.layerGroup([";
-						var layers = ar_capitals.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'citiesBig':
-						output += "var ar_citiesBig = L.layerGroup([";
-						var layers = ar_citiesBig.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'citiesSmall':
-						output += "var ar_citiesSmall = L.layerGroup([";
-						var layers = ar_citiesSmall.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'towns':
-						output += "var ar_towns = L.layerGroup([";
-						var layers = ar_towns.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'nature':
-						output += "var ar_nature = L.layerGroup([";
-						var layers = ar_nature.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'important':
-						output += "var ar_important = L.layerGroup([";
-						var layers = ar_important.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'characters':
-						output += "var ar_characters = L.layerGroup([";
-						var layers = ar_characters.getLayers();
-						generate(output, layers, newId);
-						break;
-					default:
-						// code block
-					}
-			} else {
-				switch(icon) {
-					case 'capital':
-						output += "var mo_capitals = L.layerGroup([";
-						var layers = mo_capitals.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'citiesBig':
-						output += "var mo_citiesBig = L.layerGroup([";
-						var layers = mo_citiesBig.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'citiesSmall':
-						output += "var mo_citiesSmall = L.layerGroup([";
-						var layers = mo_citiesSmall.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'towns':
-						output += "var mo_towns = L.layerGroup([";
-						var layers = mo_towns.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'nature':
-						output += "var mo_nature = L.layerGroup([";
-						var layers = mo_nature.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'important':
-						output += "var mo_important = L.layerGroup([";
-						var layers = mo_important.getLayers();
-						generate(output, layers, newId);
-						break;
-					case 'characters':
-						output += "var mo_characters = L.layerGroup([";
-						var layers = mo_characters.getLayers();
-						generate(output, layers, newId);
-						break;
-					default:
-						// code block
-					}
-				}
+			var layerMappings = {
+				'ar': {
+					'capital': ar_capitals,
+					'citiesBig': ar_citiesBig,
+					'citiesSmall': ar_citiesSmall,
+					'towns': ar_towns,
+					'nature': ar_nature,
+					'important': ar_important,
+					'characters': ar_characters
+				},
+				'mo': {
+					'capital': mo_capitals,
+					'citiesBig': mo_citiesBig,
+					'citiesSmall': mo_citiesSmall,
+					'towns': mo_towns,
+					'nature': mo_nature,
+					'important': mo_important,
+					'characters': mo_characters
+				},
+			};
+
+			var currentLayers = layerMappings[id] && layerMappings[id][icon];
+			if (currentLayers) {
+				output += `var ${id}_${icon} = L.layerGroup([`;
+				var layers = currentLayers.getLayers();
+				generate(output, layers, newId);
+			}
+
 			return output;
 		}
 
@@ -419,113 +315,54 @@
 		map.getPane('basePane').style.zIndex = 220;
 		map.getPane('backgroundPane').style.zIndex = 150;
 
-		var arathia = L.tileLayer('maps/arathia/{z}/{x}/{y}.png', {
-			continuousWorld: false,
-			noWrap: true,
-			minZoom: 2.75,
-			maxZoom: 5.4,
-			pane: 'basePane',
-		}).addTo(map);
-		var arathiaClean = L.tileLayer('maps/arathiaClean/{z}/{x}/{y}.png', {
-			continuousWorld: false,
-			noWrap: true,
-			minZoom: 2.75,
-			maxZoom: 5.4,
-			pane: 'basePane',
-		});
-		var morturia = L.tileLayer('maps/morturia/{z}/{x}/{y}.png', {
-			continuousWorld: false,
-			noWrap: true,
-			minZoom: 2.75,
-			maxZoom: 5.4,
-			pane: 'basePane',
-		});
-		var arathiaBackground = L.tileLayer('maps/arathiaBackground/{z}/{x}/{y}.png', {
-			continuousWorld: false,
-			noWrap: false,
-			minZoom: 2.75,
-			maxZoom: 5.4,
-			pane: 'backgroundPane',
-		}).addTo(map);
-		var morturiaBackground = L.tileLayer('maps/morturiaBackground/{z}/{x}/{y}.png', {
-			continuousWorld: false,
-			noWrap: false,
-			minZoom: 2.75,
-			maxZoom: 5.4,
-			pane: 'backgroundPane',
-		});
+		function createMap(title, noWrap, minZoom, maxZoom, pane, add) {
+			if (add) {
+				return L.tileLayer(`maps/${title}/{z}/{x}/{y}.png`, {
+					continuousWorld: false,
+					noWrap: noWrap,
+					minZoom: minZoom,
+					maxZoom: maxZoom,
+					pane: pane,
+				}).addTo(map);
+			} else {
+				return L.tileLayer(`maps/${title}/{z}/{x}/{y}.png`, {
+					continuousWorld: false,
+					noWrap: noWrap,
+					minZoom: minZoom,
+					maxZoom: maxZoom,
+					pane: pane,
+				});
+			}
+		}
 
-		//Icons
-		var capital = L.icon({
-			iconUrl: 'icons/capital.png',
-			iconRetinaUrl: 'icons/capital.png',
-			shadowUrl: 'icons/shadow.png',
-			iconSize: [31, 41],
-			iconAnchor: [15, 41],
-			popupAnchor: [1, -34],
-			tooltipAnchor: [16, -28],
-			shadowSize: [41, 41]
-		});
-		var cityBig = L.icon({
-			iconUrl: 'icons/cityBig.png',
-			iconRetinaUrl: 'icons/cityBig.png',
-			shadowUrl: 'icons/shadow.png',
-			iconSize: [30, 41],
-			iconAnchor: [14, 41],
-			popupAnchor: [1, -34],
-			tooltipAnchor: [16, -28],
-			shadowSize: [41, 41]
-		});
-		var citySmall = L.icon({
-			iconUrl: 'icons/citySmall.png',
-			iconRetinaUrl: 'icons/citySmall.png',
-			shadowUrl: 'icons/shadow.png',
-			iconSize: [30, 41],
-			iconAnchor: [14, 41],
-			popupAnchor: [1, -34],
-			tooltipAnchor: [16, -28],
-			shadowSize: [41, 41]
-		});
-		var town = L.icon({
-			iconUrl: 'icons/town.png',
-			iconRetinaUrl: 'icons/town.png',
-			shadowUrl: 'icons/shadow.png',
-			iconSize: [31, 41],
-			iconAnchor: [15, 41],
-			popupAnchor: [1, -34],
-			tooltipAnchor: [16, -28],
-			shadowSize: [41, 41]
-		});
-		var nature = L.icon({
-			iconUrl: 'icons/nature.png',
-			iconRetinaUrl: 'icons/nature.png',
-			shadowUrl: 'icons/shadow.png',
-			iconSize: [30, 41],
-			iconAnchor: [14, 41],
-			popupAnchor: [1, -34],
-			tooltipAnchor: [16, -28],
-			shadowSize: [41, 41]
-		});
-		var important = L.icon({
-			iconUrl: 'icons/important.png',
-			iconRetinaUrl: 'icons/important.png',
-			shadowUrl: 'icons/shadow.png',
-			iconSize: [27, 41],
-			iconAnchor: [13, 41],
-			popupAnchor: [1, -34],
-			tooltipAnchor: [16, -28],
-			shadowSize: [41, 41]
-		});
-		var character = L.icon({
-			iconUrl: 'icons/character.png',
-			iconRetinaUrl: 'icons/character.png',
-			shadowUrl: 'icons/shadow.png',
-			iconSize: [31, 41],
-			iconAnchor: [15, 41],
-			popupAnchor: [1, -34],
-			tooltipAnchor: [16, -28],
-			shadowSize: [41, 41]
-		});
+		function createIcon(icon, iconSize, iconAnchor, popupAnchor) {
+			return L.icon({
+				iconUrl: `icons/${icon}.png`,
+				iconRetinaUrl: `icons/${icon}.png`,
+				shadowUrl: 'icons/shadow.png',
+				iconSize: iconSize,
+				iconAnchor: iconAnchor,
+				popupAnchor: popupAnchor,
+				tooltipAnchor: [16, -28],
+				shadowSize: [41, 41]
+			});
+		}
+
+		// Maps
+		var arathia = createMap('arathia', true, 2.75, 5.4, 'basePane', true);
+		var arathiaClean = createMap('arathiaClean', true, 2.75, 5.4, 'basePane', false);
+		var morturia = createMap('morturia', true, 2.75, 5.4, 'basePane', false);
+		var arathiaBackground = createMap('arathiaBackground', false, 2.75, 5.4, 'backgroundPane', true);
+		var morturiaBackground = createMap('morturiaBackground', false, 2.75, 5.4, 'backgroundPane', false);
+
+		// Icons
+		var capital = createIcon('capital', [31, 41], [15, 41], [1, -44])
+		var cityBig = createIcon('cityBig', [31, 41], [15, 41], [1, -44])
+		var citySmall = createIcon('citySmall', [31, 41], [15, 41], [1, -44])
+		var town = createIcon('town', [31, 41], [15, 41], [1, -44])
+		var nature = createIcon('nature', [31, 41], [15, 41], [1, -44])
+		var important = createIcon('important', [31, 41], [15, 41], [1, -44])
+		var character = createIcon('character', [31, 41], [15, 41], [1, -44])
 
 		//Coordinate Finder
 		var marker = L.marker([0, 0], {
@@ -537,17 +374,14 @@
 		});
 
 		function markerMaker() {
-			var coords = marker.getLatLng().toString();
-			coords = coords.replace('LatLng','');
-			coords = coords.replace('(','');
-			coords = coords.replace(')','');
+			var coords = marker.getLatLng().toString().replace('LatLng','').replace('(','').replace(')','');
 			var customId = document.getElementById('Coords').value = coords;
 			document.getElementById('DevButton').addEventListener('click', function() {
 				// Get values from input fields
 				var id = document.getElementById('Id').value;
 				var title = document.getElementById('Title').value;
 				var icon = document.getElementById('Category').value;
-				var selectedCategory = document.getElementById('Category'); // not working
+				var selectedCategory = document.getElementById('Category');
 				var category = selectedCategory.options[selectedCategory.selectedIndex].id;
 				var description = document.getElementById('Description').value;
 				var linkEnabled = document.getElementById('Link').checked;
@@ -847,91 +681,67 @@
 		var iconChecked = 1;
 		var currentMap = 'Arathia';
 
+		function updateMapStyles(map, backgroundColor, addControl, removeControl) {
+			map.getContainer().style.backgroundColor = backgroundColor;
+			map.addControl(addControl);
+			map.removeControl(removeControl);
+		}
+
+		function updateLayers(map, addLayers, removeLayers) {
+			removeLayers.forEach(layer => map.removeLayer(layer));
+			addLayers.forEach(layer => map.addLayer(layer));
+		}
+
+		function updateCheckbox(selectorIndex, checked) {
+			var checkbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[selectorIndex];
+			checkbox.checked = checked;
+		}
+
+		function getTrimmedText(node) {
+			return node.nextSibling.textContent.trim();
+		}
+
 		document.addEventListener('change', function (event) {
 			var radioButton = event.target;
 
-			// Check if the changed element is a radio button
 			if (radioButton.classList.contains('leaflet-control-layers-selector')) {
-				// Check which radio button is selected
-				if (radioButton.nextSibling.textContent.trim() === 'Arathia') {
-					currentMap = radioButton.nextSibling.textContent.trim();
-					map.getContainer().style.backgroundColor = '#31565a';
-
-					map.addControl(controlSearchAr);
-					map.removeControl(controlSearchMo);
-
-					map.removeLayer(mo_all_layers);
-					map.addLayer(ar_all_layers);
-
-					map.removeLayer(morturiaBackground);
-					map.addLayer(arathiaBackground);
-
-					// Check the main checkbox
-					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
-					arathiaCheckbox.checked = true;
-					addRadioButtons(iconChecked)
-				} else if (radioButton.nextSibling.textContent.trim() === 'Arathia Clean') {
-					currentMap = radioButton.nextSibling.textContent.trim();
-					map.getContainer().style.backgroundColor = '#31565a';
-
-					map.addControl(controlSearchAr);
-					map.removeControl(controlSearchMo);
-
-					map.removeLayer(mo_all_layers);
-					map.removeLayer(ar_all_layers);
-
-					map.removeLayer(morturiaBackground);
-					map.addLayer(arathiaBackground);
-
-					// Uncheck the main checkbox
-					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
-					arathiaCheckbox.checked = false;
-					addRadioButtons(iconChecked)
-				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia') {
-					currentMap = radioButton.nextSibling.textContent.trim();
-					map.getContainer().style.backgroundColor = '#374539';
-
-					map.removeControl(controlSearchAr);
-					map.addControl(controlSearchMo);
-
-					map.removeLayer(ar_all_layers);
-					map.addLayer(mo_all_layers);
-
-					map.removeLayer(arathiaBackground);
-					map.addLayer(morturiaBackground);
-
-					// Check the main checkbox
-					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
-					morturiaCheckbox.checked = true;
-					addRadioButtons(iconChecked)
-				} else if (radioButton.nextSibling.textContent.trim() === 'Morturia Clean') {
-					currentMap = radioButton.nextSibling.textContent.trim();
-					map.getContainer().style.backgroundColor = '#374539';
-
-					map.removeControl(controlSearchAr);
-					map.addControl(controlSearchMo);
-
-					map.removeLayer(ar_all_layers);
-					map.removeLayer(mo_all_layers);
-
-					map.removeLayer(arathiaBackground);
-					map.addLayer(morturiaBackground);
-
-					// Uncheck the main checkbox
-					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
-					morturiaCheckbox.checked = false;
-					addRadioButtons(iconChecked)
-				} 
+				currentMap = getTrimmedText(radioButton);
+				switch (currentMap) {
+					case 'Arathia':
+						updateMapStyles(map, '#31565a', controlSearchAr, controlSearchMo);
+						updateLayers(map, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground]);
+						updateCheckbox(0, true);
+						addRadioButtons(iconChecked);
+						break;
+					case 'Arathia Clean':
+						updateMapStyles(map, '#31565a', controlSearchAr, controlSearchMo);
+						updateLayers(map, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground]);
+						updateCheckbox(0, false);
+						addRadioButtons(iconChecked);
+						break;
+					case 'Morturia':
+						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
+						updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
+						updateCheckbox(2, true);
+						addRadioButtons(iconChecked);
+						break;
+					case 'Morturia Clean':
+						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
+						updateLayers(map, [morturiaBackground], [mo_all_layers, ar_all_layers, arathiaBackground]);
+						updateCheckbox(2, false);
+						addRadioButtons(iconChecked);
+						break;
+				}
 			} else if (radioButton.classList.contains('custom-radio-class')) {
-				if (radioButton.nextSibling.textContent.trim() === 'Default Icons') {
-					iconChecked = 1;
-					updateIcons(currentMap, iconChecked)
-				} else if (radioButton.nextSibling.textContent.trim() === 'Old Icons') {
-					iconChecked = 2;
-					updateIcons(currentMap, iconChecked)
-				} else if (radioButton.nextSibling.textContent.trim() === 'Simple Icons') {
-					iconChecked = 3;
-					updateIcons(currentMap, iconChecked)
+				var iconMap = {
+					'Default Icons': 1,
+					'Old Icons': 2,
+					'Simple Icons': 3
+				};
+				var iconType = getTrimmedText(radioButton);
+				if (iconMap.hasOwnProperty(iconType)) {
+					iconChecked = iconMap[iconType];
+					updateIcons(currentMap, iconChecked);
 				}
 			}
 		});
@@ -939,56 +749,45 @@
 		var oldSuffix = "";
 
 		function changeIcons(layers, suffix) {
-			var newIconUrl = layers[1].options.icon.options.iconUrl.replace(oldSuffix, '');
-			newIconUrl = newIconUrl.replace(".png", suffix + ".png");
-			newIconUrl = newIconUrl.replace(suffix + "icons", "icons");
-			console.log(newIconUrl);
+			var newIconUrl = layers[1].options.icon.options.iconUrl.replace(oldSuffix, '').replace(".png", suffix + ".png").replace(suffix + "icons", "icons");
 			layers[1].options.icon.options.iconUrl = newIconUrl;
 		}
 
 		function changeAllIcons(suffix) {
-			changeIcons(ar_capitals.getLayers(), suffix);
-			changeIcons(ar_citiesBig.getLayers(), suffix);
-			changeIcons(ar_citiesSmall.getLayers(), suffix);
-			changeIcons(ar_towns.getLayers(), suffix);
-			changeIcons(ar_nature.getLayers(), suffix);
-			changeIcons(ar_important.getLayers(), suffix);
-			changeIcons(ar_characters.getLayers(), suffix);
+			const layerGroups = [ar_capitals, ar_citiesBig, ar_citiesSmall, ar_towns, ar_nature, ar_important, ar_characters];
+			layerGroups.forEach(group => changeIcons(group.getLayers(), suffix));
 			oldSuffix = suffix;
 		}
 
+		function updateCheckbox(selectorIndex, checked) {
+			var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[selectorIndex];
+			arathiaCheckbox.checked = checked;
+		}
+
 		function updateIcons(currentMap, iconChecked) {
-			if (iconChecked === 1) {
-				changeAllIcons('')
-			} else if (iconChecked === 2) {
-				changeAllIcons('Old')
-			} else if (iconChecked === 3) {
-				changeAllIcons('Simple')
-			}
+			const suffixMap = {1: '', 2: 'Old', 3: 'Simple'};
+    		changeAllIcons(suffixMap[iconChecked] || '');
+
 			switch (currentMap) {
 				case 'Arathia':
 					map.removeLayer(ar_all_layers);
 					map.addLayer(ar_all_layers);
-					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
-					arathiaCheckbox.checked = true;
+					updateCheckbox(0, true)
 					break;
 				case 'Arathia Clean':
 					map.addLayer(ar_all_layers);
 					map.removeLayer(ar_all_layers);
-					var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[0];
-					arathiaCheckbox.checked = false;
+					updateCheckbox(0, false)
 					break;
 				case 'Morturia':
 					map.removeLayer(mo_all_layers);
 					map.addLayer(mo_all_layers);
-					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
-					morturiaCheckbox.checked = true;
+					updateCheckbox(2, true)
 					break;
 				case 'Morturia Clean':
 					map.addLayer(mo_all_layers);
 					map.removeLayer(mo_all_layers);
-					var morturiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[2];
-					morturiaCheckbox.checked = false;
+					updateCheckbox(2, false)
 					break;
 			}
 			addRadioButtons(iconChecked)
@@ -1003,26 +802,18 @@
 
 		// Wait for the DOM to be ready
 		function addRadioButtons(checked) {
-			// Function to create a radio button
-			function createRadioButton(label, value, checked) {
+			// Simplified createRadioButton function
+			function createRadioButton(label, value, isChecked) {
 				var radio = document.createElement("input");
 				radio.type = "radio";
 				radio.name = "layerSelector";
 				radio.value = value;
-
-				// Check the radio button if it should be selected by default
-				if (checked) {
-					radio.checked = true;
-				}
-
+				radio.checked = isChecked; // Direct assignment
 				radio.classList.add("custom-radio-class");
-
-				var textNode = document.createTextNode(label);
 
 				var labelElement = document.createElement("label");
 				labelElement.appendChild(radio);
-				labelElement.appendChild(textNode);
-
+				labelElement.appendChild(document.createTextNode(label));
 				return labelElement;
 			}
 
@@ -1033,61 +824,51 @@
 			var separatorDiv = document.createElement("div");
 			separatorDiv.classList.add("leaflet-control-layers-separator");
 			overlayContainer.appendChild(separatorDiv);
-			
-			// Create and append the first radio button (selected by default)
-			if (checked === 1) {
-				var radioButton1 = createRadioButton("Default Icons", "option1", true);
-				var radioButton2 = createRadioButton("Old Icons", "option2", false);
-				var radioButton3 = createRadioButton("Simple Icons", "option3", false);
-			} else if (checked === 2) {
-				var radioButton1 = createRadioButton("Default Icons", "option1", false);
-				var radioButton2 = createRadioButton("Old Icons", "option2", true);
-				var radioButton3 = createRadioButton("Simple Icons", "option3", false);
-			} else if (checked === 3) {
-				var radioButton1 = createRadioButton("Default Icons", "option1", false);
-				var radioButton2 = createRadioButton("Old Icons", "option2", false);
-				var radioButton3 = createRadioButton("Simple Icons", "option3", true);
-			}
-			radioButton1.classList.add("leaflet-control-layers-selector");
-			overlayContainer.appendChild(radioButton1);
-			radioButton2.classList.add("leaflet-control-layers-selector");
-			overlayContainer.appendChild(radioButton2);
-			radioButton3.classList.add("leaflet-control-layers-selector");
-			overlayContainer.appendChild(radioButton3);
+
+			// Radio buttons information
+			var radioButtonsInfo = [
+				{ label: "Default Icons", option: "option1", checkedIndex: 1 },
+				{ label: "Old Icons", option: "option2", checkedIndex: 2 },
+				{ label: "Simple Icons", option: "option3", checkedIndex: 3 }
+			];
+
+			// Loop to create and append radio buttons
+			radioButtonsInfo.forEach(info => {
+				var radioButton = createRadioButton(info.label, info.option, checked === info.checkedIndex);
+				radioButton.classList.add("leaflet-control-layers-selector");
+				overlayContainer.appendChild(radioButton);
+			});
 		};
 
-		// Injecting the new button into the existing zoom control
-		var zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
-		// Replace the icon URL with the actual URL of the icon you want to use
-		const wikiButton = document.createElement('a');
-		wikiButton.className = 'leaflet-control-zoom-out';
-		wikiButton.href = 'wiki';
-		wikiButton.target = '_blank';
-		wikiButton.title = 'Wiki';
-		wikiButton.role = 'button';
-		wikiButton.style.display = 'flex';
-		wikiButton.style.justifyContent = 'center';
-		wikiButton.style.alignItems = 'center';
+		function createWikiButton() {
+			const wikiButton = document.createElement('a');
+			wikiButton.className = 'leaflet-control-zoom-out';
+			wikiButton.href = 'wiki';
+			wikiButton.target = '_blank';
+			wikiButton.title = 'Wiki';
+			wikiButton.role = 'button';
+			wikiButton.style.cssText = 'display: flex; justify-content: center; align-items: center;';
 
-		const img = document.createElement('img');
-		img.src = 'icons/web1.png';
-		// Add a class to the button when hovered
-		wikiButton.addEventListener('mouseenter', () => {
-			img.src = 'icons/web2.png'; // Change to the hovered icon
-		});
+			const img = document.createElement('img');
+			img.src = 'icons/web1.png';
+			img.style.cssText = 'max-width: 16px; max-height: 16px;';
 
-		// Remove the class when not hovered
-		wikiButton.addEventListener('mouseleave', () => {
-			img.src = 'icons/web1.png'; // Change back to the original icon
-		});
-		img.style.maxWidth = '16px';
-		img.style.maxHeight = '16px';
+			function toggleIcon(src) {
+				img.src = src;
+			}
 
-		wikiButton.appendChild(img);
+			wikiButton.addEventListener('mouseenter', () => toggleIcon('icons/web2.png'));
+			wikiButton.addEventListener('mouseleave', () => toggleIcon('icons/web1.png'));
 
+			wikiButton.appendChild(img);
+			return wikiButton;
+		}
+
+		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
+		const wikiButton = createWikiButton();
 		zoomControl.insertAdjacentElement('beforeend', wikiButton);
 
-		document.getElementsByClassName( 'leaflet-control-attribution' )[0].style.display = 'none';
+		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
 	</script>		
 </body>
 
