@@ -263,7 +263,8 @@
 
 			var firstTitle = title.split(' ')[0].toLowerCase();
 			var newId = `${id}_${customId || firstTitle}`;
-			linkTitle = ", '" + linkTitle + "'";
+			if (linkTitle)
+				linkTitle = ", '" + linkTitle + "'";
 
 			return `createAndAddMarker('${regionMap[id] || "mo"}', ${coords}, ${icon}, '${title}', '${newId}', generatePopupContent('${title}', '${category}', '${description}', ${linkEnabled}${linkTitle || ''}));`;
 		}
