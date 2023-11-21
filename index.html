@@ -269,14 +269,6 @@
 			return `createAndAddMarker('${regionMap[id] || "mo"}', ${coords}, ${icon}, '${title}', '${newId}', generatePopupContent('${title}', '${category}', '${description}', ${linkEnabled}${linkTitle || ''}));`;
 		}
 
-		function generate(output, layers, newId) {
-			var layersFinal = ""
-				for (var i = 0; i < layers.length; i++) {
-					layersFinal += layers[i].options.id + ", ";
-				}
-				document.getElementById('LayerGroupOutput').value = output += layersFinal + newId + "]).addTo(map);";
-		}
-
 		var southWest = L.latLng(-70, -170),
 			northEast = L.latLng(70, 170),
 			bounds = L.latLngBounds(southWest, northEast);
