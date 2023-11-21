@@ -749,7 +749,7 @@
 		}
 
 		function changeAllIcons(suffix) {
-			const layerGroups = [ar_capitals, ar_citiesBig, ar_citiesSmall, ar_towns, ar_nature, ar_important, ar_characters];
+			const layerGroups = [regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character']];
 			layerGroups.forEach(group => changeIcons(group.getLayers(), suffix));
 			oldSuffix = suffix;
 		}
