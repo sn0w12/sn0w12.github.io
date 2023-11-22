@@ -267,7 +267,7 @@
 			if (linkTitle)
 				linkTitle = ", '" + linkTitle + "'";
 
-			return `createAndAddMarker('${regionMap[id] || "mo"}', ${coords}, ${icon}, '${title}', '${newId}', generatePopupContent('${title}', '${category}', '${description}', ${linkEnabled}${linkTitle || ''}));`;
+			return `createAndAddMarker('${regionMap[id] || "mo"}', ${coords}, icon.${icon}, '${title}', '${newId}', generatePopupContent('${title}', '${category}', '${description}', ${linkEnabled}${linkTitle || ''}));`;
 		}
 
 		var southWest = L.latLng(-70, -170),
@@ -329,14 +329,37 @@
 		var arathiaBackground = createMap('arathiaBackground', false, 2.75, 5.4, 'backgroundPane', true);
 		var morturiaBackground = createMap('morturiaBackground', false, 2.75, 5.4, 'backgroundPane', false);
 
+		// Icons Settings
+		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
+		var oldIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
+		var simpleIconSettings = { size: [31, 41], anchor: [15, 25], popupAnchor: [1.5, -22] };
+
 		// Icons
-		var capital = createIcon('capital', [31, 41], [15, 41], [1, -44])
-		var cityBig = createIcon('cityBig', [31, 41], [15, 41], [1, -44])
-		var citySmall = createIcon('citySmall', [31, 41], [15, 41], [1, -44])
-		var town = createIcon('town', [31, 41], [15, 41], [1, -44])
-		var nature = createIcon('nature', [31, 41], [15, 41], [1, -44])
-		var important = createIcon('important', [31, 41], [15, 41], [1, -44])
-		var character = createIcon('character', [31, 41], [15, 41], [1, -44])
+		var icons = {
+			capital: createIcon('capital', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			cityBig: createIcon('cityBig', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			citySmall: createIcon('citySmall', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			town: createIcon('town', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			nature: createIcon('nature', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			important: createIcon('important', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			character: createIcon('character', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+	
+			capitalOld: createIcon('capitalOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			cityBigOld: createIcon('cityBigOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			citySmallOld: createIcon('citySmallOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			townOld: createIcon('townOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			natureOld: createIcon('natureOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			importantOld: createIcon('importantOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			characterOld: createIcon('characterOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+
+			capitalSimple: createIcon('capitalSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor - 6),
+			cityBigSimple: createIcon('cityBigSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+			citySmallSimple: createIcon('citySmallSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+			townSimple: createIcon('townSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+			natureSimple: createIcon('natureSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+			importantSimple: createIcon('importantSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+			characterSimple: createIcon('characterSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor)
+		}
 
 		//Coordinate Finder
 		var marker = L.marker([0, 0], {
@@ -458,20 +481,20 @@
 		
 		//Arathia	
 		//Antaria
-		createAndAddMarker('ar', [32.720989, -41.187598], capital, 'Antaria', 'an_capital', generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
+		createAndAddMarker('ar', [32.720989, -41.187598], icons.capital, 'Antaria', 'an_capital', generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
 		//Important
-		createAndAddMarker('ar', [45.04985, -79.242103], important, 'Antarian Arch-Tree', 'an_archtree', generatePopupContent('Antarian Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
+		createAndAddMarker('ar', [45.04985, -79.242103], icons.important, 'Antarian Arch-Tree', 'an_archtree', generatePopupContent('Antarian Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
 		//Big Cities
-		createAndAddMarker('ar', [12.640338, -35.859375], cityBig, 'Antarian Port City', 'an_city', generatePopupContent('Antarian Port City', 'Large City', 'A trade city in the HAE with a large port', false));
+		createAndAddMarker('ar', [12.640338, -35.859375], icons.cityBig, 'Antarian Port City', 'an_city', generatePopupContent('Antarian Port City', 'Large City', 'A trade city in the HAE with a large port', false));
 		//Small Cities
 		//Towns
-		createAndAddMarker('ar', [-1.841265, -73.559396], town, 'Antarian Town', 'an_town', generatePopupContent('Antarian Town', 'Town', '', false));
-		createAndAddMarker('ar', [18.293698, -115.356925], town, 'Antarian Town', 'an_town2', generatePopupContent('Antarian Town', 'Town', '', false));
+		createAndAddMarker('ar', [-1.841265, -73.559396], icons.town, 'Antarian Town', 'an_town', generatePopupContent('Antarian Town', 'Town', '', false));
+		createAndAddMarker('ar', [18.293698, -115.356925], icons.town, 'Antarian Town', 'an_town2', generatePopupContent('Antarian Town', 'Town', '', false));
 		//Nature
-		createAndAddMarker('ar', [27.302636, -81.285998], nature, 'Antarian Mountain Range', 'ar_mountain', generatePopupContent('Antarian Mountain Range', 'Mountain', 'The largest mountain range in Antaria', false));
+		createAndAddMarker('ar', [27.302636, -81.285998], icons.nature, 'Antarian Mountain Range', 'ar_mountain', generatePopupContent('Antarian Mountain Range', 'Mountain', 'The largest mountain range in Antaria', false));
 
 		//Odrheim
-		createAndAddMarker('ar', [46.588506, 33.414077], capital, 'Odrheim Capital', 'od_capital', generatePopupContent('Odrheim Capital', 'Capital', 'The capital of Odrheim', false));
+		createAndAddMarker('ar', [46.588506, 33.414077], icons.capital, 'Odrheim Capital', 'od_capital', generatePopupContent('Odrheim Capital', 'Capital', 'The capital of Odrheim', false));
 		//Important
 		//Big Cities
 		//Small Cities
@@ -479,7 +502,7 @@
 		//Nature
 
 		//Tunglheimr
-		createAndAddMarker('ar', [41.364997, 70.145929], capital, 'Tungleheimr Capital', 'th_capital', generatePopupContent('Tungleheimr Capital', 'Capital', 'The capital of Tunglheimr', false));
+		createAndAddMarker('ar', [41.364997, 70.145929], icons.capital, 'Tungleheimr Capital', 'th_capital', generatePopupContent('Tungleheimr Capital', 'Capital', 'The capital of Tunglheimr', false));
 		//Important
 		//Big Cities
 		//Small Cities
@@ -487,9 +510,9 @@
 		//Nature
 		
 		//Rheinland
-		createAndAddMarker('ar', [15.641359, 138.427261], capital, 'Rheinland Capital', 'rh_capital', generatePopupContent('Rheinland Capital', 'Capital', 'The capital of Rheinland', false));
+		createAndAddMarker('ar', [15.641359, 138.427261], icons.capital, 'Rheinland Capital', 'rh_capital', generatePopupContent('Rheinland Capital', 'Capital', 'The capital of Rheinland', false));
 		//Important
-		createAndAddMarker('ar', [27.803884, 131.965833], important, 'Rheinland Arch-Tree', 'rh_archtree', generatePopupContent('Rheinland Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
+		createAndAddMarker('ar', [27.803884, 131.965833], icons.important, 'Rheinland Arch-Tree', 'rh_archtree', generatePopupContent('Rheinland Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -504,7 +527,7 @@
 		//Nature
 
 		//Azurith
-		createAndAddMarker('ar', [-23.271278, 104.100923], capital, 'Azurith Capital', 'az_capital', generatePopupContent('Azurith Capital', 'Capital', 'The capital of Azurith', false));
+		createAndAddMarker('ar', [-23.271278, 104.100923], icons.capital, 'Azurith Capital', 'az_capital', generatePopupContent('Azurith Capital', 'Capital', 'The capital of Azurith', false));
 		//Important
 		//Big Cities
 		//Small Cities
@@ -512,61 +535,61 @@
 		//Nature
 
 		//Tsuki
-		createAndAddMarker('ar', [-26.786247, 10.234271], capital, 'Getsuyōsei', 'ts_capital', generatePopupContent('Getsuyōsei', 'Capital', 'The capital of Tsuki Ōkoku', true));
+		createAndAddMarker('ar', [-26.786247, 10.234271], icons.capital, 'Getsuyōsei', 'ts_capital', generatePopupContent('Getsuyōsei', 'Capital', 'The capital of Tsuki Ōkoku', true));
 		//Important
-		createAndAddMarker('ar', [-17.677522, 10.600598], important, 'Tsuki Arch-Tree', 'ts_archtree', generatePopupContent('Tsuki Arch-Tree', 'Important Location', 'The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.', true, 'Arch-Trees'));
-		createAndAddMarker('ar', [-52.329725, 58.377932], important, 'Mizu-no-Iwaya', 'ts_mizunoiwaya', generatePopupContent('Mizu-no-Iwaya', 'Important Location', 'The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.', false));
+		createAndAddMarker('ar', [-17.677522, 10.600598], icons.important, 'Tsuki Arch-Tree', 'ts_archtree', generatePopupContent('Tsuki Arch-Tree', 'Important Location', 'The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.', true, 'Arch-Trees'));
+		createAndAddMarker('ar', [-52.329725, 58.377932], icons.important, 'Mizu-no-Iwaya', 'ts_mizunoiwaya', generatePopupContent('Mizu-no-Iwaya', 'Important Location', 'The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.', false));
 		//Big Cities
-		createAndAddMarker('ar', [-13.88388, 37.332231], cityBig, 'Sōgenshima', 'ts_sōgenshima', generatePopupContent('Sōgenshima', 'Large City', '', false));
-		createAndAddMarker('ar', [-34.127172, -11.480145], cityBig, 'Kinshū', 'ts_kinshū', generatePopupContent('Kinshū', 'Large City', 'A trading city, main trading partners are Trade Company and Primoria.', false));
-		createAndAddMarker('ar', [-50.232027, 66.709798], cityBig, 'Hikari no Toshi', 'ts_hikari', generatePopupContent('Hikari no Toshi', 'Large City', '', false));
+		createAndAddMarker('ar', [-13.88388, 37.332231], icons.cityBig, 'Sōgenshima', 'ts_sōgenshima', generatePopupContent('Sōgenshima', 'Large City', '', false));
+		createAndAddMarker('ar', [-34.127172, -11.480145], icons.cityBig, 'Kinshū', 'ts_kinshū', generatePopupContent('Kinshū', 'Large City', 'A trading city, main trading partners are Trade Company and Primoria.', false));
+		createAndAddMarker('ar', [-50.232027, 66.709798], icons.cityBig, 'Hikari no Toshi', 'ts_hikari', generatePopupContent('Hikari no Toshi', 'Large City', '', false));
 		//Small Cities
-		createAndAddMarker('ar', [-32.556313, 28.080238], citySmall, 'Amagumo', 'ts_amagumo', generatePopupContent('Amagumo', 'Small City', '', false));
-		createAndAddMarker('ar', [-60.418733, 26.314855], citySmall, 'Yozora', 'ts_yozora', generatePopupContent('Yozora', 'Small City', '', false));
-		createAndAddMarker('ar', [-17.927417, 65.51944], citySmall, 'Kōun', 'ts_kōun', generatePopupContent('Kōun', 'Small City', '', false));
-		createAndAddMarker('ar', [-35.440072, 48.867281], citySmall, 'Shingetsu', 'ts_shingetsu', generatePopupContent('Shingetsu', 'Small City', '', false));
-		createAndAddMarker('ar', [-45.070751, 14.763658], citySmall, 'Engetsu', 'ts_engetsu', generatePopupContent('Engetsu', 'Small City', '', false));
-		createAndAddMarker('ar', [-40.933431, 81.082085], citySmall, 'Tsukimiya', 'ts_tsukimiya', generatePopupContent('Tsukimiya', 'Small City', 'Small city, mainly for communication and trade with eastern and northen countries', false));
+		createAndAddMarker('ar', [-32.556313, 28.080238], icons.citySmall, 'Amagumo', 'ts_amagumo', generatePopupContent('Amagumo', 'Small City', '', false));
+		createAndAddMarker('ar', [-60.418733, 26.314855], icons.citySmall, 'Yozora', 'ts_yozora', generatePopupContent('Yozora', 'Small City', '', false));
+		createAndAddMarker('ar', [-17.927417, 65.51944], icons.citySmall, 'Kōun', 'ts_kōun', generatePopupContent('Kōun', 'Small City', '', false));
+		createAndAddMarker('ar', [-35.440072, 48.867281], icons.citySmall, 'Shingetsu', 'ts_shingetsu', generatePopupContent('Shingetsu', 'Small City', '', false));
+		createAndAddMarker('ar', [-45.070751, 14.763658], icons.citySmall, 'Engetsu', 'ts_engetsu', generatePopupContent('Engetsu', 'Small City', '', false));
+		createAndAddMarker('ar', [-40.933431, 81.082085], icons.citySmall, 'Tsukimiya', 'ts_tsukimiya', generatePopupContent('Tsukimiya', 'Small City', 'Small city, mainly for communication and trade with eastern and northen countries', false));
 		//Towns
-		createAndAddMarker('ar', [-1.52557, 55.842131], town, 'Asahi', 'ts_asahi', generatePopupContent('Asahi', 'Town', 'A small town, disproportionately big military presence compared to its civilian population due to its proximity to the HAE', false));
-		createAndAddMarker('ar', [-38.316604, 56.327448], town, 'Yūnagi', 'ts_yūnagi', generatePopupContent('Yūnagi', 'Town', '', false));
-		createAndAddMarker('ar', [-50.561846, 25.966938], town, 'Tsukiakari', 'ts_tsukiakari', generatePopupContent('Tsukiakari', 'Town', '', false));
-		createAndAddMarker('ar', [-55.861359, 44.071459], town, 'Suzuran', 'ts_suzuran', generatePopupContent('Suzuran', 'Town', '', false));
-		createAndAddMarker('ar', [-40.044885, 3.08464], town, 'Yūdachi', 'ts_yūdachi', generatePopupContent('Yūdachi', 'Town', '', false));
-		createAndAddMarker('ar', [-28.800823, 72.574947], town, 'Haruka', 'ts_haruka', generatePopupContent('Haruka', 'Town', '', false));
-		createAndAddMarker('ar', [-62.13469, 65.332354], town, 'Kōri', 'ts_kōri', generatePopupContent('Kōri', 'Town', '', false));
+		createAndAddMarker('ar', [-1.52557, 55.842131], icons.town, 'Asahi', 'ts_asahi', generatePopupContent('Asahi', 'Town', 'A small icons.town, disproportionately big military presence compared to its civilian population due to its proximity to the HAE', false));
+		createAndAddMarker('ar', [-38.316604, 56.327448], icons.town, 'Yūnagi', 'ts_yūnagi', generatePopupContent('Yūnagi', 'Town', '', false));
+		createAndAddMarker('ar', [-50.561846, 25.966938], icons.town, 'Tsukiakari', 'ts_tsukiakari', generatePopupContent('Tsukiakari', 'Town', '', false));
+		createAndAddMarker('ar', [-55.861359, 44.071459], icons.town, 'Suzuran', 'ts_suzuran', generatePopupContent('Suzuran', 'Town', '', false));
+		createAndAddMarker('ar', [-40.044885, 3.08464], icons.town, 'Yūdachi', 'ts_yūdachi', generatePopupContent('Yūdachi', 'Town', '', false));
+		createAndAddMarker('ar', [-28.800823, 72.574947], icons.town, 'Haruka', 'ts_haruka', generatePopupContent('Haruka', 'Town', '', false));
+		createAndAddMarker('ar', [-62.13469, 65.332354], icons.town, 'Kōri', 'ts_kōri', generatePopupContent('Kōri', 'Town', '', false));
 		//Nature
-		createAndAddMarker('ar', [-52.306608, 37.804889], nature, 'Hanabira Nagare', 'ts_hanabira', generatePopupContent('Hanabira Nagare', 'Lake', '', false));
-		createAndAddMarker('ar', [-36.031332, 57.919922], nature, 'Yama no Kyōfū', 'ts_yama', generatePopupContent('Yama no Kyōfū', 'Mountain', 'The largest mountain range in Tsuki Ōkoku', false));
-		createAndAddMarker('ar', [-30.524413, 37.705078], nature, 'Gekkōzan', 'ts_gekkōzan', generatePopupContent('Gekkōzan', 'Mountain', '', false));
-		createAndAddMarker('ar', [-16.910568, 0.642627], nature, 'Hikari no Mori', 'ts_hikarinomori', generatePopupContent('Hikari no Mori', 'Forest', '', false));
-		createAndAddMarker('ar', [-50.176898, 50.712891], nature, 'Mizu Hanabira no Mori', 'ts_mizuhanabira', generatePopupContent('Mizu Hanabira no Mori', 'Forest', '', false));
-		createAndAddMarker('ar', [-18.452263, 32.228559], nature, 'Tsukiakari', 'ts_tsukiakari', generatePopupContent('Tsukiakari', 'Forest', '', false));
-		createAndAddMarker('ar', [-63.726971, 54.595624], nature, 'Kōri Kaisen', 'ts_kori', generatePopupContent('Kōri Kaisen', 'Shore', '', false));
+		createAndAddMarker('ar', [-52.306608, 37.804889], icons.nature, 'Hanabira Nagare', 'ts_hanabira', generatePopupContent('Hanabira Nagare', 'Lake', '', false));
+		createAndAddMarker('ar', [-36.031332, 57.919922], icons.nature, 'Yama no Kyōfū', 'ts_yama', generatePopupContent('Yama no Kyōfū', 'Mountain', 'The largest mountain range in Tsuki Ōkoku', false));
+		createAndAddMarker('ar', [-30.524413, 37.705078], icons.nature, 'Gekkōzan', 'ts_gekkōzan', generatePopupContent('Gekkōzan', 'Mountain', '', false));
+		createAndAddMarker('ar', [-16.910568, 0.642627], icons.nature, 'Hikari no Mori', 'ts_hikarinomori', generatePopupContent('Hikari no Mori', 'Forest', '', false));
+		createAndAddMarker('ar', [-50.176898, 50.712891], icons.nature, 'Mizu Hanabira no Mori', 'ts_mizuhanabira', generatePopupContent('Mizu Hanabira no Mori', 'Forest', '', false));
+		createAndAddMarker('ar', [-18.452263, 32.228559], icons.nature, 'Tsukiakari', 'ts_tsukiakari', generatePopupContent('Tsukiakari', 'Forest', '', false));
+		createAndAddMarker('ar', [-63.726971, 54.595624], icons.nature, 'Kōri Kaisen', 'ts_kori', generatePopupContent('Kōri Kaisen', 'Shore', '', false));
 
 		//Primoria
-		createAndAddMarker('ar', [-26.181457, -61.49786], capital, 'Primorian Capital', 'pr_capital', generatePopupContent('Primorian Capital', 'Capital', 'The capital of Primoria', false));
+		createAndAddMarker('ar', [-26.181457, -61.49786], icons.capital, 'Primorian Capital', 'pr_capital', generatePopupContent('Primorian Capital', 'Capital', 'The capital of Primoria', false));
 		//Important
-		createAndAddMarker('ar', [-54.521081, -69.169922], important, 'Primorian Arch-Tree', 'pr_archtree', generatePopupContent('Primorian Arch-Tree', 'Important Location', 'The Arch-Tree in Primoria', true, 'Arch-Trees'));
+		createAndAddMarker('ar', [-54.521081, -69.169922], icons.important, 'Primorian Arch-Tree', 'pr_archtree', generatePopupContent('Primorian Arch-Tree', 'Important Location', 'The Arch-Tree in Primoria', true, 'Arch-Trees'));
 		//Big Cities
 		//Small Cities
 		//Towns
 		//Nature
 
 		//Dryadalis
-		createAndAddMarker('ar', [-39.842286, -136.933594], capital, 'Aeternum', 'dr_capital', generatePopupContent('Aeternum', 'Capital ', 'The capital of Dryadalis', false));
+		createAndAddMarker('ar', [-39.842286, -136.933594], icons.capital, 'Aeternum', 'dr_capital', generatePopupContent('Aeternum', 'Capital ', 'The capital of Dryadalis', false));
 		//Important
 		//Big Cities
-		createAndAddMarker('ar', [-51.123378, -128.277507], cityBig, 'Eldorath', 'dr_eldorath', generatePopupContent('Eldorath', 'Large City', '', false));
+		createAndAddMarker('ar', [-51.123378, -128.277507], icons.cityBig, 'Eldorath', 'dr_eldorath', generatePopupContent('Eldorath', 'Large City', '', false));
 		//Small Cities
-		createAndAddMarker('ar', [-49.111661, -155.112608], citySmall, 'Faerwyn', 'dr_faerwyn', generatePopupContent('Faerwyn', 'Small City', '', false));
+		createAndAddMarker('ar', [-49.111661, -155.112608], icons.citySmall, 'Faerwyn', 'dr_faerwyn', generatePopupContent('Faerwyn', 'Small City', '', false));
 		//Towns
-		createAndAddMarker('ar', [-46.664566, -142.44974], town, 'Elaris', 'dr_elaris', generatePopupContent('Elaris', 'Town', '', false));
-		createAndAddMarker('ar', [-57.328012, -139.768383], town, 'Galadrim', 'dr_galadrim', generatePopupContent('Galadrim', 'Town', '', false));
+		createAndAddMarker('ar', [-46.664566, -142.44974], icons.town, 'Elaris', 'dr_elaris', generatePopupContent('Elaris', 'Town', '', false));
+		createAndAddMarker('ar', [-57.328012, -139.768383], icons.town, 'Galadrim', 'dr_galadrim', generatePopupContent('Galadrim', 'Town', '', false));
 		//Nature
-		createAndAddMarker('ar', [-41.435969, -150.186067], nature, 'Feywood', 'dr_feywood', generatePopupContent('Feywood', 'Forest', '', false));
-		createAndAddMarker('ar', [-49.323654, -150.75126], nature, 'Lacus Serenus', 'dr_lacus', generatePopupContent('Lacus Serenus', 'Lake', '', false));
-		createAndAddMarker('ar', [-42.875964, -142.119141], nature, 'Verdantis Mons', 'dr_verdantis', generatePopupContent('Verdantis Mons', 'Mountain', '', false));
+		createAndAddMarker('ar', [-41.435969, -150.186067], icons.nature, 'Feywood', 'dr_feywood', generatePopupContent('Feywood', 'Forest', '', false));
+		createAndAddMarker('ar', [-49.323654, -150.75126], icons.nature, 'Lacus Serenus', 'dr_lacus', generatePopupContent('Lacus Serenus', 'Lake', '', false));
+		createAndAddMarker('ar', [-42.875964, -142.119141], icons.nature, 'Verdantis Mons', 'dr_verdantis', generatePopupContent('Verdantis Mons', 'Mountain', '', false));
 
 		//Trade Company
 
@@ -595,14 +618,14 @@
 		//Oceans
 
 		//Characters
-		createAndAddMarker('ar', [-2.372369, -72.685547], character, 'Gerhard von Eichenwald', 'an_gerhard', generatePopupContent('Gerhard von Eichenwald', 'Character', 'Gerhards temporary camp in a small town in the Holy Antarian Empire', true, ));
-		createAndAddMarker('ar', [-41.980887, 32.348339], character, 'Nihil, the Eternal', 'ts_nihil', generatePopupContent('Nihil, the Eternal', 'Character ', 'Currently in hiding after the great dragon purge.', true));
-		createAndAddMarker('ar', [17.768594, -114.376119], character, 'Aurumoria, the Gilded Guardian', 'an_aurumoria', generatePopupContent('Aurumoria, the Gilded Guardian', 'Character ', 'Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.', true));
-		createAndAddMarker('ar', [-25.403585, 12.744141], character, 'Miyamoto Reiko', 'ts_reiko', generatePopupContent('Miyamoto Reiko', 'Character', 'The current leader of Tsuki Ōkoku', true));
+		createAndAddMarker('ar', [-2.372369, -72.685547], icons.character, 'Gerhard von Eichenwald', 'an_gerhard', generatePopupContent('Gerhard von Eichenwald', 'Character', 'Gerhards temporary camp in a small town in the Holy Antarian Empire', true, ));
+		createAndAddMarker('ar', [-41.980887, 32.348339], icons.character, 'Nihil, the Eternal', 'ts_nihil', generatePopupContent('Nihil, the Eternal', 'Character ', 'Currently in hiding after the great dragon purge.', true));
+		createAndAddMarker('ar', [17.768594, -114.376119], icons.character, 'Aurumoria, the Gilded Guardian', 'an_aurumoria', generatePopupContent('Aurumoria, the Gilded Guardian', 'Character ', 'Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.', true));
+		createAndAddMarker('ar', [-25.403585, 12.744141], icons.character, 'Miyamoto Reiko', 'ts_reiko', generatePopupContent('Miyamoto Reiko', 'Character', 'The current leader of Tsuki Ōkoku', true));
 
 		//Morturia
 		//Scientia
-		createAndAddMarker('mo', [39.994442, 89.15887], capital, 'Scienta Capital', 'sc_capital', generatePopupContent('Scienta Capital', 'Capital', 'The capital of Scientia', false));
+		createAndAddMarker('mo', [39.994442, 89.15887], icons.capital, 'Scienta Capital', 'sc_capital', generatePopupContent('Scienta Capital', 'Capital', 'The capital of Scientia', false));
 		//Important"
 
 		//Ardeat
@@ -746,13 +769,24 @@
 		var oldSuffix = "";
 
 		function changeIcons(layers, suffix) {
-			var newIconUrl = layers[1].options.icon.options.iconUrl.replace(oldSuffix, '').replace(".png", suffix + ".png").replace(suffix + "icons", "icons");
-			layers[1].options.icon.options.iconUrl = newIconUrl;
+			layers.forEach(layer => {
+				var newIconName = layer.options.icon.options.className.replace(oldSuffix, '') + suffix;
+
+				if (icons[newIconName]) {
+					layer.options.icon = icons[newIconName];
+				} else {
+					console.error('Icon not found:', newIconName);
+				}
+			});
 		}
 
 		function changeAllIcons(suffix) {
 			const layerGroups = [regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character']];
-			layerGroups.forEach(group => changeIcons(group.getLayers(), suffix));
+			layerGroups.forEach(group => {
+				const layers = group.getLayers();
+				changeIcons(layers, suffix, icons);
+			});
+
 			oldSuffix = suffix;
 		}
 
