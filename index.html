@@ -332,7 +332,15 @@
 		// Icons Settings
 		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
 		var oldIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
-		var simpleIconSettings = { size: [31, 41], anchor: [15, 25], popupAnchor: [1.5, -22] };
+		var simpleIconSettings = { size: [31, 41], anchor: [15, 25], popupAnchor: [1, -22] };
+
+		function adjustSettings(defaultSettings, adjustments) {
+			return {
+				size: adjustments.size || defaultSettings.size,
+				anchor: adjustments.anchor || defaultSettings.anchor,
+				popupAnchor: adjustments.popupAnchor ? [defaultSettings.popupAnchor[0] + adjustments.popupAnchor[0], defaultSettings.popupAnchor[1] + adjustments.popupAnchor[1]] : defaultSettings.popupAnchor
+			};
+		}
 
 		// Icons
 		var icons = {
@@ -352,12 +360,12 @@
 			importantOld: createIcon('importantOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
 			characterOld: createIcon('characterOld', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
 
-			capitalSimple: createIcon('capitalSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor - 6),
+			capitalSimple: createIcon('capitalSimple', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 6] }).popupAnchor),
 			cityBigSimple: createIcon('cityBigSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
-			citySmallSimple: createIcon('citySmallSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
-			townSimple: createIcon('townSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
-			natureSimple: createIcon('natureSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
-			importantSimple: createIcon('importantSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+			citySmallSimple: createIcon('citySmallSimple', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 4] }).popupAnchor),
+			townSimple: createIcon('townSimple', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] }).popupAnchor),
+			natureSimple: createIcon('natureSimple', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] }).popupAnchor),
+			importantSimple: createIcon('importantSimple', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] }).popupAnchor),
 			characterSimple: createIcon('characterSimple', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor)
 		}
 
