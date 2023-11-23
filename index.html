@@ -20,17 +20,14 @@
 	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
 	<script type="text/javascript">
 		function generatePopupContent(title, category, description, linkEnabled, linkTitle) {
-			var popupContent = '';
+			const titleLink = linkEnabled 
+				? `<a href="wiki#${encodeURIComponent(linkTitle || title)}" target="_blank"><b><font size="+0.5">${title}</font></b><br /></a>`
+				: `<b><font size="+0.5">${title}</font></b><br />`;
 
-			// Add link if linkEnabled is true
-			popupContent += linkEnabled 
-				? `<a href="wiki#${encodeURIComponent(linkTitle || title)}" target="_blank"><b><font size="+0.5">${title}</font></b> <br /></a>`
-				: `<b><font size="+0.5">${title}</font></b> <br />`;
+			const img1 = '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">';
+			const img2 = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">';
 
-			var img1 = '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">'
-			var img2 = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">'
-
-			return popupContent += `${img1}<i><font size="+0.5">${category}</font></i>${img2}<br />${description}`;
+			return `${titleLink}${img1}<i><font size="+0.5">${category}</font></i>${img2}<br />${description}`;
 		}
 
 		const regionMap = {
