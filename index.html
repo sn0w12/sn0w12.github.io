@@ -52,7 +52,7 @@
 			if (linkTitle)
 				linkTitle = ", '" + linkTitle + "'";
 
-			return `createAndAddMarker('${regionMap[id] || "mo"}', ${coords}, icon.${icon}, '${title}', '${newId}', generatePopupContent('${title}', '${category}', '${description}', ${linkEnabled}${linkTitle || ''}));`;
+			return `createAndAddMarker('${regionMap[id] || "mo"}', ${coords}, icon.${icon}, '${title}', '${newId.replace(',', '')}', generatePopupContent('${title}', '${category}', '${description}', ${linkEnabled}${linkTitle || ''}));`;
 		}
 
 		var southWest = L.latLng(-70, -170),
@@ -155,8 +155,7 @@
 		//Coordinate Finder
 		var marker = L.marker([0, 0], {
 			draggable: true,
-		});
-		marker.on('dragend', function() {
+		}).on('dragend', function() {
 			marker.openPopup();
 			markerMaker();
 		});
