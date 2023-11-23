@@ -20,7 +20,7 @@
 	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
 	<script type="text/javascript">
 		function generatePopupContent(title, category, description, linkEnabled, linkTitle) {
-			var popupContent
+			var popupContent = '';
 
 			// Add link if linkEnabled is true
 			popupContent += linkEnabled 
@@ -115,7 +115,7 @@
 		var arathiaBackground = createMap('arathiaBackground', false, 2.75, 5.4, 'backgroundPane', true);
 		var morturiaBackground = createMap('morturiaBackground', false, 2.75, 5.4, 'backgroundPane', false);
 
-		// Icons Settings
+		// Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
 		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
 		var oldIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
 		var simpleIconSettings = { size: [31, 41], anchor: [15, 25], popupAnchor: [1, -22] };
@@ -481,6 +481,8 @@
 			zoom: 5,
 			initial: false,
 			marker: false
+		}).on("search:locationfound", function (e) {
+			if (e.layer._popup) e.layer.openPopup();
 		});
 		var controlSearchMo = new L.Control.Search({
 			position:'topleft',		
@@ -488,6 +490,8 @@
 			zoom: 5,
 			initial: false,
 			marker: false
+		}).on("search:locationfound", function (e) {
+			if (e.layer._popup) e.layer.openPopup();
 		});
 
 		map.addControl( controlSearchAr );
