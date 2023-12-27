@@ -70,9 +70,11 @@
 			wheelPxPerZoomLevel: 120,
 		}).setView([0, 0], 0);
 
+		map.createPane('addPane');
 		map.createPane('basePane');
 		map.createPane('backgroundPane');
 
+		map.getPane('addPane').style.zIndex = 250;
 		map.getPane('basePane').style.zIndex = 220;
 		map.getPane('backgroundPane').style.zIndex = 150;
 
@@ -111,6 +113,8 @@
 		// Maps
 		var arathia = createMap('arathia', true, 2.75, 5.4, 'basePane', true);
 		var arathiaClean = createMap('arathiaClean', true, 2.75, 5.4, 'basePane', false);
+		var Test = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
+		var Test2 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
 		var morturia = createMap('morturia', true, 2.75, 5.4, 'basePane', false);
 		var arathiaBackground = createMap('arathiaBackground', false, 2.75, 5.4, 'backgroundPane', true);
 		var morturiaBackground = createMap('morturiaBackground', false, 2.75, 5.4, 'backgroundPane', false);
@@ -655,6 +659,10 @@
 						updateCheckbox(0, true);
 						hideCheckBoxes(2);
 						addRadioButtons(iconChecked);
+						if (currentSelectedMap != arathia) {
+							map.removeLayer(currentSelectedMap);
+						}
+						selectedOptionId = 'arOption1'
 						break;
 					case 'Arathia Clean':
 						updateMapStyles(map, '#31565a', controlSearchAr, controlSearchMo);
@@ -662,6 +670,10 @@
 						updateCheckbox(0, false);
 						hideCheckBoxes(2);
 						addRadioButtons(iconChecked);
+						if (currentSelectedMap != arathiaClean) {
+							map.removeLayer(currentSelectedMap);
+						}
+						selectedOptionId = 'arCleanOption1'
 						break;
 					case 'Morturia':
 						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
@@ -678,6 +690,10 @@
 						addRadioButtons(iconChecked);
 						break;
 				}
+				addYearSelect();
+				document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+				setYearSelectorToLastDropdown();
+				console.log("Changed selected map");
 			} else if (radioButton.classList.contains('custom-radio-class')) {
 				var iconMap = {
 					'Default Icons': 1,
@@ -693,6 +709,52 @@
 		});
 
 		var oldSuffix = "";
+
+		var currentSelectedMap = arathia;
+
+		const yearMap = {
+			"arOption1": "arathia",
+			"arOption2": "Test",
+		};
+
+		function changeMapToSelected() {
+			console.log("Current map before switching:", currentSelectedMap);
+
+			var dropdown = document.getElementById('YearSelector');
+			var selectedOption = dropdown.options[dropdown.selectedIndex].id;
+
+			switch(selectedOption) {
+				case 'arOption1':
+					if (currentSelectedMap != arathia) {
+						map.removeLayer(currentSelectedMap);
+					}
+					arathia.addTo(map);
+					currentSelectedMap = arathia;
+					break;
+				case 'arOption2':
+					if (currentSelectedMap != arathia) {
+						map.removeLayer(currentSelectedMap);
+					} 
+					Test.addTo(map);
+					currentSelectedMap = Test;
+					break;
+				case 'arOption3':
+					if (currentSelectedMap != arathia) {
+						map.removeLayer(currentSelectedMap);
+					} 
+					Test2.addTo(map);
+					currentSelectedMap = Test2;
+					break;
+				case 'arCleanOption1':
+					if (currentSelectedMap != arathiaClean) {
+						map.removeLayer(currentSelectedMap);
+					}
+					arathiaClean.addTo(map);
+					currentSelectedMap = arathiaClean;
+					break;
+			}
+			console.log("Changed map to: ", currentSelectedMap);
+		}
 
 		function changeAllIcons(suffix) {
 			const layerGroups = [regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character']];
@@ -748,6 +810,11 @@
 					break;
 			}
 			addRadioButtons(iconChecked)
+			addYearSelect();
+			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+			setYearSelectorToLastDropdown();
+			changeMapToSelected();
+			console.log("Changed selected map");
 		}
 
 		document.addEventListener('DOMContentLoaded', function () {
@@ -756,7 +823,85 @@
 			checkbox.checked = true;
 			addRadioButtons(1)
 			hideCheckBoxes(2);
+			addYearSelect();
+			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 		});
+
+		var selectedOptionId = 'arOption1';
+
+		function addYearSelect() {
+			// Find the checked radio button
+			var checkedRadioButton = document.querySelector('.leaflet-control-layers-base input[type="radio"]:checked');
+			var label = checkedRadioButton.nextElementSibling;
+
+			// Create the dropdown box
+			var dropdown = document.createElement('select');
+			dropdown.name = 'options';
+			dropdown.id = "YearSelector";
+			dropdown.className = 'custom-select';
+
+			// Add options to the dropdown
+			if (label && label.textContent == " Arathia") {
+				createSelect("1257 A.A", "arOption1", dropdown);
+				createSelect("67 B.A", "arOption2", dropdown);
+				createSelect("517 B.R", "arOption3", dropdown); 
+			} else if (label && label.textContent == " Morturia") {
+				createSelect("1257 A.A", "moOption1", dropdown);
+				createSelect("???", "moOption2", dropdown); 
+			} else if (label && label.textContent == " Arathia Clean") {
+				createSelect("1257 A.A", "arCleanOption1", dropdown);
+				createSelect("67 B.A", "arCleanOption2", dropdown);
+				createSelect("517 B.R", "arCleanOption3", dropdown); 
+			}
+
+			// Insert the dropdown after the parent label of the checked radio button
+			checkedRadioButton.closest('label').after(dropdown);
+		}
+
+		function createSelect(year, optionId, dropdown) {
+			var option = document.createElement('option');
+			option.id = optionId; // Use the optionId parameter
+			option.textContent = year;
+			dropdown.appendChild(option);
+		}
+
+		// Function to update the variable with the selected option's ID
+		function updateSelectedOptionId() {
+			var dropdown = document.getElementById('YearSelector');
+			selectedOptionId = dropdown.options[dropdown.selectedIndex].id;
+			console.log("Selected Option ID:", selectedOptionId); // For demonstration
+			changeMapToSelected();
+			console.log("Changed selected map");
+		}
+
+		function setYearSelectorToLastDropdown() {
+			var dropdown = document.getElementById('YearSelector');
+    
+			// Check if the dropdown has options
+			if (dropdown.options.length > 0) {
+				// Find the option that matches the selectedOptionId
+				var matchingOptionExists = Array.from(dropdown.options).some(option => option.id === selectedOptionId);
+
+				if (matchingOptionExists) {
+					// Set the dropdown's value to the matching option's value
+					for (var i = 0; i < dropdown.options.length; i++) {
+						if (dropdown.options[i].id === selectedOptionId) {
+							dropdown.selectedIndex = i;
+							console.log("Dropdown set to option with ID:", selectedOptionId);
+							break;
+						}
+					}
+				} else {
+					console.log('Matching option not found in the dropdown.');
+					if (currentSelectedMap != arathia) {
+						map.removeLayer(currentSelectedMap);
+					}
+					selectedOptionId = '';
+				}
+			} else {
+				console.log('The dropdown has no options.');
+			}
+		}
 
 		// Wait for the DOM to be ready
 		function addRadioButtons(checked) {
