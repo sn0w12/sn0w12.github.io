@@ -305,6 +305,36 @@
 			},
 		};
 
+		// Print all console commands
+		function help() {
+			console.log(`
+			All availible commands:
+			openAllPopupsInLayerGroup(region, group); Opens all of the popups you want
+			closeAllPopups(); Closes all open popups
+			printRegionGroups(); Prints all region Groups
+			`);
+		}
+
+		function printRegionGroups() {
+			// Iterate over each key in the regionLayerGroups object
+			for (const region in regionLayerGroups) {
+				// Check if the property is actually part of the object and not inherited
+				if (regionLayerGroups.hasOwnProperty(region)) {
+					// Get the sub-object for this region
+					const group = regionLayerGroups[region];
+					// Iterate over each key in the sub-object
+					for (const key in group) {
+						// Check if the property is actually part of the sub-object and not inherited
+						if (group.hasOwnProperty(key)) {
+							// Print the region and key in the desired format
+							console.log(`${region}, ${key}`);
+						}
+					}
+				}
+			}
+		}
+
+		// Run from the console, openAllPopupsInLayerGroup(ar, cityBig);
 		function openAllPopupsInLayerGroup(region, group) {
 			if (regionLayerGroups[region] && regionLayerGroups[region][group]) {
 				var layerGroup = regionLayerGroups[region][group];
@@ -324,6 +354,7 @@
 			}
 		}
 
+		// Run from the console
 		function closeAllPopups() {
 			// Iterate through each region in the regionLayerGroups
 			for (var region in regionLayerGroups) {
