@@ -663,6 +663,10 @@
 							map.removeLayer(currentSelectedMap);
 						}
 						selectedOptionId = 'arOption1'
+						addYearSelect();
+						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+						setYearSelectorToLastDropdown();
+						console.log("Changed selected map");
 						break;
 					case 'Arathia Clean':
 						updateMapStyles(map, '#31565a', controlSearchAr, controlSearchMo);
@@ -674,6 +678,10 @@
 							map.removeLayer(currentSelectedMap);
 						}
 						selectedOptionId = 'arCleanOption1'
+						addYearSelect();
+						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+						setYearSelectorToLastDropdown();
+						console.log("Changed selected map");
 						break;
 					case 'Morturia':
 						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
@@ -681,6 +689,10 @@
 						updateCheckbox(1, true);
 						hideCheckBoxes(1);
 						addRadioButtons(iconChecked);
+						addYearSelect();
+						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+						setYearSelectorToLastDropdown();
+						console.log("Changed selected map");
 						break;
 					case 'Morturia Clean':
 						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
@@ -688,12 +700,12 @@
 						updateCheckbox(1, false);
 						hideCheckBoxes(1);
 						addRadioButtons(iconChecked);
+						addYearSelect();
+						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+						setYearSelectorToLastDropdown();
+						console.log("Changed selected map");
 						break;
 				}
-				addYearSelect();
-				document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-				setYearSelectorToLastDropdown();
-				console.log("Changed selected map");
 			} else if (radioButton.classList.contains('custom-radio-class')) {
 				var iconMap = {
 					'Default Icons': 1,
