@@ -639,12 +639,12 @@
 
 		function hideCheckBoxes(groupNumber) {
 			var elementId = 'leaflet-control-layers-group-' + groupNumber;
-			var element = document.getElementById(elementId);
-			if (element) {
-				element.parentNode.removeChild(element);
-			} else {
-				console.log('Element with id ' + elementId + ' not found.');
-			}
+			document.getElementById(elementId).hidden = true;
+		}
+
+		function unHideCheckBoxes(groupNumber) {
+			var elementId = 'leaflet-control-layers-group-' + groupNumber;
+			document.getElementById(elementId).hidden = false;
 		}
 
 		document.addEventListener('change', function (event) {
@@ -689,6 +689,10 @@
 						updateCheckbox(1, true);
 						hideCheckBoxes(1);
 						addRadioButtons(iconChecked);
+						if (currentSelectedMap != morturia) {
+							map.removeLayer(currentSelectedMap);
+						}
+						selectedOptionId = 'moOption1'
 						addYearSelect();
 						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 						setYearSelectorToLastDropdown();
@@ -700,6 +704,10 @@
 						updateCheckbox(1, false);
 						hideCheckBoxes(1);
 						addRadioButtons(iconChecked);
+						if (currentSelectedMap != morturiaClean) {
+							map.removeLayer(currentSelectedMap);
+						}
+						selectedOptionId = 'moCleanOption1'
 						addYearSelect();
 						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 						setYearSelectorToLastDropdown();
@@ -742,6 +750,16 @@
 					}
 					arathia.addTo(map);
 					currentSelectedMap = arathia;
+
+					updateLayers(map, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground]);
+					updateCheckbox(0, true);
+					hideCheckBoxes(2);
+					addRadioButtons(iconChecked);
+
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					console.log("Changed selected map");
 					break;
 				case 'arOption2':
 					if (currentSelectedMap != arathia) {
@@ -749,6 +767,16 @@
 					} 
 					Test.addTo(map);
 					currentSelectedMap = Test;
+
+					updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
+					updateCheckbox(1, true);
+					hideCheckBoxes(1);
+					addRadioButtons(iconChecked);
+
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					console.log("Changed selected map");
 					break;
 				case 'arOption3':
 					if (currentSelectedMap != arathia) {
@@ -756,6 +784,15 @@
 					} 
 					Test2.addTo(map);
 					currentSelectedMap = Test2;
+
+					updateLayers(map, [morturiaBackground], [mo_all_layers, ar_all_layers, arathiaBackground]);
+					updateCheckbox(1, true);
+					hideCheckBoxes(1);
+					addRadioButtons(iconChecked);
+
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
 					break;
 				case 'arCleanOption1':
 					if (currentSelectedMap != arathiaClean) {
@@ -763,13 +800,55 @@
 					}
 					arathiaClean.addTo(map);
 					currentSelectedMap = arathiaClean;
+
+					updateLayers(map, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground]);
+					updateCheckbox(0, false);
+					hideCheckBoxes(2);
+					addRadioButtons(iconChecked);
+
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					break;
+				case 'arCleanOption2':
+					if (currentSelectedMap != arathiaClean) {
+						map.removeLayer(currentSelectedMap);
+					} 
+					Test.addTo(map);
+					currentSelectedMap = Test;
+
+					updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
+					updateCheckbox(1, true);
+					hideCheckBoxes(1);
+					addRadioButtons(iconChecked);
+
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					console.log("Changed selected map");
+					break;
+				case 'arCleanOption3':
+					if (currentSelectedMap != arathiaClean) {
+						map.removeLayer(currentSelectedMap);
+					} 
+					Test2.addTo(map);
+					currentSelectedMap = Test2;
+
+					updateLayers(map, [morturiaBackground, ar_all_layers], [mo_all_layers, arathiaBackground]);
+					updateCheckbox(1, false);
+					hideCheckBoxes(1);
+					addRadioButtons(iconChecked);
+
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
 					break;
 			}
 			console.log("Changed map to: ", currentSelectedMap);
 		}
 
 		function changeAllIcons(suffix) {
-			const layerGroups = [regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character']];
+			const layerGroups = [regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character'], regionLayerGroups['mo']['capital'], regionLayerGroups['mo']['cityBig'], regionLayerGroups['mo']['citySmall'], regionLayerGroups['mo']['town'], regionLayerGroups['mo']['nature'], regionLayerGroups['mo']['important'], regionLayerGroups['mo']['character']];
 			layerGroups.forEach(group => {
 				const layers = group.getLayers();
 				layers.forEach(layer => {
@@ -799,34 +878,64 @@
 				case 'Arathia':
 					map.removeLayer(ar_all_layers);
 					map.addLayer(ar_all_layers);
-					updateCheckbox(0, true)
-					hideCheckBoxes(3);
+					updateCheckbox(0, true);
+					hideCheckBoxes(2);
+					addRadioButtons(iconChecked);
+					if (currentSelectedMap != arathia) {
+						map.removeLayer(currentSelectedMap);
+					}
+					selectedOptionId = 'arOption1'
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					console.log("Changed selected map");
 					break;
 				case 'Arathia Clean':
 					map.addLayer(ar_all_layers);
 					map.removeLayer(ar_all_layers);
-					updateCheckbox(0, false)
-					hideCheckBoxes(3);
+					updateCheckbox(0, false);
+					hideCheckBoxes(2);
+					addRadioButtons(iconChecked);
+					if (currentSelectedMap != arathiaClean) {
+						map.removeLayer(currentSelectedMap);
+					}
+					selectedOptionId = 'arCleanOption1'
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					console.log("Changed selected map");
 					break;
 				case 'Morturia':
 					map.removeLayer(mo_all_layers);
 					map.addLayer(mo_all_layers);
-					updateCheckbox(2, true)
+					updateCheckbox(1, true);
 					hideCheckBoxes(1);
+					addRadioButtons(iconChecked);
+					if (currentSelectedMap != morturia) {
+						map.removeLayer(currentSelectedMap);
+					}
+					selectedOptionId = 'moOption1'
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					console.log("Changed selected map");
 					break;
 				case 'Morturia Clean':
 					map.addLayer(mo_all_layers);
 					map.removeLayer(mo_all_layers);
-					updateCheckbox(2, false)
+					updateCheckbox(1, false);
 					hideCheckBoxes(1);
+					addRadioButtons(iconChecked);
+					if (currentSelectedMap != morturiaClean) {
+						map.removeLayer(currentSelectedMap);
+					}
+					selectedOptionId = 'moCleanOption1'
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					console.log("Changed selected map");
 					break;
 			}
-			addRadioButtons(iconChecked)
-			addYearSelect();
-			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-			setYearSelectorToLastDropdown();
-			changeMapToSelected();
-			console.log("Changed selected map");
 		}
 
 		document.addEventListener('DOMContentLoaded', function () {
