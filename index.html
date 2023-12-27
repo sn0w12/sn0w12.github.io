@@ -161,27 +161,66 @@
 		});
 
 		function markerMaker() {
-			var coords = marker.getLatLng().toString().replace('LatLng','').replace('(','').replace(')','');
-			var customId = document.getElementById('Coords').value = coords;
+			// Load saved data
+			loadFormData();
+
+			var coords = marker.getLatLng().toString().replace('LatLng', '').replace('(', '').replace(')', '');
+			document.getElementById('Coords').value = coords;
+
+			// Add event listeners for each form element
+			var formElements = document.querySelectorAll('#Id, #Title, #Category, #Description, #Link, #LinkText, #CustomId');
+			formElements.forEach(function(element) {
+				element.addEventListener('change', saveFormData);
+			});
+
 			document.getElementById('DevButton').addEventListener('click', function() {
-				// Get values from input fields
-				var id = document.getElementById('Id').value;
-				var title = document.getElementById('Title').value;
-				var icon = document.getElementById('Category').value;
-				var selectedCategory = document.getElementById('Category');
-				var category = selectedCategory.options[selectedCategory.selectedIndex].id;
-				var description = document.getElementById('Description').value;
-				var linkEnabled = document.getElementById('Link').checked;
-				var linkTitle = document.getElementById('LinkText').value;
-				var customId = document.getElementById('CustomId').value;
-				var coords = marker.getLatLng().toString();
+				// Get form data
+				var formData = getFormData();
+				var output = generateMarker(formData.id, formData.title, formData.category, formData.icon, formData.description, formData.linkEnabled, formData.linkTitle, formData.coords, formData.customId);
 
-				// Call the generatePopupContent function
-				var output = generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId);
-
-				// Display the output in the 'Output' input field
+				// Display the output
 				document.getElementById('Output').value = output;
-			})
+			});
+
+			window.onbeforeunload = function() {
+				localStorage.removeItem('markerFormData');
+			};
+		}
+
+		// Get form data
+		function getFormData() {
+			return {
+				id: document.getElementById('Id').value,
+				title: document.getElementById('Title').value,
+				icon: document.getElementById('Category').value,
+				category: document.getElementById('Category').options[document.getElementById('Category').selectedIndex].id,
+				description: document.getElementById('Description').value,
+				linkEnabled: document.getElementById('Link').checked,
+				linkTitle: document.getElementById('LinkText').value,
+				customId: document.getElementById('CustomId').value,
+				coords: marker.getLatLng().toString()
+			};
+		}
+
+		// Save form data to localStorage
+		function saveFormData() {
+			var formData = getFormData();
+			localStorage.setItem('markerFormData', JSON.stringify(formData));
+		}
+
+		// Load form data from localStorage
+		function loadFormData() {
+			var savedData = localStorage.getItem('markerFormData');
+			if (savedData) {
+				savedData = JSON.parse(savedData);
+				document.getElementById('Id').value = savedData.id;
+				document.getElementById('Title').value = savedData.title;
+				document.getElementById('Category').value = savedData.icon;
+				document.getElementById('Description').value = savedData.description;
+				document.getElementById('Link').checked = savedData.linkEnabled;
+				document.getElementById('LinkText').value = savedData.linkTitle;
+				document.getElementById('CustomId').value = savedData.customId;
+			}
 		}
 
 		var formHTML = `
@@ -608,21 +647,25 @@
 					map.removeLayer(ar_all_layers);
 					map.addLayer(ar_all_layers);
 					updateCheckbox(0, true)
+					hideCheckBoxes(3);
 					break;
 				case 'Arathia Clean':
 					map.addLayer(ar_all_layers);
 					map.removeLayer(ar_all_layers);
 					updateCheckbox(0, false)
+					hideCheckBoxes(3);
 					break;
 				case 'Morturia':
 					map.removeLayer(mo_all_layers);
 					map.addLayer(mo_all_layers);
 					updateCheckbox(2, true)
+					hideCheckBoxes(1);
 					break;
 				case 'Morturia Clean':
 					map.addLayer(mo_all_layers);
 					map.removeLayer(mo_all_layers);
 					updateCheckbox(2, false)
+					hideCheckBoxes(1);
 					break;
 			}
 			addRadioButtons(iconChecked)
