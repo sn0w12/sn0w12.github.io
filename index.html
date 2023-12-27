@@ -20,10 +20,13 @@
 	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
 	<script type="text/javascript">
 		function generatePopupContent(title, category, description, linkEnabled, linkTitle) {
+			// If linkEnabled is true and linkTitle is provided, it uses linkTitle for the hyperlink otherwise it uses the title for the hyperlink.
+			// If linkEnabled is false, it just displays the title without a hyperlink.
 			const titleLink = linkEnabled 
 				? `<a href="wiki#${encodeURIComponent(linkTitle || title)}" target="_blank"><b><font size="+0.5">${title}</font></b><br /></a>`
 				: `<b><font size="+0.5">${title}</font></b><br />`;
 
+			// Image styles
 			const img1 = '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">';
 			const img2 = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">';
 
@@ -52,7 +55,7 @@
 			if (linkTitle)
 				linkTitle = ", '" + linkTitle + "'";
 
-			return `createAndAddMarker('${regionMap[id] || "mo"}', ${coords}, icon.${icon}, '${title}', '${newId.replace(',', '')}', generatePopupContent('${title}', '${category}', '${description}', ${linkEnabled}${linkTitle || ''}));`;
+			return `createAndAddMarker("${regionMap[id] || "mo"}", ${coords}, icons.${icon}, "${title}", "${newId.replace(",", "")}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${linkTitle || ""}));`;
 		}
 
 		var southWest = L.latLng(-70, -170),
@@ -254,10 +257,14 @@
 					<option value="citiesBig" id="Big City">Big City</option>
 					<option value="citiesSmall" id="Small City">Small City</option>
 					<option value="towns"id="Town">Town</option>
+					<option disabled>─────────────────────────</option>
 					<option value="nature" id="Forest">Forest</option>
 					<option value="nature" id="Mountain">Mountain</option>
 					<option value="nature" id="Cave">Cave</option>
+					<option disabled>─────────────────────────</option>
 					<option value="important" id="Important Location">Important Location</option>
+					<option value="important" id="Historical Location">Historical Location</option>
+					<option disabled>─────────────────────────</option>
 					<option value="characters" id="Character">Character</option>
 					</select>
 				<input class="custom-input" type="text" id="Description" placeholder="Description"></input>
@@ -298,6 +305,46 @@
 			},
 		};
 
+		function openAllPopupsInLayerGroup(region, group) {
+			if (regionLayerGroups[region] && regionLayerGroups[region][group]) {
+				var layerGroup = regionLayerGroups[region][group];
+
+				layerGroup.eachLayer(function(layer) {
+					if (layer instanceof L.Marker && layer.getPopup()) {
+						// Create a non-closable popup and bind it to the marker
+						var nonClosablePopup = L.popup({ autoClose: false, closeOnClick: false }).setContent(layer.getPopup().getContent());
+						layer.bindPopup(nonClosablePopup);
+
+						// Open the popup
+						layer.openPopup();
+					}
+				});
+			} else {
+				console.log("Invalid region or group");
+			}
+		}
+
+		function closeAllPopups() {
+			// Iterate through each region in the regionLayerGroups
+			for (var region in regionLayerGroups) {
+				if (regionLayerGroups.hasOwnProperty(region)) {
+					// Iterate through each group in the region
+					for (var group in regionLayerGroups[region]) {
+						if (regionLayerGroups[region].hasOwnProperty(group)) {
+							var layerGroup = regionLayerGroups[region][group];
+
+							// Close popup of each layer in the group
+							layerGroup.eachLayer(function(layer) {
+								if (layer instanceof L.Marker) {
+									layer.closePopup();
+								}
+							});
+						}
+					}
+				}
+			}
+		}
+
 		function createAndAddMarker(region, coords, icon, title, id, popupContent) {
 			var marker = L.marker(coords, { icon: icon, title: title, id: id }).bindPopup(popupContent);
 
@@ -312,7 +359,7 @@
 		//Arathia	
 		//Antaria
 		createAndAddMarker('ar', [32.720989, -41.187598], icons.capital, 'Antaria', 'an_capital', generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
-		//Important
+		//Locations
 		createAndAddMarker('ar', [45.04985, -79.242103], icons.important, 'Antarian Arch-Tree', 'an_archtree', generatePopupContent('Antarian Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
 		//Big Cities
 		createAndAddMarker('ar', [12.640338, -35.859375], icons.cityBig, 'Antarian Port City', 'an_city', generatePopupContent('Antarian Port City', 'Large City', 'A trade city in the HAE with a large port', false));
@@ -325,7 +372,7 @@
 
 		//Odrheim
 		createAndAddMarker('ar', [46.588506, 33.414077], icons.capital, 'Odrheim Capital', 'od_capital', generatePopupContent('Odrheim Capital', 'Capital', 'The capital of Odrheim', false));
-		//Important
+		//Locations
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -333,7 +380,7 @@
 
 		//Tunglheimr
 		createAndAddMarker('ar', [41.364997, 70.145929], icons.capital, 'Tungleheimr Capital', 'th_capital', generatePopupContent('Tungleheimr Capital', 'Capital', 'The capital of Tunglheimr', false));
-		//Important
+		//Locations
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -341,7 +388,7 @@
 		
 		//Rheinland
 		createAndAddMarker('ar', [15.641359, 138.427261], icons.capital, 'Rheinland Capital', 'rh_capital', generatePopupContent('Rheinland Capital', 'Capital', 'The capital of Rheinland', false));
-		//Important
+		//Locations
 		createAndAddMarker('ar', [27.803884, 131.965833], icons.important, 'Rheinland Arch-Tree', 'rh_archtree', generatePopupContent('Rheinland Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
 		//Big Cities
 		//Small Cities
@@ -350,7 +397,7 @@
 
 		//Golden Order
 
-		//Important
+		//Locations
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -358,15 +405,15 @@
 
 		//Azurith
 		createAndAddMarker('ar', [-23.271278, 104.100923], icons.capital, 'Azurith Capital', 'az_capital', generatePopupContent('Azurith Capital', 'Capital', 'The capital of Azurith', false));
-		//Important
+		//Locations
 		//Big Cities
 		//Small Cities
 		//Towns
 		//Nature
 
 		//Tsuki
-		createAndAddMarker('ar', [-26.786247, 10.234271], icons.capital, 'Getsuyōsei', 'ts_capital', generatePopupContent('Getsuyōsei', 'Capital', 'The capital of Tsuki Ōkoku', true));
-		//Important
+		createAndAddMarker('ar', [-26.786247, 10.234271], icons.capital, 'Getsuyōsei', 'ts_capital', generatePopupContent('Getsuyōsei', 'Capital', "Getsuyōsei, Tsuki Ōkoku's capital, glows with a blend of heritage and harmony. Pagodas reflect the moon's gleam, while the lunar fountain and moon-phase banners add to the city's vibrance. Local flavors and music enliven markets, and serene temples honor the moon goddess. The observatory highlights the kingdom's celestial connection.", true));
+		//Locations
 		createAndAddMarker('ar', [-17.677522, 10.600598], icons.important, 'Tsuki Arch-Tree', 'ts_archtree', generatePopupContent('Tsuki Arch-Tree', 'Important Location', 'The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.', true, 'Arch-Trees'));
 		createAndAddMarker('ar', [-52.329725, 58.377932], icons.important, 'Mizu-no-Iwaya', 'ts_mizunoiwaya', generatePopupContent('Mizu-no-Iwaya', 'Important Location', 'The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.', false));
 		//Big Cities
@@ -374,20 +421,20 @@
 		createAndAddMarker('ar', [-34.127172, -11.480145], icons.cityBig, 'Kinshū', 'ts_kinshū', generatePopupContent('Kinshū', 'Large City', 'A trading city, main trading partners are Trade Company and Primoria.', false));
 		createAndAddMarker('ar', [-50.232027, 66.709798], icons.cityBig, 'Hikari no Toshi', 'ts_hikari', generatePopupContent('Hikari no Toshi', 'Large City', '', false));
 		//Small Cities
-		createAndAddMarker('ar', [-32.556313, 28.080238], icons.citySmall, 'Amagumo', 'ts_amagumo', generatePopupContent('Amagumo', 'Small City', '', false));
-		createAndAddMarker('ar', [-60.418733, 26.314855], icons.citySmall, 'Yozora', 'ts_yozora', generatePopupContent('Yozora', 'Small City', '', false));
-		createAndAddMarker('ar', [-17.927417, 65.51944], icons.citySmall, 'Kōun', 'ts_kōun', generatePopupContent('Kōun', 'Small City', '', false));
-		createAndAddMarker('ar', [-35.440072, 48.867281], icons.citySmall, 'Shingetsu', 'ts_shingetsu', generatePopupContent('Shingetsu', 'Small City', '', false));
-		createAndAddMarker('ar', [-45.070751, 14.763658], icons.citySmall, 'Engetsu', 'ts_engetsu', generatePopupContent('Engetsu', 'Small City', '', false));
-		createAndAddMarker('ar', [-40.933431, 81.082085], icons.citySmall, 'Tsukimiya', 'ts_tsukimiya', generatePopupContent('Tsukimiya', 'Small City', 'Small city, mainly for communication and trade with eastern and northen countries', false));
+		createAndAddMarker('ar', [-32.556313, 28.080238], icons.citySmall, 'Amagumo', 'ts_amagumo', generatePopupContent('Amagumo', 'Small City', 'Nestled in the mountainous regions, known for its misty weather and skilled artisans who work with rare minerals and mountain resources.', false));
+		createAndAddMarker('ar', [-60.418733, 26.314855], icons.citySmall, 'Yozora', 'ts_yozora', generatePopupContent('Yozora', 'Small City', "Located in a remote area, known for its tranquil nights and a community deeply connected to nature, focusing on agriculture and stargazing.", false));
+		createAndAddMarker('ar', [-17.927417, 65.51944], icons.citySmall, 'Kōun', 'ts_kōun', generatePopupContent('Kōun', 'Small City', 'A prosperous city that benefits from nearby trade routes, known for its wealth and the influential merchants that reside there.', false));
+		createAndAddMarker('ar', [-35.440072, 48.867281], icons.citySmall, 'Shingetsu', 'ts_shingetsu', generatePopupContent('Shingetsu', 'Small City', 'A city that thrives under the light of the moon, famous for its observatory and scholars devoted to the study of celestial bodies and timekeeping.', false));
+		createAndAddMarker('ar', [-46.037499, 15.928128], icons.citySmall, 'Engetsu', 'ts_engetsu', generatePopupContent('Engetsu', 'Small City', 'Situated by a river, this city is a hub for fishermen and traders, renowned for its bustling fish markets and intricate waterways.', false));
+		createAndAddMarker('ar', [-40.933431, 81.082085], icons.citySmall, 'Tsukimiya', 'ts_tsukimiya', generatePopupContent('Tsukimiya', 'Small City', "Positioned strategically for trade, it's a melting pot of cultures, with busy markets offering exotic goods from distant lands.", false));
 		//Towns
-		createAndAddMarker('ar', [-1.52557, 55.842131], icons.town, 'Asahi', 'ts_asahi', generatePopupContent('Asahi', 'Town', 'A small town, disproportionately big military presence compared to its civilian population due to its proximity to the HAE', false));
-		createAndAddMarker('ar', [-38.316604, 56.327448], icons.town, 'Yūnagi', 'ts_yūnagi', generatePopupContent('Yūnagi', 'Town', '', false));
-		createAndAddMarker('ar', [-50.561846, 25.966938], icons.town, 'Tsukiakari', 'ts_tsukiakari', generatePopupContent('Tsukiakari', 'Town', '', false));
-		createAndAddMarker('ar', [-55.861359, 44.071459], icons.town, 'Suzuran', 'ts_suzuran', generatePopupContent('Suzuran', 'Town', '', false));
-		createAndAddMarker('ar', [-40.044885, 3.08464], icons.town, 'Yūdachi', 'ts_yūdachi', generatePopupContent('Yūdachi', 'Town', '', false));
-		createAndAddMarker('ar', [-28.800823, 72.574947], icons.town, 'Haruka', 'ts_haruka', generatePopupContent('Haruka', 'Town', '', false));
-		createAndAddMarker('ar', [-62.13469, 65.332354], icons.town, 'Kōri', 'ts_kōri', generatePopupContent('Kōri', 'Town', '', false));
+		createAndAddMarker('ar', [-1.52557, 55.842131], icons.town, 'Asahi', 'ts_asahi', generatePopupContent('Asahi', 'Town', "This modest town has a disproportionately large military outpost, crucial for coastal defense due to its proximity to the Holy Antarian Empire's border. The local populace is accustomed to the presence of soldiers and supports the garrison with fishing and repairs.", false));
+		createAndAddMarker('ar', [-38.316604, 56.327448], icons.town, 'Yūnagi', 'ts_yūnagi', generatePopupContent('Yūnagi', 'Town', "Tucked away in the mountains, Haruka is a small mining community. Its remote location makes it a quiet town, where most families are involved in the mining industry or supporting trades like blacksmithing.", false));
+		createAndAddMarker('ar', [-50.561846, 25.966938], icons.town, 'Tsukiakari', 'ts_tsukiakari', generatePopupContent('Tsukiakari', 'Town', "A town with a deep spiritual connection to the moon, Tsukiakari celebrates lunar events. Its small community is known for its night markets and observatory, which attracts a few curious travelers.", false));
+		createAndAddMarker('ar', [-55.861359, 44.071459], icons.town, 'Suzuran', 'ts_suzuran', generatePopupContent('Suzuran', 'Town', "Lying along a lake, Yūnagi is a quaint town whose markets are lively during trading seasons. It's a place where local farmers and craftsmen exchange goods with traveling merchants.", false));
+		createAndAddMarker('ar', [-40.044885, 3.08464], icons.town, 'Yūdachi', 'ts_yūdachi', generatePopupContent('Yūdachi', 'Town', "This town is known for its sudden evening showers that support its rich agriculture. Residents have adapted to quickly changing weather, and it has a tight-knit community known for its resilience.", false));
+		createAndAddMarker('ar', [-31.507445, 69.976505], icons.town, 'Haruka', 'ts_haruka', generatePopupContent('Haruka', 'Town', 'A town lying in the valley between the Yama no Kyōfū and ??? mountains.', false));
+		createAndAddMarker('ar', [-62.13469, 65.332354], icons.town, 'Kōri', 'ts_kōri', generatePopupContent('Kōri', 'Town', "A chilly town known for its ice fields in the winter and a small community specializing in crafting from ice and snow, like sculptors and builders who create homes designed to retain warmth.", false));
 		//Nature
 		createAndAddMarker('ar', [-52.306608, 37.804889], icons.nature, 'Hanabira Nagare', 'ts_hanabira', generatePopupContent('Hanabira Nagare', 'Lake', '', false));
 		createAndAddMarker('ar', [-36.031332, 57.919922], icons.nature, 'Yama no Kyōfū', 'ts_yama', generatePopupContent('Yama no Kyōfū', 'Mountain', 'The largest mountain range in Tsuki Ōkoku', false));
@@ -399,7 +446,7 @@
 
 		//Primoria
 		createAndAddMarker('ar', [-26.181457, -61.49786], icons.capital, 'Primorian Capital', 'pr_capital', generatePopupContent('Primorian Capital', 'Capital', 'The capital of Primoria', false));
-		//Important
+		//Locations
 		createAndAddMarker('ar', [-54.521081, -69.169922], icons.important, 'Primorian Arch-Tree', 'pr_archtree', generatePopupContent('Primorian Arch-Tree', 'Important Location', 'The Arch-Tree in Primoria', true, 'Arch-Trees'));
 		//Big Cities
 		//Small Cities
@@ -408,7 +455,7 @@
 
 		//Dryadalis
 		createAndAddMarker('ar', [-39.842286, -136.933594], icons.capital, 'Aeternum', 'dr_capital', generatePopupContent('Aeternum', 'Capital ', 'The capital of Dryadalis', false));
-		//Important
+		//Locations
 		//Big Cities
 		createAndAddMarker('ar', [-51.123378, -128.277507], icons.cityBig, 'Eldorath', 'dr_eldorath', generatePopupContent('Eldorath', 'Large City', '', false));
 		//Small Cities
@@ -423,7 +470,7 @@
 
 		//Trade Company
 
-		//Important
+		//Locations
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -431,7 +478,7 @@
 
 		//Gigantoria
 
-		//Important
+		//Locations
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -439,7 +486,7 @@
 
 		//Arcarum 
 
-		//Important
+		//Locations
 		//Big Cities
 		//Small Cities
 		//Towns
@@ -456,15 +503,15 @@
 		//Morturia
 		//Scientia
 		createAndAddMarker('mo', [39.994442, 89.15887], icons.capital, 'Scienta Capital', 'sc_capital', generatePopupContent('Scienta Capital', 'Capital', 'The capital of Scientia', false));
-		//Important"
+		//Locations"
 
 		//Ardeat
 		
-		//Important
+		//Locations
 
 		//Gelida
 		
-		//Important
+		//Locations
 
 		//Characters
 
@@ -483,7 +530,7 @@
 				"Small Cities": regionLayerGroups['ar']['citySmall'],
 				"Towns": regionLayerGroups['ar']['town'],
 				"Nature": regionLayerGroups['ar']['nature'],
-				"Important Locations": regionLayerGroups['ar']['important'],
+				"Locations": regionLayerGroups['ar']['important'],
 				"Characters": regionLayerGroups['ar']['character'],
 			},
 			"Developer": {
@@ -495,7 +542,7 @@
 				"Small Cities": regionLayerGroups['mo']['citySmall'],
 				"Towns": regionLayerGroups['mo']['town'],
 				"Nature": regionLayerGroups['mo']['nature'],
-				"Important Locations": regionLayerGroups['mo']['important'],
+				"Locations": regionLayerGroups['mo']['important'],
 				"Characters": regionLayerGroups['mo']['character'],
 			}
 		};
