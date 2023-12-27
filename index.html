@@ -549,9 +549,9 @@
 		//Marker Groups
 		var ar_all_layers = L.layerGroup([regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character']]);
 
-		var dv_coord = L.layerGroup([marker]);
-
 		var mo_all_layers = L.layerGroup([regionLayerGroups['mo']['capital'], regionLayerGroups['mo']['cityBig'], regionLayerGroups['mo']['citySmall'], regionLayerGroups['mo']['town'], regionLayerGroups['mo']['nature'], regionLayerGroups['mo']['important'], regionLayerGroups['mo']['character']]);
+		
+		var dv_coord = L.layerGroup([marker]);
 		
 		//Marker Overlay
 		var overlays = {
@@ -564,9 +564,6 @@
 				"Locations": regionLayerGroups['ar']['important'],
 				"Characters": regionLayerGroups['ar']['character'],
 			},
-			"Developer": {
-				"Marker Maker": dv_coord,
-			},
 			"Morturia": {
 				"Capitals": regionLayerGroups['mo']['capital'],
 				"Large Cities": regionLayerGroups['mo']['cityBig'],
@@ -575,6 +572,9 @@
 				"Nature": regionLayerGroups['mo']['nature'],
 				"Locations": regionLayerGroups['mo']['important'],
 				"Characters": regionLayerGroups['mo']['character'],
+			},
+			"Developer": {
+				"Marker Maker": dv_coord,
 			}
 		};
 		var options = {
@@ -653,27 +653,27 @@
 						updateMapStyles(map, '#31565a', controlSearchAr, controlSearchMo);
 						updateLayers(map, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground]);
 						updateCheckbox(0, true);
-						hideCheckBoxes(3);
+						hideCheckBoxes(2);
 						addRadioButtons(iconChecked);
 						break;
 					case 'Arathia Clean':
 						updateMapStyles(map, '#31565a', controlSearchAr, controlSearchMo);
 						updateLayers(map, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground]);
 						updateCheckbox(0, false);
-						hideCheckBoxes(3);
+						hideCheckBoxes(2);
 						addRadioButtons(iconChecked);
 						break;
 					case 'Morturia':
 						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
 						updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
-						updateCheckbox(2, true);
+						updateCheckbox(1, true);
 						hideCheckBoxes(1);
 						addRadioButtons(iconChecked);
 						break;
 					case 'Morturia Clean':
 						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
 						updateLayers(map, [morturiaBackground], [mo_all_layers, ar_all_layers, arathiaBackground]);
-						updateCheckbox(2, false);
+						updateCheckbox(1, false);
 						hideCheckBoxes(1);
 						addRadioButtons(iconChecked);
 						break;
@@ -755,7 +755,7 @@
 			var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
 			checkbox.checked = true;
 			addRadioButtons(1)
-			hideCheckBoxes(3);
+			hideCheckBoxes(2);
 		});
 
 		// Wait for the DOM to be ready
