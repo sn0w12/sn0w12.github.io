@@ -630,17 +630,20 @@
 		}
 
 		function updateLayers(map, addLayers, removeLayers) {
+			console.log('Updating Layers: Adding:', addLayers, 'Removing:', removeLayers);
+
+			// Remove all specified layers first, regardless of their current state
 			removeLayers.forEach(layer => {
-				if (isValidLayer(layer) && map.hasLayer(layer)) {
+				if (map.hasLayer(layer)) {
+					console.log('Removing layer:', layer);
 					map.removeLayer(layer);
-					console.log("Removed layer: ", layer);
 				}
 			});
+
+			// Then re-add all layers in the addLayers array
 			addLayers.forEach(layer => {
-				if (isValidLayer(layer) && !map.hasLayer(layer)){
-					map.addLayer(layer)
-					console.log("Added layer: ", layer);
-				}
+				console.log('Adding layer:', layer);
+				map.addLayer(layer);
 			});
 		}
 
@@ -789,22 +792,6 @@
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 					setYearSelectorToLastDropdown();
 					break;
-				case 'arOption3':
-					if (currentSelectedMap != arathia) {
-						map.removeLayer(currentSelectedMap);
-					} 
-					Test2.addTo(map);
-					currentSelectedMap = Test2;
-
-					updateLayers(map, [morturiaBackground], [mo_all_layers, ar_all_layers, arathiaBackground]);
-					updateCheckbox(1, false);
-					hideCheckBoxes(1);
-					addRadioButtons(iconChecked);
-
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
 				case 'arCleanOption1':
 					if (currentSelectedMap != arathiaClean) {
 						map.removeLayer(currentSelectedMap);
@@ -829,22 +816,6 @@
 					currentSelectedMap = Test3;
 
 					updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
-					updateCheckbox(1, true);
-					hideCheckBoxes(1);
-					addRadioButtons(iconChecked);
-
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
-				case 'arCleanOption3':
-					if (currentSelectedMap != arathiaClean) {
-						map.removeLayer(currentSelectedMap);
-					} 
-					Test4.addTo(map);
-					currentSelectedMap = Test4;
-
-					updateLayers(map, [ar_all_layers, morturiaBackground], [arathiaBackground]);
 					updateCheckbox(1, true);
 					hideCheckBoxes(1);
 					addRadioButtons(iconChecked);
@@ -970,14 +941,12 @@
 			if (label && label.textContent == " Arathia") {
 				createSelect("1257 A.A", "arOption1", dropdown);
 				createSelect("67 B.A", "arOption2", dropdown);
-				createSelect("517 B.R", "arOption3", dropdown); 
 			} else if (label && label.textContent == " Morturia") {
 				createSelect("1257 A.A", "moOption1", dropdown);
 				createSelect("???", "moOption2", dropdown); 
 			} else if (label && label.textContent == " Arathia Clean") {
 				createSelect("1257 A.A", "arCleanOption1", dropdown);
-				createSelect("67 B.A", "arCleanOption2", dropdown);
-				createSelect("517 B.R", "arCleanOption3", dropdown); 
+				createSelect("67 B.A", "arCleanOption2", dropdown); 
 			}
 
 			// Insert the dropdown after the parent label of the checked radio button
