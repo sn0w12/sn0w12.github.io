@@ -818,13 +818,13 @@ printRegionGroups(); Prints all region Groups
 
 					map.removeLayer(ar_all_layers);
 					map.addLayer(ar_all_layers);
-
+					
+					updateMapConfiguration(currentMap, selectedOptionId);
 					updateLayers(map, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground]);
 					updateCheckbox(0, true);
 					hideCheckBoxes(2);
 					addRadioButtons(iconChecked);
 
-					updateMapConfiguration(currentMap, selectedOptionId);
 
 					addYearSelect();
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
@@ -837,12 +837,12 @@ printRegionGroups(); Prints all region Groups
 					Test.addTo(map);
 					currentSelectedMap = Test;
 
+					updateMapConfiguration(currentMap, selectedOptionId);
 					updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
 					updateCheckbox(1, true);
 					hideCheckBoxes(1);
 					addRadioButtons(iconChecked);
 
-					updateMapConfiguration(currentMap, selectedOptionId);
 
 					addYearSelect();
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
@@ -855,12 +855,12 @@ printRegionGroups(); Prints all region Groups
 					arathiaClean.addTo(map);
 					currentSelectedMap = arathiaClean;
 
+					updateMapConfiguration(currentMap, selectedOptionId);
 					updateLayers(map, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground]);
 					updateCheckbox(0, false);
 					hideCheckBoxes(2);
 					addRadioButtons(iconChecked);
 
-					updateMapConfiguration(currentMap, selectedOptionId);
 
 					addYearSelect();
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
@@ -873,13 +873,13 @@ printRegionGroups(); Prints all region Groups
 					Test3.addTo(map);
 					currentSelectedMap = Test3;
 
+					updateMapConfiguration(currentMap, selectedOptionId);
 					updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
 					updateCheckbox(1, true);
 					hideCheckBoxes(1);
 					addRadioButtons(iconChecked);
 
-					updateMapConfiguration(currentMap, selectedOptionId);
-
+					
 					addYearSelect();
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 					setYearSelectorToLastDropdown();
@@ -916,28 +916,28 @@ printRegionGroups(); Prints all region Groups
 
 			switch (currentMap) {
 				case 'Arathia':
-					case 'Arathia Clean':
-					case 'Morturia':
-					case 'Morturia Clean':
-						// Common update map styles and layers
-						updateLayers(map, currentMapLayers[currentMap].show, currentMapLayers[currentMap].hide);
-						updateCheckbox(currentMapCheckbox[currentMap].index, currentMapCheckbox[currentMap].state);
-						hideCheckBoxes(currentMapCheckboxesToHide[currentMap]);
-						addRadioButtons(iconChecked);
+				case 'Arathia Clean':
+				case 'Morturia':
+				case 'Morturia Clean':
+					// Common update map styles and layers
+					updateLayers(map, currentMapLayers[currentMap].show, currentMapLayers[currentMap].hide);
+					updateCheckbox(currentMapCheckbox[currentMap].index, currentMapCheckbox[currentMap].state);
+					hideCheckBoxes(currentMapCheckboxesToHide[currentMap]);
+					addRadioButtons(iconChecked);
 
-						// Remove current layer if it's not the selected map
-						if (currentSelectedMap != currentMapLayers[currentMap].current) {
-							map.removeLayer(currentSelectedMap);
-						}
+					// Remove current layer if it's not the selected map
+					if (currentSelectedMap != currentMapLayers[currentMap].current) {
+						map.removeLayer(currentSelectedMap);
+					}
 
-						updateMapConfiguration(currentMap, selectedOptionId);
+					updateMapConfiguration(currentMap, selectedOptionId);
 
-						// Add year select dropdown
-						addYearSelect();
-						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-						setYearSelectorToLastDropdown();
-						updateSelectedOptionId();
-						break;
+					// Add year select dropdown
+					addYearSelect();
+					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+					setYearSelectorToLastDropdown();
+					updateSelectedOptionId();
+					break;
 			}
 		}
 
