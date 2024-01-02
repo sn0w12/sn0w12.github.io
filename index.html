@@ -314,10 +314,10 @@
 		// Print all console commands
 		function help() {
 			console.log(`
-			All availible commands:
-			openAllPopupsInLayerGroup(region, group); Opens all of the popups you want
-			closeAllPopups(); Closes all open popups
-			printRegionGroups(); Prints all region Groups
+All availible commands:
+openAllPopupsInLayerGroup(region, group); Opens all of the popups you want
+closeAllPopups(); Closes all open popups
+printRegionGroups(); Prints all region Groups
 			`);
 		}
 
@@ -392,7 +392,8 @@
 
 			return marker;
 		}
-		
+
+		//                     world																	 Title		Category   Description								 Link?
 		// createAndAddMarker('ar/mo', [coordinates], icons.icon, 'Country', 'id', generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
 
 		//Arathia	
@@ -454,7 +455,7 @@
 		createAndAddMarker('ar', [-26.786247, 10.234271], icons.capital, 'Getsuyōsei', 'ts_capital', generatePopupContent('Getsuyōsei', 'Capital', "Getsuyōsei, Tsuki Ōkoku's capital, glows with a blend of heritage and harmony. Pagodas reflect the moon's gleam, while the lunar fountain and moon-phase banners add to the city's vibrance. Local flavors and music enliven markets, and serene temples honor the moon goddess. The observatory highlights the kingdom's celestial connection.", true));
 		//Locations
 		createAndAddMarker('ar', [-17.677522, 10.600598], icons.important, 'Tsuki Arch-Tree', 'ts_archtree', generatePopupContent('Tsuki Arch-Tree', 'Important Location', 'The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.', true, 'Arch-Trees'));
-		createAndAddMarker('ar', [-52.329725, 58.377932], icons.important, 'Mizu-no-Iwaya', 'ts_mizunoiwaya', generatePopupContent('Mizu-no-Iwaya', 'Important Location', 'The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.', false));
+		createAndAddMarker('ar', [-52.329725, 58.377932], icons.important, 'Mizu-no-Iwaya', 'ts_mizunoiwaya', generatePopupContent('Mizu-no-Iwaya', 'Historical Location', 'The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.', false));
 		//Big Cities
 		createAndAddMarker('ar', [-13.88388, 37.332231], icons.cityBig, 'Sōgenshima', 'ts_sōgenshima', generatePopupContent('Sōgenshima', 'Large City', '', false));
 		createAndAddMarker('ar', [-34.127172, -11.480145], icons.cityBig, 'Kinshū', 'ts_kinshū', generatePopupContent('Kinshū', 'Large City', 'A trading city, main trading partners are Trade Company and Primoria.', false));
@@ -545,7 +546,7 @@
 		//Morturia
 		//Scientia
 		createAndAddMarker('mo', [39.994442, 89.15887], icons.capital, 'Scienta Capital', 'sc_capital', generatePopupContent('Scienta Capital', 'Capital', 'The capital of Scientia', false));
-		//Locations"
+		//Locations
 
 		//Ardeat
 		
@@ -635,19 +636,15 @@
 		}
 
 		function updateLayers(map, addLayers, removeLayers) {
-			console.log('Updating Layers: Adding:', addLayers, 'Removing:', removeLayers);
-
 			// Remove all specified layers first, regardless of their current state
 			removeLayers.forEach(layer => {
 				if (map.hasLayer(layer)) {
-					console.log('Removing layer:', layer);
 					map.removeLayer(layer);
 				}
 			});
 
 			// Then re-add all layers in the addLayers array
 			addLayers.forEach(layer => {
-				console.log('Adding layer:', layer);
 				map.addLayer(layer);
 			});
 		}
@@ -671,69 +668,124 @@
 			document.getElementById(elementId).hidden = false;
 		}
 
+		var defaultOptionIds = {
+			'Arathia': 'arOption1',
+			'Arathia Clean': 'arCleanOption1',
+			'Morturia': 'moOption1',
+			'Morturia Clean': 'moCleanOption1'
+		};
+
+		// Define a map to convert between optionIds when switching map types
+		var optionIdConversions = {
+			'arCleanOption2': 'arOption2',
+			'arOption2': 'arCleanOption2',
+			'moCleanOption2': 'moOption2',
+			'moOption2': 'moCleanOption2'
+		};
+
+		var mapConfigurations = {
+			'Arathia': {
+				color: '#31565a',
+				options: {
+					'arOption1': { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+					'arOption2': { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+				}
+			},
+			'Arathia Clean': {
+				color: '#31565a',
+				options: {
+					'arCleanOption1': { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+					'arCleanOption2': { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+				}
+			},
+			'Morturia': {
+				color: '#374539',
+				options: {
+					'moOption1': { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+					'moOption2': { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+				}
+			},
+			'Morturia Clean': {
+				color: '#374539',
+				options: {
+					'moCleanOption1': { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+					'moCleanOption2': { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+				}
+			},
+		};
+
+		var currentMapLayers = {
+			'Arathia': { show: [ar_all_layers, arathiaBackground], hide: [mo_all_layers, morturiaBackground], current: arathia },
+			'Arathia Clean': { show: [arathiaBackground], hide: [mo_all_layers, ar_all_layers, morturiaBackground], current: arathiaClean },
+			'Morturia': { show: [mo_all_layers, morturiaBackground], hide: [ar_all_layers, arathiaBackground], current: morturia },
+			'Morturia Clean': { show: [morturiaBackground], hide: [mo_all_layers, ar_all_layers, arathiaBackground], current: morturia },
+		};
+
+		var currentMapCheckbox = {
+			'Arathia': { index: 0, state: true },
+			'Arathia Clean': { index: 0, state: false },
+			'Morturia': { index: 1, state: true },
+			'Morturia Clean': { index: 1, state: false },
+		};
+
+		var currentMapCheckboxesToHide = {
+			'Arathia': 2,
+			'Arathia Clean': 2,
+			'Morturia': 1,
+			'Morturia Clean': 1,
+		};
+
+		function updateMapConfiguration(currentMap, selectedOptionId) {
+			var mapStyle = mapConfigurations[currentMap];
+			if (!mapStyle) {
+				console.error('No configuration found for currentMap:', currentMap);
+				return; // Exit if no configuration is found for the currentMap
+			}
+
+			var optionConfig = mapStyle.options[selectedOptionId];
+			if (!optionConfig) {
+				console.error('No configuration found for selectedOptionId:', selectedOptionId);
+				return; // Exit if no configuration is found for the selectedOptionId
+			}
+			console.log("Updated map styles");
+			updateMapStyles(map, mapStyle.color, optionConfig.controlSearch1, optionConfig.controlSearch2);
+		}
+
 		document.addEventListener('change', function (event) {
 			var radioButton = event.target;
 
 			if (radioButton.classList.contains('leaflet-control-layers-selector')) {
 				currentMap = getTrimmedText(radioButton);
+				// Define a map of default selectedOptionIds for each map type
+
 				switch (currentMap) {
 					case 'Arathia':
-						updateMapStyles(map, '#31565a', controlSearchAr, controlSearchMo);
-						updateLayers(map, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground]);
-						updateCheckbox(0, true);
-						hideCheckBoxes(2);
-						addRadioButtons(iconChecked);
-						if (currentSelectedMap != arathia) {
-							map.removeLayer(currentSelectedMap);
-						}
-						selectedOptionId = 'arOption1'
-						addYearSelect();
-						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-						setYearSelectorToLastDropdown();
-						break;
 					case 'Arathia Clean':
-						updateMapStyles(map, '#31565a', controlSearchAr, controlSearchMo);
-						updateLayers(map, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground]);
-						updateCheckbox(0, false);
-						hideCheckBoxes(2);
-						addRadioButtons(iconChecked);
-						if (currentSelectedMap != arathiaClean) {
-							map.removeLayer(currentSelectedMap);
-						}
-						selectedOptionId = 'arCleanOption1'
-						addYearSelect();
-						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-						setYearSelectorToLastDropdown();
-						break;
 					case 'Morturia':
-						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
-						updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
-						updateCheckbox(1, true);
-						hideCheckBoxes(1);
-						addRadioButtons(iconChecked);
-						if (currentSelectedMap != morturia) {
-							map.removeLayer(currentSelectedMap);
-						}
-						selectedOptionId = 'moOption1'
-						addYearSelect();
-						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-						setYearSelectorToLastDropdown();
-						break;
 					case 'Morturia Clean':
-						updateMapStyles(map, '#374539', controlSearchMo, controlSearchAr);
-						updateLayers(map, [morturiaBackground], [arathiaBackground]);
-						updateCheckbox(1, false);
-						hideCheckBoxes(1);
+						// Common update map styles and layers
+						updateLayers(map, currentMapLayers[currentMap].show, currentMapLayers[currentMap].hide);
+						updateCheckbox(currentMapCheckbox[currentMap].index, currentMapCheckbox[currentMap].state);
+						hideCheckBoxes(currentMapCheckboxesToHide[currentMap]);
 						addRadioButtons(iconChecked);
-						if (currentSelectedMap != morturiaClean) {
+
+						// Remove current layer if it's not the selected map
+						if (currentSelectedMap != currentMapLayers[currentMap].current) {
 							map.removeLayer(currentSelectedMap);
 						}
-						selectedOptionId = 'moCleanOption1'
+
+						// Convert selectedOptionId if necessary
+						selectedOptionId = optionIdConversions[selectedOptionId] || defaultOptionIds[currentMap];
+						updateMapConfiguration(currentMap, selectedOptionId);
+
+						// Add year select dropdown
 						addYearSelect();
 						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 						setYearSelectorToLastDropdown();
+						updateSelectedOptionId();
 						break;
 				}
+
 			} else if (radioButton.classList.contains('custom-radio-class')) {
 				var iconMap = {
 					'Default Icons': 1,
@@ -751,13 +803,6 @@
 		var oldSuffix = "";
 
 		var currentSelectedMap = arathia;
-
-		const yearMap = {
-			"arOption1": "arathia",
-			"arOption2": "Test",
-			"arCleanOption1": "arathiaClean",
-			"arCleanOption2": "Test",
-		};
 
 		function changeMapToSelected() {
 			var dropdown = document.getElementById('YearSelector');
@@ -934,6 +979,12 @@
 		var selectedOptionId = 'arOption1';
 
 		function addYearSelect() {
+			var existingDropdown = document.getElementById('YearSelector');
+			if (existingDropdown) {
+				// If it exists, remove it before creating a new one
+				existingDropdown.remove();
+			}
+
 			// Find the checked radio button
 			var checkedRadioButton = document.querySelector('.leaflet-control-layers-base input[type="radio"]:checked');
 			var label = checkedRadioButton.nextElementSibling;
@@ -948,12 +999,12 @@
 			if (label && label.textContent == " Arathia") {
 				createSelect("1257 A.A", "arOption1", dropdown);
 				createSelect("67 B.A", "arOption2", dropdown);
-			} else if (label && label.textContent == " Morturia") {
-				createSelect("1257 A.A", "moOption1", dropdown);
-				createSelect("???", "moOption2", dropdown); 
 			} else if (label && label.textContent == " Arathia Clean") {
 				createSelect("1257 A.A", "arCleanOption1", dropdown);
 				createSelect("67 B.A", "arCleanOption2", dropdown); 
+			} else if (label && label.textContent == " Morturia") {
+				createSelect("1257 A.A", "moOption1", dropdown);
+				createSelect("???", "moOption2", dropdown); 
 			}
 
 			// Insert the dropdown after the parent label of the checked radio button
@@ -972,6 +1023,7 @@
 			var dropdown = document.getElementById('YearSelector');
 			selectedOptionId = dropdown.options[dropdown.selectedIndex].id;
 			console.log("Selected Option ID:", selectedOptionId); // For demonstration
+			
 			changeMapToSelected();
 		}
 
@@ -1023,6 +1075,17 @@
 
 			// Get the overlay control container
 			var overlayContainer = document.querySelector('.leaflet-control-layers-overlays');
+
+			// Check and remove existing radio buttons and separators
+			var existingRadios = overlayContainer.querySelectorAll('.custom-radio-class');
+			var existingSeparators = overlayContainer.querySelectorAll('.leaflet-control-layers-separator');
+
+			existingRadios.forEach(function(radio) {
+				radio.parentNode.remove(); // This assumes the radio button is wrapped in a label
+			});
+			existingSeparators.forEach(function(separator) {
+				separator.remove();
+			});
 
 			// Create and append the separator div
 			var separatorDiv = document.createElement("div");
