@@ -824,6 +824,8 @@ printRegionGroups(); Prints all region Groups
 					hideCheckBoxes(2);
 					addRadioButtons(iconChecked);
 
+					updateMapConfiguration(currentMap, selectedOptionId);
+
 					addYearSelect();
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 					setYearSelectorToLastDropdown();
@@ -839,6 +841,8 @@ printRegionGroups(); Prints all region Groups
 					updateCheckbox(1, true);
 					hideCheckBoxes(1);
 					addRadioButtons(iconChecked);
+
+					updateMapConfiguration(currentMap, selectedOptionId);
 
 					addYearSelect();
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
@@ -856,6 +860,8 @@ printRegionGroups(); Prints all region Groups
 					hideCheckBoxes(2);
 					addRadioButtons(iconChecked);
 
+					updateMapConfiguration(currentMap, selectedOptionId);
+
 					addYearSelect();
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 					setYearSelectorToLastDropdown();
@@ -871,6 +877,8 @@ printRegionGroups(); Prints all region Groups
 					updateCheckbox(1, true);
 					hideCheckBoxes(1);
 					addRadioButtons(iconChecked);
+
+					updateMapConfiguration(currentMap, selectedOptionId);
 
 					addYearSelect();
 					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
@@ -921,7 +929,7 @@ printRegionGroups(); Prints all region Groups
 						if (currentSelectedMap != currentMapLayers[currentMap].current) {
 							map.removeLayer(currentSelectedMap);
 						}
-						
+
 						updateMapConfiguration(currentMap, selectedOptionId);
 
 						// Add year select dropdown
