@@ -908,61 +908,28 @@ printRegionGroups(); Prints all region Groups
 
 			switch (currentMap) {
 				case 'Arathia':
-					map.removeLayer(ar_all_layers);
-					map.addLayer(ar_all_layers);
-					updateCheckbox(0, true);
-					hideCheckBoxes(2);
-					addRadioButtons(iconChecked);
-					if (currentSelectedMap != arathia) {
-						map.removeLayer(currentSelectedMap);
-					}
-					selectedOptionId = 'arOption1'
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
-				case 'Arathia Clean':
-					map.addLayer(ar_all_layers);
-					map.removeLayer(ar_all_layers);
-					updateCheckbox(0, false);
-					hideCheckBoxes(2);
-					addRadioButtons(iconChecked);
-					if (currentSelectedMap != arathiaClean) {
-						map.removeLayer(currentSelectedMap);
-					}
-					selectedOptionId = 'arCleanOption1'
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
-				case 'Morturia':
-					map.removeLayer(mo_all_layers);
-					map.addLayer(mo_all_layers);
-					updateCheckbox(1, true);
-					hideCheckBoxes(1);
-					addRadioButtons(iconChecked);
-					if (currentSelectedMap != morturia) {
-						map.removeLayer(currentSelectedMap);
-					}
-					selectedOptionId = 'moOption1'
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
-				case 'Morturia Clean':
-					map.addLayer(mo_all_layers);
-					map.removeLayer(mo_all_layers);
-					updateCheckbox(1, false);
-					hideCheckBoxes(1);
-					addRadioButtons(iconChecked);
-					if (currentSelectedMap != morturiaClean) {
-						map.removeLayer(currentSelectedMap);
-					}
-					selectedOptionId = 'moCleanOption1'
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
+					case 'Arathia Clean':
+					case 'Morturia':
+					case 'Morturia Clean':
+						// Common update map styles and layers
+						updateLayers(map, currentMapLayers[currentMap].show, currentMapLayers[currentMap].hide);
+						updateCheckbox(currentMapCheckbox[currentMap].index, currentMapCheckbox[currentMap].state);
+						hideCheckBoxes(currentMapCheckboxesToHide[currentMap]);
+						addRadioButtons(iconChecked);
+
+						// Remove current layer if it's not the selected map
+						if (currentSelectedMap != currentMapLayers[currentMap].current) {
+							map.removeLayer(currentSelectedMap);
+						}
+						
+						updateMapConfiguration(currentMap, selectedOptionId);
+
+						// Add year select dropdown
+						addYearSelect();
+						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+						setYearSelectorToLastDropdown();
+						updateSelectedOptionId();
+						break;
 			}
 		}
 
