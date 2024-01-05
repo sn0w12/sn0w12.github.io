@@ -113,7 +113,7 @@
 		// Maps
 		var arathia = createMap('arathia', true, 2.75, 5.4, 'basePane', true);
 		var arathiaClean = createMap('arathiaClean', true, 2.75, 5.4, 'basePane', false);
-		var Test = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
+		var Test = createMap('arathia - kopia', true, 2.75, 5.4, 'addPane', false);
 		var Test2 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
 		var Test3 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
 		var Test4 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
@@ -683,6 +683,7 @@ printRegionGroups(); Prints all region Groups
 			'moOption2': 'moCleanOption2'
 		};
 
+		// Background color and Search to use for map
 		var mapConfigurations = {
 			'Arathia': {
 				color: '#31565a',
@@ -714,6 +715,7 @@ printRegionGroups(); Prints all region Groups
 			},
 		};
 
+		// Map layers to show/ hide and current map to show
 		var currentMapLayers = {
 			'Arathia': { show: [ar_all_layers, arathiaBackground], hide: [mo_all_layers, morturiaBackground], current: arathia },
 			'Arathia Clean': { show: [arathiaBackground], hide: [mo_all_layers, ar_all_layers, morturiaBackground], current: arathiaClean },
@@ -721,6 +723,7 @@ printRegionGroups(); Prints all region Groups
 			'Morturia Clean': { show: [morturiaBackground], hide: [mo_all_layers, ar_all_layers, arathiaBackground], current: morturia },
 		};
 
+		// Checkbox to check, checked or not
 		var currentMapCheckbox = {
 			'Arathia': { index: 0, state: true },
 			'Arathia Clean': { index: 0, state: false },
@@ -728,6 +731,7 @@ printRegionGroups(); Prints all region Groups
 			'Morturia Clean': { index: 1, state: false },
 		};
 
+		// Group of checkboxes to hide, 1 = Arathia, 2 = Morturia, 3 = dev
 		var currentMapCheckboxesToHide = {
 			'Arathia': 2,
 			'Arathia Clean': 2,
@@ -756,36 +760,26 @@ printRegionGroups(); Prints all region Groups
 
 			if (radioButton.classList.contains('leaflet-control-layers-selector')) {
 				currentMap = getTrimmedText(radioButton);
-				// Define a map of default selectedOptionIds for each map type
+				// Common update map styles and layers
+				updateLayers(map, currentMapLayers[currentMap].show, currentMapLayers[currentMap].hide);
+				updateCheckbox(currentMapCheckbox[currentMap].index, currentMapCheckbox[currentMap].state);
+				hideCheckBoxes(currentMapCheckboxesToHide[currentMap]);
+				addRadioButtons(iconChecked);
 
-				switch (currentMap) {
-					case 'Arathia':
-					case 'Arathia Clean':
-					case 'Morturia':
-					case 'Morturia Clean':
-						// Common update map styles and layers
-						updateLayers(map, currentMapLayers[currentMap].show, currentMapLayers[currentMap].hide);
-						updateCheckbox(currentMapCheckbox[currentMap].index, currentMapCheckbox[currentMap].state);
-						hideCheckBoxes(currentMapCheckboxesToHide[currentMap]);
-						addRadioButtons(iconChecked);
-
-						// Remove current layer if it's not the selected map
-						if (currentSelectedMap != currentMapLayers[currentMap].current) {
-							map.removeLayer(currentSelectedMap);
-						}
-
-						// Convert selectedOptionId if necessary
-						selectedOptionId = optionIdConversions[selectedOptionId] || defaultOptionIds[currentMap];
-						updateMapConfiguration(currentMap, selectedOptionId);
-
-						// Add year select dropdown
-						addYearSelect();
-						document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-						setYearSelectorToLastDropdown();
-						updateSelectedOptionId();
-						break;
+				// Remove current layer if it's not the selected map
+				if (currentSelectedMap != currentMapLayers[currentMap].current) {
+					map.removeLayer(currentSelectedMap);
 				}
 
+				// Convert selectedOptionId if necessary
+				selectedOptionId = optionIdConversions[selectedOptionId] || defaultOptionIds[currentMap];
+				updateMapConfiguration(currentMap, selectedOptionId);
+
+				// Add year select dropdown
+				addYearSelect();
+				document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+				setYearSelectorToLastDropdown();
+				updateSelectedOptionId();
 			} else if (radioButton.classList.contains('custom-radio-class')) {
 				var iconMap = {
 					'Default Icons': 1,
@@ -810,7 +804,7 @@ printRegionGroups(); Prints all region Groups
 
 			var mapActions = {
 				'arOption1': () => performActions(arathia, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground], 0, true, 2),
-				'arOption2': () => performActions(Test, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground], 1, true, 1),
+				'arOption2': () => performActions(Test, [mo_all_layers, arathiaBackground], [ar_all_layers, morturiaBackground], 1, true, 1),
 				'arCleanOption1': () => performActions(arathiaClean, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground], 0, false, 2),
 				'arCleanOption2': () => performActions(Test3, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground], 1, true, 1)
 			};
