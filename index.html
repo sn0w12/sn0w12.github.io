@@ -113,7 +113,7 @@
 		// Maps
 		var arathia = createMap('arathia', true, 2.75, 5.4, 'basePane', true);
 		var arathiaClean = createMap('arathiaClean', true, 2.75, 5.4, 'basePane', false);
-		var Test = createMap('arathia - kopia', true, 2.75, 5.4, 'addPane', false);
+		var Test = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
 		var Test2 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
 		var Test3 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
 		var Test4 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
@@ -668,13 +668,6 @@ printRegionGroups(); Prints all region Groups
 			document.getElementById(elementId).hidden = false;
 		}
 
-		var defaultOptionIds = {
-			'Arathia': 'arOption1',
-			'Arathia Clean': 'arCleanOption1',
-			'Morturia': 'moOption1',
-			'Morturia Clean': 'moCleanOption1'
-		};
-
 		// Define a map to convert between optionIds when switching map types
 		var optionIdConversions = {
 			'arCleanOption2': 'arOption2',
@@ -688,59 +681,128 @@ printRegionGroups(); Prints all region Groups
 			'Arathia': {
 				color: '#31565a',
 				options: {
-					'arOption1': { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
-					'arOption2': { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
-				}
+					'arOption1': {
+						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						mapLayer: arathia,
+						show: [ar_all_layers, arathiaBackground],
+						hide: [mo_all_layers, morturiaBackground],
+						checkboxIndex: 0,
+						checkboxState: true,
+						hideCheckboxCount: 2,
+					},
+					'arOption2': {
+						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						mapLayer: Test,
+						show: [mo_all_layers, arathiaBackground],
+						hide: [ar_all_layers, morturiaBackground],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+				},
+				show: [ar_all_layers, arathiaBackground],
+				hide: [mo_all_layers, morturiaBackground],
+				current: arathia,
+				checkboxIndex: 0, 
+				checkboxState: true,
+				hideCheckBox: 2,
+				defaultOptionId: 'arOption1',
 			},
 			'Arathia Clean': {
 				color: '#31565a',
 				options: {
-					'arCleanOption1': { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
-					'arCleanOption2': { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
-				}
+					'arCleanOption1': {
+						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						mapLayer: arathiaClean,
+						show: [arathiaBackground],
+						hide: [mo_all_layers, ar_all_layers, morturiaBackground],
+						checkboxIndex: 0,
+						checkboxState: false,
+						hideCheckboxCount: 2,
+					},
+					'arCleanOption2': {
+						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						mapLayer: Test3,
+						show: [mo_all_layers, arathiaBackground],
+						hide: [ar_all_layers, morturiaBackground],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+				},
+				show: [arathiaBackground],
+				hide: [mo_all_layers, ar_all_layers, morturiaBackground],
+				current: arathiaClean,
+				checkboxIndex: 0, 
+				checkboxState: false,
+				hideCheckBox: 2,
+				defaultOptionId: 'arCleanOption1',
 			},
 			'Morturia': {
 				color: '#374539',
 				options: {
-					'moOption1': { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
-					'moOption2': { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
-				}
+					'moOption1': {
+						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						mapLayer: morturia,
+						show: [mo_all_layers, morturiaBackground],
+						hide: [ar_all_layers, arathiaBackground],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+					'moOption2': {
+						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						mapLayer: morturia,
+						show: [mo_all_layers, morturiaBackground],
+						hide: [ar_all_layers, arathiaBackground],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+				},
+				show: [mo_all_layers, morturiaBackground],
+				hide: [ar_all_layers, arathiaBackground],
+				current: morturia,
+				checkboxIndex: 1, 
+				checkboxState: true,
+				hideCheckBox: 1,
+				defaultOptionId: 'moOption1',
 			},
 			'Morturia Clean': {
 				color: '#374539',
 				options: {
-					'moCleanOption1': { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
-					'moCleanOption2': { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
-				}
+					'moCleanOption1': {
+						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						mapLayer: morturia,
+						show: [mo_all_layers, morturiaBackground],
+						hide: [ar_all_layers, arathiaBackground],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+					'moCleanOption2': {
+						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						mapLayer: morturia,
+						show: [mo_all_layers, morturiaBackground],
+						hide: [ar_all_layers, arathiaBackground],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+				},
+				show: [morturiaBackground],
+				hide: [mo_all_layers, ar_all_layers, arathiaBackground],
+				current: morturia,
+				checkboxIndex: 1, 
+				checkboxState: false,
+				hideCheckBox: 1,
+				defaultOptionId: 'moCleanOption1',
 			},
-		};
-
-		// Map layers to show/ hide and current map to show
-		var currentMapLayers = {
-			'Arathia': { show: [ar_all_layers, arathiaBackground], hide: [mo_all_layers, morturiaBackground], current: arathia },
-			'Arathia Clean': { show: [arathiaBackground], hide: [mo_all_layers, ar_all_layers, morturiaBackground], current: arathiaClean },
-			'Morturia': { show: [mo_all_layers, morturiaBackground], hide: [ar_all_layers, arathiaBackground], current: morturia },
-			'Morturia Clean': { show: [morturiaBackground], hide: [mo_all_layers, ar_all_layers, arathiaBackground], current: morturia },
-		};
-
-		// Checkbox to check, checked or not
-		var currentMapCheckbox = {
-			'Arathia': { index: 0, state: true },
-			'Arathia Clean': { index: 0, state: false },
-			'Morturia': { index: 1, state: true },
-			'Morturia Clean': { index: 1, state: false },
-		};
-
-		// Group of checkboxes to hide, 1 = Arathia, 2 = Morturia, 3 = dev
-		var currentMapCheckboxesToHide = {
-			'Arathia': 2,
-			'Arathia Clean': 2,
-			'Morturia': 1,
-			'Morturia Clean': 1,
 		};
 
 		function updateMapConfiguration(currentMap, selectedOptionId) {
 			var mapStyle = mapConfigurations[currentMap];
+
 			if (!mapStyle) {
 				console.error('No configuration found for currentMap:', currentMap);
 				return; // Exit if no configuration is found for the currentMap
@@ -752,7 +814,7 @@ printRegionGroups(); Prints all region Groups
 				return; // Exit if no configuration is found for the selectedOptionId
 			}
 			console.log("Updated map styles");
-			updateMapStyles(map, mapStyle.color, optionConfig.controlSearch1, optionConfig.controlSearch2);
+			updateMapStyles(map, mapStyle.color, mapConfigurations[currentMap].options[selectedOptionId].search.controlSearch1, mapConfigurations[currentMap].options[selectedOptionId].search.controlSearch2);
 		}
 
 		document.addEventListener('change', function (event) {
@@ -761,18 +823,18 @@ printRegionGroups(); Prints all region Groups
 			if (radioButton.classList.contains('leaflet-control-layers-selector')) {
 				currentMap = getTrimmedText(radioButton);
 				// Common update map styles and layers
-				updateLayers(map, currentMapLayers[currentMap].show, currentMapLayers[currentMap].hide);
-				updateCheckbox(currentMapCheckbox[currentMap].index, currentMapCheckbox[currentMap].state);
-				hideCheckBoxes(currentMapCheckboxesToHide[currentMap]);
+				updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
+				updateCheckbox(mapConfigurations[currentMap].checkboxIndex, mapConfigurations[currentMap].checkboxState);
+				hideCheckBoxes(mapConfigurations[currentMap].hideCheckBox);
 				addRadioButtons(iconChecked);
 
 				// Remove current layer if it's not the selected map
-				if (currentSelectedMap != currentMapLayers[currentMap].current) {
+				if (currentSelectedMap != mapConfigurations[currentMap].current) {
 					map.removeLayer(currentSelectedMap);
 				}
 
 				// Convert selectedOptionId if necessary
-				selectedOptionId = optionIdConversions[selectedOptionId] || defaultOptionIds[currentMap];
+				selectedOptionId = optionIdConversions[selectedOptionId] || mapConfigurations[currentMap].defaultOptionId;
 				updateMapConfiguration(currentMap, selectedOptionId);
 
 				// Add year select dropdown
@@ -802,16 +864,9 @@ printRegionGroups(); Prints all region Groups
 			var dropdown = document.getElementById('YearSelector');
 			var selectedOption = dropdown.options[dropdown.selectedIndex].id;
 
-			var mapActions = {
-				'arOption1': () => performActions(arathia, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground], 0, true, 2),
-				'arOption2': () => performActions(Test, [mo_all_layers, arathiaBackground], [ar_all_layers, morturiaBackground], 1, true, 1),
-				'arCleanOption1': () => performActions(arathiaClean, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground], 0, false, 2),
-				'arCleanOption2': () => performActions(Test3, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground], 1, true, 1)
-			};
+			console.log(mapConfigurations[currentMap].options[selectedOption].show);
 
-			if (mapActions[selectedOption]) {
-				mapActions[selectedOption]();
-			}
+			performActions(mapConfigurations[currentMap].options[selectedOption].mapLayer, mapConfigurations[currentMap].options[selectedOption].show, mapConfigurations[currentMap].options[selectedOption].hide, mapConfigurations[currentMap].options[selectedOption].checkboxIndex, mapConfigurations[currentMap].options[selectedOption].checkboxState, mapConfigurations[currentMap].options[selectedOption].hideCheckboxCount)
 		}
 
 		function performActions(mapLayer, addLayers, removeLayers, checkboxIndex, checkboxState, hideCheckboxCount) {
@@ -859,31 +914,24 @@ printRegionGroups(); Prints all region Groups
 			const suffixMap = {1: '', 2: 'Old', 3: 'Simple'};
     		changeAllIcons(suffixMap[iconChecked] || '');
 
-			switch (currentMap) {
-				case 'Arathia':
-				case 'Arathia Clean':
-				case 'Morturia':
-				case 'Morturia Clean':
-					// Common update map styles and layers
-					updateLayers(map, currentMapLayers[currentMap].show, currentMapLayers[currentMap].hide);
-					updateCheckbox(currentMapCheckbox[currentMap].index, currentMapCheckbox[currentMap].state);
-					hideCheckBoxes(currentMapCheckboxesToHide[currentMap]);
-					addRadioButtons(iconChecked);
+			// Common update map styles and layers
+			updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
+			updateCheckbox(mapConfigurations[currentMap].checkboxIndex, mapConfigurations[currentMap].checkboxState);
+			hideCheckBoxes(mapConfigurations[currentMap].hideCheckBox);
+			addRadioButtons(iconChecked);
 
-					// Remove current layer if it's not the selected map
-					if (currentSelectedMap != currentMapLayers[currentMap].current) {
-						map.removeLayer(currentSelectedMap);
-					}
-
-					updateMapConfiguration(currentMap, selectedOptionId);
-
-					// Add year select dropdown
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					updateSelectedOptionId();
-					break;
+			// Remove current layer if it's not the selected map
+			if (currentSelectedMap != mapConfigurations[currentMap].current) {
+				map.removeLayer(currentSelectedMap);
 			}
+
+			updateMapConfiguration(currentMap, selectedOptionId);
+
+			// Add year select dropdown
+			addYearSelect();
+			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+			setYearSelectorToLastDropdown();
+			updateSelectedOptionId();
 		}
 
 		document.addEventListener('DOMContentLoaded', function () {
