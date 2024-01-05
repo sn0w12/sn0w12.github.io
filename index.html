@@ -808,83 +808,34 @@ printRegionGroups(); Prints all region Groups
 			var dropdown = document.getElementById('YearSelector');
 			var selectedOption = dropdown.options[dropdown.selectedIndex].id;
 
-			switch(selectedOption) {
-				case 'arOption1':
-					if (currentSelectedMap != arathia) {
-						map.removeLayer(currentSelectedMap);
-					}
-					arathia.addTo(map);
-					currentSelectedMap = arathia;
+			var mapActions = {
+				'arOption1': () => performActions(arathia, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground], 0, true, 2),
+				'arOption2': () => performActions(Test, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground], 1, true, 1),
+				'arCleanOption1': () => performActions(arathiaClean, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground], 0, false, 2),
+				'arCleanOption2': () => performActions(Test3, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground], 1, true, 1)
+			};
 
-					map.removeLayer(ar_all_layers);
-					map.addLayer(ar_all_layers);
-					
-					updateMapConfiguration(currentMap, selectedOptionId);
-					updateLayers(map, [ar_all_layers, arathiaBackground], [mo_all_layers, morturiaBackground]);
-					updateCheckbox(0, true);
-					hideCheckBoxes(2);
-					addRadioButtons(iconChecked);
-
-
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
-				case 'arOption2':
-					if (currentSelectedMap != arathia) {
-						map.removeLayer(currentSelectedMap);
-					} 
-					Test.addTo(map);
-					currentSelectedMap = Test;
-
-					updateMapConfiguration(currentMap, selectedOptionId);
-					updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
-					updateCheckbox(1, true);
-					hideCheckBoxes(1);
-					addRadioButtons(iconChecked);
-
-
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
-				case 'arCleanOption1':
-					if (currentSelectedMap != arathiaClean) {
-						map.removeLayer(currentSelectedMap);
-					}
-					arathiaClean.addTo(map);
-					currentSelectedMap = arathiaClean;
-
-					updateMapConfiguration(currentMap, selectedOptionId);
-					updateLayers(map, [arathiaBackground], [mo_all_layers, ar_all_layers, morturiaBackground]);
-					updateCheckbox(0, false);
-					hideCheckBoxes(2);
-					addRadioButtons(iconChecked);
-
-
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
-				case 'arCleanOption2':
-					if (currentSelectedMap != arathiaClean) {
-						map.removeLayer(currentSelectedMap);
-					} 
-					Test3.addTo(map);
-					currentSelectedMap = Test3;
-
-					updateMapConfiguration(currentMap, selectedOptionId);
-					updateLayers(map, [mo_all_layers, morturiaBackground], [ar_all_layers, arathiaBackground]);
-					updateCheckbox(1, true);
-					hideCheckBoxes(1);
-					addRadioButtons(iconChecked);
-
-					
-					addYearSelect();
-					document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-					setYearSelectorToLastDropdown();
-					break;
+			if (mapActions[selectedOption]) {
+				mapActions[selectedOption]();
 			}
+		}
+
+		function performActions(mapLayer, addLayers, removeLayers, checkboxIndex, checkboxState, hideCheckboxCount) {
+			if (currentSelectedMap != arathia && currentSelectedMap != arathiaClean && currentSelectedMap != morturia) {
+				map.removeLayer(currentSelectedMap);
+			}
+			mapLayer.addTo(map);
+			currentSelectedMap = mapLayer;
+
+			updateMapConfiguration(currentMap, selectedOptionId);
+			updateLayers(map, addLayers, removeLayers);
+			updateCheckbox(checkboxIndex, checkboxState);
+			hideCheckBoxes(hideCheckboxCount);
+			addRadioButtons(iconChecked);
+
+			addYearSelect();
+			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+			setYearSelectorToLastDropdown();
 		}
 
 		function changeAllIcons(suffix) {
@@ -971,15 +922,22 @@ printRegionGroups(); Prints all region Groups
 			dropdown.className = 'custom-select';
 
 			// Add options to the dropdown
-			if (label && label.textContent == " Arathia") {
-				createSelect("1257 A.A", "arOption1", dropdown);
-				createSelect("67 B.A", "arOption2", dropdown);
-			} else if (label && label.textContent == " Arathia Clean") {
-				createSelect("1257 A.A", "arCleanOption1", dropdown);
-				createSelect("67 B.A", "arCleanOption2", dropdown); 
-			} else if (label && label.textContent == " Morturia") {
-				createSelect("1257 A.A", "moOption1", dropdown);
-				createSelect("???", "moOption2", dropdown); 
+			switch (label && label.textContent) {
+				case " Arathia": {
+					createSelect("1257 A.A", "arOption1", dropdown);
+					createSelect("67 B.A", "arOption2", dropdown);
+					break;
+				}
+				case " Arathia Clean": {
+					createSelect("1257 A.A", "arCleanOption1", dropdown);
+					createSelect("67 B.A", "arCleanOption2", dropdown); 
+					break;
+				}
+				case " Morturia": {
+					createSelect("1257 A.A", "moOption1", dropdown);
+					createSelect("???", "moOption2", dropdown); 
+					break;
+				}
 			}
 
 			// Insert the dropdown after the parent label of the checked radio button
