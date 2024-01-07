@@ -334,7 +334,7 @@ removeMarker("Title"); Removes a marker with a specified title
 			`);
 		}
 
-		function removeMarkerByTitle(title) {
+		function removeMarker(title) {
 			var allMarkers = getAllMarkersFromGroups(); // Retrieve all markers
 
 			allMarkers.forEach(function(marker) {
@@ -438,7 +438,7 @@ removeMarker("Title"); Removes a marker with a specified title
 				if (id === "markerMaker") {
 					return; // Skip this marker
 				}
-				var idPrefix = id.substring(0, 2).toLowerCase(); // Ensure lowercase for matching
+				var idPrefix = id.substring(0, 2).toLowerCase();
 				var region = regionMap[idPrefix] || "mo";
 
 				var coords = [marker.getLatLng().lat, marker.getLatLng().lng];
