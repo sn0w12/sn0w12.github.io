@@ -56,8 +56,21 @@ This icon signifies various crucial locations significant to the world or the un
 The character icon designates where characters are currently residing. It helps track the locations of key individuals within the narrative, providing a visual reference for their movements and interactions throughout the world.
 
 ## Resources
+
 ### Map Framework
-The Arathia world map is powered by [Leaflet](https://github.com/Leaflet/Leaflet), an open-source JavaScript library for interactive maps. Leaflet provides a flexible and easy-to-use platform for displaying geographical data. A [plugin](https://github.com/ismyrnow/leaflet-groupedlayercontrol) is also used for grouped layer control. Another [plugin](https://github.com/stefanocudini/leaflet-search) was used for search functionality.
+The Arathia world map leverages the capabilities of [Leaflet](https://github.com/Leaflet/Leaflet), a robust and open-source JavaScript library designed for the development of interactive maps. Leaflet's user-friendly interface and versatile nature make it an ideal choice for presenting geographical data with ease.
+
+### Layer and Search Plugins
+To enhance the map's functionality, we utilize additional plugins:
+- **Grouped Layer Control**: The [Grouped Layer Control plugin](https://github.com/ismyrnow/leaflet-groupedlayercontrol) is integrated to manage multiple layers on the map efficiently, allowing users to easily switch between different types of information displayed.
+- **Search Functionality**: The map's search feature is powered by the [Leaflet Search plugin](https://github.com/stefanocudini/leaflet-search), providing a seamless experience in locating specific markers or regions on the map.
+
+### Marker Management with JSON
+- **JSON Storage**: All markers are stored in a `.json` file, which acts as a central repository for marker data. This includes information about each marker's location, icon, title, and other relevant details.
+- **Export and Import Features**: Users have the capability to export and import markers directly on the website. This feature enhances the ease of updating and managing the map's content:
+   - **Export**: Users can export the current state of markers on the map into a JSON file. This file can then be edited or used as a backup.
+   - **Import**: The import functionality allows users to upload a JSON file to add or update markers on the map. This process simplifies the addition of new markers and updates to existing ones.
+- **Simplified Marker Creation**: The integration of JSON for marker management streamlines the process of adding new markers. Users can create markers by updating the JSON file and importing it, making it straightforward to keep the map's content current and accurate.
 
 ### Base Maps
 The base maps for Arathia and Morturia were created using [Wonderdraft](https://www.wonderdraft.net/) using custom icons.
