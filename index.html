@@ -170,7 +170,7 @@
 			defaultIcon: createIcon('marker-icon', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor)
 		}
 
-		//Coordinate Finder
+		//Marker Maker
 		var marker = L.marker([0, 0], {
 			draggable: true,
 			id: "markerMaker"
@@ -330,7 +330,20 @@ All availible commands:
 openAllPopupsInLayerGroup(region, group); Opens all of the popups you want
 closeAllPopups(); Closes all open popups
 printRegionGroups(); Prints all region Groups
+removeMarker("Title"); Removes a marker with a specified title
 			`);
+		}
+
+		function removeMarkerByTitle(title) {
+			var allMarkers = getAllMarkersFromGroups(); // Retrieve all markers
+
+			allMarkers.forEach(function(marker) {
+				if (marker.options.title === title) {
+					// Remove the marker from the map
+					marker.remove();
+					return;
+				}
+			});
 		}
 
 		function printRegionGroups() {
@@ -1060,87 +1073,52 @@ printRegionGroups(); Prints all region Groups
 			});
 		};
 
-		function createWikiButton() {
-			const wikiButton = document.createElement('a');
-			wikiButton.className = 'leaflet-control-zoom-out';
-			wikiButton.href = 'wiki';
-			wikiButton.target = '_blank';
-			wikiButton.title = 'Wiki';
-			wikiButton.role = 'button';
-			wikiButton.style.cssText = 'display: flex; justify-content: center; align-items: center;';
+		function createControlButton(href, title, initialIconSrc, hoverIconSrc, onClick) {
+			const button = document.createElement('a');
+			button.className = 'leaflet-control-custom';
+			button.href = href;
+			button.title = title;
+			button.role = 'button';
+			button.style.cssText = 'display: flex; justify-content: center; align-items: center;';
 
 			const img = document.createElement('img');
-			img.src = 'icons/web1.png';
-			img.style.cssText = 'max-width: 16px; max-height: 16px;';
-
-			function toggleIcon(src) {
-				img.src = src;
-			}
-
-			wikiButton.addEventListener('mouseenter', () => toggleIcon('icons/web2.png'));
-			wikiButton.addEventListener('mouseleave', () => toggleIcon('icons/web1.png'));
-
-			wikiButton.appendChild(img);
-			return wikiButton;
-		}
-
-		function createExportButton() {
-			const exportButton = document.createElement('a');
-			exportButton.className = 'leaflet-control-custom';
-			exportButton.href = '#';
-			exportButton.title = 'Export JSON';
-			exportButton.role = 'button';
-			exportButton.style.cssText = 'display: flex; justify-content: center; align-items: center;';
-
-			const img = document.createElement('img');
-			img.src = 'icons/export1.png'; 
+			img.src = initialIconSrc;
 			img.style.cssText = 'max-width: auto; max-height: 16px;';
 
 			function toggleIcon(src) {
 				img.src = src;
 			}
 
-			exportButton.addEventListener('mouseenter', () => toggleIcon('icons/export2.png'));
-			exportButton.addEventListener('mouseleave', () => toggleIcon('icons/export1.png'));
+			button.addEventListener('mouseenter', () => toggleIcon(hoverIconSrc));
+			button.addEventListener('mouseleave', () => toggleIcon(initialIconSrc));
+			button.appendChild(img);
 
-			exportButton.appendChild(img);
+			button.addEventListener('click', onClick);
 
-			exportButton.addEventListener('click', (e) => {
-				e.preventDefault();
-				exportMarkersToJson();
-			});
-
-			return exportButton;
+			return button;
 		}
 
-		function createImportButton() {
-			const importButton = document.createElement('a');
-			importButton.className = 'leaflet-control-custom';
-			importButton.href = '#';
-			importButton.title = 'Import JSON';
-			importButton.role = 'button';
-			importButton.style.cssText = 'display: flex; justify-content: center; align-items: center;';
+		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
 
-			function toggleIcon(src) {
-				img.src = src;
-			}
+		const wikiButton = createControlButton('wiki', 'Wiki', 'icons/web1.png', 'icons/web2.png', (e) => {
+			e.preventDefault();
+			// Wiki button click behavior here
+			window.open('wiki', '_blank');
+		});
 
-			const img = document.createElement('img');
-			img.src = 'icons/import1.png';
-			img.style.cssText = 'max-width: auto; max-height: 16px;';
+		const exportButton = createControlButton('#', 'Export JSON', 'icons/export1.png', 'icons/export2.png', (e) => {
+			e.preventDefault();
+			exportMarkersToJson();
+		});
 
-			importButton.addEventListener('mouseenter', () => toggleIcon('icons/import2.png'));
-			importButton.addEventListener('mouseleave', () => toggleIcon('icons/import1.png'));
+		const importButton = createControlButton('#', 'Import JSON', 'icons/import1.png', 'icons/import2.png', (e) => {
+			e.preventDefault();
+			exportMarkersToJson();
+		});
 
-			importButton.appendChild(img);
-
-			importButton.addEventListener('click', (e) => {
-				e.preventDefault();
-				fileInput.click(); // Open file dialog
-			});
-
-			return importButton;
-		}
+		zoomControl.insertAdjacentElement('beforeend', wikiButton);
+		zoomControl.insertAdjacentElement('beforeend', exportButton);
+		zoomControl.insertAdjacentElement('beforeend', importButton);
 
 		function createFileInput() {
 			var fileInput = document.createElement('input');
@@ -1191,14 +1169,6 @@ printRegionGroups(); Prints all region Groups
 				);
 			});
 		}
-
-		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
-		const wikiButton = createWikiButton();
-		const exportButton = createExportButton();
-		const importButton = createImportButton();
-		zoomControl.insertAdjacentElement('beforeend', wikiButton);
-		zoomControl.insertAdjacentElement('beforeend', exportButton);
-		zoomControl.insertAdjacentElement('beforeend', importButton);
 
 		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
 
