@@ -34,7 +34,7 @@
 		}
 
 		const regionMap = {
-			"ar": "ar",
+			"an": "ar",
 			"od": "ar",
 			"th": "ar",
 			"rh": "ar",
@@ -241,7 +241,7 @@
 				<span class="custom-subtitle"><font size="-1">Country</font></span>
 				<select class="custom-select" name="Id" id="Id">
 					<option value="ac">Arcarum</option>
-					<option value="ar">Antaria</option>
+					<option value="an">Antaria</option>
 					<option value="az">Azurith</option>
 					<option value="dr">Dryadalis</option>
 					<option value="gi">Gigantoria</option>
@@ -382,9 +382,140 @@ printRegionGroups(); Prints all region Groups
 			}
 		}
 
+		function getAllMarkersFromGroups() {
+			var allMarkers = [];
+			var groups = [ar_all_layers, mo_all_layers, dv_coord]; // Include all your layer groups here
+
+			groups.forEach(function(group) {
+				extractMarkersFromLayer(group, allMarkers);
+			});
+
+			return allMarkers;
+		}
+
+		function extractMarkersFromLayer(layer, allMarkers) {
+			if (layer instanceof L.Marker) {
+				allMarkers.push(layer);
+			} else if (layer instanceof L.LayerGroup || layer instanceof L.FeatureGroup) {
+				layer.eachLayer(function(innerLayer) {
+					extractMarkersFromLayer(innerLayer, allMarkers);
+				});
+			}
+		}
+
+		function exportMarkersToJson() {
+			var markersData = [];
+			var allMarkers = getAllMarkersFromGroups();
+			console.log(allMarkers);
+
+			allMarkers.forEach(function(marker) {
+				var id = marker.options.id || "";
+				var idPrefix = id.substring(0, 2).toLowerCase(); // Ensure lowercase for matching
+				var region = regionMap[idPrefix] || "mo";
+
+				var coords = [marker.getLatLng().lat, marker.getLatLng().lng];
+				var icon = marker.options.icon.options.className;
+				var title = marker.options.title;
+				var popupContent = marker._popup._content;
+
+				if (popupContent){
+					var popupData = parsePopupContent(popupContent);
+				}
+
+				markersData.push({
+					region: region,
+					coordinates: coords,
+					icon: icon,
+					title: title,
+					id: id,
+					popuptitle: popupData.popuptitle,
+					category: popupData.category,
+					description: popupData.description,
+					link: popupData.link,
+					customlink: popupData.customlink
+				});
+			});
+
+			downloadJson(markersData);
+		}
+
+		function parsePopupContent(popupContent) {
+			var parser = new DOMParser();
+			var doc = parser.parseFromString(popupContent, 'text/html');
+
+			var popuptitle = doc.querySelector('b font')?.textContent || "";
+			var category = doc.querySelector('i font')?.textContent || "";
+			var description = getDescription(doc);
+
+			var linkElement = doc.querySelector('a');
+			var link = !!linkElement; // Boolean: true if a link exists, false otherwise
+
+			var customlink = null;
+			if (linkElement) {
+				var href = linkElement.getAttribute('href');
+				var linkText = href.split('#').pop(); // Extracting text after '#'
+				linkText = decodeURIComponent(linkText); // Decoding to plain text
+
+				customlink = (linkText !== popuptitle) ? linkText : null;
+			}
+
+			return {
+				popuptitle: popuptitle,
+				category: category,
+				description: description,
+				link: link,
+				customlink: customlink
+			};
+		}
+
+		function getDescription(doc) {
+			var foundCategory = false;
+			var foundBrTag = false;
+
+			var description = "";
+			var childNodes = doc.body.childNodes;
+			for (var i = 0; i < childNodes.length; i++) {
+				var node = childNodes[i];
+
+				// Check if we found the category and are at the <br /> tag
+				if (foundCategory && node.nodeName === "BR") {
+					foundBrTag = true;
+					continue;
+				}
+
+				// After finding the <br /> tag, the next text node is the description
+				if (foundBrTag && node.nodeType === Node.TEXT_NODE) {
+					description = node.textContent.trim();
+					break;
+				}
+
+				// Set foundCategory to true once we pass the category
+				if (node.querySelector && node.querySelector('i font')) {
+					foundCategory = true;
+				}
+			}
+
+			return description;
+		}
+
+		// Function to trigger the download of JSON file
+		function downloadJson(data) {
+			var jsonStr = JSON.stringify(data, null, 2);
+			var blob = new Blob([jsonStr], {type: "application/json"});
+			var url = URL.createObjectURL(blob);
+
+			var a = document.createElement('a');
+			a.href = url;
+			a.download = "markers.json";
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			URL.revokeObjectURL(url);
+		}
+
 		function createAndAddMarker(region, coords, icon, title, id, popupContent) {
 			var marker = L.marker(coords, { icon: icon, title: title, id: id }).bindPopup(popupContent);
-
+			
 			// Automatically add the marker to the correct group based on icon
 			if (regionLayerGroups[region] && regionLayerGroups[region][icon.options.className]) {
 				regionLayerGroups[region][icon.options.className].addLayer(marker);
@@ -408,7 +539,7 @@ printRegionGroups(); Prints all region Groups
 		createAndAddMarker('ar', [-1.841265, -73.559396], icons.town, 'Antarian Town', 'an_town', generatePopupContent('Antarian Town', 'Town', '', false));
 		createAndAddMarker('ar', [18.293698, -115.356925], icons.town, 'Antarian Town', 'an_town2', generatePopupContent('Antarian Town', 'Town', '', false));
 		//Nature
-		createAndAddMarker('ar', [27.302636, -81.285998], icons.nature, 'Antarian Mountain Range', 'ar_mountain', generatePopupContent('Antarian Mountain Range', 'Mountain', 'The largest mountain range in Antaria', false));
+		createAndAddMarker('ar', [27.302636, -81.285998], icons.nature, 'Antarian Mountain Range', 'an_mountain', generatePopupContent('Antarian Mountain Range', 'Mountain', 'The largest mountain range in Antaria', false));
 
 		//Odrheim
 		createAndAddMarker('ar', [46.588506, 33.414077], icons.capital, 'Odrheim Capital', 'od_capital', generatePopupContent('Odrheim Capital', 'Capital', 'The capital of Odrheim', false));
@@ -541,7 +672,7 @@ printRegionGroups(); Prints all region Groups
 		createAndAddMarker('ar', [-25.403585, 12.744141], icons.character, 'Miyamoto Reiko', 'ts_reiko', generatePopupContent('Miyamoto Reiko', 'Character', 'The current leader of Tsuki Ōkoku', true));
 
 		//Historical
-		createAndAddMarker("ar", [51.344339, -105.117188], icons.important, "Aztrus Capital Ruins", "ar_aztrus", generatePopupContent("Aztrus Capital Ruins", "Historical Location", "Ruins of the legendary Astruz capital, once a great city now only ruins of old", false));
+		createAndAddMarker("ar", [51.344339, -105.117188], icons.important, "Aztrus Capital Ruins", "an_aztrus", generatePopupContent("Aztrus Capital Ruins", "Historical Location", "Ruins of the legendary Astruz capital, once a great city now only ruins of old", false));
 
 		//Morturia
 		//Scientia
@@ -1106,9 +1237,56 @@ printRegionGroups(); Prints all region Groups
 			return wikiButton;
 		}
 
+		function createExportButton() {
+			const exportButton = document.createElement('a');
+			exportButton.className = 'leaflet-control-custom';
+			exportButton.href = '#';
+			exportButton.title = 'Export JSON';
+			exportButton.role = 'button';
+			exportButton.style.cssText = 'display: flex; justify-content: center; align-items: center;';
+
+			const img = document.createElement('img');
+			//img.src = 'icons/export.png'; // Assuming 'export.png' is your export icon
+			img.style.cssText = 'max-width: 16px; max-height: 16px;';
+
+			exportButton.appendChild(img);
+
+			exportButton.addEventListener('click', (e) => {
+				e.preventDefault();
+				exportMarkersToJson();
+			});
+
+			return exportButton;
+		}
+
+		function createImportButton() {
+			const importButton = document.createElement('a');
+			importButton.className = 'leaflet-control-custom';
+			importButton.href = '#';
+			importButton.title = 'Import JSON';
+			importButton.role = 'button';
+			importButton.style.cssText = 'display: flex; justify-content: center; align-items: center;';
+
+			const img = document.createElement('img');
+			//img.src = 'icons/import.png'; // Assuming 'import.png' is your import icon
+			img.style.cssText = 'max-width: 16px; max-height: 16px;';
+
+			importButton.appendChild(img);
+
+			importButton.addEventListener('click', (e) => {
+				e.preventDefault();
+				// Functionality for importing JSON goes here
+			});
+
+			return importButton;
+		}
+
 		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
 		const wikiButton = createWikiButton();
+		const exportButton = createExportButton();
+		const importButton = createImportButton();
 		zoomControl.insertAdjacentElement('beforeend', wikiButton);
+		zoomControl.insertAdjacentElement('beforeend', exportButton);
 
 		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
 	</script>		
