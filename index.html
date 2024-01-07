@@ -1113,7 +1113,7 @@ removeMarker("Title"); Removes a marker with a specified title
 
 		const importButton = createControlButton('#', 'Import JSON', 'icons/import1.png', 'icons/import2.png', (e) => {
 			e.preventDefault();
-			exportMarkersToJson();
+			fileInput.click();
 		});
 
 		zoomControl.insertAdjacentElement('beforeend', wikiButton);
@@ -1145,6 +1145,10 @@ removeMarker("Title"); Removes a marker with a specified title
 		var fileInput = createFileInput();
 
 		function processImportedData(jsonData) {
+			// Remove all existing markers
+			var allMarkers = getAllMarkersFromGroups();
+    		allMarkers.forEach(marker => marker.remove());
+
 			jsonData.forEach(markerData => {
 				var iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
 				if (!iconType) {
