@@ -1,0 +1,797 @@
+[
+  {
+    "region": "ar",
+    "coordinates": [
+      32.720989,
+      -41.187598
+    ],
+    "icon": "capital",
+    "title": "Antaria",
+    "id": "an_capital",
+    "popuptitle": "Antaria",
+    "category": "Capital",
+    "description": "The capital of the Holy Antarian Enpire",
+    "link": true,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      46.588506,
+      33.414077
+    ],
+    "icon": "capital",
+    "title": "Odrheim Capital",
+    "id": "od_capital",
+    "popuptitle": "Odrheim Capital",
+    "category": "Capital",
+    "description": "The capital of Odrheim",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      41.364997,
+      70.145929
+    ],
+    "icon": "capital",
+    "title": "Tungleheimr Capital",
+    "id": "th_capital",
+    "popuptitle": "Tungleheimr Capital",
+    "category": "Capital",
+    "description": "The capital of Tunglheimr",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      15.641359,
+      138.427261
+    ],
+    "icon": "capital",
+    "title": "Rheinland Capital",
+    "id": "rh_capital",
+    "popuptitle": "Rheinland Capital",
+    "category": "Capital",
+    "description": "The capital of Rheinland",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -23.271278,
+      104.100923
+    ],
+    "icon": "capital",
+    "title": "Azurith Capital",
+    "id": "az_capital",
+    "popuptitle": "Azurith Capital",
+    "category": "Capital",
+    "description": "The capital of Azurith",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -26.786247,
+      10.234271
+    ],
+    "icon": "capital",
+    "title": "Getsuyōsei",
+    "id": "ts_capital",
+    "popuptitle": "Getsuyōsei",
+    "category": "Capital",
+    "description": "Getsuyōsei, Tsuki Ōkoku's capital, glows with a blend of heritage and harmony. Pagodas reflect the moon's gleam, while the lunar fountain and moon-phase banners add to the city's vibrance. Local flavors and music enliven markets, and serene temples honor the moon goddess. The observatory highlights the kingdom's celestial connection.",
+    "link": true,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -26.181457,
+      -61.49786
+    ],
+    "icon": "capital",
+    "title": "Primorian Capital",
+    "id": "pr_capital",
+    "popuptitle": "Primorian Capital",
+    "category": "Capital",
+    "description": "The capital of Primoria",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -39.842286,
+      -136.933594
+    ],
+    "icon": "capital",
+    "title": "Aeternum",
+    "id": "dr_capital",
+    "popuptitle": "Aeternum",
+    "category": "Capital ",
+    "description": "The capital of Dryadalis",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      12.640338,
+      -35.859375
+    ],
+    "icon": "cityBig",
+    "title": "Antarian Port City",
+    "id": "an_city",
+    "popuptitle": "Antarian Port City",
+    "category": "Large City",
+    "description": "A trade city in the HAE with a large port",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -13.88388,
+      37.332231
+    ],
+    "icon": "cityBig",
+    "title": "Sōgenshima",
+    "id": "ts_sōgenshima",
+    "popuptitle": "Sōgenshima",
+    "category": "Large City",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -34.127172,
+      -11.480145
+    ],
+    "icon": "cityBig",
+    "title": "Kinshū",
+    "id": "ts_kinshū",
+    "popuptitle": "Kinshū",
+    "category": "Large City",
+    "description": "A trading city, main trading partners are Trade Company and Primoria.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -50.232027,
+      66.709798
+    ],
+    "icon": "cityBig",
+    "title": "Hikari no Toshi",
+    "id": "ts_hikari",
+    "popuptitle": "Hikari no Toshi",
+    "category": "Large City",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -51.123378,
+      -128.277507
+    ],
+    "icon": "cityBig",
+    "title": "Eldorath",
+    "id": "dr_eldorath",
+    "popuptitle": "Eldorath",
+    "category": "Large City",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -32.556313,
+      28.080238
+    ],
+    "icon": "citySmall",
+    "title": "Amagumo",
+    "id": "ts_amagumo",
+    "popuptitle": "Amagumo",
+    "category": "Small City",
+    "description": "Nestled in the mountainous regions, known for its misty weather and skilled artisans who work with rare minerals and mountain resources.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -60.418733,
+      26.314855
+    ],
+    "icon": "citySmall",
+    "title": "Yozora",
+    "id": "ts_yozora",
+    "popuptitle": "Yozora",
+    "category": "Small City",
+    "description": "Located in a remote area, known for its tranquil nights and a community deeply connected to nature, focusing on agriculture and stargazing.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -17.927417,
+      65.51944
+    ],
+    "icon": "citySmall",
+    "title": "Kōun",
+    "id": "ts_kōun",
+    "popuptitle": "Kōun",
+    "category": "Small City",
+    "description": "A prosperous city that benefits from nearby trade routes, known for its wealth and the influential merchants that reside there.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -35.440072,
+      48.867281
+    ],
+    "icon": "citySmall",
+    "title": "Shingetsu",
+    "id": "ts_shingetsu",
+    "popuptitle": "Shingetsu",
+    "category": "Small City",
+    "description": "A city that thrives under the light of the moon, famous for its observatory and scholars devoted to the study of celestial bodies and timekeeping.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -46.037499,
+      15.928128
+    ],
+    "icon": "citySmall",
+    "title": "Engetsu",
+    "id": "ts_engetsu",
+    "popuptitle": "Engetsu",
+    "category": "Small City",
+    "description": "Situated by a river, this city is a hub for fishermen and traders, renowned for its bustling fish markets and intricate waterways.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -40.933431,
+      81.082085
+    ],
+    "icon": "citySmall",
+    "title": "Tsukimiya",
+    "id": "ts_tsukimiya",
+    "popuptitle": "Tsukimiya",
+    "category": "Small City",
+    "description": "Positioned strategically for trade, it's a melting pot of cultures, with busy markets offering exotic goods from distant lands.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -49.111661,
+      -155.112608
+    ],
+    "icon": "citySmall",
+    "title": "Faerwyn",
+    "id": "dr_faerwyn",
+    "popuptitle": "Faerwyn",
+    "category": "Small City",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -1.841265,
+      -73.559396
+    ],
+    "icon": "town",
+    "title": "Antarian Town",
+    "id": "an_town",
+    "popuptitle": "Antarian Town",
+    "category": "Town",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      18.293698,
+      -115.356925
+    ],
+    "icon": "town",
+    "title": "Antarian Town",
+    "id": "an_town2",
+    "popuptitle": "Antarian Town",
+    "category": "Town",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -1.52557,
+      55.842131
+    ],
+    "icon": "town",
+    "title": "Asahi",
+    "id": "ts_asahi",
+    "popuptitle": "Asahi",
+    "category": "Town",
+    "description": "This modest town has a disproportionately large military outpost, crucial for coastal defense due to its proximity to the Holy Antarian Empire's border. The local populace is accustomed to the presence of soldiers and supports the garrison with fishing and repairs.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -38.316604,
+      56.327448
+    ],
+    "icon": "town",
+    "title": "Yūnagi",
+    "id": "ts_yūnagi",
+    "popuptitle": "Yūnagi",
+    "category": "Town",
+    "description": "Tucked away in the mountains, Haruka is a small mining community. Its remote location makes it a quiet town, where most families are involved in the mining industry or supporting trades like blacksmithing.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -50.561846,
+      25.966938
+    ],
+    "icon": "town",
+    "title": "Tsukiakari",
+    "id": "ts_tsukiakari",
+    "popuptitle": "Tsukiakari",
+    "category": "Town",
+    "description": "A town with a deep spiritual connection to the moon, Tsukiakari celebrates lunar events. Its small community is known for its night markets and observatory, which attracts a few curious travelers.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -55.861359,
+      44.071459
+    ],
+    "icon": "town",
+    "title": "Suzuran",
+    "id": "ts_suzuran",
+    "popuptitle": "Suzuran",
+    "category": "Town",
+    "description": "Lying along a lake, Yūnagi is a quaint town whose markets are lively during trading seasons. It's a place where local farmers and craftsmen exchange goods with traveling merchants.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -40.044885,
+      3.08464
+    ],
+    "icon": "town",
+    "title": "Yūdachi",
+    "id": "ts_yūdachi",
+    "popuptitle": "Yūdachi",
+    "category": "Town",
+    "description": "This town is known for its sudden evening showers that support its rich agriculture. Residents have adapted to quickly changing weather, and it has a tight-knit community known for its resilience.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -31.507445,
+      69.976505
+    ],
+    "icon": "town",
+    "title": "Haruka",
+    "id": "ts_haruka",
+    "popuptitle": "Haruka",
+    "category": "Town",
+    "description": "A town lying in the valley between the Yama no Kyōfū and ??? mountains.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -62.13469,
+      65.332354
+    ],
+    "icon": "town",
+    "title": "Kōri",
+    "id": "ts_kōri",
+    "popuptitle": "Kōri",
+    "category": "Town",
+    "description": "A chilly town known for its ice fields in the winter and a small community specializing in crafting from ice and snow, like sculptors and builders who create homes designed to retain warmth.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -46.664566,
+      -142.44974
+    ],
+    "icon": "town",
+    "title": "Elaris",
+    "id": "dr_elaris",
+    "popuptitle": "Elaris",
+    "category": "Town",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -57.328012,
+      -139.768383
+    ],
+    "icon": "town",
+    "title": "Galadrim",
+    "id": "dr_galadrim",
+    "popuptitle": "Galadrim",
+    "category": "Town",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      27.302636,
+      -81.285998
+    ],
+    "icon": "nature",
+    "title": "Antarian Mountain Range",
+    "id": "an_mountain",
+    "popuptitle": "Antarian Mountain Range",
+    "category": "Mountain",
+    "description": "The largest mountain range in Antaria",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -52.306608,
+      37.804889
+    ],
+    "icon": "nature",
+    "title": "Hanabira Nagare",
+    "id": "ts_hanabira",
+    "popuptitle": "Hanabira Nagare",
+    "category": "Lake",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -36.031332,
+      57.919922
+    ],
+    "icon": "nature",
+    "title": "Yama no Kyōfū",
+    "id": "ts_yama",
+    "popuptitle": "Yama no Kyōfū",
+    "category": "Mountain",
+    "description": "The largest mountain range in Tsuki Ōkoku",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -30.524413,
+      37.705078
+    ],
+    "icon": "nature",
+    "title": "Gekkōzan",
+    "id": "ts_gekkōzan",
+    "popuptitle": "Gekkōzan",
+    "category": "Mountain",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -16.910568,
+      0.642627
+    ],
+    "icon": "nature",
+    "title": "Hikari no Mori",
+    "id": "ts_hikarinomori",
+    "popuptitle": "Hikari no Mori",
+    "category": "Forest",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -50.176898,
+      50.712891
+    ],
+    "icon": "nature",
+    "title": "Mizu Hanabira no Mori",
+    "id": "ts_mizuhanabira",
+    "popuptitle": "Mizu Hanabira no Mori",
+    "category": "Forest",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -18.452263,
+      32.228559
+    ],
+    "icon": "nature",
+    "title": "Tsukiakari",
+    "id": "ts_tsukiakari",
+    "popuptitle": "Tsukiakari",
+    "category": "Forest",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -63.726971,
+      54.595624
+    ],
+    "icon": "nature",
+    "title": "Kōri Kaisen",
+    "id": "ts_kori",
+    "popuptitle": "Kōri Kaisen",
+    "category": "Shore",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -41.435969,
+      -150.186067
+    ],
+    "icon": "nature",
+    "title": "Feywood",
+    "id": "dr_feywood",
+    "popuptitle": "Feywood",
+    "category": "Forest",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -49.323654,
+      -150.75126
+    ],
+    "icon": "nature",
+    "title": "Lacus Serenus",
+    "id": "dr_lacus",
+    "popuptitle": "Lacus Serenus",
+    "category": "Lake",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -42.875964,
+      -142.119141
+    ],
+    "icon": "nature",
+    "title": "Verdantis Mons",
+    "id": "dr_verdantis",
+    "popuptitle": "Verdantis Mons",
+    "category": "Mountain",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      45.04985,
+      -79.242103
+    ],
+    "icon": "important",
+    "title": "Antarian Arch-Tree",
+    "id": "an_archtree",
+    "popuptitle": "Antarian Arch-Tree",
+    "category": "Important Location",
+    "description": "",
+    "link": true,
+    "customlink": "Arch-Trees"
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      27.803884,
+      131.965833
+    ],
+    "icon": "important",
+    "title": "Rheinland Arch-Tree",
+    "id": "rh_archtree",
+    "popuptitle": "Rheinland Arch-Tree",
+    "category": "Important Location",
+    "description": "",
+    "link": true,
+    "customlink": "Arch-Trees"
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -17.677522,
+      10.600598
+    ],
+    "icon": "important",
+    "title": "Tsuki Arch-Tree",
+    "id": "ts_archtree",
+    "popuptitle": "Tsuki Arch-Tree",
+    "category": "Important Location",
+    "description": "The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.",
+    "link": true,
+    "customlink": "Arch-Trees"
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -52.329725,
+      58.377932
+    ],
+    "icon": "important",
+    "title": "Mizu-no-Iwaya",
+    "id": "ts_mizunoiwaya",
+    "popuptitle": "Mizu-no-Iwaya",
+    "category": "Historical Location",
+    "description": "The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -54.521081,
+      -69.169922
+    ],
+    "icon": "important",
+    "title": "Primorian Arch-Tree",
+    "id": "pr_archtree",
+    "popuptitle": "Primorian Arch-Tree",
+    "category": "Important Location",
+    "description": "The Arch-Tree in Primoria",
+    "link": true,
+    "customlink": "Arch-Trees"
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      51.344339,
+      -105.117188
+    ],
+    "icon": "important",
+    "title": "Aztrus Capital Ruins",
+    "id": "an_aztrus",
+    "popuptitle": "Aztrus Capital Ruins",
+    "category": "Historical Location",
+    "description": "Ruins of the legendary Astruz capital, once a great city now only ruins of old",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -2.372369,
+      -72.685547
+    ],
+    "icon": "character",
+    "title": "Gerhard von Eichenwald",
+    "id": "an_gerhard",
+    "popuptitle": "Gerhard von Eichenwald",
+    "category": "Character",
+    "description": "Gerhards temporary camp in a small town in the Holy Antarian Empire",
+    "link": true,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -41.980887,
+      32.348339
+    ],
+    "icon": "character",
+    "title": "Nihil, the Eternal",
+    "id": "ts_nihil",
+    "popuptitle": "Nihil, the Eternal",
+    "category": "Character ",
+    "description": "Currently in hiding after the great dragon purge.",
+    "link": true,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      17.768594,
+      -114.376119
+    ],
+    "icon": "character",
+    "title": "Aurumoria, the Gilded Guardian",
+    "id": "an_aurumoria",
+    "popuptitle": "Aurumoria, the Gilded Guardian",
+    "category": "Character ",
+    "description": "Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.",
+    "link": true,
+    "customlink": null
+  },
+  {
+    "region": "ar",
+    "coordinates": [
+      -25.403585,
+      12.744141
+    ],
+    "icon": "character",
+    "title": "Miyamoto Reiko",
+    "id": "ts_reiko",
+    "popuptitle": "Miyamoto Reiko",
+    "category": "Character",
+    "description": "The current leader of Tsuki Ōkoku",
+    "link": true,
+    "customlink": null
+  },
+  {
+    "region": "mo",
+    "coordinates": [
+      39.994442,
+      89.15887
+    ],
+    "icon": "capital",
+    "title": "Scienta Capital",
+    "id": "sc_capital",
+    "popuptitle": "Scienta Capital",
+    "category": "Capital",
+    "description": "The capital of Scientia",
+    "link": false,
+    "customlink": null
+  }
+]

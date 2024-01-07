@@ -48,14 +48,21 @@
 		};
 
 		function generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId) {
-			coords = coords.replace('LatLng','').replace('(','[').replace(')',']');
-
+			coords = JSON.parse(coords.replace('LatLng', '').replace('(', '[').replace(')', ']'));
+			
 			var firstTitle = title.split(' ')[0].toLowerCase();
 			var newId = `${id}_${customId || firstTitle}`;
-			if (linkTitle)
-				linkTitle = ", '" + linkTitle + "'";
+			if (linkTitle) linkTitle = ", '" + linkTitle + "'";
+			
+			var region = regionMap[id] || "mo"; // Determine the region
+			var markerIcon = icons[icon]; // Determine the icon based on the icon type
+			var popupContent = generatePopupContent(title, category, description, linkEnabled, linkTitle || "");
 
-			return `createAndAddMarker("${regionMap[id] || "mo"}", ${coords}, icons.${icon}, "${title}", "${newId.replace(",", "")}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${linkTitle || ""}));`;
+			// Create and add the marker to the map
+			createAndAddMarker(region, coords, markerIcon, title, newId.replace(",", ""), popupContent);
+
+			// Return the string representation (optional, if you still need this)
+			return `createAndAddMarker("${region}", ${JSON.stringify(coords)}, icons.${icon}, "${title}", "${newId.replace(",", "")}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${linkTitle || ""}));`;
 		}
 
 		var southWest = L.latLng(-70, -170),
@@ -158,12 +165,15 @@
 			townSimple: createIcon('townSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] }).popupAnchor),
 			natureSimple: createIcon('natureSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] }).popupAnchor),
 			importantSimple: createIcon('importantSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] }).popupAnchor),
-			characterSimple: createIcon('characterSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor)
+			characterSimple: createIcon('characterSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+
+			defaultIcon: createIcon('marker-icon', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor)
 		}
 
 		//Coordinate Finder
 		var marker = L.marker([0, 0], {
 			draggable: true,
+			id: "markerMaker"
 		}).on('dragend', function() {
 			marker.openPopup();
 			markerMaker();
@@ -189,6 +199,8 @@
 
 				// Display the output
 				document.getElementById('Output').value = output;
+
+				marker.setLatLng([0, 0]);
 			});
 
 			window.onbeforeunload = function() {
@@ -410,6 +422,9 @@ printRegionGroups(); Prints all region Groups
 
 			allMarkers.forEach(function(marker) {
 				var id = marker.options.id || "";
+				if (id === "markerMaker") {
+					return; // Skip this marker
+				}
 				var idPrefix = id.substring(0, 2).toLowerCase(); // Ensure lowercase for matching
 				var region = regionMap[idPrefix] || "mo";
 
@@ -514,180 +529,19 @@ printRegionGroups(); Prints all region Groups
 		}
 
 		function createAndAddMarker(region, coords, icon, title, id, popupContent) {
+			if (!icon || !icon.options) {
+				console.error("Invalid icon:", icon);
+				return; // Stop execution if the icon is invalid
+			}
+
 			var marker = L.marker(coords, { icon: icon, title: title, id: id }).bindPopup(popupContent);
 			
-			// Automatically add the marker to the correct group based on icon
 			if (regionLayerGroups[region] && regionLayerGroups[region][icon.options.className]) {
 				regionLayerGroups[region][icon.options.className].addLayer(marker);
 			}
 
 			return marker;
 		}
-
-		//                     world																	 Title		Category   Description								 Link?
-		// createAndAddMarker('ar/mo', [coordinates], icons.icon, 'Country', 'id', generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
-
-		//Arathia	
-		//Antaria
-		createAndAddMarker('ar', [32.720989, -41.187598], icons.capital, 'Antaria', 'an_capital', generatePopupContent('Antaria', 'Capital', 'The capital of the Holy Antarian Enpire', true));
-		//Locations
-		createAndAddMarker('ar', [45.04985, -79.242103], icons.important, 'Antarian Arch-Tree', 'an_archtree', generatePopupContent('Antarian Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
-		//Big Cities
-		createAndAddMarker('ar', [12.640338, -35.859375], icons.cityBig, 'Antarian Port City', 'an_city', generatePopupContent('Antarian Port City', 'Large City', 'A trade city in the HAE with a large port', false));
-		//Small Cities
-		//Towns
-		createAndAddMarker('ar', [-1.841265, -73.559396], icons.town, 'Antarian Town', 'an_town', generatePopupContent('Antarian Town', 'Town', '', false));
-		createAndAddMarker('ar', [18.293698, -115.356925], icons.town, 'Antarian Town', 'an_town2', generatePopupContent('Antarian Town', 'Town', '', false));
-		//Nature
-		createAndAddMarker('ar', [27.302636, -81.285998], icons.nature, 'Antarian Mountain Range', 'an_mountain', generatePopupContent('Antarian Mountain Range', 'Mountain', 'The largest mountain range in Antaria', false));
-
-		//Odrheim
-		createAndAddMarker('ar', [46.588506, 33.414077], icons.capital, 'Odrheim Capital', 'od_capital', generatePopupContent('Odrheim Capital', 'Capital', 'The capital of Odrheim', false));
-		//Locations
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-
-		//Tunglheimr
-		createAndAddMarker('ar', [41.364997, 70.145929], icons.capital, 'Tungleheimr Capital', 'th_capital', generatePopupContent('Tungleheimr Capital', 'Capital', 'The capital of Tunglheimr', false));
-		//Locations
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-		
-		//Rheinland
-		createAndAddMarker('ar', [15.641359, 138.427261], icons.capital, 'Rheinland Capital', 'rh_capital', generatePopupContent('Rheinland Capital', 'Capital', 'The capital of Rheinland', false));
-		//Locations
-		createAndAddMarker('ar', [27.803884, 131.965833], icons.important, 'Rheinland Arch-Tree', 'rh_archtree', generatePopupContent('Rheinland Arch-Tree', 'Important Location', '', true, 'Arch-Trees'));
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-
-		//Golden Order
-
-		//Locations
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-
-		//Azurith
-		createAndAddMarker('ar', [-23.271278, 104.100923], icons.capital, 'Azurith Capital', 'az_capital', generatePopupContent('Azurith Capital', 'Capital', 'The capital of Azurith', false));
-		//Locations
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-
-		//Tsuki
-		createAndAddMarker('ar', [-26.786247, 10.234271], icons.capital, 'Getsuyōsei', 'ts_capital', generatePopupContent('Getsuyōsei', 'Capital', "Getsuyōsei, Tsuki Ōkoku's capital, glows with a blend of heritage and harmony. Pagodas reflect the moon's gleam, while the lunar fountain and moon-phase banners add to the city's vibrance. Local flavors and music enliven markets, and serene temples honor the moon goddess. The observatory highlights the kingdom's celestial connection.", true));
-		//Locations
-		createAndAddMarker('ar', [-17.677522, 10.600598], icons.important, 'Tsuki Arch-Tree', 'ts_archtree', generatePopupContent('Tsuki Arch-Tree', 'Important Location', 'The Arch-Tree located in the city Getsuyōsei, blossoming in a beautiful blue color.', true, 'Arch-Trees'));
-		createAndAddMarker('ar', [-52.329725, 58.377932], icons.important, 'Mizu-no-Iwaya', 'ts_mizunoiwaya', generatePopupContent('Mizu-no-Iwaya', 'Historical Location', 'The cave where the first Gekkōjin “Tsukikage Genjiro” sought enlightenment.', false));
-		//Big Cities
-		createAndAddMarker('ar', [-13.88388, 37.332231], icons.cityBig, 'Sōgenshima', 'ts_sōgenshima', generatePopupContent('Sōgenshima', 'Large City', '', false));
-		createAndAddMarker('ar', [-34.127172, -11.480145], icons.cityBig, 'Kinshū', 'ts_kinshū', generatePopupContent('Kinshū', 'Large City', 'A trading city, main trading partners are Trade Company and Primoria.', false));
-		createAndAddMarker('ar', [-50.232027, 66.709798], icons.cityBig, 'Hikari no Toshi', 'ts_hikari', generatePopupContent('Hikari no Toshi', 'Large City', '', false));
-		//Small Cities
-		createAndAddMarker('ar', [-32.556313, 28.080238], icons.citySmall, 'Amagumo', 'ts_amagumo', generatePopupContent('Amagumo', 'Small City', 'Nestled in the mountainous regions, known for its misty weather and skilled artisans who work with rare minerals and mountain resources.', false));
-		createAndAddMarker('ar', [-60.418733, 26.314855], icons.citySmall, 'Yozora', 'ts_yozora', generatePopupContent('Yozora', 'Small City', "Located in a remote area, known for its tranquil nights and a community deeply connected to nature, focusing on agriculture and stargazing.", false));
-		createAndAddMarker('ar', [-17.927417, 65.51944], icons.citySmall, 'Kōun', 'ts_kōun', generatePopupContent('Kōun', 'Small City', 'A prosperous city that benefits from nearby trade routes, known for its wealth and the influential merchants that reside there.', false));
-		createAndAddMarker('ar', [-35.440072, 48.867281], icons.citySmall, 'Shingetsu', 'ts_shingetsu', generatePopupContent('Shingetsu', 'Small City', 'A city that thrives under the light of the moon, famous for its observatory and scholars devoted to the study of celestial bodies and timekeeping.', false));
-		createAndAddMarker('ar', [-46.037499, 15.928128], icons.citySmall, 'Engetsu', 'ts_engetsu', generatePopupContent('Engetsu', 'Small City', 'Situated by a river, this city is a hub for fishermen and traders, renowned for its bustling fish markets and intricate waterways.', false));
-		createAndAddMarker('ar', [-40.933431, 81.082085], icons.citySmall, 'Tsukimiya', 'ts_tsukimiya', generatePopupContent('Tsukimiya', 'Small City', "Positioned strategically for trade, it's a melting pot of cultures, with busy markets offering exotic goods from distant lands.", false));
-		//Towns
-		createAndAddMarker('ar', [-1.52557, 55.842131], icons.town, 'Asahi', 'ts_asahi', generatePopupContent('Asahi', 'Town', "This modest town has a disproportionately large military outpost, crucial for coastal defense due to its proximity to the Holy Antarian Empire's border. The local populace is accustomed to the presence of soldiers and supports the garrison with fishing and repairs.", false));
-		createAndAddMarker('ar', [-38.316604, 56.327448], icons.town, 'Yūnagi', 'ts_yūnagi', generatePopupContent('Yūnagi', 'Town', "Tucked away in the mountains, Haruka is a small mining community. Its remote location makes it a quiet town, where most families are involved in the mining industry or supporting trades like blacksmithing.", false));
-		createAndAddMarker('ar', [-50.561846, 25.966938], icons.town, 'Tsukiakari', 'ts_tsukiakari', generatePopupContent('Tsukiakari', 'Town', "A town with a deep spiritual connection to the moon, Tsukiakari celebrates lunar events. Its small community is known for its night markets and observatory, which attracts a few curious travelers.", false));
-		createAndAddMarker('ar', [-55.861359, 44.071459], icons.town, 'Suzuran', 'ts_suzuran', generatePopupContent('Suzuran', 'Town', "Lying along a lake, Yūnagi is a quaint town whose markets are lively during trading seasons. It's a place where local farmers and craftsmen exchange goods with traveling merchants.", false));
-		createAndAddMarker('ar', [-40.044885, 3.08464], icons.town, 'Yūdachi', 'ts_yūdachi', generatePopupContent('Yūdachi', 'Town', "This town is known for its sudden evening showers that support its rich agriculture. Residents have adapted to quickly changing weather, and it has a tight-knit community known for its resilience.", false));
-		createAndAddMarker('ar', [-31.507445, 69.976505], icons.town, 'Haruka', 'ts_haruka', generatePopupContent('Haruka', 'Town', 'A town lying in the valley between the Yama no Kyōfū and ??? mountains.', false));
-		createAndAddMarker('ar', [-62.13469, 65.332354], icons.town, 'Kōri', 'ts_kōri', generatePopupContent('Kōri', 'Town', "A chilly town known for its ice fields in the winter and a small community specializing in crafting from ice and snow, like sculptors and builders who create homes designed to retain warmth.", false));
-		//Nature
-		createAndAddMarker('ar', [-52.306608, 37.804889], icons.nature, 'Hanabira Nagare', 'ts_hanabira', generatePopupContent('Hanabira Nagare', 'Lake', '', false));
-		createAndAddMarker('ar', [-36.031332, 57.919922], icons.nature, 'Yama no Kyōfū', 'ts_yama', generatePopupContent('Yama no Kyōfū', 'Mountain', 'The largest mountain range in Tsuki Ōkoku', false));
-		createAndAddMarker('ar', [-30.524413, 37.705078], icons.nature, 'Gekkōzan', 'ts_gekkōzan', generatePopupContent('Gekkōzan', 'Mountain', '', false));
-		createAndAddMarker('ar', [-16.910568, 0.642627], icons.nature, 'Hikari no Mori', 'ts_hikarinomori', generatePopupContent('Hikari no Mori', 'Forest', '', false));
-		createAndAddMarker('ar', [-50.176898, 50.712891], icons.nature, 'Mizu Hanabira no Mori', 'ts_mizuhanabira', generatePopupContent('Mizu Hanabira no Mori', 'Forest', '', false));
-		createAndAddMarker('ar', [-18.452263, 32.228559], icons.nature, 'Tsukiakari', 'ts_tsukiakari', generatePopupContent('Tsukiakari', 'Forest', '', false));
-		createAndAddMarker('ar', [-63.726971, 54.595624], icons.nature, 'Kōri Kaisen', 'ts_kori', generatePopupContent('Kōri Kaisen', 'Shore', '', false));
-
-		//Primoria
-		createAndAddMarker('ar', [-26.181457, -61.49786], icons.capital, 'Primorian Capital', 'pr_capital', generatePopupContent('Primorian Capital', 'Capital', 'The capital of Primoria', false));
-		//Locations
-		createAndAddMarker('ar', [-54.521081, -69.169922], icons.important, 'Primorian Arch-Tree', 'pr_archtree', generatePopupContent('Primorian Arch-Tree', 'Important Location', 'The Arch-Tree in Primoria', true, 'Arch-Trees'));
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-
-		//Dryadalis
-		createAndAddMarker('ar', [-39.842286, -136.933594], icons.capital, 'Aeternum', 'dr_capital', generatePopupContent('Aeternum', 'Capital ', 'The capital of Dryadalis', false));
-		//Locations
-		//Big Cities
-		createAndAddMarker('ar', [-51.123378, -128.277507], icons.cityBig, 'Eldorath', 'dr_eldorath', generatePopupContent('Eldorath', 'Large City', '', false));
-		//Small Cities
-		createAndAddMarker('ar', [-49.111661, -155.112608], icons.citySmall, 'Faerwyn', 'dr_faerwyn', generatePopupContent('Faerwyn', 'Small City', '', false));
-		//Towns
-		createAndAddMarker('ar', [-46.664566, -142.44974], icons.town, 'Elaris', 'dr_elaris', generatePopupContent('Elaris', 'Town', '', false));
-		createAndAddMarker('ar', [-57.328012, -139.768383], icons.town, 'Galadrim', 'dr_galadrim', generatePopupContent('Galadrim', 'Town', '', false));
-		//Nature
-		createAndAddMarker('ar', [-41.435969, -150.186067], icons.nature, 'Feywood', 'dr_feywood', generatePopupContent('Feywood', 'Forest', '', false));
-		createAndAddMarker('ar', [-49.323654, -150.75126], icons.nature, 'Lacus Serenus', 'dr_lacus', generatePopupContent('Lacus Serenus', 'Lake', '', false));
-		createAndAddMarker('ar', [-42.875964, -142.119141], icons.nature, 'Verdantis Mons', 'dr_verdantis', generatePopupContent('Verdantis Mons', 'Mountain', '', false));
-
-		//Trade Company
-
-		//Locations
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-
-		//Gigantoria
-
-		//Locations
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-
-		//Arcarum 
-
-		//Locations
-		//Big Cities
-		//Small Cities
-		//Towns
-		//Nature
-
-		//Oceans
-
-		//Characters
-		createAndAddMarker('ar', [-2.372369, -72.685547], icons.character, 'Gerhard von Eichenwald', 'an_gerhard', generatePopupContent('Gerhard von Eichenwald', 'Character', 'Gerhards temporary camp in a small town in the Holy Antarian Empire', true, ));
-		createAndAddMarker('ar', [-41.980887, 32.348339], icons.character, 'Nihil, the Eternal', 'ts_nihil', generatePopupContent('Nihil, the Eternal', 'Character ', 'Currently in hiding after the great dragon purge.', true));
-		createAndAddMarker('ar', [17.768594, -114.376119], icons.character, 'Aurumoria, the Gilded Guardian', 'an_aurumoria', generatePopupContent('Aurumoria, the Gilded Guardian', 'Character ', 'Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.', true));
-		createAndAddMarker('ar', [-25.403585, 12.744141], icons.character, 'Miyamoto Reiko', 'ts_reiko', generatePopupContent('Miyamoto Reiko', 'Character', 'The current leader of Tsuki Ōkoku', true));
-
-		//Historical
-		createAndAddMarker("ar", [51.344339, -105.117188], icons.important, "Aztrus Capital Ruins", "an_aztrus", generatePopupContent("Aztrus Capital Ruins", "Historical Location", "Ruins of the legendary Astruz capital, once a great city now only ruins of old", false));
-
-		//Morturia
-		//Scientia
-		createAndAddMarker('mo', [39.994442, 89.15887], icons.capital, 'Scienta Capital', 'sc_capital', generatePopupContent('Scienta Capital', 'Capital', 'The capital of Scientia', false));
-		//Locations
-
-		//Ardeat
-		
-		//Locations
-
-		//Gelida
-		
-		//Locations
-
-		//Characters
 
 		//Marker Groups
 		var ar_all_layers = L.layerGroup([regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character']]);
@@ -768,7 +622,10 @@ printRegionGroups(); Prints all region Groups
 
 		function updateLayers(map, addLayers, removeLayers) {
 			// Remove all specified layers first, regardless of their current state
-			removeLayers.forEach(layer => {
+			let allLayersToRemove = new Set([...removeLayers, ...addLayers]);
+
+			// Remove all specified layers
+			allLayersToRemove.forEach(layer => {
 				if (map.hasLayer(layer)) {
 					map.removeLayer(layer);
 				}
@@ -1065,16 +922,6 @@ printRegionGroups(); Prints all region Groups
 			updateSelectedOptionId();
 		}
 
-		document.addEventListener('DOMContentLoaded', function () {
-			// Check the main checkbox
-			var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
-			checkbox.checked = true;
-			addRadioButtons(1)
-			hideCheckBoxes(2);
-			addYearSelect();
-			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-		});
-
 		var selectedOptionId = 'arOption1';
 
 		function addYearSelect() {
@@ -1246,8 +1093,15 @@ printRegionGroups(); Prints all region Groups
 			exportButton.style.cssText = 'display: flex; justify-content: center; align-items: center;';
 
 			const img = document.createElement('img');
-			//img.src = 'icons/export.png'; // Assuming 'export.png' is your export icon
-			img.style.cssText = 'max-width: 16px; max-height: 16px;';
+			img.src = 'icons/export1.png'; 
+			img.style.cssText = 'max-width: auto; max-height: 16px;';
+
+			function toggleIcon(src) {
+				img.src = src;
+			}
+
+			exportButton.addEventListener('mouseenter', () => toggleIcon('icons/export2.png'));
+			exportButton.addEventListener('mouseleave', () => toggleIcon('icons/export1.png'));
 
 			exportButton.appendChild(img);
 
@@ -1267,18 +1121,75 @@ printRegionGroups(); Prints all region Groups
 			importButton.role = 'button';
 			importButton.style.cssText = 'display: flex; justify-content: center; align-items: center;';
 
+			function toggleIcon(src) {
+				img.src = src;
+			}
+
 			const img = document.createElement('img');
-			//img.src = 'icons/import.png'; // Assuming 'import.png' is your import icon
-			img.style.cssText = 'max-width: 16px; max-height: 16px;';
+			img.src = 'icons/import1.png';
+			img.style.cssText = 'max-width: auto; max-height: 16px;';
+
+			importButton.addEventListener('mouseenter', () => toggleIcon('icons/import2.png'));
+			importButton.addEventListener('mouseleave', () => toggleIcon('icons/import1.png'));
 
 			importButton.appendChild(img);
 
 			importButton.addEventListener('click', (e) => {
 				e.preventDefault();
-				// Functionality for importing JSON goes here
+				fileInput.click(); // Open file dialog
 			});
 
 			return importButton;
+		}
+
+		function createFileInput() {
+			var fileInput = document.createElement('input');
+			fileInput.type = 'file';
+			fileInput.accept = '.json';
+			fileInput.style.display = 'none';
+
+			fileInput.addEventListener('change', function(event) {
+				var file = event.target.files[0];
+				if (file) {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						var jsonData = JSON.parse(e.target.result);
+						processImportedData(jsonData);
+					};
+					reader.readAsText(file);
+				}
+			});
+
+			document.body.appendChild(fileInput);
+			return fileInput;
+		}
+
+		var fileInput = createFileInput();
+
+		function processImportedData(jsonData) {
+			jsonData.forEach(markerData => {
+				var iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
+				if (!iconType) {
+					console.warn("Icon not found for:", markerData.icon, "Using default icon.");
+					iconType = icons.defaultIcon; // Replace 'defaultIcon' with your default icon key
+				}
+				var popupContent = generatePopupContent(
+					markerData.popuptitle, 
+					markerData.category, 
+					markerData.description, 
+					markerData.link, 
+					markerData.customlink
+				);
+
+				createAndAddMarker(
+					markerData.region, 
+					markerData.coordinates, 
+					iconType, 
+					markerData.title, 
+					markerData.id, 
+					popupContent
+				);
+			});
 		}
 
 		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
@@ -1287,8 +1198,25 @@ printRegionGroups(); Prints all region Groups
 		const importButton = createImportButton();
 		zoomControl.insertAdjacentElement('beforeend', wikiButton);
 		zoomControl.insertAdjacentElement('beforeend', exportButton);
+		zoomControl.insertAdjacentElement('beforeend', importButton);
 
 		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
+
+		document.addEventListener('DOMContentLoaded', function () {
+			// Check the main checkbox
+			var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
+			checkbox.checked = true;
+			addRadioButtons(1)
+			hideCheckBoxes(2);
+			addYearSelect();
+			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+			fetch('markers.json')
+				.then(response => response.json())
+				.then(data => {
+					processImportedData(data);
+				})
+				.catch(error => console.error('Error loading markers.json:', error));
+		});
 	</script>		
 </body>
 
