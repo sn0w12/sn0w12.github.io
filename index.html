@@ -1093,7 +1093,10 @@ removeMarker("Title"); Removes a marker with a specified title
 			button.addEventListener('mouseleave', () => toggleIcon(initialIconSrc));
 			button.appendChild(img);
 
-			button.addEventListener('click', onClick);
+			button.addEventListener('click', (event) => {
+				onClick(event);
+				button.blur();
+			});
 
 			return button;
 		}
@@ -1102,7 +1105,6 @@ removeMarker("Title"); Removes a marker with a specified title
 
 		const wikiButton = createControlButton('wiki', 'Wiki', 'icons/web1.png', 'icons/web2.png', (e) => {
 			e.preventDefault();
-			// Wiki button click behavior here
 			window.open('wiki', '_blank');
 		});
 
