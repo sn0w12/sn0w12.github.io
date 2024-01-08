@@ -955,18 +955,18 @@ removeMarker("Title"); Removes a marker with a specified title
 			dropdown.className = 'custom-select';
 
 			// Add options to the dropdown
-			switch (label && label.textContent) {
-				case " Arathia": {
+			switch (label && label.textContent.trim()) {
+				case "Arathia": {
 					createSelect("1257 A.A", "arOption1", dropdown);
 					createSelect("67 B.A", "arOption2", dropdown);
 					break;
 				}
-				case " Arathia Clean": {
+				case "Arathia Clean": {
 					createSelect("1257 A.A", "arCleanOption1", dropdown);
 					createSelect("67 B.A", "arCleanOption2", dropdown); 
 					break;
 				}
-				case " Morturia": {
+				case "Morturia": {
 					createSelect("1257 A.A", "moOption1", dropdown);
 					createSelect("???", "moOption2", dropdown); 
 					break;
@@ -1147,9 +1147,22 @@ removeMarker("Title"); Removes a marker with a specified title
 		var fileInput = createFileInput();
 
 		function processImportedData(jsonData) {
-			// Remove all existing markers
-			var allMarkers = getAllMarkersFromGroups();
-    		allMarkers.forEach(marker => marker.remove());
+			// Check if jsonData is an array and not empty
+			if (!Array.isArray(jsonData) || jsonData.length === 0) {
+				alert("Invalid or empty data: jsonData is not a valid array");
+				return; // Exit the function early
+			}
+
+			// Validate each item in the jsonData array
+			for (let markerData of jsonData) {
+				if (!isValidMarkerData(markerData)) {
+					alert("Invalid marker data: " + JSON.stringify(markerData));
+					return; // Exit if any marker data is invalid
+				}
+			}
+
+			// Store all existing markers
+			var oldMarkers = getAllMarkersFromGroups();
 
 			jsonData.forEach(markerData => {
 				var iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
@@ -1157,6 +1170,7 @@ removeMarker("Title"); Removes a marker with a specified title
 					console.warn("Icon not found for:", markerData.icon, "Using default icon.");
 					iconType = icons.defaultIcon; // Replace 'defaultIcon' with your default icon key
 				}
+
 				var popupContent = generatePopupContent(
 					markerData.popuptitle, 
 					markerData.category, 
@@ -1174,6 +1188,24 @@ removeMarker("Title"); Removes a marker with a specified title
 					popupContent
 				);
 			});
+
+			// Remove old markers after new data has been processed
+			oldMarkers.forEach(marker => marker.remove());
+		}
+
+		function isValidMarkerData(markerData) {
+			const requiredKeys = ["region", "coordinates", "icon", "title", "id", "popuptitle", "category", "description", "link", "customlink"];
+			const hasAllKeys = requiredKeys.every(key => key in markerData);
+
+			const coordinatesValid = Array.isArray(markerData.coordinates) && 
+									markerData.coordinates.length === 2 &&
+									markerData.coordinates.every(coord => typeof coord === 'number');
+
+			const linkValid = typeof markerData.link === 'boolean';
+
+			// Check for additional validation as needed
+
+			return hasAllKeys && coordinatesValid && linkValid;
 		}
 
 		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
