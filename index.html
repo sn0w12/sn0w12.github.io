@@ -141,6 +141,8 @@
 			};
 		}
 
+		// suffix map for icon switching
+		const suffixMap = {1: '', 2: 'Old', 3: 'Simple'};
 		// Icons
 		var icons = {
 			capital: createIcon('capital', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
@@ -920,7 +922,6 @@ removeMarker("Title"); Removes a marker with a specified title
 		}
 
 		function updateIcons(currentMap, iconChecked) {
-			const suffixMap = {1: '', 2: 'Old', 3: 'Simple'};
     		changeAllIcons(suffixMap[iconChecked] || '');
 
 			// Common update map styles and layers
