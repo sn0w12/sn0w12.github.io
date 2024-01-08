@@ -671,9 +671,7 @@ removeMarker("Title"); Removes a marker with a specified title
 
 		// Define a map to convert between optionIds when switching map types
 		var optionIdConversions = {
-			'arCleanOption2': 'arOption2',
 			'arOption2': 'arCleanOption2',
-			'moCleanOption2': 'moOption2',
 			'moOption2': 'moCleanOption2'
 		};
 
@@ -818,6 +816,16 @@ removeMarker("Title"); Removes a marker with a specified title
 			updateMapStyles(map, mapStyle.color, mapConfigurations[currentMap].options[selectedOptionId].search.controlSearch1, mapConfigurations[currentMap].options[selectedOptionId].search.controlSearch2);
 		}
 
+		function getConvertedOptionId(selectedOptionId) {
+			// Direct conversion
+			if (optionIdConversions[selectedOptionId])
+				return optionIdConversions[selectedOptionId];
+
+			// Check for reverse conversion
+			const reverseConversion = Object.keys(optionIdConversions).find(key => optionIdConversions[key] === selectedOptionId);
+			return reverseConversion || selectedOptionId;
+		}
+
 		document.addEventListener('change', function (event) {
 			var radioButton = event.target;
 
@@ -834,8 +842,8 @@ removeMarker("Title"); Removes a marker with a specified title
 					map.removeLayer(currentSelectedMap);
 				}
 
-				// Convert selectedOptionId if necessary
-				selectedOptionId = optionIdConversions[selectedOptionId] || mapConfigurations[currentMap].defaultOptionId;
+				selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
+
 				updateMapConfiguration(currentMap, selectedOptionId);
 
 				// Add year select dropdown
