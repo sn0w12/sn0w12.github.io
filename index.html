@@ -22,18 +22,18 @@
 	<script type="text/javascript">
 		// MAPS
 
-		// Radio buttons information
 		var radioButtonsInfo = [
-			{ label: "Default Icons", option: "option1", checkedIndex: 1 },
-			{ label: "Old Icons", option: "option2", checkedIndex: 2 },
-			{ label: "Simple Icons", option: "option3", checkedIndex: 3 }
+			{ label: "Default Icons", option: "option1", checkedIndex: 1, suffix: '' },
+			{ label: "Old Icons", option: "option2", checkedIndex: 2, suffix: 'Old' },
+			{ label: "Simple Icons", option: "option3", checkedIndex: 3, suffix: 'Simple' }
 		];
 
-		var iconMap = {
-			'Default Icons': 1,
-			'Old Icons': 2,
-			'Simple Icons': 3
-		};
+		// suffix map for icon switching
+		const suffixMap = {1: '', 2: 'Old', 3: 'Simple'};
+
+		var oldSuffix = "";
+		var currentSelectedMap = arathia;
+		var selectedOptionId = 'arOption1';
 
 		var iconChecked = 1;
 		var currentMap = 'Arathia';
@@ -94,16 +94,6 @@
 		var oldIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
 		var simpleIconSettings = { size: [31, 41], anchor: [15, 25], popupAnchor: [1, -22] };
 
-		function adjustSettings(defaultSettings, adjustments) {
-			return {
-				size: adjustments.size ? [defaultSettings.size[0] + adjustments.size[0], defaultSettings.size[1] + adjustments.size[1]] : defaultSettings.size,
-				anchor: adjustments.anchor ? [defaultSettings.anchor[0] + adjustments.anchor[0], defaultSettings.anchor[1] + adjustments.anchor[1]] : defaultSettings.anchor,
-				popupAnchor: adjustments.popupAnchor ? [defaultSettings.popupAnchor[0] + adjustments.popupAnchor[0], defaultSettings.popupAnchor[1] + adjustments.popupAnchor[1]] : defaultSettings.popupAnchor
-			};
-		}
-
-		// suffix map for icon switching
-		const suffixMap = {1: '', 2: 'Old', 3: 'Simple'};
 		// Icons
 		var icons = {
 			capital: createIcon('capital', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
@@ -356,47 +346,6 @@
 			},
 		};
 
-		document.addEventListener('change', function (event) {
-			var radioButton = event.target;
-
-			if (radioButton.classList.contains('leaflet-control-layers-selector')) {
-				currentMap = getTrimmedText(radioButton);
-				// Common update map styles and layers
-				updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
-				updateCheckbox(mapConfigurations[currentMap].checkboxIndex, mapConfigurations[currentMap].checkboxState);
-				hideCheckBoxes(mapConfigurations[currentMap].hideCheckBox);
-				addRadioButtons(iconChecked);
-
-				// Remove current layer if it's not the selected map
-				if (currentSelectedMap != mapConfigurations[currentMap].current) {
-					map.removeLayer(currentSelectedMap);
-				}
-
-				selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
-
-				updateMapConfiguration(currentMap, selectedOptionId);
-
-				// Add year select dropdown
-				addYearSelect();
-				document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-				setYearSelectorToLastDropdown();
-				updateSelectedOptionId();
-			} else if (radioButton.classList.contains('custom-radio-class')) {
-				var iconType = getTrimmedText(radioButton);
-				if (iconType) {
-					if (iconChecked !== null) {
-						console.log(getCheckedIndex(iconType));
-						iconChecked = getCheckedIndex(iconType);
-						updateIcons(currentMap, iconChecked);
-					}
-				}
-			}
-		});
-
-		var oldSuffix = "";
-		var currentSelectedMap = arathia;
-		var selectedOptionId = 'arOption1';
-
 		function addYearSelect() {
 			var existingDropdown = document.getElementById('YearSelector');
 			if (existingDropdown) {
@@ -496,6 +445,33 @@
 				})
 				.catch(error => console.error('Error loading markers.json:', error));
 		});
+
+		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
+
+		if (zoomControl) {
+			const wikiButton = createControlButton('wiki', 'Wiki', 'icons/web1.png', 'icons/web2.png', (e) => {
+				e.preventDefault();
+				window.open('wiki', '_blank');
+			});
+
+			const exportButton = createControlButton('#', 'Export JSON', 'icons/export1.png', 'icons/export2.png', (e) => {
+				e.preventDefault();
+				exportMarkersToJson();
+			});
+
+			const importButton = createControlButton('#', 'Import JSON', 'icons/import1.png', 'icons/import2.png', (e) => {
+				e.preventDefault();
+				fileInput.click();
+			});
+
+			zoomControl.insertAdjacentElement('beforeend', wikiButton);
+			zoomControl.insertAdjacentElement('beforeend', exportButton);
+			zoomControl.insertAdjacentElement('beforeend', importButton);
+		} else {
+			console.error('Zoom control element not found');
+		}
+
+		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
 	</script>		
 </body>
 

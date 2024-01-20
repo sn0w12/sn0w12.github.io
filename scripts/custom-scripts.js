@@ -537,7 +537,8 @@ function updateCheckbox(selectorIndex, checked) {
 }
 
 function updateIcons(currentMap, iconChecked) {
-    changeAllIcons(suffixMap[iconChecked] || '');
+    var suffix = radioButtonsInfo.find(item => item.checkedIndex === iconChecked)?.suffix || '';
+    changeAllIcons(suffix);
 
     // Common update map styles and layers
     updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
@@ -706,8 +707,8 @@ function isValidMarkerData(markerData) {
     const hasAllKeys = requiredKeys.every(key => key in markerData);
 
     const coordinatesValid = Array.isArray(markerData.coordinates) && 
-                            markerData.coordinates.length === 2 &&
-                            markerData.coordinates.every(coord => typeof coord === 'number');
+        markerData.coordinates.length === 2 &&
+        markerData.coordinates.every(coord => typeof coord === 'number');
 
     const linkValid = typeof markerData.link === 'boolean';
 
@@ -716,30 +717,7 @@ function isValidMarkerData(markerData) {
     return hasAllKeys && coordinatesValid && linkValid;
 }
 
-const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
-
-const wikiButton = createControlButton('wiki', 'Wiki', 'icons/web1.png', 'icons/web2.png', (e) => {
-    e.preventDefault();
-    window.open('wiki', '_blank');
-});
-
-const exportButton = createControlButton('#', 'Export JSON', 'icons/export1.png', 'icons/export2.png', (e) => {
-    e.preventDefault();
-    exportMarkersToJson();
-});
-
-const importButton = createControlButton('#', 'Import JSON', 'icons/import1.png', 'icons/import2.png', (e) => {
-    e.preventDefault();
-    fileInput.click();
-});
-
-zoomControl.insertAdjacentElement('beforeend', wikiButton);
-zoomControl.insertAdjacentElement('beforeend', exportButton);
-zoomControl.insertAdjacentElement('beforeend', importButton);
-
 var fileInput = createFileInput();
-
-document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
 
 function getCheckedIndex(iconType) {
     for (var i = 0; i < radioButtonsInfo.length; i++) {
@@ -749,3 +727,48 @@ function getCheckedIndex(iconType) {
     }
     return null;
 }
+
+function adjustSettings(defaultSettings, adjustments) {
+    return {
+        size: adjustments.size ? [defaultSettings.size[0] + adjustments.size[0], defaultSettings.size[1] + adjustments.size[1]] : defaultSettings.size,
+        anchor: adjustments.anchor ? [defaultSettings.anchor[0] + adjustments.anchor[0], defaultSettings.anchor[1] + adjustments.anchor[1]] : defaultSettings.anchor,
+        popupAnchor: adjustments.popupAnchor ? [defaultSettings.popupAnchor[0] + adjustments.popupAnchor[0], defaultSettings.popupAnchor[1] + adjustments.popupAnchor[1]] : defaultSettings.popupAnchor
+    };
+}
+
+document.addEventListener('change', function (event) {
+    var radioButton = event.target;
+
+    if (radioButton.classList.contains('leaflet-control-layers-selector')) {
+        currentMap = getTrimmedText(radioButton);
+        // Common update map styles and layers
+        updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
+        updateCheckbox(mapConfigurations[currentMap].checkboxIndex, mapConfigurations[currentMap].checkboxState);
+        hideCheckBoxes(mapConfigurations[currentMap].hideCheckBox);
+        addRadioButtons(iconChecked);
+
+        // Remove current layer if it's not the selected map
+        if (currentSelectedMap != mapConfigurations[currentMap].current) {
+            map.removeLayer(currentSelectedMap);
+        }
+
+        selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
+
+        updateMapConfiguration(currentMap, selectedOptionId);
+
+        // Add year select dropdown
+        addYearSelect();
+        document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+        setYearSelectorToLastDropdown();
+        updateSelectedOptionId();
+    } else if (radioButton.classList.contains('custom-radio-class')) {
+        var iconType = getTrimmedText(radioButton);
+        if (iconType) {
+            if (iconChecked !== null) {
+                console.log(getCheckedIndex(iconType));
+                iconChecked = getCheckedIndex(iconType);
+                updateIcons(currentMap, iconChecked);
+            }
+        }
+    }
+});
