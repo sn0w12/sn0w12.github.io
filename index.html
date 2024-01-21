@@ -10,31 +10,26 @@
 	<link rel="stylesheet" href="scripts/leaflet-search/src/leaflet-search.css" />
 	<link rel="stylesheet" href="style.css">
 	<script src="scripts/leaflet.js"></script>
+	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
+	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
+	<script src="scripts/custom-scripts.js"></script>
 </head>
 
 <body style="height: 100%;margin: 0;overflow-y: hidden;overflow-x: hidden;">
 	<div id="map" style="width: 100%; height: 100%; background: #31565a;"></div>
 	<a class="leaflet-control-zoom-out" href="index" title="Zoom out" role="button"
         aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
-	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
-	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
-	<script src="scripts/custom-scripts.js"></script>
 	<script type="text/javascript">
 		// MAPS
-
 		var radioButtonsInfo = [
 			{ label: "Default Icons", option: "option1", checkedIndex: 1, suffix: '' },
 			{ label: "Old Icons", option: "option2", checkedIndex: 2, suffix: 'Old' },
 			{ label: "Simple Icons", option: "option3", checkedIndex: 3, suffix: 'Simple' }
 		];
 
-		// suffix map for icon switching
-		const suffixMap = {1: '', 2: 'Old', 3: 'Simple'};
-
 		var oldSuffix = "";
 		var currentSelectedMap = arathia;
 		var selectedOptionId = 'arOption1';
-
 		var iconChecked = 1;
 		var currentMap = 'Arathia';
 
@@ -122,6 +117,8 @@
 
 			defaultIcon: createIcon('marker-icon', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor)
 		}
+
+		var fileInput = createFileInput();
 
 		//Marker Maker
 		var marker = L.marker([0, 0], {
@@ -472,6 +469,28 @@
 		}
 
 		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
+
+		function createFileInput() {
+			var fileInput = document.createElement('input');
+			fileInput.type = 'file';
+			fileInput.accept = '.json';
+			fileInput.style.display = 'none';
+
+			fileInput.addEventListener('change', function(event) {
+				var file = event.target.files[0];
+				if (file) {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						var jsonData = JSON.parse(e.target.result);
+						processImportedData(jsonData);
+					};
+					reader.readAsText(file);
+				}
+			});
+
+			document.body.appendChild(fileInput);
+			return fileInput;
+		}
 	</script>		
 </body>
 

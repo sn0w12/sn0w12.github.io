@@ -1,34 +1,34 @@
 function generatePopupContent(title, category, description, linkEnabled, linkTitle) {
-        // If linkEnabled is true and linkTitle is provided, it uses linkTitle for the hyperlink otherwise it uses the title for the hyperlink.
-        // If linkEnabled is false, it just displays the title without a hyperlink.
-        const titleLink = linkEnabled 
-            ? `<a href="wiki#${encodeURIComponent(linkTitle || title)}" target="_blank"><b><font size="+0.5">${title}</font></b><br /></a>`
-            : `<b><font size="+0.5">${title}</font></b><br />`;
+    // If linkEnabled is true and linkTitle is provided, it uses linkTitle for the hyperlink otherwise it uses the title for the hyperlink.
+    // If linkEnabled is false, it just displays the title without a hyperlink.
+    const titleLink = linkEnabled 
+        ? `<a href="wiki#${encodeURIComponent(linkTitle || title)}" target="_blank"><b><font size="+0.5">${title}</font></b><br /></a>`
+        : `<b><font size="+0.5">${title}</font></b><br />`;
 
-        // Image styles
-        const img1 = '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">';
-        const img2 = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">';
+    // Image styles
+    const img1 = '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">';
+    const img2 = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">';
 
-        return `${titleLink}${img1}<i><font size="+0.5">${category}</font></i>${img2}<br />${description}`;
-    }
+    return `${titleLink}${img1}<i><font size="+0.5">${category}</font></i>${img2}<br />${description}`;
+}
 
 function generateMarker(id, title, category, icon, description, linkEnabled, linkTitle, coords, customId) {
-        coords = JSON.parse(coords.replace('LatLng', '').replace('(', '[').replace(')', ']'));
-        
-        var firstTitle = title.split(' ')[0].toLowerCase();
-        var newId = `${id}_${customId || firstTitle}`;
-        if (linkTitle) linkTitle = ", '" + linkTitle + "'";
-        
-        var region = regionMap[id] || "mo"; // Determine the region
-        var markerIcon = icons[icon]; // Determine the icon based on the icon type
-        var popupContent = generatePopupContent(title, category, description, linkEnabled, linkTitle || "");
+    coords = JSON.parse(coords.replace('LatLng', '').replace('(', '[').replace(')', ']'));
+    
+    var firstTitle = title.split(' ')[0].toLowerCase();
+    var newId = `${id}_${customId || firstTitle}`;
+    if (linkTitle) linkTitle = ", '" + linkTitle + "'";
+    
+    var region = regionMap[id] || "mo"; // Determine the region
+    var markerIcon = icons[icon]; // Determine the icon based on the icon type
+    var popupContent = generatePopupContent(title, category, description, linkEnabled, linkTitle || "");
 
-        // Create and add the marker to the map
-        createAndAddMarker(region, coords, markerIcon, title, newId.replace(",", ""), popupContent);
+    // Create and add the marker to the map
+    createAndAddMarker(region, coords, markerIcon, title, newId.replace(",", ""), popupContent);
 
-        // Return the string representation (optional, if you still need this)
-        return `createAndAddMarker("${region}", ${JSON.stringify(coords)}, icons.${icon}, "${title}", "${newId.replace(",", "")}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${linkTitle || ""}));`;
-    }
+    // Return the string representation (optional, if you still need this)
+    return `createAndAddMarker("${region}", ${JSON.stringify(coords)}, icons.${icon}, "${title}", "${newId.replace(",", "")}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${linkTitle || ""}));`;
+}
 
 function createMap(title, noWrap, minZoom, maxZoom, pane, add) {
     // Create the tile layer
@@ -486,33 +486,6 @@ function getConvertedOptionId(selectedOptionId) {
     return reverseConversion || selectedOptionId;
 }
 
-function changeMapToSelected() {
-    var dropdown = document.getElementById('YearSelector');
-    var selectedOption = dropdown.options[dropdown.selectedIndex].id;
-
-    console.log(mapConfigurations[currentMap].options[selectedOption].show);
-
-    performActions(mapConfigurations[currentMap].options[selectedOption].mapLayer, mapConfigurations[currentMap].options[selectedOption].show, mapConfigurations[currentMap].options[selectedOption].hide, mapConfigurations[currentMap].options[selectedOption].checkboxIndex, mapConfigurations[currentMap].options[selectedOption].checkboxState, mapConfigurations[currentMap].options[selectedOption].hideCheckboxCount)
-}
-
-function performActions(mapLayer, addLayers, removeLayers, checkboxIndex, checkboxState, hideCheckboxCount) {
-    if (currentSelectedMap != arathia && currentSelectedMap != arathiaClean && currentSelectedMap != morturia) {
-        map.removeLayer(currentSelectedMap);
-    }
-    mapLayer.addTo(map);
-    currentSelectedMap = mapLayer;
-
-    updateMapConfiguration(currentMap, selectedOptionId);
-    updateLayers(map, addLayers, removeLayers);
-    updateCheckbox(checkboxIndex, checkboxState);
-    hideCheckBoxes(hideCheckboxCount);
-    addRadioButtons(iconChecked);
-
-    addYearSelect();
-    document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-    setYearSelectorToLastDropdown();
-}
-
 function changeAllIcons(suffix) {
     const layerGroups = [regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character'], regionLayerGroups['mo']['capital'], regionLayerGroups['mo']['cityBig'], regionLayerGroups['mo']['citySmall'], regionLayerGroups['mo']['town'], regionLayerGroups['mo']['nature'], regionLayerGroups['mo']['important'], regionLayerGroups['mo']['character']];
     layerGroups.forEach(group => {
@@ -567,44 +540,6 @@ function createSelect(year, optionId, dropdown) {
     dropdown.appendChild(option);
 }
 
-// Function to update the variable with the selected option's ID
-function updateSelectedOptionId() {
-    var dropdown = document.getElementById('YearSelector');
-    selectedOptionId = dropdown.options[dropdown.selectedIndex].id;
-    console.log("Selected Option ID:", selectedOptionId); // For demonstration
-    
-    changeMapToSelected();
-}
-
-function setYearSelectorToLastDropdown() {
-    var dropdown = document.getElementById('YearSelector');
-
-    // Check if the dropdown has options
-    if (dropdown.options.length > 0) {
-        // Find the option that matches the selectedOptionId
-        var matchingOptionExists = Array.from(dropdown.options).some(option => option.id === selectedOptionId);
-
-        if (matchingOptionExists) {
-            // Set the dropdown's value to the matching option's value
-            for (var i = 0; i < dropdown.options.length; i++) {
-                if (dropdown.options[i].id === selectedOptionId) {
-                    dropdown.selectedIndex = i;
-                    console.log("Dropdown set to option with ID:", selectedOptionId);
-                    break;
-                }
-            }
-        } else {
-            console.log('Matching option not found in the dropdown.');
-            if (currentSelectedMap != arathia) {
-                map.removeLayer(currentSelectedMap);
-            }
-            selectedOptionId = '';
-        }
-    } else {
-        console.log('The dropdown has no options.');
-    }
-}
-
 function createControlButton(href, title, initialIconSrc, hoverIconSrc, onClick) {
     const button = document.createElement('a');
     button.className = 'leaflet-control-custom';
@@ -631,28 +566,6 @@ function createControlButton(href, title, initialIconSrc, hoverIconSrc, onClick)
     });
 
     return button;
-}
-
-function createFileInput() {
-    var fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.json';
-    fileInput.style.display = 'none';
-
-    fileInput.addEventListener('change', function(event) {
-        var file = event.target.files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var jsonData = JSON.parse(e.target.result);
-                processImportedData(jsonData);
-            };
-            reader.readAsText(file);
-        }
-    });
-
-    document.body.appendChild(fileInput);
-    return fileInput;
 }
 
 function processImportedData(jsonData) {
@@ -717,8 +630,6 @@ function isValidMarkerData(markerData) {
     return hasAllKeys && coordinatesValid && linkValid;
 }
 
-var fileInput = createFileInput();
-
 function getCheckedIndex(iconType) {
     for (var i = 0; i < radioButtonsInfo.length; i++) {
         if (radioButtonsInfo[i].label === iconType) {
@@ -772,3 +683,70 @@ document.addEventListener('change', function (event) {
         }
     }
 });
+
+function performActions(mapLayer, addLayers, removeLayers, checkboxIndex, checkboxState, hideCheckboxCount) {
+    if (currentSelectedMap && map.hasLayer(currentSelectedMap)) {
+        if (currentSelectedMap != arathia && currentSelectedMap != arathiaClean && currentSelectedMap != morturia) {
+            map.removeLayer(currentSelectedMap);
+        }
+    }
+    mapLayer.addTo(map);
+    currentSelectedMap = mapLayer;
+
+    updateMapConfiguration(currentMap, selectedOptionId);
+    updateLayers(map, addLayers, removeLayers);
+    updateCheckbox(checkboxIndex, checkboxState);
+    hideCheckBoxes(hideCheckboxCount);
+    addRadioButtons(iconChecked);
+
+    addYearSelect();
+    document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+    setYearSelectorToLastDropdown();
+}
+
+function changeMapToSelected() {
+    var dropdown = document.getElementById('YearSelector');
+    var selectedOption = dropdown.options[dropdown.selectedIndex].id;
+
+    console.log(mapConfigurations[currentMap].options[selectedOption].show);
+
+    performActions(mapConfigurations[currentMap].options[selectedOption].mapLayer, mapConfigurations[currentMap].options[selectedOption].show, mapConfigurations[currentMap].options[selectedOption].hide, mapConfigurations[currentMap].options[selectedOption].checkboxIndex, mapConfigurations[currentMap].options[selectedOption].checkboxState, mapConfigurations[currentMap].options[selectedOption].hideCheckboxCount)
+}
+
+// Function to update the variable with the selected option's ID
+function updateSelectedOptionId() {
+    var dropdown = document.getElementById('YearSelector');
+    selectedOptionId = dropdown.options[dropdown.selectedIndex].id;
+    console.log("Selected Option ID:", selectedOptionId); // For demonstration
+    
+    changeMapToSelected();
+}
+
+function setYearSelectorToLastDropdown() {
+    var dropdown = document.getElementById('YearSelector');
+
+    // Check if the dropdown has options
+    if (dropdown.options.length > 0) {
+        // Find the option that matches the selectedOptionId
+        var matchingOptionExists = Array.from(dropdown.options).some(option => option.id === selectedOptionId);
+
+        if (matchingOptionExists) {
+            // Set the dropdown's value to the matching option's value
+            for (var i = 0; i < dropdown.options.length; i++) {
+                if (dropdown.options[i].id === selectedOptionId) {
+                    dropdown.selectedIndex = i;
+                    console.log("Dropdown set to option with ID:", selectedOptionId);
+                    break;
+                }
+            }
+        } else {
+            console.log('Matching option not found in the dropdown.');
+            if (currentSelectedMap != arathia) {
+                map.removeLayer(currentSelectedMap);
+            }
+            selectedOptionId = '';
+        }
+    } else {
+        console.log('The dropdown has no options.');
+    }
+}
