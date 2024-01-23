@@ -551,6 +551,11 @@
 				window.open('wiki', '_blank');
 			});
 
+			const cityButton = createControlButton('city', 'Opens the city map', 'icons/city1.png', 'icons/city2.png', (e) => {
+				e.preventDefault();
+				window.open('cities');
+			});
+
 			const exportButton = createControlButton('#', 'Export JSON', 'icons/export1.png', 'icons/export2.png', (e) => {
 				e.preventDefault();
 				exportMarkersToJson();
@@ -562,6 +567,7 @@
 			});
 
 			zoomControl.insertAdjacentElement('beforeend', wikiButton);
+			zoomControl.insertAdjacentElement('beforeend', cityButton);
 			zoomControl.insertAdjacentElement('beforeend', exportButton);
 			zoomControl.insertAdjacentElement('beforeend', importButton);
 		} else {

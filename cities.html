@@ -58,8 +58,8 @@
 			"ac": "ac",
 		};
 
-		var southWest = L.latLng(-85, -185),
-			northEast = L.latLng(85, 185),
+		var southWest = L.latLng(-80, -185),
+			northEast = L.latLng(80, 185),
 			bounds = L.latLngBounds(southWest, northEast);
 
 		//Creating the Map
@@ -79,8 +79,8 @@
 		map.getPane('backgroundPane').style.zIndex = 150;
 
 		// Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
-		var antaria = createMap('Antaria', 'antaria', true, 2.5, 5.4, 'basePane', true);
-		var tsuki = createMap('Antaria', 'getsuyosei', true, 2.5, 5.4, 'basePane', false);
+		var antaria = createMap('Antaria', 'antaria', true, 2, 5.4, 'basePane', true);
+		var tsuki = createMap('Antaria', 'getsuyosei', true, 2, 5.4, 'basePane', false);
 
 		// Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
 		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
@@ -488,6 +488,11 @@
 				window.open('wiki', '_blank');
 			});
 
+			const worldButton = createControlButton('world', 'Opens the world map', 'icons/world1.png', 'icons/world2.png', (e) => {
+				e.preventDefault();
+				window.open('');
+			});
+
 			const exportButton = createControlButton('#', 'Export JSON', 'icons/export1.png', 'icons/export2.png', (e) => {
 				e.preventDefault();
 				exportMarkersToJson();
@@ -499,6 +504,7 @@
 			});
 
 			zoomControl.insertAdjacentElement('beforeend', wikiButton);
+			zoomControl.insertAdjacentElement('beforeend', worldButton);
 			zoomControl.insertAdjacentElement('beforeend', exportButton);
 			zoomControl.insertAdjacentElement('beforeend', importButton);
 		} else {
