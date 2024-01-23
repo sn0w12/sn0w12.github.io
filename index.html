@@ -31,14 +31,13 @@
 			arathia,
 			arathiaClean,
 			morturia
-		]
+		];
 
 		var oldSuffix = "";
 		var currentSelectedMap = arathia;
 		var selectedOptionId = 'arOption1';
 		var iconChecked = 1;
 		var currentMap = 'Arathia';
-		var lastCheckedRadioButtonLabel = "";
 
 		// Define a map to convert between optionIds when switching map types
 		var optionIdConversions = {
@@ -360,13 +359,10 @@
 			// Find the checked radio button
 			var checkedRadioButton = document.querySelector('.leaflet-control-layers-base input[type="radio"]:checked');
 			if (checkedRadioButton) {
-				lastCheckedRadioButtonLabel = checkedRadioButton.nextElementSibling;
 				var label = checkedRadioButton.nextElementSibling;
 			} else {
-				var label = lastCheckedRadioButtonLabel;
-				console.log("No radiobutton found, defaulting to the last checked radiobutton.");
+				console.error("No radiobutton found.");
 			}
-			console.log(lastCheckedRadioButtonLabel);
 
 			// Create the dropdown box
 			var dropdown = document.createElement('select');

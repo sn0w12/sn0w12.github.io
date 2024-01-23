@@ -687,14 +687,26 @@ document.addEventListener('change', function (event) {
 });
 
 function performActions(mapLayer, addLayers, removeLayers, checkboxIndex, checkboxState, hideCheckboxCount) {
-    if (currentSelectedMap && map.hasLayer(currentSelectedMap)) {
-        if (!neededMaps.includes(currentSelectedMap)) {
-            map.removeLayer(currentSelectedMap);
+    let mapToRemove = true; // Assume the map needs to be removed
+
+    // Loop through each configuration to find if the currentSelectedMap is still needed
+    Object.keys(mapConfigurations).forEach(configKey => {
+        let config = mapConfigurations[configKey];
+        if (config.current === currentSelectedMap) {
+            mapToRemove = false; // Found the map in the configuration, no need to remove
         }
+    });
+
+    // Remove the currentSelectedMap if it's not found in any current configuration
+    if (mapToRemove && currentSelectedMap && map.hasLayer(currentSelectedMap)) {
+        map.removeLayer(currentSelectedMap);
     }
+
+    // The rest of your function to add the new mapLayer and update UI components
     mapLayer.addTo(map);
     currentSelectedMap = mapLayer;
 
+    // Assuming these are functions you have defined elsewhere to update the UI and map state
     updateMapConfiguration(currentMap, selectedOptionId);
     updateLayers(map, addLayers, removeLayers);
     updateCheckbox(checkboxIndex, checkboxState);
