@@ -30,9 +30,9 @@ function generateMarker(id, title, category, icon, description, linkEnabled, lin
     return `createAndAddMarker("${region}", ${JSON.stringify(coords)}, icons.${icon}, "${title}", "${newId.replace(",", "")}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${linkTitle || ""}));`;
 }
 
-function createMap(title, noWrap, minZoom, maxZoom, pane, add) {
+function createMap(prefix, title, noWrap, minZoom, maxZoom, pane, add) {
     // Create the tile layer
-    let tileLayer = L.tileLayer(`maps/${title}/{z}/{x}/{y}.png`, {
+    let tileLayer = L.tileLayer(`maps/${prefix}/${title}/{z}/{x}/{y}.png`, {
         continuousWorld: false,
         noWrap: noWrap,
         minZoom: minZoom,
@@ -755,7 +755,16 @@ function setYearSelectorToLastDropdown() {
             }
         } else {
             console.log('Matching option not found in the dropdown.');
-            if (!neededMaps.includes(currentSelectedMap)) {
+            // Loop through each configuration to find if the currentSelectedMap is still needed
+            Object.keys(mapConfigurations).forEach(configKey => {
+                let config = mapConfigurations[configKey];
+                if (config.current === currentSelectedMap) {
+                    mapToRemove = false; // Found the map in the configuration, no need to remove
+                }
+            });
+
+            // Remove the currentSelectedMap if it's not found in any current configuration
+            if (mapToRemove && currentSelectedMap && map.hasLayer(currentSelectedMap)) {
                 map.removeLayer(currentSelectedMap);
             }
             selectedOptionId = '';

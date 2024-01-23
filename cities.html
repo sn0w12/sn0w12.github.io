@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html = style="height: 100%;">
+
+<head>
+	<title>Arathia Cities Maps</title>
+	<link rel="icon" href="icons/arathia.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="scripts/leaflet.css">
+	<link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
+	<link rel="stylesheet" href="scripts/leaflet-search/src/leaflet-search.css" />
+	<link rel="stylesheet" href="style/style.css">
+	<script src="scripts/leaflet.js"></script>
+	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
+	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
+</head>
+
+<body style="height: 100%;margin: 0;overflow-y: hidden;overflow-x: hidden;">
+	<div id="map" style="width: 100%; height: 100%; background: #f3dab4;"></div>
+	<a class="leaflet-control-zoom-out" href="index" title="Zoom out" role="button"
+        aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
+	<script src="scripts/custom-scripts.js"></script>
+	<script type="text/javascript">
+		// MAPS
+		var radioButtonsInfo = [
+			{ label: "Default Icons", option: "option1", checkedIndex: 1, suffix: '' },
+			{ label: "Old Icons", option: "option2", checkedIndex: 2, suffix: 'Old' },
+			{ label: "Simple Icons", option: "option3", checkedIndex: 3, suffix: 'Simple' }
+		];
+
+		var neededMaps = [
+			antaria,
+		];
+
+		var oldSuffix = "";
+		var currentSelectedMap = antaria;
+		var selectedOptionId = 'anOption1';
+		var iconChecked = 1;
+		var currentMap = 'Antaria';
+
+		// Define a map to convert between optionIds when switching map types
+		var optionIdConversions = {
+			'anOption2': 'anCleanOption2',
+			'moOption2': 'moCleanOption2'
+		};
+
+		const regionMap = {
+			"an": "ar",
+			"od": "ar",
+			"th": "ar",
+			"rh": "ar",
+			"az": "ar",
+			"ts": "ar",
+			"pr": "ar",
+			"dr": "ar",
+			"tc": "ar",
+			"gi": "ar",
+			"ac": "ar",
+		};
+
+		var southWest = L.latLng(-85, -170),
+			northEast = L.latLng(85, 170),
+			bounds = L.latLngBounds(southWest, northEast);
+
+		//Creating the Map
+		var map = L.map('map', {
+			maxBounds: bounds,
+			zoomSnap: 0.1,
+			zoomDelta: 0.5,
+			wheelPxPerZoomLevel: 120,
+		}).setView([0, 0], 0);
+
+		map.createPane('addPane');
+		map.createPane('basePane');
+		map.createPane('backgroundPane');
+
+		map.getPane('addPane').style.zIndex = 250;
+		map.getPane('basePane').style.zIndex = 220;
+		map.getPane('backgroundPane').style.zIndex = 150;
+
+		// Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
+		var antaria = createMap('Antaria', 'antaria', true, 2.5, 5.4, 'basePane', true);
+		var Test = createMap('Main', 'morturia', true, 2.75, 5.4, 'addPane', false);
+
+		// Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
+		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
+		var oldIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
+		var simpleIconSettings = { size: [31, 41], anchor: [15, 25], popupAnchor: [1, -22] };
+
+		// Icons
+		var icons = {
+			capital: createIcon('capital', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			cityBig: createIcon('cityBig', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			citySmall: createIcon('citySmall', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			town: createIcon('town', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			nature: createIcon('nature', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			important: createIcon('important', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+			character: createIcon('character', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
+	
+			capitalOld: createIcon('capitalOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			cityBigOld: createIcon('cityBigOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			citySmallOld: createIcon('citySmallOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			townOld: createIcon('townOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			natureOld: createIcon('natureOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			importantOld: createIcon('importantOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+			characterOld: createIcon('characterOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+
+			capitalSimple: createIcon('capitalSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] }).popupAnchor),
+			cityBigSimple: createIcon('cityBigSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+			citySmallSimple: createIcon('citySmallSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 4] }).popupAnchor),
+			townSimple: createIcon('townSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] }).popupAnchor),
+			natureSimple: createIcon('natureSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] }).popupAnchor),
+			importantSimple: createIcon('importantSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] }).popupAnchor),
+			characterSimple: createIcon('characterSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+
+			defaultIcon: createIcon('marker-icon', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor)
+		}
+
+		var fileInput = createFileInput();
+
+		//Marker Maker
+		var marker = L.marker([0, 0], {
+			draggable: true,
+			id: "markerMaker"
+		}).on('dragend', function() {
+			marker.openPopup();
+			markerMaker();
+		});
+
+		marker.bindPopup(formHTML).openPopup();
+		marker.on('click', function(e) {
+			markerMaker();
+		});
+
+		var regionLayerGroups = {
+			'an': {
+				'capital': L.layerGroup().addTo(map),
+				'cityBig': L.layerGroup().addTo(map),
+				'citySmall': L.layerGroup().addTo(map),
+				'town': L.layerGroup().addTo(map),
+				'nature': L.layerGroup().addTo(map),
+				'important': L.layerGroup().addTo(map),
+				'character': L.layerGroup().addTo(map)
+			},
+			'mo': {
+				'capital': L.layerGroup(),
+				'cityBig': L.layerGroup(),
+				'citySmall': L.layerGroup(),
+				'town': L.layerGroup(),
+				'nature': L.layerGroup(),
+				'important': L.layerGroup(),
+				'character': L.layerGroup()
+			},
+		};
+
+		//Marker Groups
+		var an_all_layers = L.layerGroup([regionLayerGroups['an']['capital'], regionLayerGroups['an']['cityBig'], regionLayerGroups['an']['citySmall'], regionLayerGroups['an']['town'], regionLayerGroups['an']['nature'], regionLayerGroups['an']['important'], regionLayerGroups['an']['character']]);
+
+		var mo_all_layers = L.layerGroup([regionLayerGroups['mo']['capital'], regionLayerGroups['mo']['cityBig'], regionLayerGroups['mo']['citySmall'], regionLayerGroups['mo']['town'], regionLayerGroups['mo']['nature'], regionLayerGroups['mo']['important'], regionLayerGroups['mo']['character']]);
+		
+		var dv_coord = L.layerGroup([marker]);
+		
+		//Marker Overlay
+		var overlays = {
+			"Antaria": {
+				"Capitals": regionLayerGroups['an']['capital'],
+				"Large Cities": regionLayerGroups['an']['cityBig'],
+				"Small Cities": regionLayerGroups['an']['citySmall'],
+				"Towns": regionLayerGroups['an']['town'],
+				"Nature": regionLayerGroups['an']['nature'],
+				"Locations": regionLayerGroups['an']['important'],
+				"Characters": regionLayerGroups['an']['character'],
+			},
+			"Morturia": {
+				"Capitals": regionLayerGroups['mo']['capital'],
+				"Large Cities": regionLayerGroups['mo']['cityBig'],
+				"Small Cities": regionLayerGroups['mo']['citySmall'],
+				"Towns": regionLayerGroups['mo']['town'],
+				"Nature": regionLayerGroups['mo']['nature'],
+				"Locations": regionLayerGroups['mo']['important'],
+				"Characters": regionLayerGroups['mo']['character'],
+			},
+			"Developer": {
+				"Marker Maker": dv_coord,
+			}
+		};
+		var options = {
+			groupCheckboxes: true
+		};
+		var mapLayers = {
+			"Antarian Empire": antaria,
+		}
+
+		//GROUP CONTROLS
+		L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
+
+		var controlSearchAr = new L.Control.Search({
+			position:'topleft',		
+			layer: an_all_layers, 
+			zoom: 5,
+			initial: false,
+			marker: false
+		}).on("search:locationfound", function (e) {
+			if (e.layer._popup) e.layer.openPopup();
+		});
+		var controlSearchMo = new L.Control.Search({
+			position:'topleft',		
+			layer: mo_all_layers, 
+			zoom: 5,
+			initial: false,
+			marker: false
+		}).on("search:locationfound", function (e) {
+			if (e.layer._popup) e.layer.openPopup();
+		});
+
+		map.addControl( controlSearchAr );
+
+		// Background color and Search to use for map
+		var mapConfigurations = {
+			'Antarian Empire': {
+				color: '#f3dab4',
+				options: {
+					'anOption1': {
+						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						mapLayer: antaria,
+						show: [an_all_layers],
+						hide: [mo_all_layers],
+						checkboxIndex: 0,
+						checkboxState: true,
+						hideCheckboxCount: 2,
+					},
+					'anOption2': {
+						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						mapLayer: Test,
+						show: [mo_all_layers],
+						hide: [an_all_layers],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+				},
+				show: [an_all_layers],
+				hide: [mo_all_layers],
+				current: antaria,
+				checkboxIndex: 0, 
+				checkboxState: true,
+				hideCheckBox: 2,
+				defaultOptionId: 'anOption1',
+			},
+		};
+
+		function addYearSelect() {
+			var existingDropdown = document.getElementById('YearSelector');
+			if (existingDropdown) {
+				// If it exists, remove it before creating a new one
+				existingDropdown.remove();
+			}
+
+			// Find the checked radio button
+			var checkedRadioButton = document.querySelector('.leaflet-control-layers-base input[type="radio"]:checked');
+			if (checkedRadioButton) {
+				var label = checkedRadioButton.nextElementSibling;
+			} else {
+				console.error("No radiobutton found.");
+			}
+
+			// Create the dropdown box
+			var dropdown = document.createElement('select');
+			dropdown.name = 'options';
+			dropdown.id = "YearSelector";
+			dropdown.className = 'custom-select';
+
+			// Add options to the dropdown
+			switch (label && label.textContent.trim()) {
+				case "Antarian Empire": {
+					createSelect("Antaria", "anOption1", dropdown);
+					createSelect("Other City", "anOption2", dropdown);
+					break;
+				}
+			}
+
+			// Insert the dropdown after the parent label of the checked radio button
+			if (checkedRadioButton) {
+				checkedRadioButton.closest('label').after(dropdown);
+			} else if (lastCheckedRadioButtonLabel) {
+				// Find the label with the text in lastCheckedRadioButtonLabel
+				var labels = document.getElementsByTagName('label');
+				for (var i = 0; i < labels.length; i++) {
+					var label = labels[i];
+					var span = label.querySelector('span');
+					if (span && span.textContent.trim() === lastCheckedRadioButtonLabel) {
+						console.log("Found Label")
+						label.after(dropdown);
+						break;
+					}
+				}
+			} else {
+				console.log("No radiobutton found");
+			}
+		}
+
+		// Wait for the DOM to be ready
+		function addRadioButtons(checked) {
+			// Simplified createRadioButton function
+			function createRadioButton(label, value, isChecked) {
+				var radio = document.createElement("input");
+				radio.type = "radio";
+				radio.name = "layerSelector";
+				radio.value = value;
+				radio.checked = isChecked; // Direct assignment
+				radio.classList.add("custom-radio-class");
+
+				var labelElement = document.createElement("label");
+				labelElement.appendChild(radio);
+				labelElement.appendChild(document.createTextNode(label));
+				return labelElement;
+			}
+
+			// Get the overlay control container
+			var overlayContainer = document.querySelector('.leaflet-control-layers-overlays');
+
+			// Check and remove existing radio buttons and separators
+			var existingRadios = overlayContainer.querySelectorAll('.custom-radio-class');
+			var existingSeparators = overlayContainer.querySelectorAll('.leaflet-control-layers-separator');
+
+			existingRadios.forEach(function(radio) {
+				radio.parentNode.remove(); // This assumes the radio button is wrapped in a label
+			});
+			existingSeparators.forEach(function(separator) {
+				separator.remove();
+			});
+
+			// Create and append the separator div
+			var separatorDiv = document.createElement("div");
+			separatorDiv.classList.add("leaflet-control-layers-separator");
+			overlayContainer.appendChild(separatorDiv);
+
+			// Loop to create and append radio buttons
+			radioButtonsInfo.forEach(info => {
+				var radioButton = createRadioButton(info.label, info.option, checked === info.checkedIndex);
+				radioButton.classList.add("leaflet-control-layers-selector");
+				overlayContainer.appendChild(radioButton);
+			});
+		};
+
+		document.addEventListener('DOMContentLoaded', function () {
+			// Check the main checkbox
+			var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
+			checkbox.checked = true;
+			addRadioButtons(1)
+			hideCheckBoxes(2);
+			addYearSelect();
+			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+			fetch('data/cityMarkers.json')
+				.then(response => response.json())
+				.then(data => {
+					processImportedData(data);
+				})
+				.catch(error => console.error('Error loading markers.json:', error));
+		});
+
+		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
+
+		if (zoomControl) {
+			const wikiButton = createControlButton('wiki', 'Wiki', 'icons/web1.png', 'icons/web2.png', (e) => {
+				e.preventDefault();
+				window.open('wiki', '_blank');
+			});
+
+			const exportButton = createControlButton('#', 'Export JSON', 'icons/export1.png', 'icons/export2.png', (e) => {
+				e.preventDefault();
+				exportMarkersToJson();
+			});
+
+			const importButton = createControlButton('#', 'Import JSON', 'icons/import1.png', 'icons/import2.png', (e) => {
+				e.preventDefault();
+				fileInput.click();
+			});
+
+			zoomControl.insertAdjacentElement('beforeend', wikiButton);
+			zoomControl.insertAdjacentElement('beforeend', exportButton);
+			zoomControl.insertAdjacentElement('beforeend', importButton);
+		} else {
+			console.error('Zoom control element not found');
+		}
+
+		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
+
+		function createFileInput() {
+			var fileInput = document.createElement('input');
+			fileInput.type = 'file';
+			fileInput.accept = '.json';
+			fileInput.style.display = 'none';
+
+			fileInput.addEventListener('change', function(event) {
+				var file = event.target.files[0];
+				if (file) {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						var jsonData = JSON.parse(e.target.result);
+						processImportedData(jsonData);
+					};
+					reader.readAsText(file);
+				}
+			});
+
+			document.body.appendChild(fileInput);
+			return fileInput;
+		}
+	</script>		
+</body>
+
+</html>

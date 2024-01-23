@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="scripts/leaflet.css">
 	<link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
 	<link rel="stylesheet" href="scripts/leaflet-search/src/leaflet-search.css" />
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="style/style.css">
 	<script src="scripts/leaflet.js"></script>
 	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
 	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
@@ -79,16 +79,16 @@
 		map.getPane('basePane').style.zIndex = 220;
 		map.getPane('backgroundPane').style.zIndex = 150;
 
-		// Maps
-		var arathia = createMap('arathia', true, 2.75, 5.4, 'basePane', true);
-		var arathiaClean = createMap('arathiaClean', true, 2.75, 5.4, 'basePane', false);
-		var Test = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
-		var Test2 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
-		var Test3 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
-		var Test4 = createMap('morturia', true, 2.75, 5.4, 'addPane', false);
-		var morturia = createMap('morturia', true, 2.75, 5.4, 'basePane', false);
-		var arathiaBackground = createMap('arathiaBackground', false, 2.75, 5.4, 'backgroundPane', true);
-		var morturiaBackground = createMap('morturiaBackground', false, 2.75, 5.4, 'backgroundPane', false);
+		// Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
+		var arathia = createMap('Main', 'arathia', true, 2.75, 5.4, 'basePane', true);
+		var arathiaClean = createMap('Main', 'arathiaClean', true, 2.75, 5.4, 'basePane', false);
+		var Test = createMap('Main', 'morturia', true, 2.75, 5.4, 'addPane', false);
+		var Test2 = createMap('Main', 'morturia', true, 2.75, 5.4, 'addPane', false);
+		var Test3 = createMap('Main', 'morturia', true, 2.75, 5.4, 'addPane', false);
+		var Test4 = createMap('Main', 'morturia', true, 2.75, 5.4, 'addPane', false);
+		var morturia = createMap('Main', 'morturia', true, 2.75, 5.4, 'basePane', false);
+		var arathiaBackground = createMap('Main', 'arathiaBackground', false, 2.75, 5.4, 'backgroundPane', true);
+		var morturiaBackground = createMap('Main', 'morturiaBackground', false, 2.75, 5.4, 'backgroundPane', false);
 
 		// Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
 		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
@@ -461,7 +461,7 @@
 			hideCheckBoxes(2);
 			addYearSelect();
 			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-			fetch('markers.json')
+			fetch('data/markers.json')
 				.then(response => response.json())
 				.then(data => {
 					processImportedData(data);
