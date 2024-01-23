@@ -417,7 +417,7 @@ function updateMapConfiguration(currentMap, selectedOptionId) {
 
     var optionConfig = mapStyle.options[selectedOptionId];
     if (!optionConfig) {
-        console.error('No configuration found for selectedOptionId:', selectedOptionId);
+        console.warn('No configuration found for selectedOptionId:', selectedOptionId);
         return; // Exit if no configuration is found for the selectedOptionId
     }
     console.log("Updated map styles");

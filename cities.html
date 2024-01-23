@@ -58,8 +58,8 @@
 			"ac": "ac",
 		};
 
-		var southWest = L.latLng(-85, -170),
-			northEast = L.latLng(85, 170),
+		var southWest = L.latLng(-85, -185),
+			northEast = L.latLng(85, 185),
 			bounds = L.latLngBounds(southWest, northEast);
 
 		//Creating the Map
@@ -145,10 +145,22 @@
 				<input class="custom-input" type="text" id="Title" placeholder="Title"></input>
 				<span class="custom-subtitle"><font size="-1">Category</font></span>
 				<select class="custom-select" name="Category" id="Category">
-					<option value="capital" id="Capital">Capital</option>
-					<option value="citiesBig" id="Big City">Big City</option>
-					<option value="citiesSmall" id="Small City">Small City</option>
-					<option value="towns"id="Town">Town</option>
+					<option value="capital" id="Town hall">Town hall</option>
+					<option value="capital" id="Courthouse">Courthouse</option>
+					<option value="capital" id="Religious institutions">Religious institutions</option>
+					<option value="capital" id="Public squares">Public squares</option>
+					<option disabled>─────────────────────────</option>
+					<option value="cityBig" id="Merchant stall">Merchant stall</option>
+					<option value="cityBig" id="Trading post">Trading post</option>
+					<option value="cityBig" id="Food vendor">Food vendor</option>
+					<option value="cityBig" id="Workshop">Workshop</option>
+					<option disabled>─────────────────────────</option>
+					<option value="citySmall" id="House">House</option>
+					<option value="citySmall" id="Inn">Inn</option>
+					<option disabled>─────────────────────────</option>
+					<option value="town"id="Gate">Gate</option>
+					<option value="town"id="Barracks">Barracks</option>
+					<option value="town"id="Tower">Tower</option>
 					<option disabled>─────────────────────────</option>
 					<option value="nature" id="Forest">Forest</option>
 					<option value="nature" id="Mountain">Mountain</option>
@@ -231,19 +243,19 @@
 		//Marker Overlay
 		var overlays = {
 			"Antaria": {
-				"Capitals": regionLayerGroups['an']['capital'],
-				"Large Cities": regionLayerGroups['an']['cityBig'],
-				"Small Cities": regionLayerGroups['an']['citySmall'],
-				"Towns": regionLayerGroups['an']['town'],
+				"Civic Centers": regionLayerGroups['an']['capital'],
+				"Market": regionLayerGroups['an']['cityBig'],
+				"Residential": regionLayerGroups['an']['citySmall'],
+				"Fortification": regionLayerGroups['an']['town'],
 				"Nature": regionLayerGroups['an']['nature'],
 				"Locations": regionLayerGroups['an']['important'],
 				"Characters": regionLayerGroups['an']['character'],
 			},
 			"Tsuki": {
-				"Capitals": regionLayerGroups['ts']['capital'],
-				"Large Cities": regionLayerGroups['ts']['cityBig'],
-				"Small Cities": regionLayerGroups['ts']['citySmall'],
-				"Towns": regionLayerGroups['ts']['town'],
+				"Civic Centers": regionLayerGroups['ts']['capital'],
+				"Market": regionLayerGroups['ts']['cityBig'],
+				"Residential": regionLayerGroups['ts']['citySmall'],
+				"Fortification": regionLayerGroups['ts']['town'],
 				"Nature": regionLayerGroups['ts']['nature'],
 				"Locations": regionLayerGroups['ts']['important'],
 				"Characters": regionLayerGroups['ts']['character'],

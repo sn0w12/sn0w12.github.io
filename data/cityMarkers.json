@@ -2,17 +2,62 @@
   {
     "region": "an",
     "coordinates": [
-      32.720989,
-      -41.187598
+      -55.637466,
+      -161.560392
     ],
-    "icon": "capital",
-    "title": "Antaria",
-    "id": "an_capital",
-    "popuptitle": "Antaria",
-    "category": "Capital",
-    "description": "The capital of the Holy Antarian Enpire",
-    "link": true,
-    "customlink": "Antaria (Capital)"
+    "icon": "town",
+    "title": "West Gate",
+    "id": "an_west",
+    "popuptitle": "West Gate",
+    "category": "Gate",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "an",
+    "coordinates": [
+      -67.978245,
+      139.334066
+    ],
+    "icon": "town",
+    "title": "Southeast Gate",
+    "id": "an_southeast",
+    "popuptitle": "Southeast Gate",
+    "category": "Gate",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "an",
+    "coordinates": [
+      75.213006,
+      0.516152
+    ],
+    "icon": "town",
+    "title": "North Gate",
+    "id": "an_north",
+    "popuptitle": "North Gate",
+    "category": "Gate",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "an",
+    "coordinates": [
+      47.788,
+      -103.366762
+    ],
+    "icon": "town",
+    "title": "Northwest Gate",
+    "id": "an_northwest",
+    "popuptitle": "Northwest Gate",
+    "category": "Gate",
+    "description": "",
+    "link": false,
+    "customlink": null
   },
   {
     "region": "ts",
@@ -22,7 +67,7 @@
     ],
     "icon": "capital",
     "title": "Getsuyōsei",
-    "id": "an_capital",
+    "id": "ts_capital",
     "popuptitle": "Getsuyōsei",
     "category": "Capital",
     "description": "The capital of the Holy Antarian Enpire",
