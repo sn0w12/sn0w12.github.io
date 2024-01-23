@@ -659,8 +659,10 @@ document.addEventListener('change', function (event) {
         addRadioButtons(iconChecked);
 
         // Remove current layer if it's not the selected map
-        if (currentSelectedMap != mapConfigurations[currentMap].current) {
-            map.removeLayer(currentSelectedMap);
+        if (currentSelectedMap && map.hasLayer(currentSelectedMap)){
+            if (currentSelectedMap != mapConfigurations[currentMap].current) {
+                map.removeLayer(currentSelectedMap);
+            }
         }
 
         selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
