@@ -505,8 +505,8 @@ function changeAllIcons(suffix) {
 }
 
 function updateCheckbox(selectorIndex, checked) {
-    var arathiaCheckbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[selectorIndex];
-    arathiaCheckbox.checked = checked;
+    var checkbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[selectorIndex];
+    checkbox.checked = checked;
 }
 
 function updateIcons(currentMap, iconChecked) {
@@ -688,7 +688,7 @@ document.addEventListener('change', function (event) {
 
 function performActions(mapLayer, addLayers, removeLayers, checkboxIndex, checkboxState, hideCheckboxCount) {
     if (currentSelectedMap && map.hasLayer(currentSelectedMap)) {
-        if (currentSelectedMap != arathia && currentSelectedMap != arathiaClean && currentSelectedMap != morturia) {
+        if (!neededMaps.includes(currentSelectedMap)) {
             map.removeLayer(currentSelectedMap);
         }
     }
@@ -743,7 +743,7 @@ function setYearSelectorToLastDropdown() {
             }
         } else {
             console.log('Matching option not found in the dropdown.');
-            if (currentSelectedMap != arathia) {
+            if (!neededMaps.includes(currentSelectedMap)) {
                 map.removeLayer(currentSelectedMap);
             }
             selectedOptionId = '';
