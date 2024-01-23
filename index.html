@@ -358,7 +358,11 @@
 
 			// Find the checked radio button
 			var checkedRadioButton = document.querySelector('.leaflet-control-layers-base input[type="radio"]:checked');
-			var label = checkedRadioButton.nextElementSibling;
+			if (checkedRadioButton) {
+				var label = checkedRadioButton.nextElementSibling;
+			} else {
+				console.log("No radiobutton found");
+			}
 
 			// Create the dropdown box
 			var dropdown = document.createElement('select');
@@ -386,7 +390,9 @@
 			}
 
 			// Insert the dropdown after the parent label of the checked radio button
-			checkedRadioButton.closest('label').after(dropdown);
+			if (checkedRadioButton) {
+				checkedRadioButton.closest('label').after(dropdown);
+			}
 		}
 
 		// Wait for the DOM to be ready
