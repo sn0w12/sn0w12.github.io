@@ -1,0 +1,32 @@
+[
+  {
+    "region": "an",
+    "coordinates": [
+      32.720989,
+      -41.187598
+    ],
+    "icon": "capital",
+    "title": "Antaria",
+    "id": "an_capital",
+    "popuptitle": "Antaria",
+    "category": "Capital",
+    "description": "The capital of the Holy Antarian Enpire",
+    "link": true,
+    "customlink": "Antaria (Capital)"
+  },
+  {
+    "region": "ts",
+    "coordinates": [
+      -19.190282,
+      -14.544143
+    ],
+    "icon": "capital",
+    "title": "Getsuyōsei",
+    "id": "an_capital",
+    "popuptitle": "Getsuyōsei",
+    "category": "Capital",
+    "description": "The capital of the Holy Antarian Enpire",
+    "link": false,
+    "customlink": null
+  }
+]

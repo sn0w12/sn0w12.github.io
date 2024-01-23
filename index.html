@@ -3,6 +3,7 @@
 
 <head>
 	<title>Arathia World Map</title>
+	<meta charset="UTF-8">
 	<link rel="icon" href="icons/arathia.png">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="scripts/leaflet.css">
@@ -126,6 +127,59 @@
 
 		var fileInput = createFileInput();
 
+		var formHTML = `
+			<div class="custom-container">
+				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
+				<span class="custom-subtitle"><font size="-1">Coords</font></span>
+				<input class="custom-input" type="text" id="Coords" placeholder="Coords"></input>
+				<img style="height:3px;width: 100%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 0px; margin-top: 0px;" src="icons/divider_small.png" alt="map popup divider">
+				<span class="custom-subtitle"><font size="-1">Country</font></span>
+				<select class="custom-select" name="Id" id="Id">
+					<option value="ac">Arcarum</option>
+					<option value="an">Antaria</option>
+					<option value="az">Azurith</option>
+					<option value="dr">Dryadalis</option>
+					<option value="gi">Gigantoria</option>
+					<option value="od">Odrheim</option>
+					<option value="pr">Primoria</option>
+					<option value="rh">Rheinland</option>
+					<option value="tc">Trade Company</option>
+					<option value="th">Tunglheimr</option>
+					<option value="ts">Tsuki</option>
+					<option disabled>─────────────────────────</option>
+					<option value="ad">Ardeat</option>
+					<option value="ge">Gelida</option>
+					<option value="sc">Scientia</option>
+				</select>
+				<input class="custom-input" type="text" id="Title" placeholder="Title"></input>
+				<span class="custom-subtitle"><font size="-1">Category</font></span>
+				<select class="custom-select" name="Category" id="Category">
+					<option value="capital" id="Capital">Capital</option>
+					<option value="citiesBig" id="Big City">Big City</option>
+					<option value="citiesSmall" id="Small City">Small City</option>
+					<option value="towns"id="Town">Town</option>
+					<option disabled>─────────────────────────</option>
+					<option value="nature" id="Forest">Forest</option>
+					<option value="nature" id="Mountain">Mountain</option>
+					<option value="nature" id="Cave">Cave</option>
+					<option disabled>─────────────────────────</option>
+					<option value="important" id="Important Location">Important Location</option>
+					<option value="important" id="Historical Location">Historical Location</option>
+					<option disabled>─────────────────────────</option>
+					<option value="characters" id="Character">Character</option>
+					</select>
+				<input class="custom-input" type="text" id="Description" placeholder="Description"></input>
+				<div class="custom-checkbox-container">
+					<input class="custom-checkbox" type="checkbox" id="Link">
+					<label for="Link">Link?</label>
+				</div>
+				<input class="custom-input" type="text" id="LinkText" placeholder="Custom link text (optional)"></input>
+				<input class="custom-input" type="text" id="CustomId" placeholder="Custom id name (optional)"></input>
+				<button class="custom-button" id="DevButton">Generate</button>
+				<input class="custom-input" type="text" id="Output" placeholder="Output"></input>
+			</div>
+			`;
+
 		//Marker Maker
 		var marker = L.marker([0, 0], {
 			draggable: true,
@@ -167,6 +221,21 @@
 		var mo_all_layers = L.layerGroup([regionLayerGroups['mo']['capital'], regionLayerGroups['mo']['cityBig'], regionLayerGroups['mo']['citySmall'], regionLayerGroups['mo']['town'], regionLayerGroups['mo']['nature'], regionLayerGroups['mo']['important'], regionLayerGroups['mo']['character']]);
 		
 		var dv_coord = L.layerGroup([marker]);
+
+		var groups = [ar_all_layers, mo_all_layers, dv_coord];
+		const regionCodes = ['ar', 'mo'];
+		const layerTypes = ['capital', 'cityBig', 'citySmall', 'town', 'nature', 'important', 'character'];
+
+		const layerGroups = [];
+
+		regionCodes.forEach(regionCode => {
+			layerTypes.forEach(layerType => {
+				const layerGroup = regionLayerGroups[regionCode][layerType];
+				if (layerGroup) { // Check if the layerGroup exists before adding
+					layerGroups.push(layerGroup);
+				}
+			});
+		});
 		
 		//Marker Overlay
 		var overlays = {
@@ -223,6 +292,11 @@
 			if (e.layer._popup) e.layer.openPopup();
 		});
 
+		var allSearch = [
+			controlSearchAr, 
+			controlSearchMo
+		];
+
 		map.addControl( controlSearchAr );
 
 		// Background color and Search to use for map
@@ -231,7 +305,7 @@
 				color: '#31565a',
 				options: {
 					'arOption1': {
-						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						search: { controlSearch1: controlSearchAr },
 						mapLayer: arathia,
 						show: [ar_all_layers, arathiaBackground],
 						hide: [mo_all_layers, morturiaBackground],
@@ -240,7 +314,7 @@
 						hideCheckboxCount: 2,
 					},
 					'arOption2': {
-						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						search: { controlSearch1: controlSearchMo },
 						mapLayer: Test,
 						show: [mo_all_layers, arathiaBackground],
 						hide: [ar_all_layers, morturiaBackground],
@@ -261,7 +335,7 @@
 				color: '#31565a',
 				options: {
 					'arCleanOption1': {
-						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						search: { controlSearch1: controlSearchAr },
 						mapLayer: arathiaClean,
 						show: [arathiaBackground],
 						hide: [mo_all_layers, ar_all_layers, morturiaBackground],
@@ -270,7 +344,7 @@
 						hideCheckboxCount: 2,
 					},
 					'arCleanOption2': {
-						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						search: { controlSearch1: controlSearchMo },
 						mapLayer: Test3,
 						show: [arathiaBackground],
 						hide: [mo_all_layers, ar_all_layers, morturiaBackground],
@@ -291,7 +365,7 @@
 				color: '#374539',
 				options: {
 					'moOption1': {
-						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						search: { controlSearch1: controlSearchMo },
 						mapLayer: morturia,
 						show: [mo_all_layers, morturiaBackground],
 						hide: [ar_all_layers, arathiaBackground],
@@ -300,7 +374,7 @@
 						hideCheckboxCount: 1,
 					},
 					'moOption2': {
-						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						search: { controlSearch1: controlSearchAr },
 						mapLayer: morturia,
 						show: [mo_all_layers, morturiaBackground],
 						hide: [ar_all_layers, arathiaBackground],
@@ -321,7 +395,7 @@
 				color: '#374539',
 				options: {
 					'moCleanOption1': {
-						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
+						search: { controlSearch1: controlSearchMo },
 						mapLayer: morturia,
 						show: [mo_all_layers, morturiaBackground],
 						hide: [ar_all_layers, arathiaBackground],
@@ -330,7 +404,7 @@
 						hideCheckboxCount: 1,
 					},
 					'moCleanOption2': {
-						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						search: { controlSearch1: controlSearchAr },
 						mapLayer: morturia,
 						show: [morturiaBackground],
 						hide: [mo_all_layers, ar_all_layers, arathiaBackground],

@@ -3,6 +3,7 @@
 
 <head>
 	<title>Arathia Cities Maps</title>
+	<meta charset="UTF-8">
 	<link rel="icon" href="icons/arathia.png">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="scripts/leaflet.css">
@@ -15,7 +16,7 @@
 </head>
 
 <body style="height: 100%;margin: 0;overflow-y: hidden;overflow-x: hidden;">
-	<div id="map" style="width: 100%; height: 100%; background: #f3dab4;"></div>
+	<div id="map" style="width: 100%; height: 100%; background: #27180d;"></div>
 	<a class="leaflet-control-zoom-out" href="index" title="Zoom out" role="button"
         aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
 	<script src="scripts/custom-scripts.js"></script>
@@ -44,17 +45,17 @@
 		};
 
 		const regionMap = {
-			"an": "ar",
-			"od": "ar",
-			"th": "ar",
-			"rh": "ar",
-			"az": "ar",
-			"ts": "ar",
-			"pr": "ar",
-			"dr": "ar",
-			"tc": "ar",
-			"gi": "ar",
-			"ac": "ar",
+			"an": "an",
+			"od": "od",
+			"th": "th",
+			"rh": "rh",
+			"az": "az",
+			"ts": "ts",
+			"pr": "pr",
+			"dr": "dr",
+			"tc": "tc",
+			"gi": "gi",
+			"ac": "ac",
 		};
 
 		var southWest = L.latLng(-85, -170),
@@ -79,7 +80,7 @@
 
 		// Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
 		var antaria = createMap('Antaria', 'antaria', true, 2.5, 5.4, 'basePane', true);
-		var Test = createMap('Main', 'morturia', true, 2.75, 5.4, 'addPane', false);
+		var tsuki = createMap('Antaria', 'getsuyosei', true, 2.5, 5.4, 'basePane', false);
 
 		// Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
 		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
@@ -117,6 +118,59 @@
 
 		var fileInput = createFileInput();
 
+		var formHTML = `
+			<div class="custom-container">
+				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
+				<span class="custom-subtitle"><font size="-1">Coords</font></span>
+				<input class="custom-input" type="text" id="Coords" placeholder="Coords"></input>
+				<img style="height:3px;width: 100%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 0px; margin-top: 0px;" src="icons/divider_small.png" alt="map popup divider">
+				<span class="custom-subtitle"><font size="-1">Country</font></span>
+				<select class="custom-select" name="Id" id="Id">
+					<option value="ac">Arcarum</option>
+					<option value="an">Antaria</option>
+					<option value="az">Azurith</option>
+					<option value="dr">Dryadalis</option>
+					<option value="gi">Gigantoria</option>
+					<option value="od">Odrheim</option>
+					<option value="pr">Primoria</option>
+					<option value="rh">Rheinland</option>
+					<option value="tc">Trade Company</option>
+					<option value="th">Tunglheimr</option>
+					<option value="ts">Tsuki</option>
+					<option disabled>─────────────────────────</option>
+					<option value="ad">Ardeat</option>
+					<option value="ge">Gelida</option>
+					<option value="sc">Scientia</option>
+				</select>
+				<input class="custom-input" type="text" id="Title" placeholder="Title"></input>
+				<span class="custom-subtitle"><font size="-1">Category</font></span>
+				<select class="custom-select" name="Category" id="Category">
+					<option value="capital" id="Capital">Capital</option>
+					<option value="citiesBig" id="Big City">Big City</option>
+					<option value="citiesSmall" id="Small City">Small City</option>
+					<option value="towns"id="Town">Town</option>
+					<option disabled>─────────────────────────</option>
+					<option value="nature" id="Forest">Forest</option>
+					<option value="nature" id="Mountain">Mountain</option>
+					<option value="nature" id="Cave">Cave</option>
+					<option disabled>─────────────────────────</option>
+					<option value="important" id="Important Location">Important Location</option>
+					<option value="important" id="Historical Location">Historical Location</option>
+					<option disabled>─────────────────────────</option>
+					<option value="characters" id="Character">Character</option>
+					</select>
+				<input class="custom-input" type="text" id="Description" placeholder="Description"></input>
+				<div class="custom-checkbox-container">
+					<input class="custom-checkbox" type="checkbox" id="Link">
+					<label for="Link">Link?</label>
+				</div>
+				<input class="custom-input" type="text" id="LinkText" placeholder="Custom link text (optional)"></input>
+				<input class="custom-input" type="text" id="CustomId" placeholder="Custom id name (optional)"></input>
+				<button class="custom-button" id="DevButton">Generate</button>
+				<input class="custom-input" type="text" id="Output" placeholder="Output"></input>
+			</div>
+			`;
+
 		//Marker Maker
 		var marker = L.marker([0, 0], {
 			draggable: true,
@@ -141,7 +195,7 @@
 				'important': L.layerGroup().addTo(map),
 				'character': L.layerGroup().addTo(map)
 			},
-			'mo': {
+			'ts': {
 				'capital': L.layerGroup(),
 				'cityBig': L.layerGroup(),
 				'citySmall': L.layerGroup(),
@@ -155,9 +209,24 @@
 		//Marker Groups
 		var an_all_layers = L.layerGroup([regionLayerGroups['an']['capital'], regionLayerGroups['an']['cityBig'], regionLayerGroups['an']['citySmall'], regionLayerGroups['an']['town'], regionLayerGroups['an']['nature'], regionLayerGroups['an']['important'], regionLayerGroups['an']['character']]);
 
-		var mo_all_layers = L.layerGroup([regionLayerGroups['mo']['capital'], regionLayerGroups['mo']['cityBig'], regionLayerGroups['mo']['citySmall'], regionLayerGroups['mo']['town'], regionLayerGroups['mo']['nature'], regionLayerGroups['mo']['important'], regionLayerGroups['mo']['character']]);
+		var ts_all_layers = L.layerGroup([regionLayerGroups['ts']['capital'], regionLayerGroups['ts']['cityBig'], regionLayerGroups['ts']['citySmall'], regionLayerGroups['ts']['town'], regionLayerGroups['ts']['nature'], regionLayerGroups['ts']['important'], regionLayerGroups['ts']['character']]);
 		
 		var dv_coord = L.layerGroup([marker]);
+
+		var groups = [an_all_layers, ts_all_layers, dv_coord];
+		const regionCodes = ['an', 'ts'];
+		const layerTypes = ['capital', 'cityBig', 'citySmall', 'town', 'nature', 'important', 'character'];
+
+		const layerGroups = [];
+
+		regionCodes.forEach(regionCode => {
+			layerTypes.forEach(layerType => {
+				const layerGroup = regionLayerGroups[regionCode][layerType];
+				if (layerGroup) { // Check if the layerGroup exists before adding
+					layerGroups.push(layerGroup);
+				}
+			});
+		});
 		
 		//Marker Overlay
 		var overlays = {
@@ -170,14 +239,14 @@
 				"Locations": regionLayerGroups['an']['important'],
 				"Characters": regionLayerGroups['an']['character'],
 			},
-			"Morturia": {
-				"Capitals": regionLayerGroups['mo']['capital'],
-				"Large Cities": regionLayerGroups['mo']['cityBig'],
-				"Small Cities": regionLayerGroups['mo']['citySmall'],
-				"Towns": regionLayerGroups['mo']['town'],
-				"Nature": regionLayerGroups['mo']['nature'],
-				"Locations": regionLayerGroups['mo']['important'],
-				"Characters": regionLayerGroups['mo']['character'],
+			"Tsuki": {
+				"Capitals": regionLayerGroups['ts']['capital'],
+				"Large Cities": regionLayerGroups['ts']['cityBig'],
+				"Small Cities": regionLayerGroups['ts']['citySmall'],
+				"Towns": regionLayerGroups['ts']['town'],
+				"Nature": regionLayerGroups['ts']['nature'],
+				"Locations": regionLayerGroups['ts']['important'],
+				"Characters": regionLayerGroups['ts']['character'],
 			},
 			"Developer": {
 				"Marker Maker": dv_coord,
@@ -187,13 +256,14 @@
 			groupCheckboxes: true
 		};
 		var mapLayers = {
-			"Antarian Empire": antaria,
+			"Antaria": antaria,
+			"Tsuki": tsuki,
 		}
 
 		//GROUP CONTROLS
 		L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
 
-		var controlSearchAr = new L.Control.Search({
+		var controlSearchAn = new L.Control.Search({
 			position:'topleft',		
 			layer: an_all_layers, 
 			zoom: 5,
@@ -202,9 +272,9 @@
 		}).on("search:locationfound", function (e) {
 			if (e.layer._popup) e.layer.openPopup();
 		});
-		var controlSearchMo = new L.Control.Search({
+		var controlSearchTs = new L.Control.Search({
 			position:'topleft',		
-			layer: mo_all_layers, 
+			layer: ts_all_layers, 
 			zoom: 5,
 			initial: false,
 			marker: false
@@ -212,39 +282,74 @@
 			if (e.layer._popup) e.layer.openPopup();
 		});
 
-		map.addControl( controlSearchAr );
+		var allSearch = [
+			controlSearchAn,
+			controlSearchTs, 
+		];
+
+		map.addControl( controlSearchAn );
 
 		// Background color and Search to use for map
 		var mapConfigurations = {
-			'Antarian Empire': {
-				color: '#f3dab4',
+			'Antaria': {
+				color: '#27180d',
 				options: {
 					'anOption1': {
-						search: { controlSearch1: controlSearchAr, controlSearch2: controlSearchMo },
+						search: { controlSearch1: controlSearchAn },
 						mapLayer: antaria,
 						show: [an_all_layers],
-						hide: [mo_all_layers],
+						hide: [ts_all_layers],
 						checkboxIndex: 0,
 						checkboxState: true,
 						hideCheckboxCount: 2,
 					},
 					'anOption2': {
-						search: { controlSearch1: controlSearchMo, controlSearch2: controlSearchAr },
-						mapLayer: Test,
-						show: [mo_all_layers],
-						hide: [an_all_layers],
+						search: { controlSearch1: controlSearchAn },
+						mapLayer: antaria,
+						show: [an_all_layers],
+						hide: [ts_all_layers],
 						checkboxIndex: 1,
 						checkboxState: true,
 						hideCheckboxCount: 1,
 					},
 				},
 				show: [an_all_layers],
-				hide: [mo_all_layers],
+				hide: [ts_all_layers],
 				current: antaria,
 				checkboxIndex: 0, 
 				checkboxState: true,
 				hideCheckBox: 2,
 				defaultOptionId: 'anOption1',
+			},
+			'Tsuki': {
+				color: '#FFFFFF',
+				options: {
+					'tsOption1': {
+						search: { controlSearch1: controlSearchTs },
+						mapLayer: tsuki,
+						show: [ts_all_layers],
+						hide: [an_all_layers],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+					'tsOption2': {
+						search: { controlSearch1: controlSearchTs },
+						mapLayer: tsuki,
+						show: [ts_all_layers],
+						hide: [an_all_layers],
+						checkboxIndex: 1,
+						checkboxState: true,
+						hideCheckboxCount: 1,
+					},
+				},
+				show: [ts_all_layers],
+				hide: [an_all_layers],
+				current: tsuki,
+				checkboxIndex: 1, 
+				checkboxState: true,
+				hideCheckBox: 1,
+				defaultOptionId: 'tsOption1',
 			},
 		};
 
@@ -271,9 +376,14 @@
 
 			// Add options to the dropdown
 			switch (label && label.textContent.trim()) {
-				case "Antarian Empire": {
+				case "Antaria": {
 					createSelect("Antaria", "anOption1", dropdown);
 					createSelect("Other City", "anOption2", dropdown);
+					break;
+				}
+				case "Tsuki": {
+					createSelect("Getsuyōsei", "tsOption1", dropdown);
+					createSelect("Other City", "tsOption2", dropdown);
 					break;
 				}
 			}

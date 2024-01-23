@@ -127,59 +127,6 @@ function loadFormData() {
     }
 }
 
-var formHTML = `
-    <div class="custom-container">
-        <span class="custom-title"><font size="+0.5">Marker Maker</font></span>
-        <span class="custom-subtitle"><font size="-1">Coords</font></span>
-        <input class="custom-input" type="text" id="Coords" placeholder="Coords"></input>
-        <img style="height:3px;width: 100%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 0px; margin-top: 0px;" src="icons/divider_small.png" alt="map popup divider">
-        <span class="custom-subtitle"><font size="-1">Country</font></span>
-        <select class="custom-select" name="Id" id="Id">
-            <option value="ac">Arcarum</option>
-            <option value="an">Antaria</option>
-            <option value="az">Azurith</option>
-            <option value="dr">Dryadalis</option>
-            <option value="gi">Gigantoria</option>
-            <option value="od">Odrheim</option>
-            <option value="pr">Primoria</option>
-            <option value="rh">Rheinland</option>
-            <option value="tc">Trade Company</option>
-            <option value="th">Tunglheimr</option>
-            <option value="ts">Tsuki</option>
-            <option disabled>─────────────────────────</option>
-            <option value="ad">Ardeat</option>
-            <option value="ge">Gelida</option>
-            <option value="sc">Scientia</option>
-        </select>
-        <input class="custom-input" type="text" id="Title" placeholder="Title"></input>
-        <span class="custom-subtitle"><font size="-1">Category</font></span>
-        <select class="custom-select" name="Category" id="Category">
-            <option value="capital" id="Capital">Capital</option>
-            <option value="citiesBig" id="Big City">Big City</option>
-            <option value="citiesSmall" id="Small City">Small City</option>
-            <option value="towns"id="Town">Town</option>
-            <option disabled>─────────────────────────</option>
-            <option value="nature" id="Forest">Forest</option>
-            <option value="nature" id="Mountain">Mountain</option>
-            <option value="nature" id="Cave">Cave</option>
-            <option disabled>─────────────────────────</option>
-            <option value="important" id="Important Location">Important Location</option>
-            <option value="important" id="Historical Location">Historical Location</option>
-            <option disabled>─────────────────────────</option>
-            <option value="characters" id="Character">Character</option>
-            </select>
-        <input class="custom-input" type="text" id="Description" placeholder="Description"></input>
-        <div class="custom-checkbox-container">
-            <input class="custom-checkbox" type="checkbox" id="Link">
-            <label for="Link">Link?</label>
-        </div>
-        <input class="custom-input" type="text" id="LinkText" placeholder="Custom link text (optional)"></input>
-        <input class="custom-input" type="text" id="CustomId" placeholder="Custom id name (optional)"></input>
-        <button class="custom-button" id="DevButton">Generate</button>
-        <input class="custom-input" type="text" id="Output" placeholder="Output"></input>
-    </div>
-    `;
-
 // Print all console commands
 function help() {
     console.log(`
@@ -266,7 +213,6 @@ function closeAllPopups() {
 
 function getAllMarkersFromGroups() {
     var allMarkers = [];
-    var groups = [ar_all_layers, mo_all_layers, dv_coord]; // Include all your layer groups here
 
     groups.forEach(function(group) {
         extractMarkersFromLayer(group, allMarkers);
@@ -413,10 +359,12 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
     return marker;
 }
 
-function updateMapStyles(map, backgroundColor, addControl, removeControl) {
+function updateMapStyles(map, backgroundColor, addControl) {
     map.getContainer().style.backgroundColor = backgroundColor;
+    allSearch.forEach(function(control) {
+        map.removeControl(control);
+    });    
     map.addControl(addControl);
-    map.removeControl(removeControl);
 }
 
 function isValidLayer(layer) {
@@ -473,7 +421,7 @@ function updateMapConfiguration(currentMap, selectedOptionId) {
         return; // Exit if no configuration is found for the selectedOptionId
     }
     console.log("Updated map styles");
-    updateMapStyles(map, mapStyle.color, mapConfigurations[currentMap].options[selectedOptionId].search.controlSearch1, mapConfigurations[currentMap].options[selectedOptionId].search.controlSearch2);
+    updateMapStyles(map, mapStyle.color, mapConfigurations[currentMap].options[selectedOptionId].search.controlSearch1);
 }
 
 function getConvertedOptionId(selectedOptionId) {
@@ -487,7 +435,6 @@ function getConvertedOptionId(selectedOptionId) {
 }
 
 function changeAllIcons(suffix) {
-    const layerGroups = [regionLayerGroups['ar']['capital'], regionLayerGroups['ar']['cityBig'], regionLayerGroups['ar']['citySmall'], regionLayerGroups['ar']['town'], regionLayerGroups['ar']['nature'], regionLayerGroups['ar']['important'], regionLayerGroups['ar']['character'], regionLayerGroups['mo']['capital'], regionLayerGroups['mo']['cityBig'], regionLayerGroups['mo']['citySmall'], regionLayerGroups['mo']['town'], regionLayerGroups['mo']['nature'], regionLayerGroups['mo']['important'], regionLayerGroups['mo']['character']];
     layerGroups.forEach(group => {
         const layers = group.getLayers();
         layers.forEach(layer => {
@@ -520,8 +467,10 @@ function updateIcons(currentMap, iconChecked) {
     addRadioButtons(iconChecked);
 
     // Remove current layer if it's not the selected map
-    if (currentSelectedMap != mapConfigurations[currentMap].current) {
-        map.removeLayer(currentSelectedMap);
+    if (currentSelectedMap && map.hasLayer(currentSelectedMap)){
+        if (currentSelectedMap != mapConfigurations[currentMap].current) {
+            map.removeLayer(currentSelectedMap);
+        }
     }
 
     updateMapConfiguration(currentMap, selectedOptionId);
@@ -590,7 +539,7 @@ function processImportedData(jsonData) {
         var iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
         if (!iconType) {
             console.warn("Icon not found for:", markerData.icon, "Using default icon.");
-            iconType = icons.defaultIcon; // Replace 'defaultIcon' with your default icon key
+            iconType = icons.defaultIcon;
         }
 
         var popupContent = generatePopupContent(
@@ -755,6 +704,8 @@ function setYearSelectorToLastDropdown() {
             }
         } else {
             console.log('Matching option not found in the dropdown.');
+            let mapToRemove = true; // Assume the map needs to be removed
+
             // Loop through each configuration to find if the currentSelectedMap is still needed
             Object.keys(mapConfigurations).forEach(configKey => {
                 let config = mapConfigurations[configKey];
