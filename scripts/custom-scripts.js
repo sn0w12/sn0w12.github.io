@@ -249,11 +249,13 @@ function displayPolygon(polygon, region, displaArea = false) {
 function help() {
     console.log(`
 All availible commands:
-openAllPopupsInLayerGroup(region, group); Opens all of the popups you want
+openAllPopupsInLayerGroup("region", "group"); Opens all of the popups you want
+openAllPopupsInCountry("country prefix"); Opens all markers in a country
 closeAllPopups(); Closes all open popups
 printRegionGroups(); Prints all region Groups
 removeMarker("Title"); Removes a marker with a specified title
 displayAllPolygons(); Displays all polygons on the current map
+isolateCountryMarkers(["country prefix"]); Removed all markers exept the cpuntries listed
     `);
 }
 
@@ -314,6 +316,40 @@ function openAllPopupsInLayerGroup(region, group) {
         });
     } else {
         console.log("Invalid region or group");
+    }
+}
+
+// Run from the console, openAllPopupsInCountry(an);
+function openAllPopupsInCountry(prefix) {
+    var markers = getAllMarkersFromGroups();
+    // Loop through all markers
+    for (var i = 0; i < markers.length; i++) {
+        var marker = markers[i];
+        var markerId = marker.options.id;
+
+        // Check if the first two letters of the marker's ID match the specified prefix
+        if (markerId && markerId.substring(0, 2) === prefix) {
+            // Create a non-closable popup and bind it to the marker
+            var nonClosablePopup = L.popup({ autoClose: false, closeOnClick: false }).setContent(marker.getPopup().getContent());
+            marker.bindPopup(nonClosablePopup);
+
+            // Open the popup
+            marker.openPopup();
+        }
+    }
+}
+
+function isolateCountryMarkers(prefixArray) {
+    var markers = getAllMarkersFromGroups();
+    // Loop through all markers
+    for (var i = 0; i < markers.length; i++) {
+        var marker = markers[i];
+        var markerId = marker.options.id;
+
+        // Check if the first two letters of the marker's ID match the specified prefix
+        if (markerId && !prefixArray.some(prefix => markerId.substring(0, 2) === prefix)) {
+            map.removeLayer(marker)
+        }
     }
 }
 
