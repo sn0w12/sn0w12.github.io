@@ -62,12 +62,86 @@ function createIcon(icon, shadow, iconSize, iconAnchor, popupAnchor) {
     });
 }
 
-function markerMaker() {
+function setSelectValueFromCheckedRadioButton(region) {
+    // Find the text of the checked radio button's next sibling span
+    var checkedRadioSpanText = document.querySelector('input[name="leaflet-base-layers"]:checked + span');
+    if (!checkedRadioSpanText) return; // Exit if no checked radio button with a span
+
+    var spanText = checkedRadioSpanText.textContent.trim();
+
+    // Map the text to the select option values
+    var select = document.getElementById('Id');
+    var options = select.options;
+
+    if (region) {
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].text === region) {
+                select.value = options[i].value;
+                break; // Stop the loop once the matching value is found and set
+            }
+        }
+    } else {
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].text === spanText) {
+                select.value = options[i].value;
+                break; // Stop the loop once the matching value is found and set
+            }
+        }
+    }
+}
+
+const polygon = turf.polygon([[
+    [-175.153929, -67.98353],
+    [162.859536, -66.338373],
+    [151.148198, 56.691438],
+    [-140.221832, 56.020238],
+    [-175.153929, -67.98353]
+]]);
+
+function parseLatLng(latlngString) {
+    // Extract the numbers from the LatLng string
+    const match = latlngString.match(/LatLng\(([^,]+),\s*([^)]+)\)/);
+    if (match) {
+        return [parseFloat(match[1]), parseFloat(match[2])];
+    }
+    return null; // Return null if the format doesn't match
+}
+
+function isPointInsidePolygon(latlngString, polygon) {
+    const point = parseLatLng(latlngString);
+    console.log(latlngString);
+    if (!point) {
+        console.log("Invalid point format.");
+        return false;
+    }
+    
+    const pt = turf.point(point);
+    const isInside = turf.booleanPointInPolygon(pt, polygon);
+    return isInside;
+}
+
+function markerMaker(isPolygon = false) {
     // Load saved data
     loadFormData();
+    var formData = getFormData();
 
     var coords = marker.getLatLng().toString().replace('LatLng', '').replace('(', '').replace(')', '');
     document.getElementById('Coords').value = coords;
+
+    if (!isPolygon)
+        setSelectValueFromCheckedRadioButton()
+    else {
+        if (countryPolygons[currentMap]) {
+            for (const region in countryPolygons[currentMap]) {
+                const polygon = countryPolygons[currentMap][region];
+                if (isPointInsidePolygon(formData.coords, polygon)) {
+                    console.log(`Point is inside the polygon in ${region}, ${currentMap}.`);
+                    setSelectValueFromCheckedRadioButton(region);
+                    break;
+                }
+            }
+        }
+    }
 
     // Add event listeners for each form element
     var formElements = document.querySelectorAll('#Id, #Title, #Category, #Description, #Link, #LinkText, #CustomId');
@@ -77,7 +151,6 @@ function markerMaker() {
 
     document.getElementById('DevButton').addEventListener('click', function() {
         // Get form data
-        var formData = getFormData();
         var output = generateMarker(formData.id, formData.title, formData.category, formData.icon, formData.description, formData.linkEnabled, formData.linkTitle, formData.coords, formData.customId);
 
         // Display the output
