@@ -90,14 +90,6 @@ function setSelectValueFromCheckedRadioButton(region) {
     }
 }
 
-const polygon = turf.polygon([[
-    [-175.153929, -67.98353],
-    [162.859536, -66.338373],
-    [151.148198, 56.691438],
-    [-140.221832, 56.020238],
-    [-175.153929, -67.98353]
-]]);
-
 function parseLatLng(latlngString) {
     // Extract the numbers from the LatLng string
     const match = latlngString.match(/LatLng\(([^,]+),\s*([^)]+)\)/);
@@ -109,7 +101,6 @@ function parseLatLng(latlngString) {
 
 function isPointInsidePolygon(latlngString, polygon) {
     const point = parseLatLng(latlngString);
-    console.log(latlngString);
     if (!point) {
         console.log("Invalid point format.");
         return false;
@@ -120,6 +111,27 @@ function isPointInsidePolygon(latlngString, polygon) {
     return isInside;
 }
 
+function reversePolygonCoordinates(polygon) {
+    if (!polygon || !polygon.geometry || !polygon.geometry.coordinates) {
+        return null; // Return null if the input is not a valid polygon
+    }
+
+    const reversedCoordinates = polygon.geometry.coordinates.map(ring => {
+        return ring.map(coord => [coord[1], coord[0]]);
+    });
+
+    return turf.polygon(reversedCoordinates, polygon.properties);
+}
+
+function clearAllVectors() {
+    // Clear all existing GeoJSON layers from the map
+    map.eachLayer(function (layer) {
+        if (layer instanceof L.GeoJSON) {
+            map.removeLayer(layer);
+        }
+    });
+}
+
 function markerMaker(isPolygon = false) {
     // Load saved data
     loadFormData();
@@ -127,18 +139,20 @@ function markerMaker(isPolygon = false) {
 
     var coords = marker.getLatLng().toString().replace('LatLng', '').replace('(', '').replace(')', '');
     document.getElementById('Coords').value = coords;
+    console.log(coords);
 
     if (!isPolygon)
         setSelectValueFromCheckedRadioButton()
     else {
+        clearAllVectors();
         if (countryPolygons[currentMap]) {
             for (const region in countryPolygons[currentMap]) {
                 const polygon = countryPolygons[currentMap][region];
                 if (isPointInsidePolygon(formData.coords, polygon)) {
-                    console.log(`Point is inside the polygon in ${region}, ${currentMap}.`);
+                    console.log(`Point is inside ${region}, ${currentMap}.`);
                     setSelectValueFromCheckedRadioButton(region);
-                    break;
-                }
+                    displayPolygon(polygon, region);
+                }                
             }
         }
     }
@@ -150,7 +164,8 @@ function markerMaker(isPolygon = false) {
     });
 
     document.getElementById('DevButton').addEventListener('click', function() {
-        // Get form data
+        // Get updated form data
+        formData = getFormData();
         var output = generateMarker(formData.id, formData.title, formData.category, formData.icon, formData.description, formData.linkEnabled, formData.linkTitle, formData.coords, formData.customId);
 
         // Display the output
@@ -200,6 +215,36 @@ function loadFormData() {
     }
 }
 
+function displayPolygon(polygon, region, displaArea = false) {
+    // Get the hex color for the current country from the mapping
+    const countryColor = countryColors[region] || '#CCCCCC'; // Default to gray if no color defined
+
+    // Create a GeoJSON layer with the specified hex color
+    const geoJsonLayer = L.geoJSON(reversePolygonCoordinates(polygon), {
+        style: {
+            fillColor: countryColor,
+            fillOpacity: 0.4,
+            color: 'black',
+            weight: 1
+        }
+    }).addTo(map);
+
+    if (displaArea) {
+        const scaleFactor = 3778747.21;
+
+        // Calculate the area of the polygon using Turf.js with the custom scale factor
+        const areaInSquareMapUnits = turf.area(polygon);
+
+        // Convert the area to square kilometers using the custom scale factor
+        const areaInSquareKilometers = areaInSquareMapUnits / (scaleFactor);
+
+        // Add a popup with the area information to the GeoJSON layer
+        const formattedArea = areaInSquareKilometers.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        geoJsonLayer.bindPopup(`Area: ${formattedArea} square kilometers`);
+
+    }
+}
+
 // Print all console commands
 function help() {
     console.log(`
@@ -208,7 +253,17 @@ openAllPopupsInLayerGroup(region, group); Opens all of the popups you want
 closeAllPopups(); Closes all open popups
 printRegionGroups(); Prints all region Groups
 removeMarker("Title"); Removes a marker with a specified title
+displayAllPolygons(); Displays all polygons on the current map
     `);
+}
+
+function displayAllPolygons() {
+    if (countryPolygons[currentMap]) {
+        for (const region in countryPolygons[currentMap]) {
+            const polygon = countryPolygons[currentMap][region];
+            displayPolygon(polygon, region, true);
+        }
+    }
 }
 
 function removeMarker(title) {
@@ -696,6 +751,7 @@ document.addEventListener('change', function (event) {
         document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
         setYearSelectorToLastDropdown();
         updateSelectedOptionId();
+        clearAllVectors();
     } else if (radioButton.classList.contains('custom-radio-class')) {
         var iconType = getTrimmedText(radioButton);
         if (iconType) {
