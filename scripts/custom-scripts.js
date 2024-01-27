@@ -135,7 +135,7 @@ function clearAllVectors() {
 function markerMaker(isPolygon = false) {
     // Load saved data
     loadFormData();
-    var formData = getFormData();
+    var formData = getFormData(marker);
 
     var coords = marker.getLatLng().toString().replace('LatLng', '').replace('(', '').replace(')', '');
     document.getElementById('Coords').value = coords;
@@ -165,7 +165,7 @@ function markerMaker(isPolygon = false) {
 
     document.getElementById('DevButton').addEventListener('click', function() {
         // Get updated form data
-        formData = getFormData();
+        formData = getFormData(marker);
         var output = generateMarker(formData.id, formData.title, formData.category, formData.icon, formData.description, formData.linkEnabled, formData.linkTitle, formData.coords, formData.customId);
 
         // Display the output
@@ -179,24 +179,141 @@ function markerMaker(isPolygon = false) {
     };
 }
 
+var pointsArray = [];
+var firstPolygonPoint = null;
+var polylineLayers = [];
+
+function addPolylineToMap(lineString, color) {
+    var polyline = L.geoJSON(lineString, {color: color}).addTo(map);
+    polylineLayers.push(polyline); // Store the reference for later removal
+}
+
+function removeAllPolylines() {
+    polylineLayers.forEach(function(polyline) {
+        map.removeLayer(polyline);
+    });
+    polylineLayers = []; // Clear the array after removing all polylines
+}
+
+
+function polygonMaker(isDropped = false) {
+    formData = getFormData(polygonMarker);
+
+    var latLng = polygonMarker.getLatLng();
+    var coords = [latLng.lat, latLng.lng];
+    document.getElementById('Coords').value = latLng.toString().replace('LatLng', '').replace('(', '').replace(')', '');
+
+    function updateMapDisplay(color) {
+        clearAllVectors();
+        removeAllPolylines();
+
+        if (pointsArray.length > 1 && pointsArray.length < 4) {
+            addPolylineToMap(createLineStringFromPoints(pointsArray), color);
+        } else if (pointsArray.length > 3) {
+            displayPolygon(convertArrayToTurfPolygon(pointsArray), "", false, color);
+        }
+    }
+
+    function drawTemporaryLine() {
+        if (pointsArray.length > 0) {
+            var tempPointsArray = [pointsArray[pointsArray.length - 1], coords];
+            addPolylineToMap(createLineStringFromPoints(tempPointsArray), 'blue');
+        }
+        if (pointsArray.length > 3) {
+            clearAllVectors();
+            var tempPointsArray = pointsArray.slice(); // Clone the pointsArray
+            tempPointsArray.push(coords); // Add the new point to the temporary array
+            var tempTurfPolygon = convertArrayToTurfPolygon(tempPointsArray);
+            displayPolygon(tempTurfPolygon, "", false, "blue");
+        }
+    }
+
+    if (isDropped) {
+        updateMapDisplay('#CCCCCC');
+        drawTemporaryLine();
+    }
+
+    document.getElementById('DevButton').addEventListener('click', function() {
+        var lastPoint = pointsArray[pointsArray.length - 1];
+    
+        // Check if the new point is different from the last point
+        if (!lastPoint || coords[0] !== lastPoint[0] || coords[1] !== lastPoint[1]) {
+            pointsArray.push(coords);
+            updateMapDisplay('#CCCCCC');
+        } else {
+            console.log("New point is the same as the last point. Not adding to array.");
+        }
+    });    
+
+    document.getElementById('DevButton2').addEventListener('click', function() {
+        console.log(pointsArray.map(point => `[${point[0]}, ${point[1]}]`).join(",\n"));
+        updateMapDisplay('green');
+        pointsArray = [];
+        firstPolygonPoint = null;
+        polylineLayers = [];
+    });
+
+    document.getElementById('DevButton3').addEventListener('click', function() {
+        pointsArray.pop();
+        updateMapDisplay();
+    });
+}
+
+function createLineStringFromPoints(pointsArray) {
+    var lineCoordinates = pointsArray.map(point => [point[1], point[0]]); // Convert to [lng, lat] for GeoJSON
+    return turf.lineString(lineCoordinates);
+}
+
+function convertArrayToTurfPolygon(points) {
+    // Clone the points array to avoid modifying the original array
+    let closedPoints = points.slice();
+
+    // Check if the last point is the same as the first point
+    if (points.length > 1 && (points[0][0] !== points[points.length - 1][0] || points[0][1] !== points[points.length - 1][1])) {
+        // Add the first point to the end to close the polygon
+        closedPoints.push(points[0]);
+    }
+
+    let turfPoints = closedPoints.map(p => [p[0], p[1]]);
+    return turf.polygon([turfPoints]);
+}
+
 // Get form data
-function getFormData() {
-    return {
-        id: document.getElementById('Id').value,
-        title: document.getElementById('Title').value,
-        icon: document.getElementById('Category').value,
-        category: document.getElementById('Category').options[document.getElementById('Category').selectedIndex].id,
-        description: document.getElementById('Description').value,
-        linkEnabled: document.getElementById('Link').checked,
-        linkTitle: document.getElementById('LinkText').value,
-        customId: document.getElementById('CustomId').value,
-        coords: marker.getLatLng().toString()
-    };
+function getFormData(currentMarker) {
+    let formData = {};
+
+    // Helper function to safely add data if it exists
+    function addIfValid(key, value) {
+        if (value !== null && value !== undefined) {
+            formData[key] = value;
+        }
+    }
+
+    addIfValid('id', document.getElementById('Id')?.value);
+    addIfValid('title', document.getElementById('Title')?.value);
+    addIfValid('icon', document.getElementById('Category')?.value);
+    
+    const categoryElement = document.getElementById('Category');
+    if (categoryElement && categoryElement.options.length > 0) {
+        const selectedIndex = categoryElement.selectedIndex;
+        addIfValid('category', categoryElement.options[selectedIndex]?.id);
+    }
+
+    addIfValid('description', document.getElementById('Description')?.value);
+    addIfValid('linkEnabled', document.getElementById('Link')?.checked);
+    addIfValid('linkTitle', document.getElementById('LinkText')?.value);
+    addIfValid('customId', document.getElementById('CustomId')?.value);
+
+    if (typeof currentMarker !== 'undefined' && currentMarker.getLatLng) {
+        addIfValid('coords', currentMarker.getLatLng().toString());
+    }
+
+    return formData;
 }
 
 // Save form data to localStorage
 function saveFormData() {
-    var formData = getFormData();
+    var formData = getFormData(marker);
     localStorage.setItem('markerFormData', JSON.stringify(formData));
 }
 
@@ -215,12 +332,31 @@ function loadFormData() {
     }
 }
 
-function displayPolygon(polygon, region, displaArea = false) {
+function calculateCorrectionFactor(latitude) {
+    // Normalize latitude to range [0, 1]
+    const normalizedLatitude = (Math.abs(latitude) / maxLatitude);
+    
+    // Calculate correction factor using a sine function
+    let correctionFactor;
+    if (latitude >= 0) { // Northern Hemisphere
+        correctionFactor = 1 + (northPoleCorrection - 1) * Math.sin(normalizedLatitude * Math.PI / 2);
+    } else { // Southern Hemisphere
+        correctionFactor = 1 + (southPoleCorrection - 1) * Math.sin(normalizedLatitude * Math.PI / 2);
+    }
+    
+    return correctionFactor;
+}
+
+function displayPolygon(polygon, region, displayArea = false, color = null) {
     // Get the hex color for the current country from the mapping
-    const countryColor = countryColors[region] || '#CCCCCC'; // Default to gray if no color defined
+    var countryColor = countryColors[region] || '#CCCCCC'; // Default to gray if no color defined
+    if (color != null) {
+        countryColor = color;
+    }
+    polygon = reversePolygonCoordinates(polygon);
 
     // Create a GeoJSON layer with the specified hex color
-    const geoJsonLayer = L.geoJSON(reversePolygonCoordinates(polygon), {
+    const geoJsonLayer = L.geoJSON(polygon, {
         style: {
             fillColor: countryColor,
             fillOpacity: 0.4,
@@ -229,20 +365,28 @@ function displayPolygon(polygon, region, displaArea = false) {
         }
     }).addTo(map);
 
-    if (displaArea) {
-        const scaleFactor = 3778747.21;
+    if (displayArea) {
+        areaInSquareKilometers = getPolygonArea(polygon);
+        areaOfWorld = (areaInSquareKilometers/worldSize) * 100;
+        areaOfLand = (areaInSquareKilometers/getTotalArea(false) * 100);
 
-        // Calculate the area of the polygon using Turf.js with the custom scale factor
-        const areaInSquareMapUnits = turf.area(polygon);
-
-        // Convert the area to square kilometers using the custom scale factor
-        const areaInSquareKilometers = areaInSquareMapUnits / (scaleFactor);
-
-        // Add a popup with the area information to the GeoJSON layer
         const formattedArea = areaInSquareKilometers.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        geoJsonLayer.bindPopup(`Area: ${formattedArea} square kilometers`);
-
+        geoJsonLayer.bindPopup(`Area: ${formattedArea} square kilometers
+        <br />% of world: ${areaOfWorld.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}%
+        <br />% of land: ${areaOfLand.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}%`);
     }
+}
+
+function getPolygonArea(polygon) {
+    const areaInSquareMeters = turf.area(polygon);
+    const centroid = turf.centroid(polygon);
+    const latitude = centroid.geometry.coordinates[1];
+    const correctionFactor = calculateCorrectionFactor(latitude);
+
+    // Adjust area calculation for fantasy world scale, distortion, and specific map boundaries
+    const correctedAreaInSquareMeters = areaInSquareMeters * polygonScale * correctionFactor;
+    const areaInSquareKilometers = correctedAreaInSquareMeters / 1e6;
+    return areaInSquareKilometers;
 }
 
 // Print all console commands
@@ -256,7 +400,37 @@ printRegionGroups(); Prints all region Groups
 removeMarker("Title"); Removes a marker with a specified title
 displayAllPolygons(); Displays all polygons on the current map
 isolateCountryMarkers(["country prefix"]); Removed all markers exept the cpuntries listed
+countCountryMarkers(); Count all markers on the map
+getTotalArea(); Get total area of all polygons
     `);
+}
+
+function countCountryMarkers() {
+    // Assuming getAllMarkersFromGroups() and formHTML are defined elsewhere
+    var allMarkers = getAllMarkersFromGroups();
+    var counts = {};
+
+    // Create idToLabelMap once and reuse if formHTML doesn't change frequently
+    const select = new DOMParser().parseFromString(formHTML, 'text/html').getElementById('Id');
+    const idToLabelMap = Array.from(select.options).reduce((map, option) => {
+        map[option.value] = option.textContent;
+        return map;
+    }, {});
+
+    allMarkers.forEach(marker => {
+        var id = marker.options.id;
+        if (id === "markerMaker") return; // Skip markerMaker markers
+        
+        var idPrefix = id.substring(0, 2).toLowerCase();
+        counts[idPrefix] = (counts[idPrefix] || 0) + 1;
+    });
+
+    // Convert counts to array, sort, and map to labels in one go
+    var combinedCounts = Object.entries(counts)
+        .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
+        .map(([id, count]) => `${idToLabelMap[id] || id}: ${count}`); // Map to label: count
+    
+    console.log(combinedCounts);
 }
 
 function displayAllPolygons() {
@@ -265,6 +439,35 @@ function displayAllPolygons() {
             const polygon = countryPolygons[currentMap][region];
             displayPolygon(polygon, region, true);
         }
+    }
+}
+
+function getTotalArea(log = true) {
+    var totalArea = 0;
+    var countryAreas = {};
+    if (countryPolygons[currentMap]) {
+        for (const region in countryPolygons[currentMap]) {
+            const polygon = countryPolygons[currentMap][region];
+            polygonArea = getPolygonArea(reversePolygonCoordinates(polygon));
+            countryAreas[region] = polygonArea;
+            totalArea += polygonArea;
+        }
+    }
+    
+    if (log == true) {
+        const formattedArea = totalArea.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        const formattedWorldSize = worldSize.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+        var combinedCountryAreas = Object.entries(countryAreas)
+            .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
+            .map(([region, area]) => `${region}: ${area.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + "Km^2"}`);
+        
+        console.log(combinedCountryAreas);
+        console.log("Land size: " + formattedArea + " Square Kilometers");
+        console.log("World size: " + formattedWorldSize + " Square Kilometers");
+        console.log("% land: " + ((totalArea/worldSize) * 100) + "%");
+    } else {
+        return totalArea;
     }
 }
 
@@ -764,30 +967,32 @@ document.addEventListener('change', function (event) {
     var radioButton = event.target;
 
     if (radioButton.classList.contains('leaflet-control-layers-selector')) {
-        currentMap = getTrimmedText(radioButton);
-        // Common update map styles and layers
-        updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
-        updateCheckbox(mapConfigurations[currentMap].checkboxIndex, mapConfigurations[currentMap].checkboxState);
-        hideCheckBoxes(mapConfigurations[currentMap].hideCheckBox);
-        addRadioButtons(iconChecked);
-
-        // Remove current layer if it's not the selected map
-        if (currentSelectedMap && map.hasLayer(currentSelectedMap)){
-            if (currentSelectedMap != mapConfigurations[currentMap].current) {
-                map.removeLayer(currentSelectedMap);
+        if (neededMaps.some(map => map.name === getTrimmedText(radioButton).toLowerCase())) {
+            currentMap = getTrimmedText(radioButton);
+            // Common update map styles and layers
+            updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
+            updateCheckbox(mapConfigurations[currentMap].checkboxIndex, mapConfigurations[currentMap].checkboxState);
+            hideCheckBoxes(mapConfigurations[currentMap].hideCheckBox);
+            addRadioButtons(iconChecked);
+    
+            // Remove current layer if it's not the selected map
+            if (currentSelectedMap && map.hasLayer(currentSelectedMap)){
+                if (currentSelectedMap != mapConfigurations[currentMap].current) {
+                    map.removeLayer(currentSelectedMap);
+                }
             }
+    
+            selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
+    
+            updateMapConfiguration(currentMap, selectedOptionId);
+    
+            // Add year select dropdown
+            addYearSelect();
+            document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+            setYearSelectorToLastDropdown();
+            updateSelectedOptionId();
+            clearAllVectors();
         }
-
-        selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
-
-        updateMapConfiguration(currentMap, selectedOptionId);
-
-        // Add year select dropdown
-        addYearSelect();
-        document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-        setYearSelectorToLastDropdown();
-        updateSelectedOptionId();
-        clearAllVectors();
     } else if (radioButton.classList.contains('custom-radio-class')) {
         var iconType = getTrimmedText(radioButton);
         if (iconType) {

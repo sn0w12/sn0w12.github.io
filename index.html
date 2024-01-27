@@ -31,9 +31,9 @@
 		];
 
 		var neededMaps = [
-			arathia,
-			arathiaClean,
-			morturia
+			{ map: arathia, name: 'arathia' },
+			{ map: arathiaClean, name: 'arathia clean' },
+			{ map: morturia, name: 'morturia' }
 		];
 
 		const countryColors = {
@@ -282,6 +282,7 @@
 		};
 
 		const regionMap = {
+			"arathia": "ar",
 			"an": "ar",
 			"od": "ar",
 			"th": "ar",
@@ -300,6 +301,12 @@
 		var southWest = L.latLng(-70, -170),
 			northEast = L.latLng(70, 170),
 			bounds = L.latLngBounds(southWest, northEast);
+
+		worldSize = 126000000 * 2.005012531328321;
+		const maxLatitude = 70; // Maximum latitude considered in the model
+		const northPoleCorrection = 1.0985; // Correction at the north pole
+		const southPoleCorrection = 1.1545; // Correction at the south pole
+		polygonScale = 0.19;
 
 		//Creating the Map
 		var map = L.map('map', {
@@ -419,6 +426,18 @@
 			</div>
 			`;
 
+			var polygonHTML = `
+			<div class="custom-container">
+				<span class="custom-title"><font size="+0.5">Polygon Maker</font></span>
+				<span class="custom-subtitle"><font size="-1">Coords</font></span>
+				<input class="custom-input" type="text" id="Coords" placeholder="Coords"></input>
+				<img style="height:3px;width: 100%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 0px; margin-top: 0px;" src="icons/divider_small.png" alt="map popup divider">
+				<button class="custom-button" id="DevButton">Add point</button>
+				<button class="custom-button" id="DevButton2">Finsh polygon</button>
+				<button class="custom-button" id="DevButton3">Remove last point</button>
+			</div>
+			`;
+
 		//Marker Maker
 		var marker = L.marker([0, 0], {
 			draggable: true,
@@ -431,6 +450,20 @@
 		marker.bindPopup(formHTML).openPopup();
 		marker.on('click', function(e) {
 			markerMaker(true);
+		});
+
+		//Polygon Maker
+		var polygonMarker = L.marker([0, 0], {
+			draggable: true,
+			id: "markerMaker"
+		}).on('dragend', function() {
+			polygonMarker.openPopup();
+			polygonMaker(true);
+		});
+
+		polygonMarker.bindPopup(polygonHTML).openPopup();
+		polygonMarker.on('click', function(e) {
+			polygonMaker();
 		});
 
 		var regionLayerGroups = {
@@ -459,7 +492,7 @@
 
 		var mo_all_layers = L.layerGroup([regionLayerGroups['mo']['capital'], regionLayerGroups['mo']['cityBig'], regionLayerGroups['mo']['citySmall'], regionLayerGroups['mo']['town'], regionLayerGroups['mo']['nature'], regionLayerGroups['mo']['important'], regionLayerGroups['mo']['character']]);
 		
-		var dv_coord = L.layerGroup([marker]);
+		var dv_coord = L.layerGroup([marker, polygonMarker]);
 
 		var groups = [ar_all_layers, mo_all_layers, dv_coord];
 		const regionCodes = ['ar', 'mo'];
@@ -497,7 +530,8 @@
 				"Characters": regionLayerGroups['mo']['character'],
 			},
 			"Developer": {
-				"Marker Maker": dv_coord,
+				"Marker Maker": marker,
+				"Polygon Maker": polygonMarker,
 			}
 		};
 		var options = {
