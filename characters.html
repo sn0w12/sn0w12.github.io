@@ -53,27 +53,25 @@
             top: 0;
             z-index: 500;
         }
-
         summary::-webkit-details-marker {
             display: none;
         }
-
         ul {
             list-style: none;
             padding-left: 8px;
         }
-
         li {
             margin-bottom: 8px;
         }
-
         h1 {
             margin-bottom: 5px;
         }
-
         .header-container {
             text-align: center;
             margin-bottom: 16px;
+        }
+        .header-container p {
+            margin: 5px;
         }
         .search-container {
             position: relative;
@@ -116,7 +114,6 @@
             margin-bottom: 20px;
             list-style-type: none;
         }
-
         .character-container {
             display: flex;
             flex-direction: column;
@@ -125,19 +122,16 @@
             border-radius: 6px;
             padding: 15px;
         }
-
         .character-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .character-name {
             font-weight: bold;
             font-size: 18px;
             color: var(--highlight);
         }
-
         .copy-btn {
             margin-left: auto;
             cursor: pointer;
@@ -148,32 +142,53 @@
             padding: 5px 10px;
             font-size: 14px;
         }
-
         .copy-btn:hover {
             background-color: var(--highlight2);
         }
-
         .divider {
             border: none;
             border-top: 1px solid var(--highlight);
             margin: 15px 0;
         }
-
         .character-summary {
             color: var(--foreground);
             font-size: 16px;
             text-align: justify;
         }
-
-        .character-image {
+        .character-image-container {
             width: 35%;
-            height: auto;
             max-width: 100%;
             float: right;
             margin-left: 10px;
             margin-bottom: 10px;
             margin-top: 3px;
             border: 1px solid var(--highlight);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .character-image {
+            width: 100%;
+            height: auto;
+        }
+        .character-image-container > div {
+            text-align: justify;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 1px solid var(--foreground);
+        }
+        .info-item {
+            display: flex;
+            width: 100%;
+            text-align: left;
+        }
+        .info-label, .info-item div {
+            flex: 1;
+            padding: 5px;
+            box-sizing: border-box; /* Ensure padding is included in the width */
+        }
+        .info-label {
+            border-right: 1px solid var(--foreground);
         }
     </style>
 </head>
@@ -197,7 +212,29 @@
             </div>
             <hr class="divider">
             <div class="character-content">
-                <img class="character-image" src="" alt="">
+                <div class="character-image-container">
+                    <img class="character-image" src="" alt="">
+                    <div class="info-item">
+                        <div class="info-label">Gender</div>
+                        <div class="gender">Unknown</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Race</div>
+                        <div class="race">Unknown</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="status">Unknown</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nationality</div>
+                        <div class="nationality">Unknown</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Age</div>
+                        <div class="age">Unknown</div>
+                    </div>
+                </div>
                 <div class="character-summary"></div>
             </div>
           </div>
@@ -210,53 +247,125 @@
         fetch('/data/characters.json')
             .then(response => response.json())
             .then(data => {
-            const container = document.querySelector('.main-container');
-            const template = document.getElementById('character-template').content;
+                const headerContainer = document.querySelector('.header-container');
+                const container = document.querySelector('.main-container');
+                const template = document.getElementById('character-template').content;
 
-            Object.entries(data).forEach(([mainCategory, characters]) => {
-                const mainDetailsElement = document.createElement('details');
-                const mainSummaryElement = document.createElement('summary');
-                mainSummaryElement.textContent = mainCategory;
-                mainDetailsElement.appendChild(mainSummaryElement);
+                let ages = [];
+                let highestAge = 0;
+                let lowestAge = Infinity;
+                let characterCount = 0;
+                const nationCounts = {};
 
-                characters.forEach(character => {
-                const clone = document.importNode(template, true);
-                clone.querySelector('.character-name').textContent = character.name;
-                clone.querySelector('.character-summary').textContent = character.summary;
-                clone.querySelector('.copy-btn').onclick = () => copyToClipboard(character.name);
-                if (character.image) {
-                    const imgElement = clone.querySelector('.character-image');
-                    imgElement.src = character.image;
-                    imgElement.alt = character.name;
-                } else {
-                    // Hide image container if no image is available
-                    clone.querySelector('.character-image').style.display = 'none';
-                }
-                
-                if (character.category) {
-                    let subcategoryList = mainDetailsElement.querySelector(`[data-category="${character.category}"]`);
-                    if (!subcategoryList) {
-                    const subDetailsElement = document.createElement('details');
-                    const subSummaryElement = document.createElement('summary');
-                    subSummaryElement.textContent = character.category;
-                    subDetailsElement.appendChild(subSummaryElement);
+                Object.entries(data).forEach(([mainCategory, characters]) => {
+                    const mainDetailsElement = document.createElement('details');
+                    const mainSummaryElement = document.createElement('summary');
+                    mainSummaryElement.textContent = mainCategory;
+                    mainDetailsElement.appendChild(mainSummaryElement);
 
-                    subcategoryList = document.createElement('ul');
-                    subcategoryList.setAttribute('data-category', character.category);
-                    subDetailsElement.appendChild(subcategoryList);
-                    mainDetailsElement.appendChild(subDetailsElement);
-                    }
-                    subcategoryList.appendChild(clone);
-                } else {
-                    mainDetailsElement.appendChild(clone);
-                }
+                    characters.forEach(character => {
+                        // Age calculations
+                        const age = parseInt(character.age, 10);
+                        if (!isNaN(age)) {
+                            ages.push(age);
+                            highestAge = Math.max(highestAge, age);
+                            lowestAge = Math.min(lowestAge, age);
+                            characterCount++;
+                        }
+
+                        // Nation count calculations (skipping "Unknown")
+                        const nation = character.nationality;
+                        if (nation && nation !== "Unknown") {
+                            nationCounts[nation] = (nationCounts[nation] || 0) + 1;
+                        }
+
+                        const clone = document.importNode(template, true);
+                        clone.querySelector('.character-name').textContent = character.name;
+                        clone.querySelector('.character-summary').textContent = character.summary || "Unknown";
+                        clone.querySelector('.character-image').src = character.image || '';
+                        clone.querySelector('.character-image').alt = character.name;
+                        clone.querySelector('.character-image').style.display = character.image ? 'block' : 'none';
+
+                        // Set additional fields
+                        clone.querySelector('.info-item .gender').textContent = character.gender || "Unknown";
+                        clone.querySelector('.info-item .race').textContent = character.race || "Unknown";
+                        clone.querySelector('.info-item .status').textContent = character.status || "Unknown";
+                        clone.querySelector('.info-item .nationality').textContent = character.nationality || "Unknown";
+                        clone.querySelector('.info-item .age').textContent = character.age || "Unknown";
+
+                        if (character.category) {
+                            let subcategoryList = mainDetailsElement.querySelector(`[data-category="${character.category}"]`);
+                            if (!subcategoryList) {
+                                const subDetailsElement = document.createElement('details');
+                                const subSummaryElement = document.createElement('summary');
+                                subSummaryElement.textContent = character.category;
+                                subDetailsElement.appendChild(subSummaryElement);
+
+                                subcategoryList = document.createElement('ul');
+                                subcategoryList.setAttribute('data-category', character.category);
+                                subDetailsElement.appendChild(subcategoryList);
+                                mainDetailsElement.appendChild(subDetailsElement);
+                            }
+                            subcategoryList.appendChild(clone);
+                        } else {
+                            mainDetailsElement.appendChild(clone);
+                        }
+                    });
+
+                    container.appendChild(mainDetailsElement);
+                });
+                // Sort the ages array
+                ages.sort((a, b) => a - b);
+
+                // Calculate weights with more weight towards the center
+                const weights = ages.map((_, index, arr) => {
+                    const midIndex = (arr.length - 1) / 2;
+                    // Quadratic weight distribution
+                    return 1 - Math.pow((index - midIndex) / midIndex, 2);
                 });
 
-                container.appendChild(mainDetailsElement);
-            });
-            })
+                // Calculate the weighted sum
+                const weightedSum = ages.reduce((acc, age, index) => acc + age * weights[index], 0);
+
+                // Calculate the sum of weights
+                const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
+
+                // Calculate the weighted average
+                const weightedAverageAge = weightedSum / totalWeight;
+
+                const mostCharactersNation = Object.entries(nationCounts).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+
+                // Find the minimum character count among the nations
+                const minCount = Math.min(...Object.values(nationCounts));
+                // Collect all nations that have this minimum count
+                const leastCharactersNations = Object.entries(nationCounts)
+                    .filter(([nation, count]) => count === minCount)
+                    .map(([nation, _]) => nation);
+
+                // Adjust label based on the number of nations
+                const leastNationsLabel = leastCharactersNations.length > 1 ? "Nations" : "Nation";
+
+                // Create an element to display the interesting information
+                const infoContainer = document.createElement('div');
+                infoContainer.innerHTML = `
+                    <p>Weighted Average Age: ${weightedAverageAge.toFixed(2)}</p>
+                    <p>Highest Age: ${highestAge}</p>
+                    <p>Lowest Age: ${lowestAge}</p>
+                    <p>Nation with the most characters: ${mostCharactersNation}</p>
+                    <p>${leastNationsLabel} with the least characters: ${leastCharactersNations.join(', ')}</p>
+                `;
+
+                // Insert the infoContainer right after the headerContainer
+                if (headerContainer) {
+                    headerContainer.insertAdjacentElement('beforeend', infoContainer);
+                } else {
+                    // Fallback if headerContainer is not found, prepend to the main container
+                    console.log("No headerContainer found");
+                    container.prepend(infoContainer);
+                }
+                })
             .catch(error => console.error('Error loading character data:', error));
-        });
+    });
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
@@ -337,7 +446,7 @@
             // Set a timeout to hide the results, allowing time for a click to register
             hideResultsTimeout = setTimeout(() => {
             resultsContainer.style.display = 'none';
-            }, 200); // Adjust delay as needed
+            }, 100);
         });
 
         // Prevent hiding if the search results are being interacted with

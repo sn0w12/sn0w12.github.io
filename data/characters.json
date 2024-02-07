@@ -3,262 +3,537 @@
       {
         "name": "Regulus Cor Leonis",
         "category": "Main Character",
-        "summary": "Regulus Cor Leonis, marked by his striking appearance with blond, thick hair, and scars from numerous battles, stands tall at 1.89 meters with an athletic build. Over time, his visage toughens with more scars, a full beard, and a significant eye loss, reflecting his journey filled with strife and transformation. Driven by a deep-seated resolve to halt Zovjun, liberate the world from impending slavery and death, Regulus embodies a beacon of hope. His quest is not only to save his loved ones and end wars but also to forge a path toward a more peaceful and just world. Armed with immortality and a masterful command over combat, specifically with his fiery, reforgeable straight sword, he confronts challenges with strategic brilliance and unparalleled valor. From a serene childhood shattered by violence to a fraught existence marked by profound loss and an unyielding will to prevail, Regulus' life is a testament to resilience. Through his ordeals, he emerges not just as a warrior but as a symbol of the relentless pursuit of freedom and justice, all while grappling with the burdens of his immortality and the complexities of his powers and destiny."
+        "summary": "Regulus Cor Leonis, marked by his striking appearance with blond, thick hair, and scars from numerous battles, stands tall at 1.89 meters with an athletic build. Over time, his visage toughens with more scars, a full beard, and a significant eye loss, reflecting his journey filled with strife and transformation. Driven by a deep-seated resolve to halt Zovjun, liberate the world from impending slavery and death, Regulus embodies a beacon of hope. His quest is not only to save his loved ones and end wars but also to forge a path toward a more peaceful and just world. Armed with immortality and a masterful command over combat, specifically with his fiery, reforgeable straight sword, he confronts challenges with strategic brilliance and unparalleled valor. From a serene childhood shattered by violence to a fraught existence marked by profound loss and an unyielding will to prevail, Regulus' life is a testament to resilience. Through his ordeals, he emerges not just as a warrior but as a symbol of the relentless pursuit of freedom and justice, all while grappling with the burdens of his immortality and the complexities of his powers and destiny.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "22"
       },
       {
         "name": "Valgas",
         "category": "Side Characters",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "Diana, Elizabeth Hunter",
         "category": "Side Characters",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Female",
+        "race": "Homosapien",
+        "status": "Unknown",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Leon, Alexander",
         "category": "Side Characters",
-        "summary": "Leon Alexander, a character defined by his singular focus, aspires to protect those he holds dear and yearns for a tranquil life amidst chaos. Driven by the conviction that resurrecting Xathun is the sole means to thwart Zovjun, Leon's journey takes a dark turn, isolating him within his own circle and setting the stage for a heartbreaking conflict. His tragic fate is sealed when Regulus, acting on diverging convictions, takes his life, underscoring the devastating costs of their shared mission. Leon's unique \"Soulseeker\" ability, central to his strategy for confronting Zovjun, showcases his willingness to leverage profound powers for what he believes to be the greater good. Despite his untimely death, Leon's actions and decisions leave an indelible mark on the narrative, highlighting themes of sacrifice, the pursuit of peace, and the complex web of interpersonal relationships among characters striving for a common goal."
+        "summary": "Leon Alexander, a character defined by his singular focus, aspires to protect those he holds dear and yearns for a tranquil life amidst chaos. Driven by the conviction that resurrecting Xathun is the sole means to thwart Zovjun, Leon's journey takes a dark turn, isolating him within his own circle and setting the stage for a heartbreaking conflict. His tragic fate is sealed when Regulus, acting on diverging convictions, takes his life, underscoring the devastating costs of their shared mission. Leon's unique \"Soulseeker\" ability, central to his strategy for confronting Zovjun, showcases his willingness to leverage profound powers for what he believes to be the greater good. Despite his untimely death, Leon's actions and decisions leave an indelible mark on the narrative, highlighting themes of sacrifice, the pursuit of peace, and the complex web of interpersonal relationships among characters striving for a common goal.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Deceased",
+        "nationality": "Primorian",
+        "age": "Unknown"
       },
       {
         "name": "Zenus",
         "category": "Side Characters",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Apollo, Vulara",
         "category": "Gray Characters",
-        "summary": "Apollo Vulara, marked by his unique appearance with white hair and symmetrical lines that glow with elemental powers—Solar, Arc, and Void—upon activation, stands as a blind warrior of unparalleled adaptability in combat. Despite his blindness, a result of early damage, he excels in close-quarters battle, manifesting an aggressive yet easily modifiable fighting style, thanks to his mastery over the three elements, a rare gift that comes at the cost of ranged abilities. Once a vampire hunter, his life took a dramatic turn upon transforming into the vampire emperor, a role that emboldened his commitment to peace and mentorship. Known as \"The God Fist,\" Apollo's journey from darkness to a beacon of guidance is underscored when Regulus seeks his help, highlighting his enduring significance in their shared world. Apollo's narrative is one of resilience, mentorship, and the complex interplay of power and responsibility."
+        "summary": "Apollo Vulara, marked by his unique appearance with white hair and symmetrical lines that glow with elemental powers—Solar, Arc, and Void—upon activation, stands as a blind warrior of unparalleled adaptability in combat. Despite his blindness, a result of early damage, he excels in close-quarters battle, manifesting an aggressive yet easily modifiable fighting style, thanks to his mastery over the three elements, a rare gift that comes at the cost of ranged abilities. Once a vampire hunter, his life took a dramatic turn upon transforming into the vampire emperor, a role that emboldened his commitment to peace and mentorship. Known as \"The God Fist,\" Apollo's journey from darkness to a beacon of guidance is underscored when Regulus seeks his help, highlighting his enduring significance in their shared world. Apollo's narrative is one of resilience, mentorship, and the complex interplay of power and responsibility.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "64"
       },
       {
         "name": "The Ancient One",
         "category": "Gray Characters",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Vampire (The Old One)",
         "category": "Gray Characters",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "gender",
+        "race": "Eldarin",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "3879"
       },
       {
         "name": "The Templar",
         "category": "Gray Characters",
-        "summary": "The Templar, shrouded in heavy Templar armor and standing at 220 cm tall, is a formidable presence who never reveals his face, embodying the mystique and power of the ancient Golden Order. Tasked with restoring this once-preeminent order, supplanted by \"The Sons of Antares\" after the rise of Antares, he upholds the mission with unwavering dedication, adhering to the commands of the three gods: Raljun, Eridus, and Stelarus. His vendetta against Zovjun, rooted in betrayal and desecration of the Golden Order's values, drives him with a singular purpose: to exact vengeance. In combat, The Templar's fighting style is dualistic; he wields his sword with devastating swings for close encounters and harnesses his aether abilities against distant foes, demonstrating his mastery of \"Perfectum Arcus.\" Despite his eventual beheading, The Templar's legacy as \"Retribution of The Gods\" endures, symbolizing the unyielding pursuit of justice and fidelity to ancient oaths."
+        "summary": "The Templar, shrouded in heavy Templar armor and standing at 220 cm tall, is a formidable presence who never reveals his face, embodying the mystique and power of the ancient Golden Order. Tasked with restoring this once-preeminent order, supplanted by \"The Sons of Antares\" after the rise of Antares, he upholds the mission with unwavering dedication, adhering to the commands of the three gods: Raljun, Eridus, and Stelarus. His vendetta against Zovjun, rooted in betrayal and desecration of the Golden Order's values, drives him with a singular purpose: to exact vengeance. In combat, The Templar's fighting style is dualistic; he wields his sword with devastating swings for close encounters and harnesses his aether abilities against distant foes, demonstrating his mastery of \"Perfectum Arcus.\" Despite his eventual beheading, The Templar's legacy as \"Retribution of The Gods\" endures, symbolizing the unyielding pursuit of justice and fidelity to ancient oaths.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "James, Henry",
         "category": "Gray Characters",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Central Arathian CO",
+        "age": "20"
       },
       {
         "name": "Praecipula",
         "category": "Gray Characters",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "Zovjun Asturuz",
         "category": "Main Villains",
-        "summary": "Zovjun Asturuz, known as the World Ender, is a towering figure at 1.96m with a commanding presence, marked by black hair, scars resembling lightning from his arc abilities, and eyes that glow light blue when his powers are active. Born into turmoil, his life was reshaped by abduction and the subsequent brutal upbringing under Steleus, who falsely claimed paternity, only to subject Zovjun to years of abuse for being an \"arc born,\" fostering deep-seated hatred and a desire for vengeance against the gifted and his tormentors. Zovjun's goals are twofold: to ascend to godhood, reuniting with his wife in a paradisiacal existence, and to eradicate the gifted, viewing them as sources of worldly suffering. His combat prowess is unmatched, with an aggressive style that leaves little room for defense, utilizing his formidable arc abilities to dominate adversaries before they can muster a defense. Despite his fearsome path and the darkness that envelops his journey, Zovjun's story is one of tragedy, power, and a relentless quest for a twisted form of peace."
+        "summary": "Zovjun Asturuz, known as the World Ender, is a towering figure at 1.96m with a commanding presence, marked by black hair, scars resembling lightning from his arc abilities, and eyes that glow light blue when his powers are active. Born into turmoil, his life was reshaped by abduction and the subsequent brutal upbringing under Steleus, who falsely claimed paternity, only to subject Zovjun to years of abuse for being an \"arc born,\" fostering deep-seated hatred and a desire for vengeance against the gifted and his tormentors. Zovjun's goals are twofold: to ascend to godhood, reuniting with his wife in a paradisiacal existence, and to eradicate the gifted, viewing them as sources of worldly suffering. His combat prowess is unmatched, with an aggressive style that leaves little room for defense, utilizing his formidable arc abilities to dominate adversaries before they can muster a defense. Despite his fearsome path and the darkness that envelops his journey, Zovjun's story is one of tragedy, power, and a relentless quest for a twisted form of peace.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian/old Aztrusian",
+        "age": "27"
       },
       {
         "name": "Julius Astraeus",
         "category": "Main Villains",
-        "summary": "Julius Astraeus, recognized as \"The Black Rose,\" stands as a formidable figure in military attire, exuding authority with his dark, meticulously groomed appearance, symbolizing his readiness for any challenge. His journey from humble beginnings on a farm to the pinnacle of power within the Antarian Empire is marked by ambition, intellect, and a god complex, driven by a desire to save Antaria and unite its people under his rule. Armed with extraordinary abilities granted through a pact with the demon Trezzok, Julius becomes a warlock of unmatched prowess, capable of mind-reading and near omniscience, which he uses to navigate the treacherous path to the throne. Despite facing assassination attempts and a fractured empire, Julius's strategic acumen and ruthlessness enable him to seize power, proclaiming himself emperor and embarking on a merciless campaign to eradicate those he deems corrupt. His reign, however, is characterized by division and bloodshed, as his actions deepen the rifts within Antaria, challenging his ability to reunite and heal the empire he aims to save."
+        "summary": "Julius Astraeus, recognized as \"The Black Rose,\" stands as a formidable figure in military attire, exuding authority with his dark, meticulously groomed appearance, symbolizing his readiness for any challenge. His journey from humble beginnings on a farm to the pinnacle of power within the Antarian Empire is marked by ambition, intellect, and a god complex, driven by a desire to save Antaria and unite its people under his rule. Armed with extraordinary abilities granted through a pact with the demon Trezzok, Julius becomes a warlock of unmatched prowess, capable of mind-reading and near omniscience, which he uses to navigate the treacherous path to the throne. Despite facing assassination attempts and a fractured empire, Julius's strategic acumen and ruthlessness enable him to seize power, proclaiming himself emperor and embarking on a merciless campaign to eradicate those he deems corrupt. His reign, however, is characterized by division and bloodshed, as his actions deepen the rifts within Antaria, challenging his ability to reunite and heal the empire he aims to save.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "31"
       },
       {
         "name": "Emperor Novum",
         "category": "Main Villains",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "….. (assassin)",
         "category": "Side Villains",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Brother 1",
         "category": "Side Villains",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Brother 2",
         "category": "Side Villains",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "???",
         "category": "Side Villains",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       }
     ],
     "Country Leaders": [
       {
         "name": "Augustinus",
         "category": "The Golden Order",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Militum",
         "category": "The Golden Order",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Pontiff Lucius",
         "category": "The Golden Order",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Basileus",
         "category": "The Golden Order",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Primus",
         "category": "The Golden Order",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Octavianus",
         "category": "The Golden Order",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Titus",
         "category": "The Golden Order",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Aurelianus",
         "category": "The Golden Order",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Marcus, Ashford",
         "category": "Free People of Antaria",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "Joseph, Auster",
         "category": "Arcarum",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "Catherine, Elise, Beaumont",
         "category": "Primoria",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Female",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Miyamoto Reiko",
         "category": "Tsuki Ōkoku",
-        "summary": "Miyamoto Reijiro stands as a towering figure with an athletic build, her silver-blue eyes and long, black hair accentuating her commanding presence. Known for her unapologetically blunt and feisty personality, she fiercely protects the people of Tsuki Ōkoku, embodying both strength and determination. Her combat prowess is highlighted through her mastery of \"Tsukuyomi Gekkō no Daisaihen,\" \"Time blink,\" and \"Gravitational manipulation,\" making her a formidable opponent on the battlefield. Reijiro wields the tachi \"Mikazuki\" and tanto \"Kasumi\" with unparalleled skill, her fighting style a blend of speed and precision. From training with her family's Tsuki Oni \"Kokugetsu\" to ascending the military ranks, Reijiro's journey reflects her growth into a leader balancing tradition with the demands of governance and diplomacy."
+        "summary": "Miyamoto Reijiro stands as a towering figure with an athletic build, her silver-blue eyes and long, black hair accentuating her commanding presence. Known for her unapologetically blunt and feisty personality, she fiercely protects the people of Tsuki Ōkoku, embodying both strength and determination. Her combat prowess is highlighted through her mastery of \"Tsukuyomi Gekkō no Daisaihen,\" \"Time blink,\" and \"Gravitational manipulation,\" making her a formidable opponent on the battlefield. Reijiro wields the tachi \"Mikazuki\" and tanto \"Kasumi\" with unparalleled skill, her fighting style a blend of speed and precision. From training with her family's Tsuki Oni \"Kokugetsu\" to ascending the military ranks, Reijiro's journey reflects her growth into a leader balancing tradition with the demands of governance and diplomacy.",
+        "gender": "Female",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Tsuki Ōkoku",
+        "age": "32"
       },
       {
         "name": "Sirellius, the Golden Monarch",
         "category": "Drakoria",
-        "summary": "Sirellius, the Golden Monarch, was a majestic dragon with white and golden scales that radiated the splendor of his ancient lineage and the wisdom of his long reign. He dedicated his life to the unity and prosperity of Drakoria, advocating for harmony among the elemental dragon tribes to prevent any one group from overpowering the others. His rule emphasized the balance of power and the preservation of dragonkind's legacy. In the face of extinction, Sirellius united the Solar, Void, and Arc tribes, leading them with unparalleled valor into a battle that would decide their fate. His sacrifice, a testament to his commitment to Drakoria and its inhabitants, ensured the survival of dragonkind, marking him as a figure of eternal reverence in their history."
+        "summary": "Sirellius, the Golden Monarch, was a majestic dragon with white and golden scales that radiated the splendor of his ancient lineage and the wisdom of his long reign. He dedicated his life to the unity and prosperity of Drakoria, advocating for harmony among the elemental dragon tribes to prevent any one group from overpowering the others. His rule emphasized the balance of power and the preservation of dragonkind's legacy. In the face of extinction, Sirellius united the Solar, Void, and Arc tribes, leading them with unparalleled valor into a battle that would decide their fate. His sacrifice, a testament to his commitment to Drakoria and its inhabitants, ensured the survival of dragonkind, marking him as a figure of eternal reverence in their history.",
+        "gender": "Male",
+        "race": "Dragon",
+        "status": "Deceased",
+        "nationality": "Drakoria",
+        "age": "1815"
       }
     ],
     "Misc Characters": [
       {
         "name": "Dragos, Imperatus",
-        "summary": "Dragos, Imperatus, is a formidable figure in \"God King Templar\" armor, adorned with eagle-like shoulders and a crowned helmet, symbolizing his regal authority and battle-hardened prowess from countless fights in hell. Standing 2.5 meters tall, his draconian heritage is evident in his physical attributes, including scales, enhanced bone strength, and a heightened Aether gift, blending with his human-like appearance to create an aura of mystery and power. Driven by a profound sense of duty, Dragos sees himself as Arathia's protector, tirelessly battling demons to prevent their invasion and corruption of his homeland, viewing his relentless crusade as a sacred responsibility to safeguard and honor his beloved home. Despite discovering his brother Novrun's fate as an eternal servant to Zognalith, the king of the underworld, Dragos's resolve only strengthens, determined to free his brother and eliminate Zognalith's threat, embodying the epitome of resilience and dedication. Dragos's journey from a devout young paladin to the youngest Solar Templar, and ultimately the God King Templar, showcases his unparalleled skill in combat, unwavering loyalty to the Golden Order and the gods, and his enduring hope for humanity's survival against demonic forces."
+        "summary": "Dragos, Imperatus, is a formidable figure in \"God King Templar\" armor, adorned with eagle-like shoulders and a crowned helmet, symbolizing his regal authority and battle-hardened prowess from countless fights in hell. Standing 2.5 meters tall, his draconian heritage is evident in his physical attributes, including scales, enhanced bone strength, and a heightened Aether gift, blending with his human-like appearance to create an aura of mystery and power. Driven by a profound sense of duty, Dragos sees himself as Arathia's protector, tirelessly battling demons to prevent their invasion and corruption of his homeland, viewing his relentless crusade as a sacred responsibility to safeguard and honor his beloved home. Despite discovering his brother Novrun's fate as an eternal servant to Zognalith, the king of the underworld, Dragos's resolve only strengthens, determined to free his brother and eliminate Zognalith's threat, embodying the epitome of resilience and dedication. Dragos's journey from a devout young paladin to the youngest Solar Templar, and ultimately the God King Templar, showcases his unparalleled skill in combat, unwavering loyalty to the Golden Order and the gods, and his enduring hope for humanity's survival against demonic forces.",
+        "gender": "Male",
+        "race": "Draconian",
+        "status": "Alive",
+        "nationality": "Aztrusian",
+        "age": "Unknown"
       },
       {
         "name": "Gerhard von Eichenwald",
-        "summary": "Gerhard von Eichenwald, a 63-year-old Germanic man, blends a rugged outdoor physique with a charismatic and warm demeanor. His appearance is marked by slightly graying, shoulder-length hair, piercing blue eyes, and a weathered face. He dresses in practical yet stylish attire, including a brown wool coat and a wide-brimmed hat with feathers. Gerhard is a captivating storyteller, known for his engaging tales of adventure and mythical lore, leaving listeners awestruck with his wisdom and animated storytelling."
+        "summary": "Gerhard von Eichenwald, a 63-year-old Germanic man, blends a rugged outdoor physique with a charismatic and warm demeanor. His appearance is marked by slightly graying, shoulder-length hair, piercing blue eyes, and a weathered face. He dresses in practical yet stylish attire, including a brown wool coat and a wide-brimmed hat with feathers. Gerhard is a captivating storyteller, known for his engaging tales of adventure and mythical lore, leaving listeners awestruck with his wisdom and animated storytelling.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Rheinland",
+        "age": "63"
       },
       {
         "name": "Valerius Asturuz",
-        "summary": "Valerius Asturuz, known as The Forsaken Emperor, stands at a commanding height of 2.15 meters, his physique honed from years of stringent training, reflecting his formidable presence. With thick, snow-white hair and stormy, almond-shaped eyes, his appearance combines an air of aristocratic authority with the untamed force of nature, underscored by sharp facial features and a chiseled jawline that speaks to both his strength and noble lineage. Valerius's primary objective is the eradication of all Draconians, Eldarin, and external threats to humanity, alongside his ambition to resurrect the golden age of the Aztrusian imperium, showcasing his extreme dedication to his people's supremacy and the realm's prosperity. His fighting style is aggressively unmatched in Arathia, employing storms and arc claws with such speed and ferocity that he becomes a nearly invincible force on the battlefield, his tactics designed to obliterate armies with sheer offensive power. As The Forsaken Emperor, Valerius embodies the epitome of vengeance and martial prowess, with his life's mission rooted in the protection and elevation of his empire above all else."
+        "summary": "Valerius Asturuz, known as The Forsaken Emperor, stands at a commanding height of 2.15 meters, his physique honed from years of stringent training, reflecting his formidable presence. With thick, snow-white hair and stormy, almond-shaped eyes, his appearance combines an air of aristocratic authority with the untamed force of nature, underscored by sharp facial features and a chiseled jawline that speaks to both his strength and noble lineage. Valerius's primary objective is the eradication of all Draconians, Eldarin, and external threats to humanity, alongside his ambition to resurrect the golden age of the Aztrusian imperium, showcasing his extreme dedication to his people's supremacy and the realm's prosperity. His fighting style is aggressively unmatched in Arathia, employing storms and arc claws with such speed and ferocity that he becomes a nearly invincible force on the battlefield, his tactics designed to obliterate armies with sheer offensive power. As The Forsaken Emperor, Valerius embodies the epitome of vengeance and martial prowess, with his life's mission rooted in the protection and elevation of his empire above all else.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Unknown",
+        "nationality": "Aztrusian",
+        "age": "Unknown"
       },
       {
         "name": "Antoine Von Bouchard",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Primorian",
+        "age": "Unknown"
       },
       {
         "name": "Xathun The Soul Revenant",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien / Demigod",
+        "status": "Alive",
+        "nationality": "Nashorian",
+        "age": "91"
       },
       {
         "name": "Vaylith The Promised Prince",
-        "summary": "Vaylith, known as The Promised Prince, in death preserved the youthful and robust visage of his mid-twenties, his appearance marked by cold, piercing blue eyes and dark, semi-long hair, creating an aura of captivating, handsome masculinity clad in dark metal armor. Born from a magical pact between his father, Xathun, and a demon, Vaylith was destined for the soul realm, a fate that fueled his deep-seated hatred for his father and spurred his ambition to overthrow him and claim rulership over the soul realm and eventually hell itself. Despite his prowess in grand tactical warfare, Vaylith's direct combat experience was minimal, preferring to wield the power of souls over his foes in the rare instances he fought. His life was a tapestry of vengeance and power, a demonborn with a cursed destiny, his existence intricately linked to his father's ambitions of possession and the dark legacy of the soulseeker power. Vaylith's journey was one of internal conflict and unquenchable hatred, his quest for revenge unfulfilled by his father's early demise, leaving him to seek purpose and satisfaction in the dominion and destruction of his enemies and the exploration of his formidable soulseeker abilities."
+        "summary": "Vaylith, known as The Promised Prince, in death preserved the youthful and robust visage of his mid-twenties, his appearance marked by cold, piercing blue eyes and dark, semi-long hair, creating an aura of captivating, handsome masculinity clad in dark metal armor. Born from a magical pact between his father, Xathun, and a demon, Vaylith was destined for the soul realm, a fate that fueled his deep-seated hatred for his father and spurred his ambition to overthrow him and claim rulership over the soul realm and eventually hell itself. Despite his prowess in grand tactical warfare, Vaylith's direct combat experience was minimal, preferring to wield the power of souls over his foes in the rare instances he fought. His life was a tapestry of vengeance and power, a demonborn with a cursed destiny, his existence intricately linked to his father's ambitions of possession and the dark legacy of the soulseeker power. Vaylith's journey was one of internal conflict and unquenchable hatred, his quest for revenge unfulfilled by his father's early demise, leaving him to seek purpose and satisfaction in the dominion and destruction of his enemies and the exploration of his formidable soulseeker abilities.",
+        "gender": "Male",
+        "race": "Demonborn / Demigod",
+        "status": "Alive",
+        "nationality": "Nashorian",
+        "age": "45"
       },
       {
         "name": "Adeline, Princess of Blood",
         "summary": "Adeline, known as the Princess of Blood or The Scarlet Princess, is a demigod banished from Elysium for her alliance with dragons. With striking scarlet hair, fair skin, and a regal attire adorned with gold, she wields solar and void powers, specializing in Bloodflame and Dragon Conjuring. Leading the Scarlet Order, a group formed post-exile, Adeline forges a significant pact in Drakoria, enhancing her powers with dragon essence. Her relentless quest for power, including experiments with vampirism, defines her journey, as does her role in major conflicts like the demonic invasion of 74 B.A. and her eventual forced return to Elysium during the thousand-year war.",
-        "image": "images/adeline.png"
+        "image": "images/adeline.png",
+        "gender": "Female",
+        "race": "Demigod",
+        "status": "Alive",
+        "nationality": "Obitus",
+        "age": "37393"
       },
       {
         "name": "Ianara, Blade of Adeline",
-        "summary": "Ianara Ustrina, heralded as the Blade of Adeline, stands as a testament to the legacy of the Scarlet Order, her shoulder-length brown hair and eyes—a mesmerizing blend of brown, yellow, and red—mirror the fiery essence of her demigod lineage. As a descendent of Promethean blood, Ianara transitioned from a soldier in the draconian army to the pinnacle of the Scarlet Order, driven by a shared mission with Adeline, the Princess of Blood, to support dragons during the war and uphold their shared values. Her prowess in combat is augmented by a unique blend of Solar powers, Bloodflame, and Dragon Conjuring abilities, making her a formidable leader and symbol of the Order's enduring mission. Following Adeline's retreat to Elysium, Ianara ascended as the leader of the Scarlet Order, embodying the principles and guidance bestowed upon her by Adeline, and continuing their work with renewed fervor. Ianara's journey from a common soldier to the revered Blade of Adeline encapsulates her growth, loyalty, and the profound bond with her mentor, positioning her as a pivotal figure in the ongoing narrative of their world."
+        "summary": "Ianara Ustrina, heralded as the Blade of Adeline, stands as a testament to the legacy of the Scarlet Order, her shoulder-length brown hair and eyes—a mesmerizing blend of brown, yellow, and red—mirror the fiery essence of her demigod lineage. As a descendent of Promethean blood, Ianara transitioned from a soldier in the draconian army to the pinnacle of the Scarlet Order, driven by a shared mission with Adeline, the Princess of Blood, to support dragons during the war and uphold their shared values. Her prowess in combat is augmented by a unique blend of Solar powers, Bloodflame, and Dragon Conjuring abilities, making her a formidable leader and symbol of the Order's enduring mission. Following Adeline's retreat to Elysium, Ianara ascended as the leader of the Scarlet Order, embodying the principles and guidance bestowed upon her by Adeline, and continuing their work with renewed fervor. Ianara's journey from a common soldier to the revered Blade of Adeline encapsulates her growth, loyalty, and the profound bond with her mentor, positioning her as a pivotal figure in the ongoing narrative of their world.",
+        "gender": "Female",
+        "race": "Part Demigod, Draconian",
+        "status": "Alive",
+        "nationality": "Seraphyria",
+        "age": "3594"
       },
       {
         "name": "Aelarion The Ember of Stars",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Eldarin",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "2351"
       },
       {
         "name": "Gabriel The Forgotten Savior",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Deceased",
+        "nationality": "Aztrusian",
+        "age": "Unknown"
       },
       {
         "name": "Atheon The Forsaker",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "gender",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Zognalith The Fallen",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "God",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "The Grand Antarian Acolyte",
-        "summary": "The Grand Antarian Acolyte, highest-ranking religious figure in the Holy Antarian Empire, is adorned in resplendent white and golden robes, embellished with sacred symbols. Their mask or helmet, worn to conceal the face and eyes, features a crown and mirrors the depiction of one of Antares' angels, imbuing them with a divine presence. Despite the discomfort caused by the helmet, it serves a dual purpose of sacred significance and inflicting wounds to prompt the acolyte's healing process, symbolizing the appreciation for life bestowed by Antares. In times of war, the Acolyte dons additional battle gear, including war armor designed to induce pain and strengthen the wearer's empowerment. Beneath the armor and robes lies a figure shrouded in mystery, with only their imposing stature standing at 197 cm tall discernible to others."
+        "summary": "The Grand Antarian Acolyte, highest-ranking religious figure in the Holy Antarian Empire, is adorned in resplendent white and golden robes, embellished with sacred symbols. Their mask or helmet, worn to conceal the face and eyes, features a crown and mirrors the depiction of one of Antares' angels, imbuing them with a divine presence. Despite the discomfort caused by the helmet, it serves a dual purpose of sacred significance and inflicting wounds to prompt the acolyte's healing process, symbolizing the appreciation for life bestowed by Antares. In times of war, the Acolyte dons additional battle gear, including war armor designed to induce pain and strengthen the wearer's empowerment. Beneath the armor and robes lies a figure shrouded in mystery, with only their imposing stature standing at 197 cm tall discernible to others.",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "79"
       },
       {
         "name": "Hamal",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Arcturus",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Sirius",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "Scutulum",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Unknown",
+        "age": "Unknown"
       },
       {
         "name": "Thuban",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "Giauzar",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Male",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       },
       {
         "name": "Lynx",
-        "summary": "summary"
+        "summary": "summary",
+        "gender": "Female",
+        "race": "Homosapien",
+        "status": "Alive",
+        "nationality": "Antarian",
+        "age": "Unknown"
       }
     ],
     "Non-Human Characters": [
       {
         "name": "Nihil, the Eternal",
         "summary": "Cloaked in abyssal darkness, Nihil, the Eternal, possesses an imposing appearance with inky feathers that absorb light and purple eyes that radiate intelligence. His immense size and muscular body are adorned with wings bearing celestial constellation patterns against velvety ebony plumage. Adorned with intricate gold jewelry, Nihil's horns resemble crowns, symbolizing his majestic authority over the void. Despite the dragon's regal allure, his connection to the cosmic tapestry of the void remains hidden to all but the most astute observers. Born during the Great Dragon Purge, Nihil defied fate by retreating into the heart of the void, where he exists in a liminal space, neither fully in the world nor entirely outside it. As an enigmatic presence in a world ignorant of his existence, Nihil embodies resilience and survival, his very nature mirroring the name he bears: Aeternum, everlasting.",
-        "image": "images/nihil.png"
+        "image": "images/nihil.png",
+        "gender": "Male",
+        "race": "Dragon",
+        "status": "Alive",
+        "nationality": "Drakoria",
+        "age": "Unknown"
       },
       {
         "name": "Aurumoria, the Gilded Guardian",
         "summary": "In her true form, Aurumoria, the Gilded Guardian, is adorned with scales that gleam like molten gold, reflecting light in a mesmerizing dance. Her wings bear intricate patterns, and her eyes hold ancient wisdom, flickering with an inner fire. In her human guise as Maeva, she blends seamlessly into the human world, with a warm complexion and hazel eyes hinting at her dragon form's brilliance. Aurumoria's personality is characterized by a desire to live a calm life, a contrast to her storied past and enigmatic purpose. As a skilled blacksmith, she crafts masterpieces with an innate affinity for shaping and manipulating metal, a talent that has become legendary throughout the land. Despite her extraordinary abilities, Aurumoria remains humble and dedicated to protecting both herself and the remnants of her kind, forging a bridge between her storied past and a world that has forgotten them.",
-        "image": "images/aurumoria.png"
+        "image": "images/aurumoria.png",
+        "gender": "Female",
+        "race": "Dragon",
+        "status": "Alive",
+        "nationality": "Drakoria",
+        "age": "Unknown"
       },
       {
         "name": "Zephyrion, the Emberheart",
-        "summary": "Zephyrion, the Emberheart, embodies fire and strength with scales that glisten like polished rubies and wings adorned with fiery patterns. His eyes reflect the warmth of his spirit and the wisdom of centuries, while his sleek and sinuous body resonates with the energy of his flames. Despite emerging from the Great Dragon Purge as a mere hatchling, Zephyrion has grown into a majestic being over approximately 2400 years of solitary existence. His flight, once unsteady, has become a graceful ballet of precision and power, and his flames now roar with the intensity of a true emberheart. Zephyrion's goal is to bring back the age of the dragons, a mission fueled by the echoes of a hatchling's curiosity and the fierce determination of a dragon who has weathered the storms of solitude."
+        "summary": "Zephyrion, the Emberheart, embodies fire and strength with scales that glisten like polished rubies and wings adorned with fiery patterns. His eyes reflect the warmth of his spirit and the wisdom of centuries, while his sleek and sinuous body resonates with the energy of his flames. Despite emerging from the Great Dragon Purge as a mere hatchling, Zephyrion has grown into a majestic being over approximately 2400 years of solitary existence. His flight, once unsteady, has become a graceful ballet of precision and power, and his flames now roar with the intensity of a true emberheart. Zephyrion's goal is to bring back the age of the dragons, a mission fueled by the echoes of a hatchling's curiosity and the fierce determination of a dragon who has weathered the storms of solitude.",
+        "gender": "Male",
+        "race": "Dragon",
+        "status": "Alive",
+        "nationality": "Drakoria",
+        "age": "Unknown"
       },
       {
         "name": "Solitarius, the Primordial",
-        "summary": "Solitarius, the first being to ever walk Arathia. Born from the very essence of aether, it embodies purity in its most primal form. In the epoch when dragons soared and ruled the skies, Solitarius was a majestic presence, harmonizing with its kin as a steward of the fledgling world. However, as the eons unfolded and the epochs transitioned, Solitarius, for reasons obscured by time, succumbed to a profound slumber. It chose its resting place in the northeast, near the colossal arch-tree that stood as a testament to the world's origins. Here, among the craggy rocks and veils of earth, Solitarius nestled into a deep repose. Over time, layers of soil and stone enveloped its form, rendering it nearly imperceptible to the casual observer. Its massive, dormant presence lay hidden, a relic from a bygone era."
+        "summary": "Solitarius, the first being to ever walk Arathia. Born from the very essence of aether, it embodies purity in its most primal form. In the epoch when dragons soared and ruled the skies, Solitarius was a majestic presence, harmonizing with its kin as a steward of the fledgling world. However, as the eons unfolded and the epochs transitioned, Solitarius, for reasons obscured by time, succumbed to a profound slumber. It chose its resting place in the northeast, near the colossal arch-tree that stood as a testament to the world's origins. Here, among the craggy rocks and veils of earth, Solitarius nestled into a deep repose. Over time, layers of soil and stone enveloped its form, rendering it nearly imperceptible to the casual observer. Its massive, dormant presence lay hidden, a relic from a bygone era.",
+        "gender": "None",
+        "race": "True Dragon, Demigod",
+        "status": "Unknown",
+        "nationality": "Unknown",
+        "age": "None"
       }
     ]
   }
