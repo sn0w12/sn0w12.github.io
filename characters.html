@@ -207,9 +207,9 @@
         <li class="character-entry">
           <div class="character-container">
             <div class="character-header">
-                <span class="character-name"></span>
-                <button class="copy-btn">Copy Name</button>
-            </div>
+                <span class="character-name">Character Name Here</span>
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copy Name</button>
+            </div>            
             <hr class="divider">
             <div class="character-content">
                 <div class="character-image-container">
@@ -367,10 +367,18 @@
             .catch(error => console.error('Error loading character data:', error));
     });
 
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => {
+    function copyToClipboard(btnElement) {
+        // Navigate to the sibling span containing the character name
+        const nameSpan = btnElement.previousElementSibling; // Assumes the span is directly before the button
+        const textToCopy = nameSpan.textContent;
+
+        // Use the Clipboard API to copy the text
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            console.log("Text copied to clipboard");
+            btnElement.textContent = "Copied!";
+            setTimeout(() => btnElement.textContent = "Copy Name", 2000); // Change back after 1.5s
         }).catch(err => {
-            console.error('Failed to copy text to clipboard', err);
+            console.error('Failed to copy text: ', err);
         });
     }
 
