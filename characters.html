@@ -43,13 +43,15 @@
         }
         summary {
             background-color: var(--background);
-            position: sticky;
-            top: 0; /* Stick to the top of the viewport */
-            z-index: 10; /* Ensure it's above other content */
             cursor: pointer;
             font-weight: bold;
             color: var(--highlight);
             padding: 8px;
+        }
+        .open-summary {
+            position: sticky;
+            top: 0;
+            z-index: 500;
         }
 
         summary::-webkit-details-marker {
@@ -263,6 +265,20 @@
         });
     }
 
+    window.addEventListener('load', function() {
+        document.querySelectorAll('details').forEach(function(details) {
+            details.addEventListener('toggle', function(event) {
+                const summary = details.querySelector('summary');
+                if (details.open) {
+                    // Add a class when the <summary> is opened
+                    summary.classList.add('open-summary');
+                } else {
+                    // Remove the class when the <summary> is closed
+                    summary.classList.remove('open-summary');
+                }
+            });
+        });
+    });
 
     function filterCharacters(query) {
         const resultsContainer = document.getElementById('search-results');
@@ -328,8 +344,6 @@
         resultsContainer.addEventListener('mousedown', function(e) {
             clearTimeout(hideResultsTimeout);
         });
-
-        // Additional code for filterCharacters and other functionalities
     });
 
     function addResultItem(text, targetElement, container) {
@@ -366,11 +380,7 @@
             let characterCount = 0; // Initialize character count
 
             Object.entries(data).forEach(([mainCategory, characters]) => {
-                // Existing logic to create and append mainCategory and characters
-                // For each character processed, increment characterCount
                 characterCount += characters.length;
-
-                // Existing logic to append details and characters to the container
             });
 
             // After all characters have been processed, update the character count display
