@@ -50,6 +50,7 @@
         }
         .open-summary {
             position: sticky;
+            position: -webkit-sticky;
             top: 0;
             z-index: 500;
         }
@@ -595,14 +596,14 @@
             if (Math.abs(touchEndY - touchStartY) < 10) { // 10px threshold for movement to be considered a scroll
                 document.getElementById('imageModal').style.display = "block";
                 document.getElementById('img01').src = src;
-                disablePointerEvents(); // Assuming disablePointerEvents function is implemented
+                disablePointerEvents(); 
             }
         };
 
         // Close the modal and enable pointer events on other elements
         const closeModal = () => {
             modal.style.display = "none";
-            enablePointerEvents(); // Re-enable pointer events when modal is closed
+            enablePointerEvents();
         };
         
         // Close button event listener
@@ -631,9 +632,6 @@
                 showModal(this.src);
             }, { passive: true });
 
-            // Optionally, for better performance, you might consider adding the touchmove event
-            // listener to the window or a common parent element instead of each image, to reduce
-            // the number of listeners being registered.
             img.addEventListener('touchmove', function(e) {
                 touchEndY = e.changedTouches[0].clientY;
             }, { passive: true });
