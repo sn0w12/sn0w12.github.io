@@ -16,7 +16,7 @@
         body {
             color: var(--foreground);
             font-family: Arial, sans-serif;
-            padding: 20px;
+            padding: 0px;
             background-color: var(--background);
         }
         .main-container {
@@ -189,6 +189,24 @@
         }
         .info-label {
             border-right: 1px solid var(--foreground);
+        }
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 5px;
+                max-width: 100%;
+            }
+            .character-container {
+                flex-direction: column;
+            }
+            .character-name, .copy-btn {
+                font-size: 16px; /* Increase touch target size */
+            }
+            .search-box {
+                font-size: 16px; /* Easier to read and select */
+            }
+            .character-image-container {
+                width: 100%;
+            }
         }
     </style>
 </head>
