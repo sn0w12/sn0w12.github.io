@@ -571,24 +571,47 @@
         const modalImg = document.getElementById('img01');
         const closeBtn = document.getElementsByClassName('close')[0];
 
+        const showModal = (src) => {
+            modal.style.display = "block";
+            modalImg.src = src;
+        };
+
         document.querySelectorAll('.character-image').forEach(img => {
-            img.onclick = function() {
-                modal.style.display = "block";
-                modalImg.src = this.src;
-            }
+            // Listen for clicks
+            img.addEventListener('click', function() {
+                showModal(this.src);
+            });
+            
+            // Listen for touch ends
+            img.addEventListener('touchend', function() {
+                showModal(this.src);
+            }, { passive: true }); // Use passive option for better performance on scrollable content
         });
 
-        closeBtn.onclick = function() { 
+        const closeModal = () => {
             modal.style.display = "none";
-        }
+        };
 
-        modal.onclick = function(event) {
+        closeBtn.addEventListener('click', closeModal);
+
+        // Also add a touchend listener for the close button
+        closeBtn.addEventListener('touchend', closeModal, { passive: true });
+
+        modal.addEventListener('click', function(event) {
             if (event.target === modalImg) {
                 // Prevent closing if the image itself is clicked
                 return;
             }
-            modal.style.display = "none";
-        }
+            closeModal();
+        });
+
+        // Adding touchend listener for closing modal by touching outside the image
+        modal.addEventListener('touchend', function(event) {
+            if (event.target === modalImg) {
+                return;
+            }
+            closeModal();
+        }, { passive: true });
     });
 
 </script>
