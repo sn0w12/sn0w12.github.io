@@ -571,47 +571,60 @@
         const modalImg = document.getElementById('img01');
         const closeBtn = document.getElementsByClassName('close')[0];
 
+        // Function to show the modal with the selected image
         const showModal = (src) => {
             modal.style.display = "block";
             modalImg.src = src;
         };
 
-        document.querySelectorAll('.character-image').forEach(img => {
-            // Listen for clicks
-            img.addEventListener('click', function() {
-                showModal(this.src);
-            });
-            
-            // Listen for touch ends
-            img.addEventListener('touchend', function() {
-                showModal(this.src);
-            }, { passive: true }); // Use passive option for better performance on scrollable content
-        });
-
+        // Function to close the modal
         const closeModal = () => {
             modal.style.display = "none";
         };
 
+        // Function to add event listeners to images
+        const applyImageListeners = (img) => {
+            img.addEventListener('click', function() {
+                showModal(this.src);
+            });
+            
+            // Add touch support
+            img.addEventListener('touchend', function() {
+                showModal(this.src);
+            }, { passive: true });
+        };
+
+        // Add event listeners to all current images
+        document.querySelectorAll('.character-image').forEach(applyImageListeners);
+
+        // Event listeners for closing the modal
         closeBtn.addEventListener('click', closeModal);
-
-        // Also add a touchend listener for the close button
         closeBtn.addEventListener('touchend', closeModal, { passive: true });
-
-        modal.addEventListener('click', function(event) {
-            if (event.target === modalImg) {
-                // Prevent closing if the image itself is clicked
-                return;
-            }
+        modal.addEventListener('click', (event) => {
+            if (event.target === modalImg) return;
             closeModal();
         });
-
-        // Adding touchend listener for closing modal by touching outside the image
-        modal.addEventListener('touchend', function(event) {
-            if (event.target === modalImg) {
-                return;
-            }
+        modal.addEventListener('touchend', (event) => {
+            if (event.target === modalImg) return;
             closeModal();
         }, { passive: true });
+
+        // MutationObserver to observe changes in the document
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1 && node.matches('.character-image')) { // Ensure it's an element node and matches the selector
+                        applyImageListeners(node);
+                    }
+                });
+            });
+        });
+
+        // Configuration of the observer:
+        const config = { childList: true, subtree: true };
+
+        // Start observing the body for added elements
+        observer.observe(document.body, config);
     });
 
 </script>
