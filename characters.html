@@ -614,6 +614,7 @@
             mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
                     if (node.nodeType === 1 && node.matches('.character-image')) { // Ensure it's an element node and matches the selector
+                        console.log("Found Image");
                         applyImageListeners(node);
                     }
                 });
@@ -625,6 +626,15 @@
 
         // Start observing the body for added elements
         observer.observe(document.body, config);
+
+        setTimeout(() => {
+            document.querySelectorAll('.character-image').forEach(img => {
+                if (!img.classList.contains('zoom-applied')) {
+                    applyImageListeners(img);
+                    img.classList.add('zoom-applied'); // Mark the image to avoid re-applying listeners
+                }
+            });
+        }, 1000); // Adjust the delay as needed
     });
 
 </script>
