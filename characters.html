@@ -567,6 +567,9 @@
         });
 
     window.addEventListener('load', function() {
+        let touchStartY = 0;
+        let touchEndY = 0;
+
         const modal = document.getElementById('imageModal');
         const modalImg = document.getElementById('img01');
         const closeBtn = document.getElementsByClassName('close')[0];
@@ -589,9 +592,11 @@
 
         // Show the modal and disable pointer events on other elements
         const showModal = (src) => {
-            modal.style.display = "block";
-            modalImg.src = src;
-            disablePointerEvents(); // Disable pointer events when modal is shown
+            if (Math.abs(touchEndY - touchStartY) < 10) { // 10px threshold for movement to be considered a scroll
+                document.getElementById('imageModal').style.display = "block";
+                document.getElementById('img01').src = src;
+                disablePointerEvents(); // Assuming disablePointerEvents function is implemented
+            }
         };
 
         // Close the modal and enable pointer events on other elements
@@ -617,18 +622,22 @@
                 showModal(this.src);
             });
             
-            // Add touch support
-            img.addEventListener('touchend', function() {
+            img.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            img.addEventListener('touchend', function(e) {
+                touchEndY = e.changedTouches[0].clientY;
                 showModal(this.src);
             }, { passive: true });
+
+            // Optionally, for better performance, you might consider adding the touchmove event
+            // listener to the window or a common parent element instead of each image, to reduce
+            // the number of listeners being registered.
+            img.addEventListener('touchmove', function(e) {
+                touchEndY = e.changedTouches[0].clientY;
+            }, { passive: true });
         };
-        
-        // Apply event listeners to images
-        document.querySelectorAll('.character-image').forEach(img => {
-            img.addEventListener('click', function() {
-                showModal(this.src);
-            });
-        });
 
         // Add event listeners to all current images
         document.querySelectorAll('.character-image').forEach(applyImageListeners);
@@ -659,24 +668,6 @@
             }
             closeModal();
         }, { passive: false });
-
-        // MutationObserver to observe changes in the document
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    if (node.nodeType === 1 && node.matches('.character-image')) { // Ensure it's an element node and matches the selector
-                        console.log("Found Image");
-                        applyImageListeners(node);
-                    }
-                });
-            });
-        });
-
-        // Configuration of the observer:
-        const config = { childList: true, subtree: true };
-
-        // Start observing the body for added elements
-        observer.observe(document.body, config);
 
         setTimeout(() => {
             document.querySelectorAll('.character-image').forEach(img => {
