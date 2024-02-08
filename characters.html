@@ -192,6 +192,41 @@
         .info-label {
             border-right: 1px solid var(--foreground);
         }
+        /* Image Modal (background) */
+        .image-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            padding-top: 60px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+        }
+
+        /* Modal Content (image) */
+        .image-modal-content {
+            margin: auto;
+            display: block;
+            width: auto;
+            max-width: 700px;
+            max-height: 90%;
+        }
+
+        /* Close Button */
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
         @media (max-width: 600px) {
             .main-container {
                 padding: 5px;
@@ -207,6 +242,10 @@
                 font-size: 16px; /* Easier to read and select */
             }
             .character-image-container {
+                width: 100%;
+                min-width: none;
+            }
+            .image-modal-content {
                 width: 100%;
             }
         }
@@ -525,7 +564,39 @@
             })
             .catch(error => console.error('Error loading character data:', error));
         });
-</script>
 
+    window.addEventListener('load', function() {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('img01');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        document.querySelectorAll('.character-image').forEach(img => {
+            img.onclick = function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        });
+
+        closeBtn.onclick = function() { 
+            modal.style.display = "none";
+        }
+
+        modal.onclick = function(event) {
+            if (event.target === modalImg) {
+                // Prevent closing if the image itself is clicked
+                return;
+            }
+            modal.style.display = "none";
+        }
+    });
+
+</script>
+<!-- The Modal -->
+<div id="imageModal" class="image-modal">
+    <!-- The Close Button -->
+    <span class="close">&times;</span>
+    <!-- Modal Content (The Image) -->
+    <img class="image-modal-content" id="img01">
+  </div>  
 </body>
 </html>
