@@ -571,17 +571,46 @@
         const modalImg = document.getElementById('img01');
         const closeBtn = document.getElementsByClassName('close')[0];
 
-        // Function to show the modal with the selected image
+        // Function to disable pointer events on all interactive elements
+        const disablePointerEvents = () => {
+            document.querySelectorAll('a, button, .character-image').forEach(elem => {
+                if (!elem.closest('#imageModal')) { // Skip elements inside the modal
+                    elem.style.pointerEvents = 'none';
+                }
+            });
+        };
+
+        // Function to enable pointer events on all interactive elements
+        const enablePointerEvents = () => {
+            document.querySelectorAll('a, button, .character-image').forEach(elem => {
+                elem.style.pointerEvents = '';
+            });
+        };
+
+        // Show the modal and disable pointer events on other elements
         const showModal = (src) => {
             modal.style.display = "block";
             modalImg.src = src;
+            disablePointerEvents(); // Disable pointer events when modal is shown
         };
 
-        // Function to close the modal
+        // Close the modal and enable pointer events on other elements
         const closeModal = () => {
             modal.style.display = "none";
+            enablePointerEvents(); // Re-enable pointer events when modal is closed
         };
-
+        
+        // Close button event listener
+        closeBtn.addEventListener('click', closeModal);
+        
+        // Close modal when clicking outside the image
+        modal.addEventListener('click', function(event) {
+            if (event.target === modalImg) {
+                return;
+            }
+            closeModal();
+        });
+        
         // Function to add event listeners to images
         const applyImageListeners = (img) => {
             img.addEventListener('click', function() {
@@ -593,6 +622,13 @@
                 showModal(this.src);
             }, { passive: true });
         };
+        
+        // Apply event listeners to images
+        document.querySelectorAll('.character-image').forEach(img => {
+            img.addEventListener('click', function() {
+                showModal(this.src);
+            });
+        });
 
         // Add event listeners to all current images
         document.querySelectorAll('.character-image').forEach(applyImageListeners);
