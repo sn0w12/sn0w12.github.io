@@ -598,16 +598,31 @@
         document.querySelectorAll('.character-image').forEach(applyImageListeners);
 
         // Event listeners for closing the modal
-        closeBtn.addEventListener('click', closeModal);
-        closeBtn.addEventListener('touchend', closeModal, { passive: true });
-        modal.addEventListener('click', (event) => {
-            if (event.target === modalImg) return;
+        closeBtn.addEventListener('click', function(event) { 
+            event.stopPropagation();
+            event.preventDefault();
             closeModal();
         });
-        modal.addEventListener('touchend', (event) => {
-            if (event.target === modalImg) return;
+        closeBtn.addEventListener('touchend', function(event) {
+            event.stopPropagation();
             closeModal();
-        }, { passive: true });
+        }, { passive: false });
+        modal.addEventListener('click', function(event) {
+            event.stopPropagation();
+            // Only close if the click is not on the modalImg itself
+            if (event.target === modalImg) {
+                event.preventDefault(); // Prevent default to stop any link navigation or other actions
+                return;
+            }
+            closeModal();
+        });
+        modal.addEventListener('touchend', function(event) {
+            event.stopPropagation();
+            if (event.target === modalImg) {
+                return;
+            }
+            closeModal();
+        }, { passive: false });
 
         // MutationObserver to observe changes in the document
         const observer = new MutationObserver((mutations) => {
