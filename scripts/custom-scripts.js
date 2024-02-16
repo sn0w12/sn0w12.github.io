@@ -195,7 +195,6 @@ function removeAllPolylines() {
     polylineLayers = []; // Clear the array after removing all polylines
 }
 
-
 function polygonMaker(isDropped = false) {
     formData = getFormData(polygonMarker);
 
