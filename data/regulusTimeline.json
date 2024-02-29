@@ -1,0 +1,19 @@
+[
+    {
+        "era": "Age of Fragmentation",
+        "description": "After the Shattering, the mortal realm plunged into the chaotic embrace of the Age of Fragmentation. The once-unified Pantheon of gods, who had meticulously woven the cosmic tapestry, now seemed to withdraw, their celestial presence becoming elusive and distant. Mortals, left to grapple with the aftermath of the cosmic upheaval, found themselves navigating a world reshaped by the fractures that echoed through the realms. The Arch-Trees, once harmonious conduits of divine power, experienced a profound transformation. Blooming like never before, these majestic entities absorbed the unbridled Aether that surged through the breach, branching into a riotous display of colors and energies. The mortal world, once a realm carefully crafted by the gods, now bore witness to the untamed forces of Aether, coursing through the Arch-Trees and permeating the very essence of existence. In this tumultuous era, the world began its gradual regression toward the formless state of the Age of Genesis. The shattered remnants of divine realms cast their influence upon the mortal plane, creating landscapes that bore both the scars of conflict and the promise of untapped potential. The boundaries between the divine and mortal blurred, as the lingering echoes of the Shattering resonated through every corner of the realms. As the shackles that once bound Aether were shattered, mortals found themselves able to absorb the essence of Aether at an unprecedented rate. The empowered became the most potent they had ever been, their very beings resonating with the unfettered power of Aether. Cities rose and fell, empires clashed, and newfound abilities manifested in individuals who now stood as living conduits of Aether.",
+        "subcategories": [
+            {
+                "title": "Childhood",
+                "events": [
+                    {
+                        "year": "1235 A.A",
+                        "title": "Regulus is born",
+                        "description": "Regulus is born.",
+                        "level": "Local Event"
+                    }
+                ]
+            }
+        ]
+    }
+]

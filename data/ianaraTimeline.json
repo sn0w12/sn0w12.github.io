@@ -1,0 +1,60 @@
+[
+    {
+        "era": "Age of Aether",
+        "description": "With the Advent of Aether, the tranquil existence of the Age of Genesis was disrupted by an event of unparalleled significance. Aether, the fundamental force that introduced Disparity, swept through the cosmos, bringing with it the dualities of heat and cold, life and death, and light and dark. In response to this infusion of Aether, the Primordial 7 gods were born, each claiming dominion over specific aspects of Aether itself, meticulously guiding and controlling its vast potential. Stelarus, the God of Solar, harnessed the radiant energies of Aether, commanding the essence of fire to shape the celestial bodies that illuminated the cosmos. Raljun, the God of Arc, wove the threads of Aether into the tapestry of the arcane, manipulating the very essence of magic and mysticism. Eridus, the God of Void, took upon the solemn duty of controlling the dark currents of Aether. Nocturna, the Goddess of Death, guided the ebb and flow of Aether in realms beyond mortal comprehension, overseeing the transition from life to afterlife. Odin, the God of Conflict, utilized Aether to fuel the flames of strife and war, channeling its power into the struggles that defined the mortal plane. Hyperia, the Goddess of Time, wove the strands of Aether into the fabric of temporal existence, orchestrating the flow of moments within the cosmic tapestry. Vitalius, the God of Life, nurtured the fertile aspects of Aether, infusing vitality into the Arch-Trees and sowing the seeds of life across the mortal realm. While controlling the Aether the gods kept it from surging out of control. In their celestial realms, the gods crafted the mortal world, sowing the seeds of creation within the Arch-Trees. These majestic trees, conduits of Aether, served as vessels for the divine essence, spreading the life-giving force across the realms. The gods carefully maintained control over Aether, ensuring its balance and preventing the force from spiraling into chaotic discord. During this era, the dragons, blessed by the gods with a harmonious connection to Aether, ruled the lands with seemingly limitless power. The divine essence coursed through their veins, making them formidable beings. Mortals, guided and influenced by the gods, flourished in a world shaped by the delicate control of Aether, living in harmony with the divine forces that shaped their existence.",
+        "subcategories": [
+            {
+                "title": "Childhood",
+                "events": [
+                    {
+                        "year": "1201 B.R",
+                        "title": "Ianara is born",
+                        "description": "Ianara is born.",
+                        "level": "Local Event"
+                    }
+                ]
+            },
+            {
+                "title": "The Army",
+                "events": [
+                    {
+                        "year": "1213 B.R (Month 2, Day 17)",
+                        "title": "Dragon attack",
+                        "description": "Story starts, Ianara is in the army fighting the war against the dragons. Due to Seraphyrian propaganda she strongly believes the dragons started the war by attacking the city ??? for no reason. Ianara is currently a Corporal (At least in a similar position) and leads her soldiers to battle and slays the dragon, some of her soldiers pass away during the battle. ",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "1213 B.R (Month 2, Day 18)",
+                        "title": "Mourning",
+                        "description": "After the battle she mourns her dead soldiers but also celebrates the survivors.",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "1213 B.R (Month 2, Day 30)",
+                        "title": "Called to the Capital",
+                        "description": "We follow Ianara in a more normal everyday setting, showing more of her personality and loyalty to Seraphyria. Ianara is called by her superiors and she is told that she is being called back to the capital.",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "1213 B.R (Month 2, Day 31)",
+                        "title": "To the Capital",
+                        "description": "We see more of the land and cities as we travel on the way to the capital.",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "1213 B.R (Month 3, Day 20)",
+                        "title": "To the Dragon Settlement",
+                        "description": "Ianara gets the order to go to a dragon settlement.",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "1213 B.R (Month 3, Day 26)",
+                        "title": "Dragon Slaugher",
+                        "description": "Ianara is at the settlement, they ruthlessly slaughter them during the night. Ianara questions the need for this slaughter but remembers/ is reminded of the slaughter of her people at the hands of the dragons.",
+                        "level": "Local Event"
+                    }
+                ]
+            }
+        ]
+    }
+]

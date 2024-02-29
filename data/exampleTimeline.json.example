@@ -1,0 +1,19 @@
+[
+    {
+        "era": "Age of Aether",
+        "description": "With the Advent of Aether, the tranquil existence of the Age of Genesis was disrupted by an event of unparalleled significance. Aether, the fundamental force that introduced Disparity, swept through the cosmos, bringing with it the dualities of heat and cold, life and death, and light and dark. In response to this infusion of Aether, the Primordial 7 gods were born, each claiming dominion over specific aspects of Aether itself, meticulously guiding and controlling its vast potential. Stelarus, the God of Solar, harnessed the radiant energies of Aether, commanding the essence of fire to shape the celestial bodies that illuminated the cosmos. Raljun, the God of Arc, wove the threads of Aether into the tapestry of the arcane, manipulating the very essence of magic and mysticism. Eridus, the God of Void, took upon the solemn duty of controlling the dark currents of Aether. Nocturna, the Goddess of Death, guided the ebb and flow of Aether in realms beyond mortal comprehension, overseeing the transition from life to afterlife. Odin, the God of Conflict, utilized Aether to fuel the flames of strife and war, channeling its power into the struggles that defined the mortal plane. Hyperia, the Goddess of Time, wove the strands of Aether into the fabric of temporal existence, orchestrating the flow of moments within the cosmic tapestry. Vitalius, the God of Life, nurtured the fertile aspects of Aether, infusing vitality into the Arch-Trees and sowing the seeds of life across the mortal realm. While controlling the Aether the gods kept it from surging out of control. In their celestial realms, the gods crafted the mortal world, sowing the seeds of creation within the Arch-Trees. These majestic trees, conduits of Aether, served as vessels for the divine essence, spreading the life-giving force across the realms. The gods carefully maintained control over Aether, ensuring its balance and preventing the force from spiraling into chaotic discord. During this era, the dragons, blessed by the gods with a harmonious connection to Aether, ruled the lands with seemingly limitless power. The divine essence coursed through their veins, making them formidable beings. Mortals, guided and influenced by the gods, flourished in a world shaped by the delicate control of Aether, living in harmony with the divine forces that shaped their existence.",
+        "subcategories": [
+            {
+                "title": "title",
+                "events": [
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "Universe Changing Event"
+                    }
+                ]
+            }
+        ]
+    }
+]
