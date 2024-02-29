@@ -2,15 +2,30 @@ let allEvents = []; // This will hold all events after fetching from JSON
 let filteredEvents = []; // Holds events after applying filters
 
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('data/timeline.json')
+    // Initially load the default timeline
+    loadSelectedTimeline();
+});
+
+// This function directly uses the selected value from the dropdown or sessionStorage
+function loadSelectedTimeline(selectedTimeline) {
+    if (!selectedTimeline) {
+        // If no parameter is passed, use the saved timeline or default to the first option
+        selectedTimeline = sessionStorage.getItem('selectedTimeline') || document.getElementById('timelineDropdown').value;
+        document.getElementById('timelineDropdown').value = selectedTimeline; // Ensure dropdown shows the current selection
+    }
+
+    fetch(selectedTimeline)
     .then(response => response.json())
     .then(data => {
-        allEvents = data; // Store all events
-        filteredEvents = data;
-        createTimeline(data); // Initial timeline creation
+        allEvents = data;
+        createTimeline(data);
         populateSidebar(data);
-    });
-});
+    })
+    .catch(error => console.error('Error loading the timeline:', error));
+
+    // Update sessionStorage with the current selection
+    sessionStorage.setItem('selectedTimeline', selectedTimeline);
+}
 
 function createTimeline(data) {
     const timeline = document.getElementById('timeline');

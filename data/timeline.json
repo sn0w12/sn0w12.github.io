@@ -249,57 +249,81 @@
                 "title": "Rise of the Vampires",
                 "events": [
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "400 B.A",
+                        "title": "Vampires slowly take control of most kingdoms",
+                        "description": "Vampires slowly taking control of most kingdoms from the shadows,",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "658 B.A",
+                        "title": "Xathun is born",
+                        "description": "Xathun is born.",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "682 B.A",
+                        "title": "Rise of Xathun The Soul Revenant",
+                        "description": "Rise of Xathun The Soul Revenant.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "703 B.A",
+                        "title": "Nashor Empire emerges",
+                        "description": "Nashor Empire emerges.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "717 B.A",
+                        "title": "Nashor War unfolds",
+                        "description": "Nashor War unfolds (Kingdom of the Moon + ??? vs Nashor Empire).",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "720 B.A",
+                        "title": "Awakening of a Void Born",
+                        "description": "Awakening of a Void Born.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "742 B.A",
+                        "title": "Birth of Vaylith",
+                        "description": "Birth of Vaylith (born through pact of hell).",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "749 B.A",
+                        "title": "Death of Xathun",
+                        "description": "Death of Xathun The Soul Revenant",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "788 B.A",
+                        "title": "Death of Vaylith",
+                        "description": "Death of Vaylith The Promised Prince",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "789 B.A",
+                        "title": "Shattering of the Moon Kingdom",
+                        "description": "Shattering of the Moon Kingdom and the Nashor War concludes.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "796 B.A",
+                        "title": "Formation of Tsuki Ōkoku",
+                        "description": "Eight families unite to form the Tsuki Ōkoku Empire.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "800 B.A",
+                        "title": "Destruction of the Nashor Empire",
+                        "description": "Destruction of the Nashor Empire.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
-                        "level": "World Changing Event"
-                    },
-                    {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1032 B.A",
+                        "title": "Vampires gain more control of the world",
+                        "description": "Vampires gain more control of the world",
                         "level": "World Changing Event"
                     }
                 ]
@@ -308,58 +332,172 @@
                 "title": "Antarian Ascendance",
                 "events": [
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "0 A.A, 1136 B.A",
+                        "title": "Antares is born",
+                        "description": "Antares is born.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "? A.A, ? B.A",
+                        "title": "Vampire hunting starts",
+                        "description": "Start to hunt vampires under Antares leadership.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "40 A.A, 1176 B.A",
+                        "title": "Small state Antaria is born",
+                        "description": "A small independent state named Antaria is born.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "? A.A, ? B.A",
+                        "title": "Sons of Antares are created",
+                        "description": "An order named ”Sons of Antares” is created to collect the 8 most powerful solar vampire hunters.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "53 A.A, 1189 B.A",
+                        "title": "Rise of the antarian empire",
+                        "description": "Rise of the antarian empire.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "64 A.A, 1200 B.A",
+                        "title": "The star forge is found",
+                        "description": "The star forge is found",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "70 A.A, 1206 B.A",
+                        "title": "Death of Antares",
+                        "description": "Death of Antares",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "127 A.A, 1263 B.A",
+                        "title": "Fall of the vampires",
+                        "description": "Fall of the vampires.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "687 A.A, 1823 B.A",
+                        "title": "Mass murder of the arc born",
+                        "description": "Mass murder of the arc born",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "999 A.A, 2135 B.A",
+                        "title": "A faction emerges to liberate the oppressed arc born",
+                        "description": "A revived faction emerges to liberate the oppressed arc born in the Antarian Empire.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1127 A.A, 2263 B.A",
+                        "title": "Rise of a united viking kingdom",
+                        "description": "Rise of a united viking kingdom.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1180 A.A, 2316 B.A",
+                        "title": "The Arcarum Union is founded",
+                        "description": "The Arcarum Union is founded.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1202 A.A, 2338 B.A",
+                        "title": "The HAE declares war on ???",
+                        "description": "The HAE (Holy Antarian Empire) declares war on ???.",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1203 A.A, 2339 B.A",
+                        "title": "The HAE declares war on ???",
+                        "description": "The HAE declares war on ???",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1205 A.A, 2341 B.A",
+                        "title": "The free antarian movement starts",
+                        "description": "The free antarian movement starts",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "1209 A.A, 2345 B.A",
+                        "title": "The golden order is refounded",
+                        "description": "The golden order is refounded",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1214 A.A, 2350 B.A",
+                        "title": "The HAE declares war on Primoria",
+                        "description": "The HAE declares war on Primoria",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1215 A.A, 2351 B.A",
+                        "title": "The ARF was founded",
+                        "description": "The ARF (Antarian Resistance Front) was founded.",
                         "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1217 A.A, 2353 B.A",
+                        "title": "The golden order declares war on the holy antarian empire",
+                        "description": "The golden order declares war on the holy antarian empire.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1218 A.A, 2354 B.A",
+                        "title": "A blood father rises",
+                        "description": "A blood father rises.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1226 A.A, 2362 B.A",
+                        "title": "Julius is born",
+                        "description": "Julius is born",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1230 A.A, 2366 B.A",
+                        "title": "Zovjun is born",
+                        "description": "Zovjun is born",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1235 A.A, 2371 B.A",
+                        "title": "Azurith joins the ARF",
+                        "description": "Azurith joins the ARF",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1246 A.A, 2382 B.A",
+                        "title": "The Free People of Antaria joins the ARF",
+                        "description": "The Free People of Antaria joins the ARF",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1249 A.A, 2385 B.A",
+                        "title": "Dryadalis joins the ARF",
+                        "description": "Dryadalis joins the ARF",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1249 A.A, 2385 B.A",
+                        "title": "A Large portion of the viking kingdom and antarian army is wiped out",
+                        "description": "A Large portion of the viking kingdom and antarian army is wiped out in a fight with the golden order",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1256 A.A, 2392 B.A (Month 8, Day 1)",
+                        "title": "Battle for Primorium starts",
+                        "description": "Battle for Primorium starts",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1256 A.A, 2392 B.A (Month 12, Day 2)",
+                        "title": "Battle for Primorium ends",
+                        "description": "Battle for Primorium ends",
+                        "level": "National Event"
                     }
                 ]
             },
@@ -367,58 +505,94 @@
                 "title": "The Final Confrontation",
                 "events": [
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1257 A.A, 2393 B.A",
+                        "title": "Story starts",
+                        "description": "The story of Regulus Cor Leonis starts.",
+                        "level": "Out of Story Event"
+                    },
+                    {
+                        "year": "1257 A.A, 2393 B.A (Month 1, Day 4)",
+                        "title": "The grand general of antaria is executed",
+                        "description": "The grand general of antaria is executed.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1257 A.A, 2393 B.A (Month 1, Day 27)",
+                        "title": "The HAE declare war on the viking kingdom",
+                        "description": "The HAE declare war on the viking kingdom",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1257 A.A, 2393 B.A (Month 3)",
+                        "title": "Tungleheimr joins the ARF",
+                        "description": "Tungleheimr joins the ARF",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1257 A.A, 2393 B.A (Month 4)",
+                        "title": "The HAE declares war on …",
+                        "description": "The HAE declares war on …",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1257 A.A, 2393 B.A (Month 6)",
+                        "title": "Emperor novums power is unstable",
+                        "description": "Emperor novums power is unstable due to a 5 front war",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1257 A.A, 2393 B.A (Month 7, Day 11, Hour 15)",
+                        "title": "Coup in Antaria",
+                        "description": "Coup in Antaria, emperor novum is killed",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1257 A.A, 2393 B.A (Month 7, Day 11, Hour 20)",
+                        "title": "The golden order is almost wiped out",
+                        "description": "The golden order is almost wiped out",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1257 A.A, 2393 B.A (Month 7, Day 12)",
+                        "title": " Julius becomes the new emperor of The HAE",
+                        "description": " Julius becomes the new emperor of The Holy Antarian Empire",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1258 A.A, 2394 B.A (Month 1)",
+                        "title": "The HAE becomes the ”The Antarain Order”",
+                        "description": "The ”Holy Antarian empire” becomes the ”The Antarain Order”",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "1258 A.A, 2394 B.A (Month 2)",
+                        "title": "Mass slaughter of gifted around the world starts",
+                        "description": "Mass slaughter of gifted around the world starts by a new antarian law",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1258 A.A, 2394 B.A (Month 3)",
+                        "title": "A Group builds a team that fight Zovjun",
+                        "description": "A Group builds a team that fight Zovjun",
                         "level": "World Changing Event"
                     },
                     {
-                        "year": "year",
-                        "title": "title",
-                        "description": "description",
+                        "year": "1258 A.A, 2394 B.A (Month 7)",
+                        "title": "The ancient void born is summoned back to the mortal realm",
+                        "description": "The ancient void born is summoned back to the mortal realm",
                         "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1259 A.A, 2395 B.A (Month 1, Day 17)",
+                        "title": "The final battle starts",
+                        "description": "The final battle starts",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1259 A.A, 2395 B.A (Month 1, Day 18)",
+                        "title": "The final battle ends",
+                        "description": "The final battle ends",
+                        "level": "Universe Changing Event"
                     }
                 ]
             }

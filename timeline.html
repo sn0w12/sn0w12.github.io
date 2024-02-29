@@ -19,6 +19,17 @@
         <label><input type="checkbox" name="eventLevel" value="Local Event" checked> Local Events</label>
         <button onclick="applyFilters()">Apply Filters</button>
     </div>
+    <div class="timeline-selector">
+        <select id="timelineDropdown" onchange="loadSelectedTimeline(this.value)">
+            <option value="data/timeline.json">Arathian Timeline</option>
+            <option value="data/elysiumTimeline.json">Elysium Timeline</option>
+            <option value="data/timeline.json">Morturia Timeline</option>
+            <option disabled>───────────</option>
+            <option value="data/timeline.json">Regulus Timeline</option>
+            <option value="data/timeline.json">Zovjun Timeline</option>
+            <option value="data/timeline.json">Ianara Timeline</option>
+        </select>
+    </div>
     <div class="sidebar">
         <div class="sidebar-content" id="sidebarContent"></div>
     </div>
