@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arathia Timeline</title>
+    <link rel="icon" href="icons/arathia.png">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css">
+    <link rel="stylesheet" href="style/timeline.css">
+</head>
+<body>
+    <div class="search-container">
+        <input type="text" id="searchBox" class="search-box" placeholder="Search events..." oninput="searchEvents()">
+    </div>
+    <div class="filters">
+        <label><input type="checkbox" name="eventLevel" value="Universe Changing Event" checked> Universe Changing Events</label>
+        <label><input type="checkbox" name="eventLevel" value="World Changing Event" checked> World Changing Events</label>
+        <label><input type="checkbox" name="eventLevel" value="National Event" checked> National Events</label>
+        <label><input type="checkbox" name="eventLevel" value="Local Event" checked> Local Events</label>
+        <button onclick="applyFilters()">Apply Filters</button>
+    </div>
+    <div class="sidebar">
+        <div class="sidebar-content" id="sidebarContent"></div>
+    </div>
+    <div id="timeline" class="main-container"></div> 
+
+    <!-- Modal for Event Details -->
+    <div id="eventModal" class="image-modal hidden">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="image-modal-content" id="modalContent"></div>
+    </div>
+
+    <script src="scripts/timeline-scripts.js"></script>
+</body>
+</html>
