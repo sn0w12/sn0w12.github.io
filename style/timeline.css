@@ -50,7 +50,8 @@ body, .image-modal {
 
 .sidebar-era {
     border-left: 4px solid var(--highlight2);
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
     background-color: var(--highlight-background);
     color: var(--highlight);
     padding: 10px;
@@ -58,13 +59,30 @@ body, .image-modal {
     text-align: left;
     outline: none;
     cursor: pointer;
-    margin-top: 5px; /* Space between era buttons */
+}
+
+.sidebar-subcat-title {
+    border-left: 4px solid var(--highlight2);
+    margin-bottom: 5px;
+    margin-top: 5px;
+    background-color: var(--highlight-background);
+    color: var(--highlight);
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    outline: none;
+    cursor: pointer;
+}
+
+.sidebar-subcategories-container {
+    padding-left: 10px;
 }
   
 .sidebar-events-container {
     display: none;
-    padding-left: 20px; /* Indent event links for hierarchy visibility */
+    padding-left: 20px;
     margin-bottom: 5px;
+    margin-top: 5px;
 }
   
 .sidebar-events-container.active {
@@ -106,6 +124,7 @@ body, .image-modal {
 
 .era {
     margin-bottom: 40px;
+    color: var(--highlight);
 }
 
 .era h1 {
@@ -117,6 +136,12 @@ body, .image-modal {
 .title-container {
     border-bottom: 2px solid var(--highlight2);
     margin-bottom: 10px;
+}
+
+.subcategory h2 {
+    color: var(--highlight);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--highlight2);
 }
 
 .hidden {

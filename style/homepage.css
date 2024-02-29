@@ -1,0 +1,84 @@
+:root {
+    --background: #100f0feb;
+    --foreground: #9f957e;
+    --highlight: #ffe7ab;
+    --highlight2: #ddbc6a;
+    --highlight-background: #ddbd6a50;
+
+    --sidebar-padding: 300px;
+}
+
+body {
+    color: var(--foreground);
+    font-family: Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: var(--background);
+}
+
+/* Adapted classes for main layout */
+.header, .main, .footer {
+    padding-left: var(--sidebar-padding);
+}
+
+.header {
+    border-bottom: 4px solid var(--highlight2);
+    padding: 20px 0;
+    text-align: center;
+}
+
+.main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.footer {
+    border-top: 4px solid var(--highlight2);
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* Links and navigation styling */
+nav a {
+    color: var(--highlight);
+    text-decoration: none;
+    padding: 10px;
+    margin: 0 5px;
+}
+
+nav a:hover {
+    color: var(--highlight2);
+}
+
+/* Feature section adjustments */
+.features a {
+    display: block;
+    background-color: var(--highlight-background);
+    color: var(--highlight);
+    text-decoration: none;
+    margin: 10px 0;
+    padding: 20px;
+    border-left: 4px solid var(--highlight2);
+}
+
+.features a:hover {
+    background-color: var(--background);
+    color: var(--highlight2);
+}
+
+/* Utilizing provided event link styles for features */
+.features a.map, .features a.wiki, .features a.characters, .features a.timeline {
+    border-color: var(--highlight2);
+}
+
+/* Additional responsive adjustments */
+@media screen and (max-width: 768px) {
+    :root {
+        --sidebar-padding: 20px;
+    }
+
+    .header, .main, .footer {
+        padding-left: var(--sidebar-padding);
+    }
+}

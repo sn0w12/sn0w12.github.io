@@ -47,14 +47,25 @@ function createTimeline(data) {
         eraDiv.appendChild(titleContainer);
         eraDiv.appendChild(eraDescription);
 
-        era.events.forEach((event, eventIndex) => {
-            const eventDiv = document.createElement('div');
-            eventDiv.className = `event ${event.level.replace(/\s+/g, '-').toLowerCase()}`;
-            eventDiv.id = `event-${index}-${eventIndex}`;
-            eventDiv.innerHTML = `<h2>${event.year}: ${event.title}</h2>`;
-            eventDiv.onclick = () => openModal(event);
-            eraDiv.appendChild(eventDiv);
-        });
+        if (era.subcategories) {
+            era.subcategories.forEach((subcategory, subcatIndex) => {
+                const subcatDiv = document.createElement('div');
+                subcatDiv.className = 'subcategory';
+                subcatDiv.innerHTML = `<h2>${subcategory.title}</h2>`;
+                eraDiv.appendChild(subcatDiv);
+
+                // Iterate through events in subcategory
+                subcategory.events.forEach((event, eventIndex) => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = `event ${event.level.replace(/\s+/g, '-').toLowerCase()}`;
+                    eventDiv.id = `event-${index}-${subcatIndex}-${eventIndex}`;
+                    eventDiv.innerHTML = `<h3>${event.year}: ${event.title}</h3>`;
+                    eventDiv.onclick = () => openModal(event);
+                    subcatDiv.appendChild(eventDiv);
+                });
+            });
+        }
+
         timeline.appendChild(eraDiv);
     });
 }
@@ -63,13 +74,16 @@ function applyFilters() {
     const checkboxes = document.querySelectorAll('input[name="eventLevel"]:checked');
     let selectedLevels = Array.from(checkboxes).map(cb => cb.value);
 
-    filteredEvents = allEvents.map(era => ({
+    const filteredEvents = allEvents.map(era => ({
         ...era,
-        events: era.events.filter(event => selectedLevels.includes(event.level))
-    })).filter(era => era.events.length > 0);
+        subcategories: era.subcategories.map(subcat => ({
+            ...subcat,
+            events: subcat.events.filter(event => selectedLevels.includes(event.level))
+        })).filter(subcat => subcat.events.length > 0)
+    })).filter(era => era.subcategories.some(subcat => subcat.events.length > 0)); // Keep eras with at least one subcategory having matching events
 
-    createTimeline(filteredEvents);
-    populateSidebar(filteredEvents);
+    createTimeline(filteredEvents); // Recreate the timeline with filtered events
+    populateSidebar(filteredEvents); // Repopulate sidebar to reflect filters
 }
 
 function toggleDescription(descriptionId, btn) {
@@ -87,17 +101,19 @@ function searchEvents() {
     const searchQuery = document.getElementById('searchBox').value.toLowerCase();
     const filteredEvents = allEvents.map(era => ({
         ...era,
-        events: era.events.filter(event => 
-            event.title.toLowerCase().includes(searchQuery) || 
-            event.description.toLowerCase().includes(searchQuery) ||
-            event.year.toString().toLowerCase().includes(searchQuery)
-        )
-    })).filter(era => era.events.length > 0); // Filter out eras with no matching events
+        subcategories: era.subcategories.map(subcat => ({
+            ...subcat,
+            events: subcat.events.filter(event =>
+                event.title.toLowerCase().includes(searchQuery) || 
+                event.description.toLowerCase().includes(searchQuery) ||
+                event.year.toString().toLowerCase().includes(searchQuery)
+            )
+        })).filter(subcat => subcat.events.length > 0)
+    })).filter(era => era.subcategories.some(subcat => subcat.events.length > 0)); // Keep eras with at least one subcategory having matching events
 
     createTimeline(filteredEvents); // Recreate the timeline with filtered events
-    populateSidebar(filteredEvents);
+    populateSidebar(filteredEvents); // Repopulate sidebar to reflect search results
 }
-
 
 function openModal(event) {
     const modal = document.getElementById('eventModal');
@@ -140,27 +156,57 @@ function populateSidebar(data) {
         eraTitle.className = 'sidebar-era';
         eraTitle.textContent = era.era;
         eraTitle.onclick = function() {
-            this.nextElementSibling.classList.toggle('active');
+            this.classList.toggle('active');
+            const nextElement = this.nextElementSibling;
+            if (nextElement.style.display === "none") {
+                nextElement.style.display = "block";
+            } else {
+                nextElement.style.display = "none";
+            }
         };
         sidebarContent.appendChild(eraTitle);
 
-        // Create a container for era events, initially hidden
-        const eventsContainer = document.createElement('div');
-        eventsContainer.className = 'sidebar-events-container';
+        // Initially hidden container for era subcategories and events
+        const subcategoriesContainer = document.createElement('div');
+        subcategoriesContainer.className = 'sidebar-subcategories-container';
+        subcategoriesContainer.style.display = "none";
 
-        era.events.forEach((event, eventIndex) => {
-            const eventLink = document.createElement('a');
-            eventLink.href = `#event-${eraIndex}-${eventIndex}`;
-            eventLink.textContent = event.title;
-            eventLink.className = `sidebar-event-link ${event.level.replace(/\s+/g, '-').toLowerCase()}`;
-            eventLink.onclick = function(e) {
-                e.preventDefault();
-                const targetId = `event-${eraIndex}-${eventIndex}`;
-                document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
-            };
-            eventsContainer.appendChild(eventLink);
-        });
+        // Iterate through subcategories for sidebar links
+        if (era.subcategories) {
+            era.subcategories.forEach((subcategory, subcatIndex) => {
+                const subcatDiv = document.createElement('div');
+                const subcatTitle = document.createElement('button');
+                subcatTitle.className = 'sidebar-subcat-title';
+                subcatTitle.textContent = subcategory.title;
+                subcatDiv.appendChild(subcatTitle);
 
-        sidebarContent.appendChild(eventsContainer);
+                const eventsContainer = document.createElement('div');
+                eventsContainer.className = 'sidebar-events-container';
+                eventsContainer.style.display = "none"; // Initially hide events
+
+                subcatTitle.onclick = function() {
+                    this.classList.toggle('active');
+                    eventsContainer.style.display = eventsContainer.style.display === "none" ? "block" : "none";
+                };
+
+                subcategory.events.forEach((event, eventIndex) => {
+                    const eventLink = document.createElement('a');
+                    eventLink.href = `#event-${eraIndex}-${subcatIndex}-${eventIndex}`;
+                    eventLink.textContent = event.title;
+                    eventLink.className = `sidebar-event-link ${event.level.replace(/\s+/g, '-').toLowerCase()}`;
+                    eventLink.onclick = function(e) {
+                        e.preventDefault();
+                        const targetId = `event-${eraIndex}-${subcatIndex}-${eventIndex}`;
+                        document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
+                    };
+                    eventsContainer.appendChild(eventLink);
+                });
+
+                subcatDiv.appendChild(eventsContainer);
+                subcategoriesContainer.appendChild(subcatDiv);
+            });
+        }
+
+        sidebarContent.appendChild(subcategoriesContainer);
     });
 }

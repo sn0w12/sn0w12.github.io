@@ -2,282 +2,425 @@
     {
         "era": "Age of Aether",
         "description": "With the Advent of Aether, the tranquil existence of the Age of Genesis was disrupted by an event of unparalleled significance. Aether, the fundamental force that introduced Disparity, swept through the cosmos, bringing with it the dualities of heat and cold, life and death, and light and dark. In response to this infusion of Aether, the Primordial 7 gods were born, each claiming dominion over specific aspects of Aether itself, meticulously guiding and controlling its vast potential. Stelarus, the God of Solar, harnessed the radiant energies of Aether, commanding the essence of fire to shape the celestial bodies that illuminated the cosmos. Raljun, the God of Arc, wove the threads of Aether into the tapestry of the arcane, manipulating the very essence of magic and mysticism. Eridus, the God of Void, took upon the solemn duty of controlling the dark currents of Aether. Nocturna, the Goddess of Death, guided the ebb and flow of Aether in realms beyond mortal comprehension, overseeing the transition from life to afterlife. Odin, the God of Conflict, utilized Aether to fuel the flames of strife and war, channeling its power into the struggles that defined the mortal plane. Hyperia, the Goddess of Time, wove the strands of Aether into the fabric of temporal existence, orchestrating the flow of moments within the cosmic tapestry. Vitalius, the God of Life, nurtured the fertile aspects of Aether, infusing vitality into the Arch-Trees and sowing the seeds of life across the mortal realm. While controlling the Aether the gods kept it from surging out of control. In their celestial realms, the gods crafted the mortal world, sowing the seeds of creation within the Arch-Trees. These majestic trees, conduits of Aether, served as vessels for the divine essence, spreading the life-giving force across the realms. The gods carefully maintained control over Aether, ensuring its balance and preventing the force from spiraling into chaotic discord. During this era, the dragons, blessed by the gods with a harmonious connection to Aether, ruled the lands with seemingly limitless power. The divine essence coursed through their veins, making them formidable beings. Mortals, guided and influenced by the gods, flourished in a world shaped by the delicate control of Aether, living in harmony with the divine forces that shaped their existence.",
-        "events": [
+        "subcategories": [
             {
-            "year": "55000 B.R",
-            "title": "Solitarius is Conceived",
-            "description": "The first dragon, Solitarius, a creature of pure aether, stirred within the womb of the nascent universe. Its birth heralded the dawn of an era where raw, unbridled aether took form, weaving the essence of creation into a living being.",
-            "level": "Universe Changing Event"
+                "title": "Dawn of Aether",
+                "events": [
+                    {
+                        "year": "55000 B.R",
+                        "title": "Solitarius is Conceived",
+                        "description": "The first dragon, Solitarius, a creature of pure aether, stirred within the womb of the nascent universe. Its birth heralded the dawn of an era where raw, unbridled aether took form, weaving the essence of creation into a living being.",
+                        "level": "Universe Changing Event"
+                    },
+                    {
+                        "year": "53000 B.R - 51000 B.R",
+                        "title": "Solitarius Grows",
+                        "description": "For millennia, the embryonic dragon basked in the primordial aether, nestled within the cosmic cradle of Arathia. The celestial forces that governed the universe meticulously shaped and molded the dragon-to-be.",
+                        "level": "Universe Changing Event"
+                    },
+                    {
+                        "year": "50000 B.R",
+                        "title": "Solitarius is Born",
+                        "description": "As the eons unfurled, the gestation of the dragon neared its culmination. In a spectacular display of brilliance, the dragon drew its first breath. Its eyes, aglow with the newborn fires of aether, opened to witness the virgin world. With its birth, the First Dragon became a sort of demigod, an entity transcending the boundaries of understanding.",
+                        "level": "Universe Changing Event"
+                    }
+                ]
             },
             {
-                "year": "53000 B.R - 51000 B.R",
-                "title": "Solitarius Grows",
-                "description": "For millennia, the embryonic dragon basked in the primordial aether, nestled within the cosmic cradle of Arathia. The celestial forces that governed the universe meticulously shaped and molded the dragon-to-be.",
-                "level": "Universe Changing Event"
-            },
-            {
-                "year": "50000 B.R",
-                "title": "Solitarius is Born",
-                "description": "As the eons unfurled, the gestation of the dragon neared its culmination. In a spectacular display of brilliance, the dragon drew its first breath. Its eyes, aglow with the newborn fires of aether, opened to witness the virgin world. With its birth, the First Dragon became a sort of demigod, an entity transcending the boundaries of understanding.",
-                "level": "Universe Changing Event"
-            },
-            {
-                "year": "25000 B.R - 20000 B.R",
                 "title": "The Rise of Species",
-                "description": "The Draconian, Eldarin, and Moros emerge as distinct species, each bestowed with unique powers by the forces governing Arathia. A world, untamed and vibrant, becomes their playground, yet their powers remain dormant, awaiting discovery. In the shadow of those born with the grace of aether, humans come into being. Born without the intrinsic powers that define the three dominant species, humans, humble in origin, gaze upon the radiant beings around them with awe and envy.",
-                "level": "World Changing Event"
+                "events": [
+                    {
+                        "year": "25000 B.R - 20000 B.R",
+                        "title": "The Rise of Species",
+                        "description": "The Draconian, Eldarin, and Moros emerge as distinct species, each bestowed with unique powers by the forces governing Arathia. A world, untamed and vibrant, becomes their playground, yet their powers remain dormant, awaiting discovery. In the shadow of those born with the grace of aether, humans come into being. Born without the intrinsic powers that define the three dominant species, humans, humble in origin, gaze upon the radiant beings around them with awe and envy.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "18000 B.R - 15000 B.R",
+                        "title": "The Rise of Magic",
+                        "description": "The three races, initially living in scattered tribes, commence their tentative exploration of their powers. During this epoch, whispers of aetheric guidance, akin to divine murmurs, guide the gifted few among them toward understanding.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "12000 B.R - 10000 B.R",
+                        "title": "Magic Domination",
+                        "description": "Through trial, error, and guidance from the ancient aether, the Draconian, Eldarin, and Moros gradually harness their powers effectively. Small communities emerge as they develop a rudimentary understanding of their abilities, using them to tame the wild landscapes and build their nascent civilizations. The humans are brought to submission with their immense power.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "9438 B.R",
+                        "title": "Founding of Cities",
+                        "description": "With newfound knowledge and cohesion, the Draconian, Eldarin, and Moros initiate the establishment of towns and cities across the vast expanse of Arathia. The initial settlements, shrouded in the mystique of their powers, serve as nuclei for the cultures that will emerge in the years to come.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "8967 B.R",
+                        "title": "Founding of Empires",
+                        "description": "These burgeoning civilizations evolve into mighty empires as the Draconian, Eldarin, and Moros, now adept in harnessing their powers, expand their domains. The cities become beacons of arcane brilliance, flourishing in the glow of aetheric energies wielded by the gifted elite who rise as leaders.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "5403 B.R",
+                        "title": "Drakoria is founded",
+                        "description": "Drakoria is founded. In the wake of countless ages in isolation, the dragons coalesce into a sovereign empire. Yet, their inherent penchant for seclusion persists.",
+                        "level": "National Event"
+                    }
+                ]
             },
             {
-                "year": "18000 B.R - 15000 B.R",
-                "title": "The Rise of Magic",
-                "description": "The three races, initially living in scattered tribes, commence their tentative exploration of their powers. During this epoch, whispers of aetheric guidance, akin to divine murmurs, guide the gifted few among them toward understanding.",
-                "level": "National Event"
-            },
-            {
-                "year": "12000 B.R - 10000 B.R",
-                "title": "Magic Domination",
-                "description": "Through trial, error, and guidance from the ancient aether, the Draconian, Eldarin, and Moros gradually harness their powers effectively. Small communities emerge as they develop a rudimentary understanding of their abilities, using them to tame the wild landscapes and build their nascent civilizations. The humans are brought to submission with their immense power.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "9438 B.R",
-                "title": "Founding of Cities",
-                "description": "With newfound knowledge and cohesion, the Draconian, Eldarin, and Moros initiate the establishment of towns and cities across the vast expanse of Arathia. The initial settlements, shrouded in the mystique of their powers, serve as nuclei for the cultures that will emerge in the years to come.",
-                "level": "National Event"
-            },
-            {
-                "year": "8967 B.R",
-                "title": "Founding of Empires",
-                "description": "These burgeoning civilizations evolve into mighty empires as the Draconian, Eldarin, and Moros, now adept in harnessing their powers, expand their domains. The cities become beacons of arcane brilliance, flourishing in the glow of aetheric energies wielded by the gifted elite who rise as leaders.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "5403 B.R",
-                "title": "Drakoria is founded",
-                "description": "Drakoria is founded. In the wake of countless ages in isolation, the dragons coalesce into a sovereign empire. Yet, their inherent penchant for seclusion persists.",
-                "level": "National Event"
-            },
-            {
-                "year": "1214 B.R",
-                "title": "The Great Dragon Purge",
-                "description": "The Great Dragon Purge unfolds, orchestrated by the Eldarin, Draconian and Moros to eradicate dragons, leaving the Draconian, Eldarin, and Moros as the primary species.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "1171 B.R",
-                "title": "End of The Great Dragon Purge",
-                "description": "The three powers stop actively hunting down dragons, they are declared extinct.",
-                "level": "National Event"
-            },
-            {
-                "year": "? B.R",
-                "title": "The Golden Order",
-                "description": "The golden order is founded.",
-                "level": "Local Event"
-            },
-            {
-                "year": "0 B.R",
-                "title": "The Shattering",
-                "description": "At the heart of the shattering stood Eridus, the enigmatic God of Void, his influence looming over the fate of the world. Eridus, harbinger of the power of void, made a fateful choice that would reverberate through the realms. Eridus, the most powerful of the Primordial 7 gods, felt another presence in the void, a presence previously unknown, intrigued he chose to defy his sacred duty as the god of void. In a moment of rebellion, he relinquished his grip on the shackles that restrained the raw power of Aether. The other gods, entrusted with maintaining the delicate balance of existence, could not anticipate the consequences of Eridus's bold decision. The very fabric of the world quivered as the ethereal shackles binding Aether shattered into a myriad of fractured fragments. The cosmic force, once harmoniously channeled and restrained by the gods, now roared unchecked, unrestrained by divine hands. Waves of chaotic energy emanated from the breach, echoing through the celestial realms and cascading into the mortal plane. Mortals, too, felt the aftershocks of The Shattering. The Aether, no longer restrained by divine guidance, manifested in unpredictable ways. As The Shattering unfolded, the delicate balance of existence crumbled. The gods, faced with the consequences of their brother's rebellion, withdrew from direct intervention, leaving the fractured realms in the hands of mortals now navigating a world on the brink of chaos.",
-                "level": "Universe Changing Event"
+                "title": "Ascension of Empires",
+                "events": [
+                    {
+                        "year": "1214 B.R",
+                        "title": "The Great Dragon Purge",
+                        "description": "The Great Dragon Purge unfolds, orchestrated by the Eldarin, Draconian and Moros to eradicate dragons, leaving the Draconian, Eldarin, and Moros as the primary species.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1171 B.R",
+                        "title": "End of The Great Dragon Purge",
+                        "description": "The three powers stop actively hunting down dragons, they are declared extinct.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "? B.R",
+                        "title": "The Golden Order",
+                        "description": "The golden order is founded.",
+                        "level": "Local Event"
+                    },
+                    {
+                        "year": "0 B.R",
+                        "title": "The Shattering",
+                        "description": "At the heart of the shattering stood Eridus, the enigmatic God of Void, his influence looming over the fate of the world. Eridus, harbinger of the power of void, made a fateful choice that would reverberate through the realms. Eridus, the most powerful of the Primordial 7 gods, felt another presence in the void, a presence previously unknown, intrigued he chose to defy his sacred duty as the god of void. In a moment of rebellion, he relinquished his grip on the shackles that restrained the raw power of Aether. The other gods, entrusted with maintaining the delicate balance of existence, could not anticipate the consequences of Eridus's bold decision. The very fabric of the world quivered as the ethereal shackles binding Aether shattered into a myriad of fractured fragments. The cosmic force, once harmoniously channeled and restrained by the gods, now roared unchecked, unrestrained by divine hands. Waves of chaotic energy emanated from the breach, echoing through the celestial realms and cascading into the mortal plane. Mortals, too, felt the aftershocks of The Shattering. The Aether, no longer restrained by divine guidance, manifested in unpredictable ways. As The Shattering unfolded, the delicate balance of existence crumbled. The gods, faced with the consequences of their brother's rebellion, withdrew from direct intervention, leaving the fractured realms in the hands of mortals now navigating a world on the brink of chaos.",
+                        "level": "Universe Changing Event"
+                    }
+                ]
             }
         ]
     },
     {
         "era": "Age of Fragmentation",
         "description": "After the Shattering, the mortal realm plunged into the chaotic embrace of the Age of Fragmentation. The once-unified Pantheon of gods, who had meticulously woven the cosmic tapestry, now seemed to withdraw, their celestial presence becoming elusive and distant. Mortals, left to grapple with the aftermath of the cosmic upheaval, found themselves navigating a world reshaped by the fractures that echoed through the realms. The Arch-Trees, once harmonious conduits of divine power, experienced a profound transformation. Blooming like never before, these majestic entities absorbed the unbridled Aether that surged through the breach, branching into a riotous display of colors and energies. The mortal world, once a realm carefully crafted by the gods, now bore witness to the untamed forces of Aether, coursing through the Arch-Trees and permeating the very essence of existence. In this tumultuous era, the world began its gradual regression toward the formless state of the Age of Genesis. The shattered remnants of divine realms cast their influence upon the mortal plane, creating landscapes that bore both the scars of conflict and the promise of untapped potential. The boundaries between the divine and mortal blurred, as the lingering echoes of the Shattering resonated through every corner of the realms. As the shackles that once bound Aether were shattered, mortals found themselves able to absorb the essence of Aether at an unprecedented rate. The empowered became the most potent they had ever been, their very beings resonating with the unfettered power of Aether. Cities rose and fell, empires clashed, and newfound abilities manifested in individuals who now stood as living conduits of Aether.",
-        "events": [
+        "subcategories": [
             {
-                "year": "0 B.A",
-                "title": "Ral'vathun Asturuz is Born.",
-                "description": "Ral'vathun Asturuz, the esteemed leader, is born.",
-                "level": "World Changing Event"
+                "title": "Asturuz Era and Shifting Tides",
+                "events": [
+                    {
+                        "year": "0 B.A",
+                        "title": "Ral'vathun Asturuz is Born.",
+                        "description": "Ral'vathun Asturuz, the esteemed leader, is born.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "0 B.A",
+                        "title": "Thousands of Miscreants are created",
+                        "description": "Thousands of Miscreants are created by the sudden surge of aether.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "1 B.A",
+                        "title": "Birth of Dragos",
+                        "description": "Birth of Dragos.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "7 B.A",
+                        "title": "The Ancient Void Born",
+                        "description": "The Ancient Void Born comes into existence.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "16 B.A",
+                        "title": "Aztrus Kingdom rises",
+                        "description": "Aztrus Kingdom rises.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "42 B.A",
+                        "title": "Novrum is born",
+                        "description": "Novrum is born.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "44 B.A",
+                        "title": "Aelarion is born",
+                        "description": "Aelarion The forge master is born.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "45 B.A",
+                        "title": "Valerius is born",
+                        "description": "Valerius, The Forsaken Emperor is born.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "50 B.A",
+                        "title": "The Imperium of Aztrus is proclaimed",
+                        "description": "The Imperium of Aztrus is proclaimed, marking the zenith of empires.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "53 B.A",
+                        "title": "The World Stone is harnessed",
+                        "description": "The World Stone is harnessed to channel power, ushering prosperity into the Aztrus Imperium",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "72 B.A",
+                        "title": "Novrum is captured by Zognalith",
+                        "description": "Novrum is captured by Zognalith, and Dragos descended into Hell.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "73 B.A",
+                        "title": "Demon invasion",
+                        "description": "Demon invasion ensues.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "80 B.A",
+                        "title": "Victory against the demons",
+                        "description": "Novrum (38) is slain, and victory against the demons is achieved.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "87 B.A",
+                        "title": "the Kingdom of the Moon rises",
+                        "description": "Void Born Kingdom, the Kingdom of the Moon rises.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "90 B.A",
+                        "title": "Ral'vathun Asturuz attempts to awaken",
+                        "description": "Ral'vathun Asturuz attempts to awaken with the World Stone, which would then result in a colossal explosion, subsequently propelling humanity into centuries of warfare, famine, and utter chaos. This catastrophic turn of events led Valerius to place blame squarely on the Draconians for the explosion.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "90 B.A",
+                        "title": "Crusade against Draconians and Eldarins",
+                        "description": "Forsaken Emperor initiates a crusade against Draconians and Eldarins.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "91 B.A",
+                        "title": "Golden Order rally behind the Forsaken Emperor",
+                        "description": "Followers of the Golden Order rally behind the Forsaken Emperor.",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "92 B.A",
+                        "title": "The largest battle between the gifted",
+                        "description": "The largest battle between the gifted occurs.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "92 B.A",
+                        "title": "Forsaken Emperor concludes the battle",
+                        "description": "Forsaken Emperor concludes the battle and vanishes, ushering in a fractured world and a power vacuum.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "125 B.A",
+                        "title": "Vampires manipulate kingdoms",
+                        "description": "Vampires subtly manipulate kingdoms from the shadows.",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "131 B.A",
+                        "title": "A Paladin proclaims himself king of …",
+                        "description": "A Paladin from the shattered golden order proclaims himself king of …",
+                        "level": "National Event"
+                    },
+                    {
+                        "year": "192 B.A",
+                        "title": "Oathbreaker Lucius proclaims himself king of …",
+                        "description": "Oathbreaker Lucius murders … and proclaims himself king of …",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "193 B.A",
+                        "title": "The great bloodbath of Arathia",
+                        "description": "Oathbreaker Lucius starts the great bloodbath of Arathia",
+                        "level": "World Changing Event"
+                    }
+                ]
             },
             {
-                "year": "0 B.A",
-                "title": "Thousands of Miscreants are created",
-                "description": "Thousands of Miscreants are created by the sudden surge of aether.",
-                "level": "World Changing Event"
+                "title": "Rise of the Vampires",
+                "events": [
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    }
+                ]
             },
             {
-                "year": "1 B.A",
-                "title": "Birth of Dragos",
-                "description": "Birth of Dragos.",
-                "level": "World Changing Event"
+                "title": "Antarian Ascendance",
+                "events": [
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    }
+                ]
             },
             {
-                "year": "7 B.A",
-                "title": "The Ancient Void Born",
-                "description": "The Ancient Void Born comes into existence.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "16 B.A",
-                "title": "Aztrus Kingdom rises",
-                "description": "Aztrus Kingdom rises.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "42 B.A",
-                "title": "Novrum is born",
-                "description": "Novrum is born.",
-                "level": "National Event"
-            },
-            {
-                "year": "44 B.A",
-                "title": "Aelarion is born",
-                "description": "Aelarion The forge master is born.",
-                "level": "National Event"
-            },
-            {
-                "year": "45 B.A",
-                "title": "Valerius is born",
-                "description": "Valerius, The Forsaken Emperor is born.",
-                "level": "National Event"
-            },
-            {
-                "year": "50 B.A",
-                "title": "The Imperium of Aztrus is proclaimed",
-                "description": "The Imperium of Aztrus is proclaimed, marking the zenith of empires.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "53 B.A",
-                "title": "The World Stone is harnessed",
-                "description": "The World Stone is harnessed to channel power, ushering prosperity into the Aztrus Imperium",
-                "level": "National Event"
-            },
-            {
-                "year": "72 B.A",
-                "title": "Novrum is captured by Zognalith",
-                "description": "Novrum is captured by Zognalith, and Dragos descended into Hell.",
-                "level": "National Event"
-            },
-            {
-                "year": "73 B.A",
-                "title": "Demon invasion",
-                "description": "Demon invasion ensues.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "80 B.A",
-                "title": "Victory against the demons",
-                "description": "Novrum (38) is slain, and victory against the demons is achieved.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "87 B.A",
-                "title": "the Kingdom of the Moon rises",
-                "description": "Void Born Kingdom, the Kingdom of the Moon rises.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "90 B.A",
-                "title": "Ral'vathun Asturuz attempts to awaken",
-                "description": "Ral'vathun Asturuz attempts to awaken with the World Stone, which would then result in a colossal explosion, subsequently propelling humanity into centuries of warfare, famine, and utter chaos. This catastrophic turn of events led Valerius to place blame squarely on the Draconians for the explosion.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "90 B.A",
-                "title": "Crusade against Draconians and Eldarins",
-                "description": "Forsaken Emperor initiates a crusade against Draconians and Eldarins.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "91 B.A",
-                "title": "Golden Order rally behind the Forsaken Emperor",
-                "description": "Followers of the Golden Order rally behind the Forsaken Emperor.",
-                "level": "National Event"
-            },
-            {
-                "year": "92 B.A",
-                "title": "The largest battle between the gifted",
-                "description": "The largest battle between the gifted occurs.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "92 B.A",
-                "title": "Forsaken Emperor concludes the battle",
-                "description": "Forsaken Emperor concludes the battle and vanishes, ushering in a fractured world and a power vacuum.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "125 B.A",
-                "title": "Vampires manipulate kingdoms",
-                "description": "Vampires subtly manipulate kingdoms from the shadows.",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
-            },
-            {
-                "year": "year",
-                "title": "title",
-                "description": "description",
-                "level": "World Changing Event"
+                "title": "The Final Confrontation",
+                "events": [
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    },
+                    {
+                        "year": "year",
+                        "title": "title",
+                        "description": "description",
+                        "level": "World Changing Event"
+                    }
+                ]
             }
         ]
       }
