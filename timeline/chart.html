@@ -108,6 +108,10 @@
 
             // Ensure the scaling factor does not exceed our predefined maximum for small year spans
             scalingFactor = Math.max(scalingFactor, 1); // Ensure it doesn't go below 1 for large spans
+            console.log(scalingFactor);
+            let tickInterval = Math.ceil(50 / scalingFactor);
+            console.log(tickInterval);
+            let tickValues = d3.range(minYear, maxYear + 1, tickInterval);
 
             // Calculate SVG width based on dynamic scaling factor
             const svgWidth = yearSpan * scalingFactor;
@@ -153,7 +157,7 @@
             // Add X axis
             svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
+                .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(d3.format("d")));
 
             // Y scale
             var y = d3.scaleLinear()
