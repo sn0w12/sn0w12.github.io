@@ -337,6 +337,10 @@ body, .image-modal {
     .close {
         font-size: 40px;
     }
+
+    .sidebar {
+        display: none;
+    }
 }
 
 /* scrollbar */
