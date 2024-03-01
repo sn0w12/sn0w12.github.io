@@ -113,6 +113,7 @@ function applyFilters() {
 
     createTimeline(filteredEvents); // Recreate the timeline with filtered events
     populateSidebar(filteredEvents); // Repopulate sidebar to reflect filters
+    updateVisualization(filteredEvents);
 }
 
 function toggleDescription(descriptionId, btn) {
@@ -142,6 +143,7 @@ function searchEvents() {
 
     createTimeline(filteredEvents); // Recreate the timeline with filtered events
     populateSidebar(filteredEvents); // Repopulate sidebar to reflect search results
+    updateVisualization(filteredEvents);
 }
 
 function openModal(event) {
