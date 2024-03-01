@@ -172,7 +172,7 @@
                 .attr("stroke", highlightColor) // Stroke color for the line itself
                 .attr("stroke-width", 1)
                 .attr("d", d3.area() // Use d3.area instead of d3.line for filling the area
-                    .curve(d3.curveBasis) // Smooth the line
+                    .curve(d3.curveLinear) // Smooth the line
                     .x(function(d) { return x(d[0]); })
                     .y0(height) // Start fill from the bottom of the SVG (y-axis baseline)
                     .y1(function(d) { return y(d[1]); }) // Fill to the y-value of the data point

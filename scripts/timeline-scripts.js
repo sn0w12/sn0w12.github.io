@@ -1,9 +1,15 @@
 let allEvents = []; // This will hold all events after fetching from JSON
 let filteredEvents = []; // Holds events after applying filters
-let uniqueSubcategories = new Set();
+let uniqueSubcategories = new Map();
 let currentViewData = null;
 
+let highlightColor = null;
+let highlightBackgroundColor = null;
+
 document.addEventListener('DOMContentLoaded', function() {
+    const style = getComputedStyle(document.body);
+    highlightColor = style.getPropertyValue('--highlight');
+    highlightBackgroundColor = style.getPropertyValue('--highlight-background');
     // Initially load the default timeline
     loadSelectedTimeline();
     const sidebar = document.querySelector('.sidebar');
@@ -18,14 +24,13 @@ document.addEventListener('DOMContentLoaded', function() {
     setUpButtons();
 });
 
-// This function directly uses the selected value from the dropdown or sessionStorage
 function loadSelectedTimeline(selectedTimeline) {
     resetSubFilters();
-    uniqueSubcategories.clear();
+    uniqueSubcategories.clear(); // Correct for clearing a Map
+
     if (!selectedTimeline) {
-        // If no parameter is passed, use the saved timeline or default to the first option
         selectedTimeline = sessionStorage.getItem('selectedTimeline') || document.getElementById('timelineDropdown').value;
-        document.getElementById('timelineDropdown').value = selectedTimeline; // Ensure dropdown shows the current selection
+        document.getElementById('timelineDropdown').value = selectedTimeline;
     }
 
     fetch(selectedTimeline)
@@ -33,18 +38,19 @@ function loadSelectedTimeline(selectedTimeline) {
         .then(data => {
             allEvents = data;
             data.forEach(era => {
-                uniqueSubcategories[era.era] = new Set([...(uniqueSubcategories[era.era] || []), ...era.subcategories.map(subcat => subcat.title)]);
+                const currentSubcategories = uniqueSubcategories.get(era.era) || new Set();
+                era.subcategories.forEach(subcat => currentSubcategories.add(subcat.title));
+                uniqueSubcategories.set(era.era, currentSubcategories); // Use Map's set method
             });
             createSubcategoryFilters();
             createTimeline(data);
             populateSidebar(data);
             applyFilters();
             searchEvents();
-            addSubEventListeners()
+            addSubEventListeners();
         })
         .catch(error => console.error('Error loading the timeline:', error));
 
-    // Update sessionStorage with the current selection
     sessionStorage.setItem('selectedTimeline', selectedTimeline);
 }
 
@@ -59,38 +65,36 @@ function resetSubFilters() {
 
 function createSubcategoryFilters() {
     const mainFiltersContainer = document.querySelector('.filters.sub');
-    mainFiltersContainer.innerHTML = ''; // Clear existing filters
+    mainFiltersContainer.innerHTML = '';
 
-    Object.keys(uniqueSubcategories).forEach(era => {
-        // Create a div for each era
+    uniqueSubcategories.forEach((subcategories, era) => {
         const eraDiv = document.createElement('div');
         eraDiv.classList.add('era-filters');
+
         const eraHeader = document.createElement('h3');
         eraHeader.textContent = era;
         eraDiv.appendChild(eraHeader);
 
-        // Master toggle for the era
         const masterToggleLabel = document.createElement('label');
         const masterToggleCheckbox = document.createElement('input');
         masterToggleCheckbox.type = 'checkbox';
-        masterToggleCheckbox.checked = true; // Default to checked
+        masterToggleCheckbox.checked = true;
         masterToggleCheckbox.addEventListener('change', () => {
             document.querySelectorAll(`input[data-era='${era}']`).forEach(subCheckbox => {
                 subCheckbox.checked = masterToggleCheckbox.checked;
             });
-            applyFilters(); // Apply filters based on new checkbox states
+            applyFilters();
         });
         masterToggleLabel.appendChild(masterToggleCheckbox);
         masterToggleLabel.append(' Toggle All');
         eraDiv.appendChild(masterToggleLabel);
 
-        // Add subcategory filters to the era div
-        uniqueSubcategories[era].forEach(subcat => {
+        subcategories.forEach(subcat => {
             const label = document.createElement('label');
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.name = 'subCategory';
-            checkbox.setAttribute('data-era', era); // Associate with its era
+            checkbox.setAttribute('data-era', era);
             checkbox.value = subcat;
             checkbox.checked = true;
             checkbox.addEventListener('change', applyFilters);
@@ -99,7 +103,6 @@ function createSubcategoryFilters() {
             eraDiv.appendChild(label);
         });
 
-        // Append the era div to the main filters container
         mainFiltersContainer.appendChild(eraDiv);
     });
 }
@@ -347,47 +350,121 @@ function updateVisualization(data) {
 }
 
 function generateDensityPlot(processedEvents) {
-    d3.select("#chartContainer svg").remove();
+    console.time("Total generateDensityPlot");
 
-    const years = processedEvents.map(d => d.plotYear);
-    const minYear = Math.min(...years);
-    const maxYear = Math.max(...years);
+    let minYear = processedEvents[0].plotYear, maxYear = processedEvents[0].plotYear;
+    processedEvents.forEach(event => {
+        if (event.plotYear < minYear) minYear = event.plotYear;
+        if (event.plotYear > maxYear) maxYear = event.plotYear;
+    });
 
-    const style = getComputedStyle(document.body);
-    const highlightColor = style.getPropertyValue('--highlight');
-    const highlightBackgroundColor = style.getPropertyValue('--highlight-background');
-
-    const chartContainer = d3.select("#chartContainer");
-    const containerWidth = chartContainer.node().getBoundingClientRect().width;
+    const chartContainer = document.getElementById("chartContainer");
+    let canvas = chartContainer.querySelector("canvas");
+    if (!canvas) {
+        canvas = document.createElement("canvas");
+        chartContainer.appendChild(canvas);
+    }
+    const containerWidth = chartContainer.getBoundingClientRect().width;
     const margin = {top: 20, right: 20, bottom: 40, left: 50};
     const width = containerWidth * 0.97 - margin.left - margin.right;
     const height = 300 - margin.top - margin.bottom;
 
-    const svg = chartContainer.append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+    canvas.width = width + margin.left + margin.right;
+    canvas.height = height + margin.top + margin.bottom;
 
-    const kde = kernelDensityEstimator(kernelEpanechnikov(7), d3.range(minYear, maxYear));
-    const densityData = kde(years);
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save(); // Save the clean state of the canvas
+    ctx.translate(margin.left, margin.top); // Adjust coordinate system for margin
 
-    const x = d3.scaleLinear().domain([minYear, maxYear]).range([0, width]);
-    svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
+    console.time("Compute density data");
+    const plotYears = processedEvents.map(d => d.plotYear);
+    const kde = kernelDensityEstimator(kernelEpanechnikov(7), d3.range(minYear, maxYear + 1));
+    const densityData = kde(plotYears);
+    console.timeEnd("Compute density data");
 
-    const y = d3.scaleLinear().domain([0, Math.max(...densityData.map(d => d[1]))]).range([height, 0]);
+    console.time("Rendering to Canvas");
 
-    svg.append("path")
-        .datum(densityData)
-        .attr("fill", highlightBackgroundColor)
-        .attr("stroke", highlightColor)
-        .attr("stroke-width", 1)
-        .attr("d", d3.area()
-            .curve(d3.curveBasis)
-            .x(d => x(d[0]))
-            .y0(height)
-            .y1(d => y(d[1]))
-        );
+    // Calculate tick interval based on the span of years
+    const yearSpan = maxYear - minYear;
+    let tickInterval;
+    if(yearSpan > 50000) {
+        tickInterval = 3000;
+    } else if(yearSpan > 10000) {
+        tickInterval = 1000;
+    } else if(yearSpan > 1000) {
+        tickInterval = 100; // For spans over a millennium, use century ticks
+    } else if(yearSpan > 100) {
+        tickInterval = 5; // For spans over a century, use decade ticks
+    } else if(yearSpan > 10) {
+        tickInterval = 2; // For spans over a decade, use 5-year ticks
+    } else {
+        tickInterval = 1; // For spans of 10 years or less, use annual ticks
+    }
+
+    // Directly calculate scales in canvas context
+    const x = d => (d - minYear) / (maxYear - minYear) * width;
+    const yMax = Math.max(...densityData.map(d => d[1]));
+    const y = d => height - (d / yMax) * height; // Flip y coordinate for canvas drawing
+
+    // Drawing density plot path
+    ctx.beginPath();
+    ctx.moveTo(x(densityData[0][0]), y(densityData[0][1]));
+    densityData.forEach(([year, value]) => {
+        ctx.lineTo(x(year), y(value));
+    });
+
+    // Closing the path to fill under the curve
+    ctx.lineTo(x(densityData[densityData.length - 1][0]), height);
+    ctx.lineTo(x(densityData[0][0]), height);
+    ctx.closePath();
+
+    // Fill the path
+    ctx.fillStyle = highlightBackgroundColor; // Assume these are pre-calculated or globally accessible
+    ctx.fill();
+
+    // Optionally redraw the path outline
+    ctx.beginPath();
+    ctx.moveTo(x(densityData[0][0]), y(densityData[0][1]));
+    densityData.forEach(([year, value]) => {
+        ctx.lineTo(x(year), y(value));
+    });
+    ctx.strokeStyle = highlightColor; // Assume these are pre-calculated or globally accessible
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    
+    ctx.save();
+    drawDynamicTicks(ctx, minYear, maxYear, tickInterval, x, height, width);
+    ctx.restore(); // Restore to the clean state to remove any applied transformations
+
+    console.timeEnd("Rendering to Canvas");
+    console.timeEnd("Total generateDensityPlot");
+}
+
+function drawDynamicTicks(ctx, minYear, maxYear, interval, scaleX, chartHeight, chartWidth) {
+    const tickLength = 5; // Length of the ticks in pixels
+    const fontSize = 10; // Font size for the tick labels
+    ctx.font = `${fontSize}px Arial`; // Set font for tick labels
+
+    // Draw the x-axis line
+    ctx.beginPath();
+    ctx.moveTo(0, chartHeight);
+    ctx.lineTo(chartWidth, chartHeight);
+    ctx.stroke();
+
+    // Draw ticks and labels
+    for (let year = minYear; year <= maxYear; year += interval) {
+        const x = scaleX(year);
+        ctx.beginPath();
+        ctx.moveTo(x, chartHeight);
+        ctx.lineTo(x, chartHeight + tickLength);
+        ctx.stroke();
+
+        // Draw tick label, adjusting for label width to center it
+        const label = year.toString();
+        const textWidth = ctx.measureText(label).width;
+        ctx.fillText(label, x - textWidth / 2, chartHeight + tickLength + fontSize);
+    }
 }
 
 function kernelDensityEstimator(kernel, X) {

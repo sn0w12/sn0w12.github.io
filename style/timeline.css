@@ -334,6 +334,10 @@ body, .image-modal {
 }
 
 .filters.sub {
+    border-bottom: 0px;
+}
+
+.era-filters {
     border-bottom: 1px solid var(--highlight2);
     padding-bottom: 5px;
 }
