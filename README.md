@@ -1,6 +1,7 @@
-# Arathia - World Map 
+# Arathia
 
-An interactive map for the world of Arathia                                                                                    
+Several project related to the world of Arathia.
+
 **Homepage:** [sn0w12.github.io](https://sn0w12.github.io/)<br>
 **Interactive Map:** [sn0w12.github.io/world](https://sn0w12.github.io/world) <br>
 **Wiki:** [sn0w12.github.io/wiki](https://sn0w12.github.io/wiki)
