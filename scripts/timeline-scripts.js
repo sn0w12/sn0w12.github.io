@@ -1,6 +1,7 @@
 let allEvents = []; // This will hold all events after fetching from JSON
 let filteredEvents = []; // Holds events after applying filters
-let eventsChartInstance = null;
+let uniqueSubcategories = new Set();
+let currentViewData = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initially load the default timeline
@@ -19,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // This function directly uses the selected value from the dropdown or sessionStorage
 function loadSelectedTimeline(selectedTimeline) {
+    resetSubFilters();
+    uniqueSubcategories.clear();
     if (!selectedTimeline) {
         // If no parameter is passed, use the saved timeline or default to the first option
         selectedTimeline = sessionStorage.getItem('selectedTimeline') || document.getElementById('timelineDropdown').value;
@@ -26,19 +29,79 @@ function loadSelectedTimeline(selectedTimeline) {
     }
 
     fetch(selectedTimeline)
-    .then(response => response.json())
-    .then(data => {
-        allEvents = data;
-        createTimeline(data);
-        populateSidebar(data);
-        updateVisualization(data);
-        applyFilters();
-        searchEvents();
-    })
-    .catch(error => console.error('Error loading the timeline:', error));
+        .then(response => response.json())
+        .then(data => {
+            allEvents = data;
+            data.forEach(era => {
+                uniqueSubcategories[era.era] = new Set([...(uniqueSubcategories[era.era] || []), ...era.subcategories.map(subcat => subcat.title)]);
+            });
+            createSubcategoryFilters();
+            createTimeline(data);
+            populateSidebar(data);
+            applyFilters();
+            searchEvents();
+            addSubEventListeners()
+        })
+        .catch(error => console.error('Error loading the timeline:', error));
 
     // Update sessionStorage with the current selection
     sessionStorage.setItem('selectedTimeline', selectedTimeline);
+}
+
+function resetSubFilters() {
+    try{
+        document.querySelector('.filters.sub').innerHTML = "";
+    }
+    catch {
+        console.log("No .filters.sub found.");
+    }
+}
+
+function createSubcategoryFilters() {
+    const mainFiltersContainer = document.querySelector('.filters.sub');
+    mainFiltersContainer.innerHTML = ''; // Clear existing filters
+
+    Object.keys(uniqueSubcategories).forEach(era => {
+        // Create a div for each era
+        const eraDiv = document.createElement('div');
+        eraDiv.classList.add('era-filters');
+        const eraHeader = document.createElement('h3');
+        eraHeader.textContent = era;
+        eraDiv.appendChild(eraHeader);
+
+        // Master toggle for the era
+        const masterToggleLabel = document.createElement('label');
+        const masterToggleCheckbox = document.createElement('input');
+        masterToggleCheckbox.type = 'checkbox';
+        masterToggleCheckbox.checked = true; // Default to checked
+        masterToggleCheckbox.addEventListener('change', () => {
+            document.querySelectorAll(`input[data-era='${era}']`).forEach(subCheckbox => {
+                subCheckbox.checked = masterToggleCheckbox.checked;
+            });
+            applyFilters(); // Apply filters based on new checkbox states
+        });
+        masterToggleLabel.appendChild(masterToggleCheckbox);
+        masterToggleLabel.append(' Toggle All');
+        eraDiv.appendChild(masterToggleLabel);
+
+        // Add subcategory filters to the era div
+        uniqueSubcategories[era].forEach(subcat => {
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = 'subCategory';
+            checkbox.setAttribute('data-era', era); // Associate with its era
+            checkbox.value = subcat;
+            checkbox.checked = true;
+            checkbox.addEventListener('change', applyFilters);
+            label.appendChild(checkbox);
+            label.append(` ${subcat}`);
+            eraDiv.appendChild(label);
+        });
+
+        // Append the era div to the main filters container
+        mainFiltersContainer.appendChild(eraDiv);
+    });
 }
 
 function createTimeline(data) {
@@ -100,20 +163,20 @@ function createTimeline(data) {
 }
 
 function applyFilters() {
-    const checkboxes = document.querySelectorAll('input[name="eventLevel"]:checked');
-    let selectedLevels = Array.from(checkboxes).map(cb => cb.value);
+    const levelCheckboxes = document.querySelectorAll('input[name="eventLevel"]:checked');
+    let selectedLevels = Array.from(levelCheckboxes).map(cb => cb.value);
+    const subcatCheckboxes = document.querySelectorAll('input[name="subCategory"]:checked');
+    let selectedSubcats = Array.from(subcatCheckboxes).map(cb => cb.value);
 
     const filteredEvents = allEvents.map(era => ({
         ...era,
-        subcategories: era.subcategories.map(subcat => ({
+        subcategories: era.subcategories.filter(subcat => selectedSubcats.includes(subcat.title)).map(subcat => ({
             ...subcat,
             events: subcat.events.filter(event => selectedLevels.includes(event.level))
         })).filter(subcat => subcat.events.length > 0)
-    })).filter(era => era.subcategories.some(subcat => subcat.events.length > 0)); // Keep eras with at least one subcategory having matching events
+    })).filter(era => era.subcategories.some(subcat => subcat.events.length > 0));
 
-    createTimeline(filteredEvents); // Recreate the timeline with filtered events
-    populateSidebar(filteredEvents); // Repopulate sidebar to reflect filters
-    updateVisualization(filteredEvents);
+    updateViewIfNeeded(filteredEvents);
 }
 
 function toggleDescription(descriptionId, btn) {
@@ -141,9 +204,7 @@ function searchEvents() {
         })).filter(subcat => subcat.events.length > 0)
     })).filter(era => era.subcategories.some(subcat => subcat.events.length > 0)); // Keep eras with at least one subcategory having matching events
 
-    createTimeline(filteredEvents); // Recreate the timeline with filtered events
-    populateSidebar(filteredEvents); // Repopulate sidebar to reflect search results
-    updateVisualization(filteredEvents);
+    updateViewIfNeeded(filteredEvents);
 }
 
 function openModal(event) {
@@ -252,7 +313,7 @@ function setUpButtons() {
         input.addEventListener('change', function() {
             applyFilters();
         });
-    });
+    }); 
 
     document.addEventListener('keydown', function(event) {
         if (event.key === "Escape") {
@@ -261,107 +322,97 @@ function setUpButtons() {
     });
 }
 
+function addSubEventListeners() {
+    document.querySelectorAll('input[name="subCategory"]').forEach(input => {
+        input.addEventListener('change', function() {
+            applyFilters();
+        });
+    });  
+}
+
 function updateVisualization(data) {
-    // Aggregate events from all eras and subcategories into a flat array
-    let processedEvents = [];
-    data.forEach(era => {
-        era.subcategories.forEach(subcategory => {
-            subcategory.events.forEach(event => {
+    const processedEvents = [];
+    for (const era of data) {
+        for (const subcategory of era.subcategories) {
+            for (const event of subcategory.events) {
                 const match = event.year.match(/(\d+)\s(B\.R|B\.A)/);
                 if (match) {
-                    const yearValue = parseInt(match[1], 10) * (match[2] === 'B.R' ? -1 : 1);
-                    processedEvents.push({ ...event, plotYear: yearValue });
+                    processedEvents.push({ ...event, plotYear: parseInt(match[1], 10) * (match[2] === 'B.R' ? -1 : 1) });
                 }
-            });
-        });
-    });
+            }
+        }
+    }
 
     generateDensityPlot(processedEvents);
 }
 
 function generateDensityPlot(processedEvents) {
-    // Remove existing SVG to prevent duplicates
     d3.select("#chartContainer svg").remove();
 
-    // Extract just the plotYear values from processedEvents
     const years = processedEvents.map(d => d.plotYear);
+    const minYear = Math.min(...years);
+    const maxYear = Math.max(...years);
 
-    // Find the minimum and maximum years in the dataset
-    const minYear = d3.min(years);
-    const maxYear = d3.max(years);
-
-    // Access CSS custom properties
     const style = getComputedStyle(document.body);
-    const backgroundColor = style.getPropertyValue('--background');
-    const foregroundColor = style.getPropertyValue('--foreground');
     const highlightColor = style.getPropertyValue('--highlight');
-    const highlight2Color = style.getPropertyValue('--highlight2');
     const highlightBackgroundColor = style.getPropertyValue('--highlight-background');
 
-    // Select the chart container and determine its width
     const chartContainer = d3.select("#chartContainer");
     const containerWidth = chartContainer.node().getBoundingClientRect().width;
+    const margin = {top: 20, right: 20, bottom: 40, left: 50};
+    const width = containerWidth * 0.97 - margin.left - margin.right;
+    const height = 300 - margin.top - margin.bottom;
 
-    widthChange = containerWidth * 0.03;
+    const svg = chartContainer.append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Set up SVG dimensions dynamically
-    const margin = {top: 20, right: 20, bottom: 40, left: 50},
-        width = containerWidth - widthChange - margin.left - margin.right, // Use container width
-        height = 300 - margin.top - margin.bottom; // Adjust height as needed
+    const kde = kernelDensityEstimator(kernelEpanechnikov(7), d3.range(minYear, maxYear));
+    const densityData = kde(years);
 
-    var svg = d3.select("#chartContainer")
-        .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    const x = d3.scaleLinear().domain([minYear, maxYear]).range([0, width]);
+    svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
 
-    // Step 2: Define the kernel density estimation function
-    // This is a simplified example; you might need a more specific implementation
-    function kernelDensityEstimator(kernel, X) {
-        return function(V) {
-            return X.map(function(x) {
-                return [x, d3.mean(V, function(v) { return kernel(x - v); })];
-            });
-        };
-    }
+    const y = d3.scaleLinear().domain([0, Math.max(...densityData.map(d => d[1]))]).range([height, 0]);
 
-    function kernelEpanechnikov(k) {
-        return function(v) {
-            return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
-        };
-    }
-
-    // Step 3: Prepare the data for KDE
-    var kde = kernelDensityEstimator(kernelEpanechnikov(7), d3.range(minYear, maxYear, 1)); // Adjust range and bandwidth as needed
-    var densityData = kde(processedEvents.map(d => d.plotYear));
-
-    // Step 4: Create the density plot
-    // X scale
-    var x = d3.scaleLinear()
-        .domain([minYear, maxYear]) // Adjust based on your data range
-        .range([0, width]);
-
-    // Add X axis
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
-
-    // Y scale
-    var y = d3.scaleLinear()
-        .domain([0, d3.max(densityData, function(d) { return d[1]; })])
-        .range([height, 0]);
-
-    // Add the density curve
     svg.append("path")
         .datum(densityData)
-        .attr("fill", highlightBackgroundColor) // Use the fill for the area under the curve
-        .attr("stroke", highlightColor) // Stroke color for the line itself
+        .attr("fill", highlightBackgroundColor)
+        .attr("stroke", highlightColor)
         .attr("stroke-width", 1)
-        .attr("d", d3.area() // Use d3.area instead of d3.line for filling the area
-            .curve(d3.curveBasis) // Smooth the line
-            .x(function(d) { return x(d[0]); })
-            .y0(height) // Start fill from the bottom of the SVG (y-axis baseline)
-            .y1(function(d) { return y(d[1]); }) // Fill to the y-value of the data point
+        .attr("d", d3.area()
+            .curve(d3.curveBasis)
+            .x(d => x(d[0]))
+            .y0(height)
+            .y1(d => y(d[1]))
         );
+}
+
+function kernelDensityEstimator(kernel, X) {
+    return function(V) {
+        return X.map(x => [x, d3.mean(V, v => kernel(x - v))]);
+    };
+}
+
+function kernelEpanechnikov(k) {
+    return function(v) {
+        v /= k;
+        return Math.abs(v) <= 1 ? 0.75 * (1 - v * v) / k : 0;
+    };
+}
+
+function updateViewIfNeeded(filteredEvents) {
+    // Convert to a comparable format (e.g., JSON string) to check if data has changed
+    const newViewData = JSON.stringify(filteredEvents);
+    if (newViewData === currentViewData) {
+        return; // Skip update if the data hasn't changed
+    }
+    currentViewData = newViewData;
+
+    // Update the UI as needed
+    createTimeline(filteredEvents);
+    populateSidebar(filteredEvents);
+    updateVisualization(filteredEvents);
 }

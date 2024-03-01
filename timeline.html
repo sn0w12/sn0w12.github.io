@@ -13,7 +13,7 @@
 <body>
     <button id="toggleSidebar" class="toggle-sidebar-button">☰</button>
     <div class="search-container">
-        <input type="text" id="searchBox" class="search-box" placeholder="Search events..." oninput="updateData()">
+        <input type="text" id="searchBox" class="search-box" placeholder="Search events..." oninput="searchEvents()">
     </div>
     <div class="filters">
         <label><input type="checkbox" name="eventLevel" value="Universe Changing Event" checked> Universe Changing Events</label>
@@ -21,6 +21,7 @@
         <label><input type="checkbox" name="eventLevel" value="National Event" checked> National Events</label>
         <label><input type="checkbox" name="eventLevel" value="Local Event" checked> Local Events</label>
     </div>
+    <div class="filters sub"></div>
     <div class="timeline-selector">
         <select id="timelineDropdown" onchange="loadSelectedTimeline(this.value)">
             <option value="data/timeline.json">Arathian Timeline</option>

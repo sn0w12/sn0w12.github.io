@@ -330,7 +330,20 @@ body, .image-modal {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    border-bottom: 2px solid var(--highlight2);
 }
+
+.filters.sub {
+    border-bottom: 1px solid var(--highlight2);
+    padding-bottom: 5px;
+}
+
+.era-filters h3 {
+    margin-top: 0;
+    color: var(--highlight);
+    font-weight: bold;
+}
+
 
 .filters label {
     margin-right: 15px;
