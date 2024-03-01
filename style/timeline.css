@@ -277,10 +277,11 @@ body, .image-modal {
 
 .close {
     color: var(--highlight);
-    float: right;
     font-size: 40px;
     font-weight: bold;
-    padding-right: 18px;
+    margin-top: -20px;
+    display: none;
+    float: right;
 }
 
 .close:hover,
@@ -425,7 +426,7 @@ body, .image-modal {
     }
 
     .close {
-        display: none;
+        display: block;
     }
 
     .sidebar.open, .sidebar.close {

@@ -151,7 +151,7 @@ function openModal(event) {
     const img2 = '<img style="height:3px;width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">';
 
 
-    content.innerHTML = `<h1>${event.title}</h1>${img}<h2>${event.level}</h2>${img2}<p>${event.description}</p>`;
+    content.innerHTML = `<span class="close" onclick="closeModal()">&times;</span><h1>${event.title}</h1>${img}<h2>${event.level}</h2>${img2}<p>${event.description}</p>`;
     modal.style.display = 'block';
 
     // Add an event listener to close the modal if the user clicks outside of it
