@@ -324,11 +324,17 @@ body, .image-modal {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .filters label {
     margin-right: 15px;
     color: var(--highlight);
+    white-space: nowrap;
 }
 
 .filters button {
@@ -412,6 +418,11 @@ body, .image-modal {
     .sidebar {
         width: 80%;
         transform: translateX(-100%);
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: center;
     }
 }
 
