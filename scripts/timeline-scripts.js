@@ -4,6 +4,15 @@ let filteredEvents = []; // Holds events after applying filters
 document.addEventListener('DOMContentLoaded', function() {
     // Initially load the default timeline
     loadSelectedTimeline();
+    const sidebar = document.querySelector('.sidebar');
+    // Check if the screen width is less than or equal to 768px
+    if (window.innerWidth <= 768) {
+        // Initially close the sidebar on mobile
+        sidebar.classList.add('close');
+    } else {
+        // Ensure the sidebar is open on desktop
+        sidebar.classList.add('open');
+    }
 });
 
 // This function directly uses the selected value from the dropdown or sessionStorage
@@ -225,3 +234,14 @@ function populateSidebar(data) {
         sidebarContent.appendChild(subcategoriesContainer);
     });
 }
+
+document.getElementById('toggleSidebar').addEventListener('click', function() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        sidebar.classList.add('close');
+    } else {
+        sidebar.classList.remove('close');
+        sidebar.classList.add('open');
+    }
+});
