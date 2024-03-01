@@ -296,10 +296,16 @@ function generateDensityPlot(processedEvents) {
     const highlight2Color = style.getPropertyValue('--highlight2');
     const highlightBackgroundColor = style.getPropertyValue('--highlight-background');
 
-    // Step 1: Set up SVG and dimensions, similar to before
-    var margin = {top: 10, right: 30, bottom: 30, left: 40},
-        width = 750 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
+    // Select the chart container and determine its width
+    const chartContainer = d3.select("#chartContainer");
+    const containerWidth = chartContainer.node().getBoundingClientRect().width;
+
+    widthChange = containerWidth * 0.03;
+
+    // Set up SVG dimensions dynamically
+    const margin = {top: 20, right: 20, bottom: 40, left: 50},
+        width = containerWidth - widthChange - margin.left - margin.right, // Use container width
+        height = 300 - margin.top - margin.bottom; // Adjust height as needed
 
     var svg = d3.select("#chartContainer")
         .append("svg")

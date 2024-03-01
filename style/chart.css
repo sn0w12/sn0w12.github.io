@@ -1,0 +1,60 @@
+:root {
+    --background: #100f0feb;
+    --foreground: #9f957e;
+    --highlight: #ffe7ab;
+    --highlight2: #ddbc6a;
+    --highlight-background: #ddbd6a50;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll on the whole page */
+    background-color: var(--background);
+    color: var(--foreground);
+}
+
+#chartContainer {
+    width: 100%; /* Full width of the viewport */
+    overflow-x: auto; /* Allow horizontal scrolling */
+    overflow-y: hidden;
+    height: 96vh;
+}
+
+.chart-container svg {
+    height: 100%;
+    background-color: var(--background);
+}
+
+#timelineDropdown {
+    padding: 8px 12px; /* Make the dropdown taller and have some padding on the sides */
+    background-color: var(--background); /* Use the --background variable for the dropdown background */
+    color: var(--highlight); /* Use the --highlight variable for the text color */
+    border: 2px solid var(--highlight2); /* A slightly different color for the border to stand out */
+    border-radius: 4px; /* Rounded corners for the dropdown */
+    font-size: 16px; /* Slightly larger text for better readability */
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+}
+  
+#timelineDropdown:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: var(--highlight); /* Change border color to highlight color on focus */
+    box-shadow: 0 0 8px var(--highlight); /* Add a glow effect to indicate focus */
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--highlight2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--highlight);
+}
