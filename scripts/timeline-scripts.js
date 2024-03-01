@@ -1,5 +1,6 @@
 let allEvents = []; // This will hold all events after fetching from JSON
 let filteredEvents = []; // Holds events after applying filters
+let eventsChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initially load the default timeline
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ensure the sidebar is open on desktop
         sidebar.classList.add('open');
     }
+    setUpButtons();
 });
 
 // This function directly uses the selected value from the dropdown or sessionStorage
@@ -29,8 +31,9 @@ function loadSelectedTimeline(selectedTimeline) {
         allEvents = data;
         createTimeline(data);
         populateSidebar(data);
+        updateVisualization(data);
         applyFilters();
-        searchEvents()
+        searchEvents();
     })
     .catch(error => console.error('Error loading the timeline:', error));
 
@@ -159,12 +162,6 @@ function openModal(event) {
     });
 }
 
-document.addEventListener('keydown', function(event) {
-    if (event.key === "Escape") {
-        closeModal();
-    }
-});
-
 function closeModal() {
     const modal = document.getElementById('eventModal');
     if (modal.style.display !== 'none') {
@@ -237,19 +234,126 @@ function populateSidebar(data) {
     });
 }
 
-document.getElementById('toggleSidebar').addEventListener('click', function() {
-    const sidebar = document.querySelector('.sidebar');
-    if (sidebar.classList.contains('open')) {
-        sidebar.classList.remove('open');
-        sidebar.classList.add('close');
-    } else {
-        sidebar.classList.remove('close');
-        sidebar.classList.add('open');
-    }
-});
-
-document.querySelectorAll('input[name="eventLevel"]').forEach(function(input) {
-    input.addEventListener('change', function() {
-        applyFilters();
+function setUpButtons() {
+    document.getElementById('toggleSidebar').addEventListener('click', function() {
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open');
+            sidebar.classList.add('close');
+        } else {
+            sidebar.classList.remove('close');
+            sidebar.classList.add('open');
+        }
     });
-});
+    
+    document.querySelectorAll('input[name="eventLevel"]').forEach(function(input) {
+        input.addEventListener('change', function() {
+            applyFilters();
+        });
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closeModal();
+        }
+    });
+}
+
+function updateVisualization(data) {
+    // Aggregate events from all eras and subcategories into a flat array
+    let processedEvents = [];
+    data.forEach(era => {
+        era.subcategories.forEach(subcategory => {
+            subcategory.events.forEach(event => {
+                const match = event.year.match(/(\d+)\s(B\.R|B\.A)/);
+                if (match) {
+                    const yearValue = parseInt(match[1], 10) * (match[2] === 'B.R' ? -1 : 1);
+                    processedEvents.push({ ...event, plotYear: yearValue });
+                }
+            });
+        });
+    });
+
+    generateDensityPlot(processedEvents);
+}
+
+function generateDensityPlot(processedEvents) {
+    // Remove existing SVG to prevent duplicates
+    d3.select("#chartContainer svg").remove();
+
+    // Extract just the plotYear values from processedEvents
+    const years = processedEvents.map(d => d.plotYear);
+
+    // Find the minimum and maximum years in the dataset
+    const minYear = d3.min(years);
+    const maxYear = d3.max(years);
+
+    // Access CSS custom properties
+    const style = getComputedStyle(document.body);
+    const backgroundColor = style.getPropertyValue('--background');
+    const foregroundColor = style.getPropertyValue('--foreground');
+    const highlightColor = style.getPropertyValue('--highlight');
+    const highlight2Color = style.getPropertyValue('--highlight2');
+    const highlightBackgroundColor = style.getPropertyValue('--highlight-background');
+
+    // Step 1: Set up SVG and dimensions, similar to before
+    var margin = {top: 10, right: 30, bottom: 30, left: 40},
+        width = 750 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
+
+    var svg = d3.select("#chartContainer")
+        .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Step 2: Define the kernel density estimation function
+    // This is a simplified example; you might need a more specific implementation
+    function kernelDensityEstimator(kernel, X) {
+        return function(V) {
+            return X.map(function(x) {
+                return [x, d3.mean(V, function(v) { return kernel(x - v); })];
+            });
+        };
+    }
+
+    function kernelEpanechnikov(k) {
+        return function(v) {
+            return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
+        };
+    }
+
+    // Step 3: Prepare the data for KDE
+    var kde = kernelDensityEstimator(kernelEpanechnikov(7), d3.range(minYear, maxYear, 1)); // Adjust range and bandwidth as needed
+    var densityData = kde(processedEvents.map(d => d.plotYear));
+
+    // Step 4: Create the density plot
+    // X scale
+    var x = d3.scaleLinear()
+        .domain([minYear, maxYear]) // Adjust based on your data range
+        .range([0, width]);
+
+    // Add X axis
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // Y scale
+    var y = d3.scaleLinear()
+        .domain([0, d3.max(densityData, function(d) { return d[1]; })])
+        .range([height, 0]);
+
+    // Add the density curve
+    svg.append("path")
+        .datum(densityData)
+        .attr("fill", highlightBackgroundColor) // Use the fill for the area under the curve
+        .attr("stroke", highlightColor) // Stroke color for the line itself
+        .attr("stroke-width", 1)
+        .attr("d", d3.area() // Use d3.area instead of d3.line for filling the area
+            .curve(d3.curveBasis) // Smooth the line
+            .x(function(d) { return x(d[0]); })
+            .y0(height) // Start fill from the bottom of the SVG (y-axis baseline)
+            .y1(function(d) { return y(d[1]); }) // Fill to the y-value of the data point
+        );
+}

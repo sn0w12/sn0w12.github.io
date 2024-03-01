@@ -7,6 +7,8 @@
     <link rel="icon" href="icons/arathia.png">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css">
     <link rel="stylesheet" href="style/timeline.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="scripts/timeline-scripts.js"></script>
 </head>
 <body>
     <button id="toggleSidebar" class="toggle-sidebar-button">☰</button>
@@ -34,13 +36,12 @@
         <div class="sidebar-content" id="sidebarContent"></div>
     </div>
     <div id="timeline" class="main-container"></div> 
+    <div id="chartContainer" class="chart-container"></div>
 
     <!-- Modal for Event Details -->
     <div id="eventModal" class="image-modal hidden">
         <span class="close" onclick="closeModal()">&times;</span>
         <div class="image-modal-content" id="modalContent"></div>
     </div>
-
-    <script src="scripts/timeline-scripts.js"></script>
 </body>
 </html>
