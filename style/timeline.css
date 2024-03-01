@@ -51,10 +51,12 @@ body, .image-modal {
 }
 
 .sidebar.open {
+    transition: transform 0.3s ease;
     transform: translateX(0%);
 }
 
-.sidebar.close {
+.sidebar.closed {
+    transition: transform 0.3s ease;
     transform: translateX(-100%); /* Hide sidebar off-screen */
     font-size: 100%;
 }
@@ -429,7 +431,7 @@ body, .image-modal {
         display: block;
     }
 
-    .sidebar.open, .sidebar.close {
+    .sidebar.open, .sidebar.closed {
         display: block;
     }
 

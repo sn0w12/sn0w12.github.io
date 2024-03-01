@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if the screen width is less than or equal to 768px
     if (window.innerWidth <= 1520) {
         // Initially close the sidebar on mobile
-        sidebar.classList.add('close');
+        sidebar.classList.add('closed');
     } else {
         // Ensure the sidebar is open on desktop
         sidebar.classList.add('open');
@@ -239,9 +239,9 @@ function setUpButtons() {
         const sidebar = document.querySelector('.sidebar');
         if (sidebar.classList.contains('open')) {
             sidebar.classList.remove('open');
-            sidebar.classList.add('close');
+            sidebar.classList.add('closed');
         } else {
-            sidebar.classList.remove('close');
+            sidebar.classList.remove('closed');
             sidebar.classList.add('open');
         }
     });
