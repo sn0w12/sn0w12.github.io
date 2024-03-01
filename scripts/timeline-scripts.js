@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadSelectedTimeline();
     const sidebar = document.querySelector('.sidebar');
     // Check if the screen width is less than or equal to 768px
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1520) {
         // Initially close the sidebar on mobile
         sidebar.classList.add('close');
     } else {
@@ -29,6 +29,8 @@ function loadSelectedTimeline(selectedTimeline) {
         allEvents = data;
         createTimeline(data);
         populateSidebar(data);
+        applyFilters();
+        searchEvents()
     })
     .catch(error => console.error('Error loading the timeline:', error));
 
@@ -244,4 +246,10 @@ document.getElementById('toggleSidebar').addEventListener('click', function() {
         sidebar.classList.remove('close');
         sidebar.classList.add('open');
     }
+});
+
+document.querySelectorAll('input[name="eventLevel"]').forEach(function(input) {
+    input.addEventListener('change', function() {
+        applyFilters();
+    });
 });

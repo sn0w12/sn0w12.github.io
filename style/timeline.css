@@ -7,12 +7,16 @@
 
     --universe-event: #ddbd6a50;
     --universe-event-highlight: #ddbc6a;
+    --universe-event-highlight-hover: #ffe7ab;
     --world-event: #ffbcac50;
     --world-event-highlight: #ffbcac;
+    --world-event-highlight-hover: #ffddd0;
     --national-event: #d0acfc50;
     --national-event-highlight: #d0acfc;
+    --national-event-highlight-hover: #e9cfff;
     --local-event: #b0bcfc50;
     --local-event-highlight: #b0bcfc;
+    --local-event-highlight-hover: #d2daff;
 
     --sidebar-padding: 350px;
 }
@@ -45,6 +49,7 @@ body, .image-modal {
     transition: transform 0.3s ease;
     transform: translateX(0%);
     font-size: 100%;
+    z-index: 100;
 }
 
 .sidebar.open {
@@ -186,6 +191,14 @@ body, .image-modal {
     border-left: 4px solid var(--highlight2);
     margin-bottom: 10px;
     background-color: var(--highlight-background);
+    transition: all 0.2s ease-in-out;
+    z-index: 50;
+}
+
+.event:hover {
+    transform: scale(1.05); /* Gently scale up the event card */
+    border-left: 4px solid var(--highlight);
+    transition: all 0.2s ease-in-out; /* Smooth transition */
 }
 
 .event.universe-changing-event {
@@ -193,9 +206,17 @@ body, .image-modal {
     background-color: var(--universe-event);
 }
 
+.event.universe-changing-event:hover {
+    border-left: 4px solid var(--universe-event-highlight-hover);
+}
+
 .event.world-changing-event {
     border-left: 4px solid var(--world-event-highlight);
     background-color: var(--world-event);
+}
+
+.event.world-changing-event:hover {
+    border-left: 4px solid var(--world-event-highlight-hover);
 }
 
 .event.national-event {
@@ -203,9 +224,17 @@ body, .image-modal {
     background-color: var(--national-event);
 }
 
+.event.national-event:hover {
+    border-left: 4px solid var(--national-event-highlight-hover);
+}
+
 .event.local-event {
     border-left: 4px solid var(--local-event-highlight);
     background-color: var(--local-event);
+}
+
+.event.local-event:hover {
+    border-left: 4px solid var(--local-event-highlight-hover);
 }
 
 .event h2 {
@@ -294,6 +323,7 @@ body, .image-modal {
     text-align: center;
     padding-left: 30px;
     padding-right: 30px;
+    padding-top: 10px;
 }
 
 .filters label {
@@ -320,7 +350,7 @@ body, .image-modal {
 
 .timeline-selector {
     text-align: center; /* Center the dropdown in the div */
-    margin: 20px 0; /* Add some space above and below the dropdown */
+    margin: 10px 0; /* Add some space above and below the dropdown */
 }
   
 #timelineDropdown {
@@ -355,6 +385,10 @@ body, .image-modal {
     padding-bottom: 5px;
     font-size: 20px;
     cursor: pointer;
+}
+
+.toggle-sidebar-button:hover {
+    background-color: var(--highlight2);
 }
 
 @media screen and (max-width: 768px) {
