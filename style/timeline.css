@@ -461,6 +461,12 @@ body, .image-modal {
         flex-direction: column;
         align-items: center;
     }
+
+    .era-filters {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 /* scrollbar */
