@@ -340,6 +340,7 @@ body, .image-modal {
 .era-filters {
     border-bottom: 1px solid var(--highlight2);
     padding-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .era-filters h3 {
@@ -462,10 +463,17 @@ body, .image-modal {
         align-items: center;
     }
 
+    .filters.sub {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
     .era-filters {
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+        border-bottom: 1px solid var(--highlight2);
     }
 }
 
