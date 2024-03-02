@@ -350,120 +350,123 @@ function updateVisualization(data) {
 }
 
 function generateDensityPlot(processedEvents) {
-    console.time("Total generateDensityPlot");
-
-    let minYear = processedEvents[0].plotYear, maxYear = processedEvents[0].plotYear;
-    processedEvents.forEach(event => {
-        if (event.plotYear < minYear) minYear = event.plotYear;
-        if (event.plotYear > maxYear) maxYear = event.plotYear;
-    });
-
-    const chartContainer = document.getElementById("chartContainer");
-    let canvas = chartContainer.querySelector("canvas");
-    if (!canvas) {
-        canvas = document.createElement("canvas");
-        chartContainer.appendChild(canvas);
-    }
-    const containerWidth = chartContainer.getBoundingClientRect().width;
-    const margin = {top: 20, right: 20, bottom: 40, left: 50};
-    const width = containerWidth * 0.97 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
-
-    canvas.width = width + margin.left + margin.right;
-    canvas.height = height + margin.top + margin.bottom;
-
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save(); // Save the clean state of the canvas
-    ctx.translate(margin.left, margin.top); // Adjust coordinate system for margin
-
-    console.time("Compute density data");
-    const plotYears = processedEvents.map(d => d.plotYear);
-    const kde = kernelDensityEstimator(kernelEpanechnikov(7), d3.range(minYear, maxYear + 1));
-    const densityData = kde(plotYears);
-    console.timeEnd("Compute density data");
-
-    console.time("Rendering to Canvas");
-
-    // Calculate tick interval based on the span of years
-    const yearSpan = maxYear - minYear;
-    let tickInterval;
-    if(yearSpan > 50000) {
-        tickInterval = 3000;
-    } else if(yearSpan > 10000) {
-        tickInterval = 1000;
-    } else if(yearSpan > 1000) {
-        tickInterval = 100; // For spans over a millennium, use century ticks
-    } else if(yearSpan > 100) {
-        tickInterval = 5; // For spans over a century, use decade ticks
-    } else if(yearSpan > 10) {
-        tickInterval = 2; // For spans over a decade, use 5-year ticks
-    } else {
-        tickInterval = 1; // For spans of 10 years or less, use annual ticks
-    }
-
-    // Directly calculate scales in canvas context
-    const x = d => (d - minYear) / (maxYear - minYear) * width;
-    const yMax = Math.max(...densityData.map(d => d[1]));
-    const y = d => height - (d / yMax) * height; // Flip y coordinate for canvas drawing
-
-    // Drawing density plot path
-    ctx.beginPath();
-    ctx.moveTo(x(densityData[0][0]), y(densityData[0][1]));
-    densityData.forEach(([year, value]) => {
-        ctx.lineTo(x(year), y(value));
-    });
-
-    // Closing the path to fill under the curve
-    ctx.lineTo(x(densityData[densityData.length - 1][0]), height);
-    ctx.lineTo(x(densityData[0][0]), height);
-    ctx.closePath();
-
-    // Fill the path
-    ctx.fillStyle = highlightBackgroundColor; // Assume these are pre-calculated or globally accessible
-    ctx.fill();
-
-    // Optionally redraw the path outline
-    ctx.beginPath();
-    ctx.moveTo(x(densityData[0][0]), y(densityData[0][1]));
-    densityData.forEach(([year, value]) => {
-        ctx.lineTo(x(year), y(value));
-    });
-    ctx.strokeStyle = highlightColor; // Assume these are pre-calculated or globally accessible
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    if (processedEvents) {
+        console.time("Total generateDensityPlot");
     
-    ctx.save();
-    drawDynamicTicks(ctx, minYear, maxYear, tickInterval, x, height, width);
-    ctx.restore(); // Restore to the clean state to remove any applied transformations
-
-    console.timeEnd("Rendering to Canvas");
-    console.timeEnd("Total generateDensityPlot");
-}
-
-function drawDynamicTicks(ctx, minYear, maxYear, interval, scaleX, chartHeight, chartWidth) {
-    const tickLength = 5; // Length of the ticks in pixels
-    const fontSize = 10; // Font size for the tick labels
-    ctx.font = `${fontSize}px Arial`; // Set font for tick labels
-
-    // Draw the x-axis line
-    ctx.beginPath();
-    ctx.moveTo(0, chartHeight);
-    ctx.lineTo(chartWidth, chartHeight);
-    ctx.stroke();
-
-    // Draw ticks and labels
-    for (let year = minYear; year <= maxYear; year += interval) {
-        const x = scaleX(year);
+        let minYear = processedEvents[0].plotYear, maxYear = processedEvents[0].plotYear;
+        processedEvents.forEach(event => {
+            if (event.plotYear < minYear) minYear = event.plotYear;
+            if (event.plotYear > maxYear) maxYear = event.plotYear;
+        });
+    
+        const chartContainer = document.getElementById("chartContainer");
+        let canvas = chartContainer.querySelector("canvas");
+        if (!canvas) {
+            canvas = document.createElement("canvas");
+            chartContainer.appendChild(canvas);
+        }
+        const containerWidth = chartContainer.getBoundingClientRect().width;
+        const margin = {top: 20, right: 20, bottom: 40, left: 50};
+        const width = containerWidth * 0.97 - margin.left - margin.right;
+        const height = 300 - margin.top - margin.bottom;
+    
+        canvas.width = width + margin.left + margin.right;
+        canvas.height = height + margin.top + margin.bottom;
+    
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save(); // Save the clean state of the canvas
+        ctx.translate(margin.left, margin.top); // Adjust coordinate system for margin
+    
+        console.time("Compute density data");
+        const plotYears = processedEvents.map(d => d.plotYear);
+        const kde = kernelDensityEstimator(kernelEpanechnikov(7), d3.range(minYear, maxYear + 1));
+        const densityData = kde(plotYears);
+        console.timeEnd("Compute density data");
+    
+        console.time("Rendering to Canvas");
+    
+        // Calculate tick interval based on the span of years
+        const yearSpan = maxYear - minYear;
+        console.log(yearSpan);
+        let tickInterval;
+        if(yearSpan > 50000) {
+            tickInterval = 3000;
+        } else if(yearSpan > 10000) {
+            tickInterval = 1000;
+        } else if(yearSpan > 1000) {
+            tickInterval = 100; // For spans over a millennium, use century ticks
+        } else if(yearSpan > 100) {
+            tickInterval = 25; // For spans over a century, use decade ticks
+        } else if(yearSpan > 10) {
+            tickInterval = 2; // For spans over a decade, use 5-year ticks
+        } else {
+            tickInterval = 1; // For spans of 10 years or less, use annual ticks
+        }
+    
+        // Directly calculate scales in canvas context
+        const x = d => (d - minYear) / (maxYear - minYear) * width;
+        const yMax = Math.max(...densityData.map(d => d[1]));
+        const y = d => height - (d / yMax) * height; // Flip y coordinate for canvas drawing
+    
+        // Drawing density plot path
         ctx.beginPath();
-        ctx.moveTo(x, chartHeight);
-        ctx.lineTo(x, chartHeight + tickLength);
+        ctx.moveTo(x(densityData[0][0]), y(densityData[0][1]));
+        densityData.forEach(([year, value]) => {
+            ctx.lineTo(x(year), y(value));
+        });
+    
+        // Closing the path to fill under the curve
+        ctx.lineTo(x(densityData[densityData.length - 1][0]), height);
+        ctx.lineTo(x(densityData[0][0]), height);
+        ctx.closePath();
+    
+        // Fill the path
+        ctx.fillStyle = highlightBackgroundColor; // Assume these are pre-calculated or globally accessible
+        ctx.fill();
+    
+        // Optionally redraw the path outline
+        ctx.beginPath();
+        ctx.moveTo(x(densityData[0][0]), y(densityData[0][1]));
+        densityData.forEach(([year, value]) => {
+            ctx.lineTo(x(year), y(value));
+        });
+        ctx.strokeStyle = highlightColor; // Assume these are pre-calculated or globally accessible
+        ctx.lineWidth = 1;
         ctx.stroke();
-
-        // Draw tick label, adjusting for label width to center it
-        const label = year.toString();
-        const textWidth = ctx.measureText(label).width;
-        ctx.fillText(label, x - textWidth / 2, chartHeight + tickLength + fontSize);
+        
+        ctx.save();
+        drawDynamicTicks(ctx, minYear, maxYear, tickInterval, x, height, width);
+        ctx.restore(); // Restore to the clean state to remove any applied transformations
+    
+        console.timeEnd("Rendering to Canvas");
+        console.timeEnd("Total generateDensityPlot");
+    }
+    
+    function drawDynamicTicks(ctx, minYear, maxYear, interval, scaleX, chartHeight, chartWidth) {
+        const tickLength = 5; // Length of the ticks in pixels
+        const fontSize = 10; // Font size for the tick labels
+        ctx.font = `${fontSize}px Arial`; // Set font for tick labels
+    
+        // Draw the x-axis line
+        ctx.beginPath();
+        ctx.moveTo(0, chartHeight);
+        ctx.lineTo(chartWidth, chartHeight);
+        ctx.stroke();
+    
+        // Draw ticks and labels
+        for (let year = minYear; year <= maxYear; year += interval) {
+            const x = scaleX(year);
+            ctx.beginPath();
+            ctx.moveTo(x, chartHeight);
+            ctx.lineTo(x, chartHeight + tickLength);
+            ctx.stroke();
+    
+            // Draw tick label, adjusting for label width to center it
+            const label = year.toString();
+            const textWidth = ctx.measureText(label).width;
+            ctx.fillText(label, x - textWidth / 2, chartHeight + tickLength + fontSize);
+        }
     }
 }
 
