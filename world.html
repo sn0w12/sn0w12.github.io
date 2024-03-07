@@ -410,6 +410,7 @@
 		var selectedOptionId = 'arOption1';
 		var iconChecked = 1;
 		var currentMap = 'Arathia';
+		var currentSelectedCategories = "capitals-largecities-smallcities-towns-nature-locations-characters";
 
 		// Define a map to convert between optionIds when switching map types
 		var optionIdConversions = {
@@ -1007,6 +1008,7 @@
 			addRadioButtons(1)
 			hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
 			addYearSelect();
+			attachEventListenersToCheckboxes();
 			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 			fetch('data/markers.json')
 				.then(response => response.json())

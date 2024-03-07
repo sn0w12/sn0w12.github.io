@@ -167,24 +167,35 @@ function openPopupFromUrl(markerId) {
     }
 }
 
-function updateCategorySelection(categories) {
+function updateCategorySelection(categories = []) {
     const categorySet = new Set(categories.map(category => category.trim().toLowerCase().replace(' ', '')));
 
     // Get all checkboxes (excluding radio buttons) within the control layers
     const selectors = document.querySelectorAll('.leaflet-control-layers-selector[type="checkbox"]');
-    
+
     // Iterate over the checkboxes to simulate a click event where needed
     selectors.forEach(selector => {
-        if (selector.nextElementSibling && selector.nextElementSibling.tagName === 'SPAN') {
-            const categoryName = selector.nextElementSibling.textContent.trim().toLowerCase().replace(' ', '');
-            const shouldBeChecked = categorySet.has(categoryName);
+        // Get the closest parent .leaflet-control-layers-group of the checkbox
+        const group = selector.closest('.leaflet-control-layers-group');
 
-            // Check if we need to change the state of the checkbox
-            if (selector.checked !== shouldBeChecked) {
-                selector.click();
+        // Proceed only if the group is not hidden
+        if (group && !group.hasAttribute('hidden')) {
+            if (selector.nextElementSibling && selector.nextElementSibling.tagName === 'SPAN') {
+                const categoryName = selector.nextElementSibling.textContent.trim().toLowerCase().replace(' ', '');
+                const shouldBeChecked = categorySet.has(categoryName);
+
+                // Check if we need to change the state of the checkbox
+                if (selector.checked !== shouldBeChecked) {
+                    selector.click();
+                }
             }
         }
     });
+
+    if (currentMap.slice(-5).toLowerCase() != "clean") {
+        currentSelectedCategories = categories.join('-');
+        console.log(currentSelectedCategories);
+    }
 }
 
 function createMap(prefix, title, noWrap, minZoom, maxZoom, pane, add) {
@@ -1198,6 +1209,13 @@ document.addEventListener('change', function (event) {
             setYearSelectorToLastDropdown();
             updateSelectedOptionId();
             clearAllVectors();
+            if (currentMap.slice(-5).toLowerCase() == "clean") {
+                updateCategorySelection();
+                attachEventListenersToCheckboxes();
+            } else {
+                updateCategorySelection(currentSelectedCategories.split('-'));
+                attachEventListenersToCheckboxes();
+            }
         }
     } else if (radioButton.classList.contains('custom-radio-class')) {
         var iconType = getTrimmedText(radioButton);
@@ -1237,6 +1255,13 @@ function performActions(mapLayer, addLayers, checkboxIndex, checkboxState, hideC
     updateCheckbox(checkboxIndex, checkboxState);
     hideCheckBoxes(hideCheckboxes);
     addRadioButtons(iconChecked);
+    if (currentMap.slice(-5).toLowerCase() == "clean") {
+        updateCategorySelection();
+        attachEventListenersToCheckboxes();
+    } else {
+        updateCategorySelection(currentSelectedCategories.split('-'));
+        attachEventListenersToCheckboxes();
+    }
 
     addYearSelect();
     document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
@@ -1316,4 +1341,26 @@ function enableDevMode() {
             }
         }
     }    
+}
+
+function updateSelectedCategoriesString() {
+    // Find all checkbox inputs within the .leaflet-control-layers-group elements that are not hidden
+    const selectors = document.querySelectorAll('.leaflet-control-layers-group:not([hidden]) .leaflet-control-layers-selector[type="checkbox"]');
+
+    // Filter out the checked selectors and map their sibling span's textContent to an array
+    const selectedCategories = Array.from(selectors)
+        .filter(selector => selector.checked)
+        .map(selector => selector.nextElementSibling.textContent.trim().toLowerCase().replace(' ', ''));
+
+    // Join the selected categories with a dash
+    currentSelectedCategories = selectedCategories.join('-');
+}
+
+function attachEventListenersToCheckboxes() {
+    const selectors = document.querySelectorAll('.leaflet-control-layers-selector[type="checkbox"]');
+
+    // Iterate over all selectors to attach the change event listener
+    selectors.forEach(selector => {
+        selector.addEventListener('change', updateSelectedCategoriesString);
+    });
 }
