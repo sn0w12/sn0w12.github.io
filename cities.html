@@ -62,17 +62,17 @@
 		};
 
 		const regionToFull = {
-			"an": "antaria",
-			"od": "od",
-			"th": "th",
-			"rh": "rh",
-			"az": "az",
-			"ts": "tsuki",
-			"pr": "pr",
-			"dr": "dr",
-			"tc": "tc",
-			"gi": "gi",
-			"ac": "ac",
+			"an": ["antaria"],
+			"od": ["od"],
+			"th": ["th"],
+			"rh": ["rh"],
+			"az": ["az"],
+			"ts": ["tsuki"],
+			"pr": ["pr"],
+			"dr": ["dr"],
+			"tc": ["tc"],
+			"gi": ["gi"],
+			"ac": ["ac"],
 		}
 
 		var southWest = L.latLng(-80, -185),
@@ -209,8 +209,8 @@
 			markerMaker();
 		});
 
-		marker.bindPopup(formHTML).openPopup();
 		marker.on('click', function(e) {
+			marker.openPopup();
 			markerMaker();
 		});
 
@@ -235,27 +235,16 @@
 			},
 		};
 
-		//Marker Groups
-		var an_all_layers = L.layerGroup([regionLayerGroups['an']['capital'], regionLayerGroups['an']['cityBig'], regionLayerGroups['an']['citySmall'], regionLayerGroups['an']['town'], regionLayerGroups['an']['nature'], regionLayerGroups['an']['important'], regionLayerGroups['an']['character']]);
-
-		var ts_all_layers = L.layerGroup([regionLayerGroups['ts']['capital'], regionLayerGroups['ts']['cityBig'], regionLayerGroups['ts']['citySmall'], regionLayerGroups['ts']['town'], regionLayerGroups['ts']['nature'], regionLayerGroups['ts']['important'], regionLayerGroups['ts']['character']]);
-		
+		//Marker Groups	
 		var dv_coord = L.layerGroup([marker]);
 
-		var groups = [an_all_layers, ts_all_layers, dv_coord];
 		const regionCodes = ['an', 'ts'];
 		const layerTypes = ['capital', 'cityBig', 'citySmall', 'town', 'nature', 'important', 'character'];
 
 		const layerGroups = [];
 
-		regionCodes.forEach(regionCode => {
-			layerTypes.forEach(layerType => {
-				const layerGroup = regionLayerGroups[regionCode][layerType];
-				if (layerGroup) { // Check if the layerGroup exists before adding
-					layerGroups.push(layerGroup);
-				}
-			});
-		});
+		var an_all_layers = createLayerGroup(regionCodes[0], layerTypes);
+		var ts_all_layers = createLayerGroup(regionCodes[1], layerTypes);
 		
 		//Marker Overlay
 		var overlays = {
@@ -330,7 +319,9 @@
 						hide: [ts_all_layers],
 						checkboxIndex: 0,
 						checkboxState: true,
-						hideCheckboxCount: 2,
+						hideCheckboxes: [2],
+						form: formHTML,
+						defaultFormSelect: 0,
 					},
 					'anOption2': {
 						search: { controlSearch1: controlSearchAn },
@@ -339,15 +330,12 @@
 						hide: [ts_all_layers],
 						checkboxIndex: 1,
 						checkboxState: true,
-						hideCheckboxCount: 1,
+						hideCheckboxes: [1],
+						form: formHTML,
+						defaultFormSelect: 0,
 					},
 				},
-				show: [an_all_layers],
-				hide: [ts_all_layers],
 				current: antaria,
-				checkboxIndex: 0, 
-				checkboxState: true,
-				hideCheckBox: 2,
 				defaultOptionId: 'anOption1',
 			},
 			'Tsuki': {
@@ -360,7 +348,9 @@
 						hide: [an_all_layers],
 						checkboxIndex: 1,
 						checkboxState: true,
-						hideCheckboxCount: 1,
+						hideCheckboxes: [1],
+						form: formHTML,
+						defaultFormSelect: 0,
 					},
 					'tsOption2': {
 						search: { controlSearch1: controlSearchTs },
@@ -369,15 +359,12 @@
 						hide: [an_all_layers],
 						checkboxIndex: 1,
 						checkboxState: true,
-						hideCheckboxCount: 1,
+						hideCheckboxes: [1],
+						form: formHTML,
+						defaultFormSelect: 0,
 					},
 				},
-				show: [ts_all_layers],
-				hide: [an_all_layers],
 				current: tsuki,
-				checkboxIndex: 1, 
-				checkboxState: true,
-				hideCheckBox: 1,
 				defaultOptionId: 'tsOption1',
 			},
 		};
@@ -486,7 +473,7 @@
 			var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
 			checkbox.checked = true;
 			addRadioButtons(1)
-			hideCheckBoxes(2);
+			hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
 			addYearSelect();
 			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 			fetch('data/cityMarkers.json')

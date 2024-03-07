@@ -780,6 +780,21 @@
     "customlink": null
   },
   {
+    "region": "ar1213BR",
+    "coordinates": [
+      43.685816,
+      -48.951216
+    ],
+    "icon": "capital",
+    "title": "Seraphyrian Capital",
+    "id": "se_seraphyrian",
+    "popuptitle": "Seraphyrian Capital",
+    "category": "Capital",
+    "description": "The capital of Seraphyria",
+    "link": false,
+    "customlink": null
+  },
+  {
     "region": "mo",
     "coordinates": [
       39.994442,

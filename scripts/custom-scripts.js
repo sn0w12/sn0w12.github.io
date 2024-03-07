@@ -71,15 +71,10 @@ function switchToMarkerMap(markerId) {
     let markerPrefix = markerId.slice(0, 2);
     let markerRegion = regionMap[markerPrefix] || "default";
 
-    // Assume regionToFull translates region codes to full names
-    let fullRegionName = regionToFull[markerRegion];
+    let fullRegionName = regionToFull[markerRegion][0];
+    let submap = regionToFull[markerRegion][1];
 
-    if (fullRegionName == currentMap.toLowerCase()) {
-        console.log("Map is already correct");
-        return true;
-    }
-
-    if (fullRegionName) {
+    if (fullRegionName != currentMap.toLowerCase()) {
         let labels = document.querySelectorAll('label span');
         let targetLabel = Array.from(labels).find(span => span.textContent.trim().toLowerCase() === fullRegionName);
 
@@ -90,11 +85,25 @@ function switchToMarkerMap(markerId) {
                 console.log(`Switching to map of region: ${fullRegionName}`);
                 // Click the radio button
                 radioButton.click();
-                return true;
             }
         }
+    } else {
+        console.log("Map is already correct");
     }
 
+    if (submap) {
+        const yearSelector =  document.getElementById('YearSelector');
+
+        for (const option of yearSelector.options) {
+            if (option.id === submap) {
+                option.selected = true;
+                yearSelector.dispatchEvent(new Event('change'));
+                return true; // Exit the loop as we found our match
+            }
+        }
+    } else {
+        return true;
+    }
     console.warn("Marker not found in any region:", markerId);
     return false; // Marker not found or could not switch maps
 }
@@ -185,6 +194,26 @@ function createIcon(icon, shadow, iconSize, iconAnchor, popupAnchor) {
     });
 }
 
+function createLayerGroup(regionCode, layerTypes) {
+    let regionLayerGroup = L.layerGroup([]); // Initialize an empty layer group for the region
+
+    // Iterate over each layer type for the current region
+    layerTypes.forEach(layerType => {
+        // Check if the layer group exists for the current region and layer type
+        const layerGroup = regionLayerGroups[regionCode][layerType];
+        if (layerGroup) {
+        // Add the layer group to the region's layer group
+        regionLayerGroup.addLayer(layerGroup);
+        }
+    });
+
+    // Assign the created layer group to the allLayerGroups object
+    layerGroups.push(regionLayerGroup);
+
+    // Optionally, return the single layer group for the specified region if needed
+    return regionLayerGroup;
+}
+
 function setSelectValueFromCheckedRadioButton(region) {
     // Find the text of the checked radio button's next sibling span
     var checkedRadioSpanText = document.querySelector('input[name="leaflet-base-layers"]:checked + span');
@@ -196,10 +225,13 @@ function setSelectValueFromCheckedRadioButton(region) {
     var select = document.getElementById('Id');
     var options = select.options;
 
+    var found = false;
+
     if (region) {
         for (var i = 0; i < options.length; i++) {
             if (options[i].text === region) {
                 select.value = options[i].value;
+                found = true;
                 break; // Stop the loop once the matching value is found and set
             }
         }
@@ -207,9 +239,14 @@ function setSelectValueFromCheckedRadioButton(region) {
         for (var i = 0; i < options.length; i++) {
             if (options[i].text === spanText) {
                 select.value = options[i].value;
+                found = true;
                 break; // Stop the loop once the matching value is found and set
             }
         }
+    }
+
+    if (!found) {
+        select.value = mapConfigurations[currentMap].options[selectedOptionId].defaultFormSelect;
     }
 }
 
@@ -256,6 +293,7 @@ function clearAllVectors() {
 }
 
 function markerMaker(isPolygon = false) {
+    marker.bindPopup(mapConfigurations[currentMap].options[selectedOptionId].form).openPopup();
     // Load saved data
     loadFormData();
     var formData = getFormData(marker);
@@ -268,9 +306,9 @@ function markerMaker(isPolygon = false) {
         setSelectValueFromCheckedRadioButton()
     else {
         clearAllVectors();
-        if (countryPolygons[currentMap]) {
-            for (const region in countryPolygons[currentMap]) {
-                const polygon = countryPolygons[currentMap][region];
+        if (countryPolygons[currentMap][selectedOptionId]) {
+            for (const region in countryPolygons[currentMap][selectedOptionId]) {
+                const polygon = countryPolygons[currentMap][selectedOptionId][region];
                 if (isPointInsidePolygon(formData.coords, polygon)) {
                     console.log(`Point is inside ${region}, ${currentMap}.`);
                     setSelectValueFromCheckedRadioButton(region);
@@ -368,7 +406,15 @@ function polygonMaker(isDropped = false) {
     });    
 
     document.getElementById('DevButton2').addEventListener('click', function() {
-        console.log(pointsArray.map(point => `[${point[0]}, ${point[1]}]`).join(",\n"));
+        if (pointsArray.length > 0) {
+            // Clone the pointsArray and add the first point to the end
+            let pointsWithFirstPointRepeated = [...pointsArray, pointsArray[0]];
+            
+            // Convert each point to a string and join them, including the repeated first point
+            console.log(pointsWithFirstPointRepeated.map(point => `[${point[0]}, ${point[1]}]`).join(",\n"));
+        } else {
+            console.warn("The points array is empty.");
+        }
         updateMapDisplay('green');
         pointsArray = [];
         firstPolygonPoint = null;
@@ -557,8 +603,8 @@ function countCountryMarkers() {
 
 function displayAllPolygons() {
     if (countryPolygons[currentMap]) {
-        for (const region in countryPolygons[currentMap]) {
-            const polygon = countryPolygons[currentMap][region];
+        for (const region in countryPolygons[currentMap][selectedOptionId]) {
+            const polygon = countryPolygons[currentMap][selectedOptionId][region];
             displayPolygon(polygon, region, true);
         }
     }
@@ -567,9 +613,9 @@ function displayAllPolygons() {
 function getTotalArea(log = true) {
     var totalArea = 0;
     var countryAreas = {};
-    if (countryPolygons[currentMap]) {
-        for (const region in countryPolygons[currentMap]) {
-            const polygon = countryPolygons[currentMap][region];
+    if (countryPolygons[currentMap][selectedOptionId]) {
+        for (const region in countryPolygons[currentMap][selectedOptionId]) {
+            const polygon = countryPolygons[currentMap][selectedOptionId][region];
             polygonArea = getPolygonArea(reversePolygonCoordinates(polygon));
             countryAreas[region] = polygonArea;
             totalArea += polygonArea;
@@ -703,7 +749,7 @@ function closeAllPopups() {
 function getAllMarkersFromGroups() {
     var allMarkers = [];
 
-    groups.forEach(function(group) {
+    layerGroups.forEach(function(group) {
         extractMarkersFromLayer(group, allMarkers);
     });
 
@@ -845,16 +891,30 @@ function isValidLayer(layer) {
     return layer !== undefined && layer != null;
 }
 
-function updateLayers(map, addLayers, removeLayers) {
-    // Remove all specified layers first, regardless of their current state
-    let allLayersToRemove = new Set([...removeLayers, ...addLayers]);
+function updateLayers(map, addLayers) {
+    // Initialize a Set to hold all layers that should be removed
+    let allLayersToRemove = new Set();
+
+    if (layerGroups) {
+        // Add layer groups to the Set
+        layerGroups.forEach(layerGroup => {
+            if (map.hasLayer(layerGroup)) { // Check if the layer group currently exists on the map
+                allLayersToRemove.add(layerGroup);
+            }
+        });
+    }
+
+    if (typeof backgrounds !== 'undefined' && Array.isArray(backgrounds)) {
+        // Add backgrounds to the Set only if they exist
+        backgrounds.forEach(background => {
+            if (map.hasLayer(background)) { // Check if the background layer currently exists on the map
+                allLayersToRemove.add(background);
+            }
+        });
+    }
 
     // Remove all specified layers
-    allLayersToRemove.forEach(layer => {
-        if (map.hasLayer(layer)) {
-            map.removeLayer(layer);
-        }
-    });
+    allLayersToRemove.forEach(layer => map.removeLayer(layer));
 
     // Then re-add all layers in the addLayers array
     addLayers.forEach(layer => {
@@ -871,14 +931,14 @@ function getTrimmedText(node) {
     return node.nextSibling.textContent.trim();
 }
 
-function hideCheckBoxes(groupNumber) {
-    var elementId = 'leaflet-control-layers-group-' + groupNumber;
-    document.getElementById(elementId).hidden = true;
-}
-
-function unHideCheckBoxes(groupNumber) {
-    var elementId = 'leaflet-control-layers-group-' + groupNumber;
-    document.getElementById(elementId).hidden = false;
+function hideCheckBoxes(groupNumbers) {
+    groupNumbers.forEach(function(groupNumber) {
+        var elementId = 'leaflet-control-layers-group-' + groupNumber;
+        var element = document.getElementById(elementId);
+        if (element) {
+            element.hidden = true;
+        }
+    });
 }
 
 function updateMapConfiguration(currentMap, selectedOptionId) {
@@ -912,22 +972,20 @@ function changeAllIcons(suffix) {
     layerGroups.forEach(group => {
         const layers = group.getLayers();
         layers.forEach(layer => {
-            var newIconName = layer.options.icon.options.className.replace(oldSuffix, '') + suffix;
+            const subLayers = layer.getLayers();
+            subLayers.forEach(subLayer => {
+                var newIconName = subLayer.options.icon.options.className.replace(oldSuffix, '') + suffix;
 
-            if (icons[newIconName]) {
-                layer.options.icon = icons[newIconName];
-            } else {
-                console.error('Icon not found:', newIconName);
-            }
+                if (icons[newIconName]) {
+                    subLayer.options.icon = icons[newIconName];
+                } else {
+                    console.error('Icon not found:', newIconName);
+                }
+            });
         });
     });
 
     oldSuffix = suffix;
-}
-
-function updateCheckbox(selectorIndex, checked) {
-    var checkbox = document.querySelectorAll('.leaflet-control-layers-group-selector')[selectorIndex];
-    checkbox.checked = checked;
 }
 
 function updateIcons(currentMap, iconChecked) {
@@ -935,9 +993,9 @@ function updateIcons(currentMap, iconChecked) {
     changeAllIcons(suffix);
 
     // Common update map styles and layers
-    updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
-    updateCheckbox(mapConfigurations[currentMap].checkboxIndex, mapConfigurations[currentMap].checkboxState);
-    hideCheckBoxes(mapConfigurations[currentMap].hideCheckBox);
+    updateLayers(map, mapConfigurations[currentMap].options[selectedOptionId].show);
+    updateCheckbox(mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState);
+    hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
     addRadioButtons(iconChecked);
 
     // Remove current layer if it's not the selected map
@@ -1080,9 +1138,11 @@ document.addEventListener('change', function (event) {
         if (neededMaps.some(map => map.name === getTrimmedText(radioButton).toLowerCase())) {
             currentMap = getTrimmedText(radioButton);
             // Common update map styles and layers
-            updateLayers(map, mapConfigurations[currentMap].show, mapConfigurations[currentMap].hide);
-            updateCheckbox(mapConfigurations[currentMap].checkboxIndex, mapConfigurations[currentMap].checkboxState);
-            hideCheckBoxes(mapConfigurations[currentMap].hideCheckBox);
+            selectedOptionId =  mapConfigurations[currentMap].defaultOptionId;
+            console.log(selectedOptionId);
+            updateLayers(map, mapConfigurations[currentMap].options[selectedOptionId].show);
+            updateCheckbox(mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState);
+            hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
             addRadioButtons(iconChecked);
     
             // Remove current layer if it's not the selected map
@@ -1115,7 +1175,7 @@ document.addEventListener('change', function (event) {
     }
 });
 
-function performActions(mapLayer, addLayers, removeLayers, checkboxIndex, checkboxState, hideCheckboxCount) {
+function performActions(mapLayer, addLayers, checkboxIndex, checkboxState, hideCheckboxes) {
     let mapToRemove = true; // Assume the map needs to be removed
 
     // Loop through each configuration to find if the currentSelectedMap is still needed
@@ -1137,9 +1197,9 @@ function performActions(mapLayer, addLayers, removeLayers, checkboxIndex, checkb
 
     // Assuming these are functions you have defined elsewhere to update the UI and map state
     updateMapConfiguration(currentMap, selectedOptionId);
-    updateLayers(map, addLayers, removeLayers);
+    updateLayers(map, addLayers);
     updateCheckbox(checkboxIndex, checkboxState);
-    hideCheckBoxes(hideCheckboxCount);
+    hideCheckBoxes(hideCheckboxes);
     addRadioButtons(iconChecked);
 
     addYearSelect();
@@ -1153,7 +1213,7 @@ function changeMapToSelected() {
 
     console.log(mapConfigurations[currentMap].options[selectedOption].show);
 
-    performActions(mapConfigurations[currentMap].options[selectedOption].mapLayer, mapConfigurations[currentMap].options[selectedOption].show, mapConfigurations[currentMap].options[selectedOption].hide, mapConfigurations[currentMap].options[selectedOption].checkboxIndex, mapConfigurations[currentMap].options[selectedOption].checkboxState, mapConfigurations[currentMap].options[selectedOption].hideCheckboxCount)
+    performActions(mapConfigurations[currentMap].options[selectedOption].mapLayer, mapConfigurations[currentMap].options[selectedOption].show, mapConfigurations[currentMap].options[selectedOption].checkboxIndex, mapConfigurations[currentMap].options[selectedOption].checkboxState, mapConfigurations[currentMap].options[selectedOption].hideCheckboxes)
 }
 
 // Function to update the variable with the selected option's ID
