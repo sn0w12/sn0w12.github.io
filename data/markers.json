@@ -795,6 +795,171 @@
     "customlink": null
   },
   {
+    "region": "ar1213BR",
+    "coordinates": [
+      5.079051,
+      -136.704385
+    ],
+    "icon": "capital",
+    "title": "Talasir Capital",
+    "id": "ta_capital",
+    "popuptitle": "Talasir Capital",
+    "category": "Capital",
+    "description": "The capital of Talasir",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      -16.174761,
+      -100.143934
+    ],
+    "icon": "capital",
+    "title": "Thyranian Capital",
+    "id": "ty_capital",
+    "popuptitle": "Thyranian Capital",
+    "category": "Capital",
+    "description": "The capital of Thyrania",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      41.902277,
+      -87.714844
+    ],
+    "icon": "citySmall",
+    "title": "Callatis",
+    "id": "se_callatis",
+    "popuptitle": "Callatis",
+    "category": "Small City",
+    "description": "Callatis, nestled at the fringe of a dense forest, was a quaint small city shrouded in tranquility until tragedy struck. Known for its scenic beauty and modest lifestyle, its peace was shattered in a devastating attack, leaving its inhabitants reeling in shock and sorrow. Though the specifics remain obscure to many, the aftermath of the assault left a haunting imprint on the collective memory of Callatis, forever altering its serene existence.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      32.175612,
+      -106.962891
+    ],
+    "icon": "citySmall",
+    "title": "Mirfield",
+    "id": "ta_mirfield",
+    "popuptitle": "Mirfield",
+    "category": "Small City",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      -16.693686,
+      -111.505569
+    ],
+    "icon": "citySmall",
+    "title": "Yelune",
+    "id": "ty_yelune",
+    "popuptitle": "Yelune",
+    "category": "Small City",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      45.04985,
+      -79.242103
+    ],
+    "icon": "important",
+    "title": "Seraphyrian Arch-Tree",
+    "id": "se_archtree",
+    "popuptitle": "Seraphyrian Arch-Tree",
+    "category": "Important Location",
+    "description": "",
+    "link": true,
+    "customlink": "Arch-Trees"
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      27.803884,
+      131.965833
+    ],
+    "icon": "important",
+    "title": "Eastern Arch-Tree",
+    "id": "da_archtree",
+    "popuptitle": "Eastern Arch-Tree",
+    "category": "Important Location",
+    "description": "",
+    "link": true,
+    "customlink": "Arch-Trees"
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      -17.677522,
+      10.600598
+    ],
+    "icon": "important",
+    "title": "South-Eastern Arch-Tree",
+    "id": "da_archtree",
+    "popuptitle": "South-Eastern Arch-Tree",
+    "category": "Important Location",
+    "description": "Blossoming in a beautiful blue color.",
+    "link": true,
+    "customlink": "Arch-Trees"
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      -54.521081,
+      -69.169922
+    ],
+    "icon": "important",
+    "title": "Thyranian Arch-Tree",
+    "id": "ty_archtree",
+    "popuptitle": "Thyranian Arch-Tree",
+    "category": "Important Location",
+    "description": "The Arch-Tree in Thyrania",
+    "link": true,
+    "customlink": "Arch-Trees"
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      23.340522,
+      -4.16798
+    ],
+    "icon": "character",
+    "title": "Ianara Ustrina",
+    "id": "da_ianara",
+    "popuptitle": "Ianara Ustrina",
+    "category": "Character",
+    "description": "Ianara at the start of her story.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      19.162839,
+      -59.999488
+    ],
+    "icon": "character",
+    "title": "Helios, the Eclipsed",
+    "id": "da_helios",
+    "popuptitle": "Helios, the Eclipsed",
+    "category": "Character",
+    "description": "",
+    "link": false,
+    "customlink": null
+  },
+  {
     "region": "mo",
     "coordinates": [
       39.994442,
