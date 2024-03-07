@@ -56,8 +56,9 @@ function checkUrl() {
         openMapFromUrl(map);
     }
       
-    const markerId = getFromUrl('markerId');
+    const markerId = getFromUrl('markerid');
     if (markerId) {
+        console.log(markerId);
         openPopupFromUrl(markerId);
     }
 }
@@ -1142,7 +1143,7 @@ document.addEventListener('change', function (event) {
         if (neededMaps.some(map => map.name === getTrimmedText(radioButton).toLowerCase())) {
             currentMap = getTrimmedText(radioButton);
             // Common update map styles and layers
-            selectedOptionId =  mapConfigurations[currentMap].defaultOptionId;
+            selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
             console.log(selectedOptionId);
             updateLayers(map, mapConfigurations[currentMap].options[selectedOptionId].show);
             updateCheckbox(mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState);
@@ -1155,8 +1156,6 @@ document.addEventListener('change', function (event) {
                     map.removeLayer(currentSelectedMap);
                 }
             }
-    
-            selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
     
             updateMapConfiguration(currentMap, selectedOptionId);
     
@@ -1267,4 +1266,21 @@ function setYearSelectorToLastDropdown() {
     } else {
         console.log('The dropdown has no options.');
     }
+}
+
+function enableDevMode() {
+    for (let region in allMarkers) { // Iterate over each region in allMarkers
+        let markers = allMarkers[region]; // Get the markers for the current region
+        for (let markerId in markers) { // Iterate over each marker in the region
+            let marker = markers[markerId]; // Get the marker object
+            // Assume the title is stored in marker.options.title
+            let title = marker.options.title || 'No Title'; // Fallback to 'No Title' if undefined
+            let newContent = `${title}<br>${markerId}`; // Combine title and ID with a newline in between
+            if (marker.getPopup()) {
+                marker.getPopup().setContent(newContent); // Set the popup content to the new content
+            } else {
+                marker.bindPopup(newContent).openPopup();
+            }
+        }
+    }    
 }
