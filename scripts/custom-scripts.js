@@ -292,8 +292,13 @@ function clearAllVectors() {
     });
 }
 
+function resetAndOpenPopup() {
+    marker.unbindPopup(); // Unbind any existing popup
+    marker.bindPopup(mapConfigurations[currentMap].options[selectedOptionId].form); // Bind a new popup with potentially updated content
+    marker.openPopup();
+}
+
 function markerMaker(isPolygon = false) {
-    marker.bindPopup(mapConfigurations[currentMap].options[selectedOptionId].form).openPopup();
     // Load saved data
     loadFormData();
     var formData = getFormData(marker);
@@ -490,7 +495,6 @@ function loadFormData() {
     var savedData = localStorage.getItem('markerFormData');
     if (savedData) {
         savedData = JSON.parse(savedData);
-        document.getElementById('Id').value = savedData.id;
         document.getElementById('Title').value = savedData.title;
         document.getElementById('Category').value = savedData.icon;
         document.getElementById('Description').value = savedData.description;

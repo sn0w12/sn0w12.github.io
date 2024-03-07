@@ -636,12 +636,10 @@
 			draggable: true,
 			id: "markerMaker"
 		}).on('dragend', function() {
-			marker.openPopup();
+			resetAndOpenPopup();
 			markerMaker(true);
-		});
-
-		marker.on('click', function(e) {
-			marker.openPopup();
+		}).on('click', function() {
+			resetAndOpenPopup();
 			markerMaker(true);
 		});
 

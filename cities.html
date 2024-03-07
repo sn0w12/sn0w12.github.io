@@ -205,12 +205,10 @@
 			draggable: true,
 			id: "markerMaker"
 		}).on('dragend', function() {
-			marker.openPopup();
+			resetAndOpenPopup();
 			markerMaker();
-		});
-
-		marker.on('click', function(e) {
-			marker.openPopup();
+		}).on('click', function(e) {
+			resetAndOpenPopup();
 			markerMaker();
 		});
 
