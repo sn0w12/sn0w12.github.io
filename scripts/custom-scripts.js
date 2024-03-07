@@ -964,12 +964,21 @@ function updateMapConfiguration(currentMap, selectedOptionId) {
 
 function getConvertedOptionId(selectedOptionId) {
     // Direct conversion
-    if (optionIdConversions[selectedOptionId])
-        return optionIdConversions[selectedOptionId];
+    if (optionIdConversions[selectedOptionId]) {
+        if (mapConfigurations[currentMap].options[optionIdConversions[selectedOptionId]]) {
+            return optionIdConversions[selectedOptionId];
+        }
+    }
 
     // Check for reverse conversion
     const reverseConversion = Object.keys(optionIdConversions).find(key => optionIdConversions[key] === selectedOptionId);
-    return reverseConversion || optionIdConversions[selectedOptionId];
+    if(reverseConversion) {
+        if (mapConfigurations[currentMap].options[reverseConversion]) {
+            return reverseConversion;
+        }
+    }
+
+    return mapConfigurations[currentMap].defaultOptionId;
 }
 
 function changeAllIcons(suffix) {
@@ -1142,7 +1151,7 @@ document.addEventListener('change', function (event) {
         if (neededMaps.some(map => map.name === getTrimmedText(radioButton).toLowerCase())) {
             currentMap = getTrimmedText(radioButton);
             // Common update map styles and layers
-            selectedOptionId = getConvertedOptionId(selectedOptionId) || mapConfigurations[currentMap].defaultOptionId;
+            selectedOptionId = getConvertedOptionId(selectedOptionId);
             console.log(selectedOptionId);
             updateLayers(map, mapConfigurations[currentMap].options[selectedOptionId].show);
             updateCheckbox(mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState);
