@@ -50,6 +50,18 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
     return marker;
 }
 
+function checkUrl() {
+    const map = getFromUrl('map');
+    if (map) {
+        openMapFromUrl(map);
+    }
+      
+    const markerId = getFromUrl('markerId');
+    if (markerId) {
+        openPopupFromUrl(markerId);
+    }
+}
+
 function getFromUrl(search) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(search);
@@ -87,8 +99,7 @@ function switchToMarkerMap(markerId) {
     return false; // Marker not found or could not switch maps
 }
 
-function openMapFromUrl() {
-    const map = getFromUrl('map');
+function openMapFromUrl(map) {
     const submap = getFromUrl('submap');
 
     if (map != currentMap.toLowerCase()) {
@@ -122,10 +133,7 @@ function openMapFromUrl() {
     }
 }
 
-function openPopupFromUrl() {
-    const markerId = getFromUrl('markerId');
-    if (!markerId) return; // Exit if no markerId found in the URL
-
+function openPopupFromUrl(markerId) {
     const markerMap = switchToMarkerMap(markerId);
     if (!markerMap) return; // Exit if the marker does not belong to any map
 

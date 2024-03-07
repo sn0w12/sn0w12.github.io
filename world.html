@@ -818,8 +818,7 @@
 				.then(data => processImportedData(data))
 				.then(() => {
 					map.whenReady(() => {
-						openMapFromUrl();
-						openPopupFromUrl();
+						checkUrl();
 					});
 				})
 				.catch(error => console.error('Error loading markers.json:', error));
