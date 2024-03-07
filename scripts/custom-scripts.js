@@ -1,3 +1,5 @@
+var allMarkers = {};
+
 function generatePopupContent(title, category, description, linkEnabled, linkTitle) {
     // If linkEnabled is true and linkTitle is provided, it uses linkTitle for the hyperlink otherwise it uses the title for the hyperlink.
     // If linkEnabled is false, it just displays the title without a hyperlink.
@@ -19,15 +21,94 @@ function generateMarker(id, title, category, icon, description, linkEnabled, lin
     var newId = `${id}_${customId || firstTitle}`;
     if (linkTitle) linkTitle = ", '" + linkTitle + "'";
     
-    var region = regionMap[id] || "mo"; // Determine the region
+    var region = regionMap[id] || "default"; // Determine the region
     var markerIcon = icons[icon]; // Determine the icon based on the icon type
     var popupContent = generatePopupContent(title, category, description, linkEnabled, linkTitle || "");
 
     // Create and add the marker to the map
     createAndAddMarker(region, coords, markerIcon, title, newId.replace(",", ""), popupContent);
 
-    // Return the string representation (optional, if you still need this)
+    // Return the string representation
     return `createAndAddMarker("${region}", ${JSON.stringify(coords)}, icons.${icon}, "${title}", "${newId.replace(",", "")}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${linkTitle || ""}));`;
+}
+
+function createAndAddMarker(region, coords, icon, title, id, popupContent) {
+    if (!icon || !icon.options) {
+        console.error("Invalid icon:", icon);
+        return; // Stop execution if the icon is invalid
+    }
+
+    var marker = L.marker(coords, { icon: icon, title: title, id: id }).bindPopup(popupContent);
+    
+    if (regionLayerGroups[region] && regionLayerGroups[region][icon.options.className]) {
+        regionLayerGroups[region][icon.options.className].addLayer(marker);
+    }
+
+    if (!allMarkers[region]) allMarkers[region] = {};
+    allMarkers[region][id] = marker;
+
+    return marker;
+}
+
+function getMarkerIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams.get('markerId'));
+    return urlParams.get('markerId');
+}
+
+function switchToMarkerMap(markerId) {
+    let markerPrefix = markerId.slice(0, 2);
+    let markerRegion = regionMap[markerPrefix] || "default";
+
+    // Assume regionToFull translates region codes to full names
+    let fullRegionName = regionToFull[markerRegion];
+
+    if (fullRegionName == currentMap.toLowerCase()) {
+        console.log("Map is already correct");
+        return true;
+    }
+
+    if (fullRegionName) {
+        let labels = document.querySelectorAll('label span');
+        let targetLabel = Array.from(labels).find(span => span.textContent.trim().toLowerCase() === fullRegionName);
+
+        if (targetLabel) {
+            // Go up to the parent label element to find the input element (radio button)
+            let radioButton = targetLabel.closest('label').querySelector('input[type="radio"].leaflet-control-layers-selector');
+            if (radioButton) {
+                console.log(`Switching to map of region: ${fullRegionName}`);
+                // Click the radio button
+                radioButton.click();
+                return true;
+            }
+        }
+    }
+
+    console.warn("Marker not found in any region:", markerId);
+    return false; // Marker not found or could not switch maps
+}
+
+function openPopupFromUrl() {
+    const markerId = getMarkerIdFromUrl();
+    if (!markerId) return; // Exit if no markerId found in the URL
+
+    const markerMap = switchToMarkerMap(markerId);
+    if (!markerMap) return; // Exit if the marker does not belong to any map
+
+    for (let region in allMarkers) {
+        if (allMarkers[region][markerId]) {
+            // Open the popup
+            console.log(`Opening popup ${markerId}`);
+            const marker = allMarkers[region][markerId];
+            const latlng = marker.getLatLng();
+            allMarkers[region][markerId].openPopup();
+            map.setView(latlng, 4);
+            setTimeout(function() {
+                map.setView(latlng, 4);
+            }, 500);
+            break;
+        }
+    }
 }
 
 function createMap(prefix, title, noWrap, minZoom, maxZoom, pane, add) {
@@ -710,21 +791,6 @@ function downloadJson(data) {
     URL.revokeObjectURL(url);
 }
 
-function createAndAddMarker(region, coords, icon, title, id, popupContent) {
-    if (!icon || !icon.options) {
-        console.error("Invalid icon:", icon);
-        return; // Stop execution if the icon is invalid
-    }
-
-    var marker = L.marker(coords, { icon: icon, title: title, id: id }).bindPopup(popupContent);
-    
-    if (regionLayerGroups[region] && regionLayerGroups[region][icon.options.className]) {
-        regionLayerGroups[region][icon.options.className].addLayer(marker);
-    }
-
-    return marker;
-}
-
 function updateMapStyles(map, backgroundColor, addControl) {
     map.getContainer().style.backgroundColor = backgroundColor;
     allSearch.forEach(function(control) {
@@ -884,50 +950,53 @@ function createControlButton(href, title, initialIconSrc, hoverIconSrc, onClick)
 }
 
 function processImportedData(jsonData) {
-    // Check if jsonData is an array and not empty
-    if (!Array.isArray(jsonData) || jsonData.length === 0) {
-        alert("Invalid or empty data: jsonData is not a valid array");
-        return; // Exit the function early
-    }
-
-    // Validate each item in the jsonData array
-    for (let markerData of jsonData) {
-        if (!isValidMarkerData(markerData)) {
-            alert("Invalid marker data: " + JSON.stringify(markerData));
-            return; // Exit if any marker data is invalid
-        }
-    }
-
-    // Store all existing markers
-    var oldMarkers = getAllMarkersFromGroups();
-
-    jsonData.forEach(markerData => {
-        var iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
-        if (!iconType) {
-            console.warn("Icon not found for:", markerData.icon, "Using default icon.");
-            iconType = icons.defaultIcon;
+    return new Promise((resolve, reject) => {
+        // Check if jsonData is an array and not empty
+        if (!Array.isArray(jsonData) || jsonData.length === 0) {
+            alert("Invalid or empty data: jsonData is not a valid array");
+            return; // Exit the function early
         }
 
-        var popupContent = generatePopupContent(
-            markerData.popuptitle, 
-            markerData.category, 
-            markerData.description, 
-            markerData.link, 
-            markerData.customlink
-        );
+        // Validate each item in the jsonData array
+        for (let markerData of jsonData) {
+            if (!isValidMarkerData(markerData)) {
+                alert("Invalid marker data: " + JSON.stringify(markerData));
+                return; // Exit if any marker data is invalid
+            }
+        }
 
-        createAndAddMarker(
-            markerData.region, 
-            markerData.coordinates, 
-            iconType, 
-            markerData.title, 
-            markerData.id, 
-            popupContent
-        );
+        // Store all existing markers
+        var oldMarkers = getAllMarkersFromGroups();
+
+        jsonData.forEach(markerData => {
+            var iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
+            if (!iconType) {
+                console.warn("Icon not found for:", markerData.icon, "Using default icon.");
+                iconType = icons.defaultIcon;
+            }
+
+            var popupContent = generatePopupContent(
+                markerData.popuptitle, 
+                markerData.category, 
+                markerData.description, 
+                markerData.link, 
+                markerData.customlink
+            );
+
+            createAndAddMarker(
+                markerData.region, 
+                markerData.coordinates, 
+                iconType, 
+                markerData.title, 
+                markerData.id, 
+                popupContent
+            );
+        });
+
+        // Remove old markers after new data has been processed
+        oldMarkers.forEach(marker => marker.remove());
+        resolve();
     });
-
-    // Remove old markers after new data has been processed
-    oldMarkers.forEach(marker => marker.remove());
 }
 
 function isValidMarkerData(markerData) {

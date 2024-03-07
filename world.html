@@ -296,7 +296,13 @@
 			"ac": "ar",
 			"go": "ar",
 			"fp": "ar",
+			"sc": "mo",
 		};
+
+		const regionToFull = {
+			"ar": "arathia",
+			"mo": "morturia"
+		}
 
 		var southWest = L.latLng(-70, -170),
 			northEast = L.latLng(70, 170),
@@ -809,9 +815,8 @@
 			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 			fetch('data/markers.json')
 				.then(response => response.json())
-				.then(data => {
-					processImportedData(data);
-				})
+				.then(data => processImportedData(data))
+				.then(() => openPopupFromUrl())
 				.catch(error => console.error('Error loading markers.json:', error));
 		});
 

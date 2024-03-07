@@ -61,6 +61,20 @@
 			"ac": "ac",
 		};
 
+		const regionToFull = {
+			"an": "antaria",
+			"od": "od",
+			"th": "th",
+			"rh": "rh",
+			"az": "az",
+			"ts": "tsuki",
+			"pr": "pr",
+			"dr": "dr",
+			"tc": "tc",
+			"gi": "gi",
+			"ac": "ac",
+		}
+
 		var southWest = L.latLng(-80, -185),
 			northEast = L.latLng(80, 185),
 			bounds = L.latLngBounds(southWest, northEast);
@@ -477,8 +491,11 @@
 			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 			fetch('data/cityMarkers.json')
 				.then(response => response.json())
-				.then(data => {
-					processImportedData(data);
+				.then(data => processImportedData(data))
+				.then(() => {
+					map.whenReady(() => {
+						openPopupFromUrl();
+					});
 				})
 				.catch(error => console.error('Error loading markers.json:', error));
 		});
