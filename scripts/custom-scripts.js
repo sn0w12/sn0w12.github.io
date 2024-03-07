@@ -58,7 +58,6 @@ function checkUrl() {
       
     const markerId = getFromUrl('markerid');
     if (markerId) {
-        console.log(markerId);
         openPopupFromUrl(markerId);
     }
 }
@@ -970,7 +969,7 @@ function getConvertedOptionId(selectedOptionId) {
 
     // Check for reverse conversion
     const reverseConversion = Object.keys(optionIdConversions).find(key => optionIdConversions[key] === selectedOptionId);
-    return reverseConversion || selectedOptionId;
+    return reverseConversion || optionIdConversions[selectedOptionId];
 }
 
 function changeAllIcons(suffix) {
