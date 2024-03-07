@@ -1,6 +1,6 @@
 # Arathia
 
-Several project related to the world of Arathia.
+Several projects related to the world of Arathia.
 
 **Homepage:** [sn0w12.github.io](https://sn0w12.github.io/)<br>
 **Interactive Map:** [sn0w12.github.io/world](https://sn0w12.github.io/world) <br>
