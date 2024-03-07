@@ -50,10 +50,9 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
     return marker;
 }
 
-function getMarkerIdFromUrl() {
+function getFromUrl(search) {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log(urlParams.get('markerId'));
-    return urlParams.get('markerId');
+    return urlParams.get(search);
 }
 
 function switchToMarkerMap(markerId) {
@@ -88,8 +87,43 @@ function switchToMarkerMap(markerId) {
     return false; // Marker not found or could not switch maps
 }
 
+function openMapFromUrl() {
+    const map = getFromUrl('map');
+    const submap = getFromUrl('submap');
+
+    if (map != currentMap.toLowerCase()) {
+        let labels = document.querySelectorAll('label span');
+        let targetLabel = Array.from(labels).find(span => span.textContent.trim().toLowerCase() === map);
+    
+        if (targetLabel) {
+            // Go up to the parent label element to find the input element (radio button)
+            let radioButton = targetLabel.closest('label').querySelector('input[type="radio"].leaflet-control-layers-selector');
+            if (radioButton) {
+                // Click the radio button
+                radioButton.click();
+            }
+        }
+    } else {
+        console.log("Map is already correct");
+    }
+
+    if (submap) {
+        const yearSelector =  document.getElementById('YearSelector');
+
+        for (const option of yearSelector.options) {
+            const normalizedOptionText = option.text.replace(/[\s.]/g, '');
+    
+            if (normalizedOptionText === submap) {
+                option.selected = true;
+                yearSelector.dispatchEvent(new Event('change'));
+                break; // Exit the loop as we found our match
+            }
+        }
+    }
+}
+
 function openPopupFromUrl() {
-    const markerId = getMarkerIdFromUrl();
+    const markerId = getFromUrl('markerId');
     if (!markerId) return; // Exit if no markerId found in the URL
 
     const markerMap = switchToMarkerMap(markerId);
@@ -105,7 +139,7 @@ function openPopupFromUrl() {
             map.setView(latlng, 4);
             setTimeout(function() {
                 map.setView(latlng, 4);
-            }, 500);
+            }, 150); // In case it fails to zoom for some reason, happens on city map
             break;
         }
     }
