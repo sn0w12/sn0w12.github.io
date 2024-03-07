@@ -60,6 +60,11 @@ function checkUrl() {
     if (markerId) {
         openPopupFromUrl(markerId);
     }
+
+    const categories = getFromUrl('categories');
+    if (categories) {
+        updateCategorySelection(categories.split('-'));
+    }
 }
 
 function getFromUrl(search) {
@@ -160,6 +165,26 @@ function openPopupFromUrl(markerId) {
             break;
         }
     }
+}
+
+function updateCategorySelection(categories) {
+    const categorySet = new Set(categories.map(category => category.trim().toLowerCase().replace(' ', '')));
+
+    // Get all checkboxes (excluding radio buttons) within the control layers
+    const selectors = document.querySelectorAll('.leaflet-control-layers-selector[type="checkbox"]');
+    
+    // Iterate over the checkboxes to simulate a click event where needed
+    selectors.forEach(selector => {
+        if (selector.nextElementSibling && selector.nextElementSibling.tagName === 'SPAN') {
+            const categoryName = selector.nextElementSibling.textContent.trim().toLowerCase().replace(' ', '');
+            const shouldBeChecked = categorySet.has(categoryName);
+
+            // Check if we need to change the state of the checkbox
+            if (selector.checked !== shouldBeChecked) {
+                selector.click();
+            }
+        }
+    });
 }
 
 function createMap(prefix, title, noWrap, minZoom, maxZoom, pane, add) {
