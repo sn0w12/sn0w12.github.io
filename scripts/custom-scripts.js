@@ -93,7 +93,7 @@ function openMapFromUrl() {
 
     if (map != currentMap.toLowerCase()) {
         let labels = document.querySelectorAll('label span');
-        let targetLabel = Array.from(labels).find(span => span.textContent.trim().toLowerCase() === map);
+        let targetLabel = Array.from(labels).find(span => span.textContent.trim().toLowerCase().replace(' ', '') === map);
     
         if (targetLabel) {
             // Go up to the parent label element to find the input element (radio button)
