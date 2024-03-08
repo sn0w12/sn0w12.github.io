@@ -87,13 +87,10 @@ function switchToMarkerMap(markerId) {
             // Go up to the parent label element to find the input element (radio button)
             let radioButton = targetLabel.closest('label').querySelector('input[type="radio"].leaflet-control-layers-selector');
             if (radioButton) {
-                console.log(`Switching to map of region: ${fullRegionName}`);
                 // Click the radio button
                 radioButton.click();
             }
         }
-    } else {
-        console.log("Map is already correct");
     }
 
     if (submap) {
@@ -128,8 +125,6 @@ function openMapFromUrl(map) {
                 radioButton.click();
             }
         }
-    } else {
-        console.log("Map is already correct");
     }
 
     if (submap) {
@@ -154,7 +149,6 @@ function openPopupFromUrl(markerId) {
     for (let region in allMarkers) {
         if (allMarkers[region][markerId]) {
             // Open the popup
-            console.log(`Opening popup ${markerId}`);
             const marker = allMarkers[region][markerId];
             const latlng = marker.getLatLng();
             allMarkers[region][markerId].openPopup();
@@ -172,6 +166,7 @@ function updateCategorySelection(categories = []) {
 
     // Get all checkboxes (excluding radio buttons) within the control layers
     const selectors = document.querySelectorAll('.leaflet-control-layers-selector[type="checkbox"]');
+    const groupSelectors = document.querySelectorAll('.leaflet-control-layers-group-selector[type="checkbox"]');
 
     // Iterate over the checkboxes to simulate a click event where needed
     selectors.forEach(selector => {
@@ -191,6 +186,18 @@ function updateCategorySelection(categories = []) {
             }
         }
     });
+
+    categories = categories.filter(category => category.trim() !== '');
+    if (categories.length == 0) {
+        groupSelectors.forEach(selector => {
+            if (!selector.hasAttribute('hidden')) {
+                // Check if we need to change the state of the checkbox
+                if (selector.checked) {
+                    selector.click();
+                }
+            }
+        });
+    }
 
     if (currentMap.slice(-5).toLowerCase() != "clean") {
         currentSelectedCategories = categories.join('-');
@@ -298,7 +305,7 @@ function parseLatLng(latlngString) {
 function isPointInsidePolygon(latlngString, polygon) {
     const point = parseLatLng(latlngString);
     if (!point) {
-        console.log("Invalid point format.");
+        console.warn("Invalid point format.");
         return false;
     }
     
@@ -341,7 +348,6 @@ function markerMaker(isPolygon = false) {
 
     var coords = marker.getLatLng().toString().replace('LatLng', '').replace('(', '').replace(')', '');
     document.getElementById('Coords').value = coords;
-    console.log(coords);
 
     if (!isPolygon)
         setSelectValueFromCheckedRadioButton()
@@ -351,7 +357,6 @@ function markerMaker(isPolygon = false) {
             for (const region in countryPolygons[currentMap][selectedOptionId]) {
                 const polygon = countryPolygons[currentMap][selectedOptionId][region];
                 if (isPointInsidePolygon(formData.coords, polygon)) {
-                    console.log(`Point is inside ${region}, ${currentMap}.`);
                     setSelectValueFromCheckedRadioButton(region);
                     displayPolygon(polygon, region);
                 }                
@@ -726,7 +731,7 @@ function openAllPopupsInLayerGroup(region, group) {
             }
         });
     } else {
-        console.log("Invalid region or group");
+        console.warn("Invalid region or group");
     }
 }
 
@@ -994,7 +999,6 @@ function updateMapConfiguration(currentMap, selectedOptionId) {
         console.warn('No configuration found for selectedOptionId:', selectedOptionId);
         return; // Exit if no configuration is found for the selectedOptionId
     }
-    console.log("Updated map styles");
     updateMapStyles(map, mapStyle.color, mapConfigurations[currentMap].options[selectedOptionId].search.controlSearch1);
 }
 
@@ -1188,7 +1192,6 @@ document.addEventListener('change', function (event) {
             currentMap = getTrimmedText(radioButton);
             // Common update map styles and layers
             selectedOptionId = getConvertedOptionId(selectedOptionId);
-            console.log(selectedOptionId);
             updateLayers(map, mapConfigurations[currentMap].options[selectedOptionId].show);
             updateCheckbox(mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState);
             hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
@@ -1221,7 +1224,6 @@ document.addEventListener('change', function (event) {
         var iconType = getTrimmedText(radioButton);
         if (iconType) {
             if (iconChecked !== null) {
-                console.log(getCheckedIndex(iconType));
                 iconChecked = getCheckedIndex(iconType);
                 updateIcons(currentMap, iconChecked);
             }
@@ -1272,8 +1274,6 @@ function changeMapToSelected() {
     var dropdown = document.getElementById('YearSelector');
     var selectedOption = dropdown.options[dropdown.selectedIndex].id;
 
-    console.log(mapConfigurations[currentMap].options[selectedOption].show);
-
     performActions(mapConfigurations[currentMap].options[selectedOption].mapLayer, mapConfigurations[currentMap].options[selectedOption].show, mapConfigurations[currentMap].options[selectedOption].checkboxIndex, mapConfigurations[currentMap].options[selectedOption].checkboxState, mapConfigurations[currentMap].options[selectedOption].hideCheckboxes)
 }
 
@@ -1281,7 +1281,6 @@ function changeMapToSelected() {
 function updateSelectedOptionId() {
     var dropdown = document.getElementById('YearSelector');
     selectedOptionId = dropdown.options[dropdown.selectedIndex].id;
-    console.log("Selected Option ID:", selectedOptionId); // For demonstration
     
     changeMapToSelected();
 }
@@ -1299,12 +1298,10 @@ function setYearSelectorToLastDropdown() {
             for (var i = 0; i < dropdown.options.length; i++) {
                 if (dropdown.options[i].id === selectedOptionId) {
                     dropdown.selectedIndex = i;
-                    console.log("Dropdown set to option with ID:", selectedOptionId);
                     break;
                 }
             }
         } else {
-            console.log('Matching option not found in the dropdown.');
             let mapToRemove = true; // Assume the map needs to be removed
 
             // Loop through each configuration to find if the currentSelectedMap is still needed
@@ -1358,9 +1355,14 @@ function updateSelectedCategoriesString() {
 
 function attachEventListenersToCheckboxes() {
     const selectors = document.querySelectorAll('.leaflet-control-layers-selector[type="checkbox"]');
+    const groupSelectors = document.querySelectorAll('.leaflet-control-layers-group-selector[type="checkbox"]');
 
     // Iterate over all selectors to attach the change event listener
     selectors.forEach(selector => {
+        selector.addEventListener('change', updateSelectedCategoriesString);
+    });
+
+    groupSelectors.forEach(selector => {
         selector.addEventListener('change', updateSelectedCategoriesString);
     });
 }

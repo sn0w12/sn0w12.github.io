@@ -1008,7 +1008,7 @@
 			addRadioButtons(1)
 			hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
 			addYearSelect();
-			attachEventListenersToCheckboxes();
+			updateSelectedCategoriesString();
 			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 			fetch('data/markers.json')
 				.then(response => response.json())
