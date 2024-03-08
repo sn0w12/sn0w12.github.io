@@ -464,23 +464,7 @@
 		};
 
 		document.addEventListener('DOMContentLoaded', function () {
-			// Check the main checkbox
-			var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
-			checkbox.checked = true;
-			addRadioButtons(1)
-			hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
-			addYearSelect();
-			attachEventListenersToCheckboxes();
-			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-			fetch('data/cityMarkers.json')
-				.then(response => response.json())
-				.then(data => processImportedData(data))
-				.then(() => {
-					map.whenReady(() => {
-						checkUrl();
-					});
-				})
-				.catch(error => console.error('Error loading markers.json:', error));
+			setUp('data/markers/cityMarkers.json');
 		});
 
 		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');

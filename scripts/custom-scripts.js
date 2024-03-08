@@ -1,4 +1,5 @@
 var allMarkers = {};
+let isDragging = false;
 
 function generatePopupContent(title, category, description, linkEnabled, linkTitle) {
     // If linkEnabled is true and linkTitle is provided, it uses linkTitle for the hyperlink otherwise it uses the title for the hyperlink.
@@ -559,28 +560,68 @@ function calculateCorrectionFactor(latitude) {
     return correctionFactor;
 }
 
-function displayPolygon(polygon, region, displayArea = false, color = null) {
-    // Get the hex color for the current country from the mapping
-    var countryColor = countryColors[region] || '#CCCCCC'; // Default to gray if no color defined
+function displayPolygon(polygon, region, displayArea = false, color = null, opacity = 0.4, outline = 1, url = null) {
+    // Get the hex color for the current region from the mapping
+    var regionColor = countryColors[region] || '#CCCCCC'; // Default to gray if no color defined
     if (color != null) {
-        countryColor = color;
+        regionColor = color;
     }
     polygon = reversePolygonCoordinates(polygon);
 
-    // Create a GeoJSON layer with the specified hex color
+    const highlightStyle = {
+        fillColor: regionColor,
+        fillOpacity: 0.4, // Increase opacity on hover
+        color: 'black',
+        weight: 1
+    };
+
+    const normalStyle = {
+        fillColor: regionColor,
+        fillOpacity: opacity, // Normal opacity
+        color: 'black',
+        weight: outline
+    };
+
+    // Create a GeoJSON layer with the specified hex color and opacity
     const geoJsonLayer = L.geoJSON(polygon, {
-        style: {
-            fillColor: countryColor,
-            fillOpacity: 0.4,
-            color: 'black',
-            weight: 1
-        }
+        style: normalStyle
     }).addTo(map);
 
+    if (url) {
+        // Change the style on hover to indicate interactivity
+        geoJsonLayer.on('mouseover', function() {
+            this.setStyle(highlightStyle);
+        });
+        geoJsonLayer.on('mouseout', function() {
+            this.setStyle(normalStyle);
+        });
+
+        geoJsonLayer.on('click', function(e) {
+            if (!isDragging) {
+                if (e.originalEvent.button === 0) {
+                    if (e.originalEvent.ctrlKey || e.originalEvent.metaKey) {
+                        window.open(url, '_blank');
+                    } else {
+                        window.location.href = url;
+                    }
+                }
+            }
+        });
+
+        geoJsonLayer.on('mousedown', function(e) {
+            if (e.originalEvent.button === 1) {
+                map.dragging.disable();
+                window.open(url, '_blank');
+                map.dragging.enable();
+            }
+        });
+    }
+
+    // Calculate and display area if required
     if (displayArea) {
         areaInSquareKilometers = getPolygonArea(polygon);
-        areaOfWorld = (areaInSquareKilometers/worldSize) * 100;
-        areaOfLand = (areaInSquareKilometers/getTotalArea(false) * 100);
+        areaOfWorld = (areaInSquareKilometers / worldSize) * 100;
+        areaOfLand = (areaInSquareKilometers / getTotalArea(false)) * 100;
 
         const formattedArea = areaInSquareKilometers.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         geoJsonLayer.bindPopup(`Area: ${formattedArea} square kilometers
@@ -1218,6 +1259,7 @@ document.addEventListener('change', function (event) {
                 updateCategorySelection(currentSelectedCategories.split('-'));
                 attachEventListenersToCheckboxes();
             }
+            addCityPolygons();
         }
     } else if (radioButton.classList.contains('custom-radio-class')) {
         var iconType = getTrimmedText(radioButton);
@@ -1267,6 +1309,7 @@ function performActions(mapLayer, addLayers, checkboxIndex, checkboxState, hideC
     addYearSelect();
     document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
     setYearSelectorToLastDropdown();
+    addCityPolygons();
 }
 
 function changeMapToSelected() {
@@ -1364,4 +1407,60 @@ function attachEventListenersToCheckboxes() {
     groupSelectors.forEach(selector => {
         selector.addEventListener('change', updateSelectedCategoriesString);
     });
+
+    map.on('mousedown', function(e) {
+        // Reset the dragging flag on mouse down
+        isDragging = false;
+    });
+    
+    map.on('mousemove', function(e) {
+        // Set the dragging flag if the mouse moves (map is being dragged)
+        isDragging = true;
+    });
+}
+
+function addCityPolygons() {
+    clearAllVectors();
+    // Access the relevant polygons for the current map and selected option
+    if (cityPolygons[currentMap] && typeof cityPolygons[currentMap][selectedOptionId] != "undefined") {
+        const options = cityPolygons[currentMap][selectedOptionId];
+    
+        // Iterate through the options object to get each city's details
+        for (const country in options) {
+            const countryDetails = options[country];
+            for (const city in countryDetails) {
+                const cityDetails = countryDetails[city];
+                console.log(cityDetails);
+        
+                // Extract the polygon and URL for the current city
+                const polygon = cityDetails.polygons;
+                const url = cityDetails.url;
+        
+                displayPolygon(polygon, country, false, null, 0, 0, url)
+            }
+        }
+    } else {
+        console.warn("No config found for:", currentMap, selectedOptionId)
+    }
+}
+
+function setUp(dataUrl) {
+    // Check the main checkbox
+    var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
+    checkbox.checked = true;
+    addRadioButtons(1)
+    hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
+    addYearSelect();
+    attachEventListenersToCheckboxes();
+    document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
+    addCityPolygons();
+    fetch(dataUrl)
+        .then(response => response.json())
+        .then(data => processImportedData(data))
+        .then(() => {
+            map.whenReady(() => {
+                checkUrl();
+            });
+        })
+        .catch(error => console.error(`Error loading ${dataUrl}:`, error));
 }
