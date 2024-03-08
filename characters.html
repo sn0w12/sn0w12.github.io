@@ -305,7 +305,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('/data/characters.json')
+        fetch('/data/characters/characters.json')
             .then(response => response.json())
             .then(data => {
                 const headerContainer = document.querySelector('.header-container');
