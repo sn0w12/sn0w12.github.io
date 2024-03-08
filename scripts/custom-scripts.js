@@ -1421,26 +1421,28 @@ function attachEventListenersToCheckboxes() {
 
 function addCityPolygons() {
     clearAllVectors();
-    // Access the relevant polygons for the current map and selected option
-    if (cityPolygons[currentMap] && typeof cityPolygons[currentMap][selectedOptionId] != "undefined") {
-        const options = cityPolygons[currentMap][selectedOptionId];
-    
-        // Iterate through the options object to get each city's details
-        for (const country in options) {
-            const countryDetails = options[country];
-            for (const city in countryDetails) {
-                const cityDetails = countryDetails[city];
-                console.log(cityDetails);
+    if (typeof cityPolygons != "undefined") {
+        // Access the relevant polygons for the current map and selected option
+        if (cityPolygons[currentMap] && typeof cityPolygons[currentMap][selectedOptionId] != "undefined") {
+            const options = cityPolygons[currentMap][selectedOptionId];
         
-                // Extract the polygon and URL for the current city
-                const polygon = cityDetails.polygons;
-                const url = cityDetails.url;
-        
-                displayPolygon(polygon, country, false, null, 0, 0, url)
+            // Iterate through the options object to get each city's details
+            for (const country in options) {
+                const countryDetails = options[country];
+                for (const city in countryDetails) {
+                    const cityDetails = countryDetails[city];
+                    console.log(cityDetails);
+            
+                    // Extract the polygon and URL for the current city
+                    const polygon = cityDetails.polygons;
+                    const url = cityDetails.url;
+            
+                    displayPolygon(polygon, country, false, null, 0, 0, url)
+                }
             }
+        } else {
+            console.warn("No config found for:", currentMap, selectedOptionId)
         }
-    } else {
-        console.warn("No config found for:", currentMap, selectedOptionId)
     }
 }
 
