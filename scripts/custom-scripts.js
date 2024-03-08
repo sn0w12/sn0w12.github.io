@@ -201,7 +201,6 @@ function updateCategorySelection(categories = []) {
 
     if (currentMap.slice(-5).toLowerCase() != "clean") {
         currentSelectedCategories = categories.join('-');
-        console.log(currentSelectedCategories);
     }
 }
 

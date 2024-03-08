@@ -470,7 +470,7 @@
 			addRadioButtons(1)
 			hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
 			addYearSelect();
-			updateSelectedCategoriesString();
+			attachEventListenersToCheckboxes();
 			document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
 			fetch('data/cityMarkers.json')
 				.then(response => response.json())
