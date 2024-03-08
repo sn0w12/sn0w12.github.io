@@ -787,7 +787,7 @@
     ],
     "icon": "capital",
     "title": "Seraphyrian Capital",
-    "id": "se_seraphyrian",
+    "id": "se_capital",
     "popuptitle": "Seraphyrian Capital",
     "category": "Capital",
     "description": "The capital of Seraphyria",
@@ -836,6 +836,36 @@
     "popuptitle": "Callatis",
     "category": "Small City",
     "description": "Callatis, nestled at the fringe of a dense forest, was a quaint small city shrouded in tranquility until tragedy struck. Known for its scenic beauty and modest lifestyle, its peace was shattered in a devastating attack, leaving its inhabitants reeling in shock and sorrow. Though the specifics remain obscure to many, the aftermath of the assault left a haunting imprint on the collective memory of Callatis, forever altering its serene existence.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      32.077314,
+      -15.811423
+    ],
+    "icon": "citySmall",
+    "title": "Lentia",
+    "id": "se_lentia",
+    "popuptitle": "Lentia",
+    "category": "Small City",
+    "description": "An almost abandoned city, created by Seraphyria for expansion, now it's only used by the military.",
+    "link": false,
+    "customlink": null
+  },
+  {
+    "region": "ar1213BR",
+    "coordinates": [
+      32.303388,
+      -8.998733
+    ],
+    "icon": "town",
+    "title": "Tarrin",
+    "id": "se_tarrin",
+    "popuptitle": "Tarrin",
+    "category": "Town",
+    "description": "An abandoned town, created by Seraphyria for expansion.",
     "link": false,
     "customlink": null
   },
