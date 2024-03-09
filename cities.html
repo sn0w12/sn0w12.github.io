@@ -1,142 +1,332 @@
 <!DOCTYPE html>
-<html = style="height: 100%;">
+<html style="height: 100%;">
+  <head>
+    <title>Arathia Cities Maps</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="icons/arathia.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="scripts/leaflet.css" />
+    <link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
+    <link
+      rel="stylesheet"
+      href="scripts/leaflet-search/src/leaflet-search.css"
+    />
+    <link rel="stylesheet" href="style/style.css" />
+    <script src="scripts/leaflet.js"></script>
+    <script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
+    <script src="scripts/leaflet-search/src/leaflet-search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.0.0/Leaflet.Editable.min.js"></script>
+  </head>
 
-<head>
-	<title>Arathia Cities Maps</title>
-	<meta charset="UTF-8">
-	<link rel="icon" href="icons/arathia.png">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="scripts/leaflet.css">
-	<link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
-	<link rel="stylesheet" href="scripts/leaflet-search/src/leaflet-search.css" />
-	<link rel="stylesheet" href="style/style.css">
-	<script src="scripts/leaflet.js"></script>
-	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
-	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.0.0/Leaflet.Editable.min.js"></script>
-</head>
+  <body style="height: 100%; margin: 0; overflow-y: hidden; overflow-x: hidden">
+    <div id="map" style="width: 100%; height: 100%; background: #cc0000"></div>
+    <a
+      class="leaflet-control-zoom-out"
+      href="index"
+      title="Zoom out"
+      role="button"
+      aria-label="Zoom out"
+      aria-disabled="false"
+      ><span aria-hidden="true">−</span></a
+    >
+    <script src="scripts/custom-scripts.js"></script>
+    <script type="text/javascript">
+      // MAPS
+      var radioButtonsInfo = [
+        {
+          label: "Default Icons",
+          option: "option1",
+          checkedIndex: 1,
+          suffix: "",
+        },
+        {
+          label: "Old Icons",
+          option: "option2",
+          checkedIndex: 2,
+          suffix: "Old",
+        },
+        {
+          label: "Simple Icons",
+          option: "option3",
+          checkedIndex: 3,
+          suffix: "Simple",
+        },
+      ];
 
-<body style="height: 100%;margin: 0;overflow-y: hidden;overflow-x: hidden;">
-	<div id="map" style="width: 100%; height: 100%; background: #cc0000;"></div>
-	<a class="leaflet-control-zoom-out" href="index" title="Zoom out" role="button"
-        aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
-	<script src="scripts/custom-scripts.js"></script>
-	<script type="text/javascript">
-		// MAPS
-		var radioButtonsInfo = [
-			{ label: "Default Icons", option: "option1", checkedIndex: 1, suffix: '' },
-			{ label: "Old Icons", option: "option2", checkedIndex: 2, suffix: 'Old' },
-			{ label: "Simple Icons", option: "option3", checkedIndex: 3, suffix: 'Simple' }
-		];
+      var neededMaps = [
+        { map: antaria, name: "antaria" },
+        { map: tsuki, name: "tsuki" },
+      ];
 
-		var neededMaps = [
-			{ map: antaria, name: "antaria" },
-			{ map: tsuki, name: "tsuki" },
-		];
+      var oldSuffix = "";
+      var currentSelectedMap = antaria;
+      var selectedOptionId = "anOption1";
+      var iconChecked = 1;
+      var currentMap = "Antaria";
+      var currentSelectedCategories =
+        "civiccenters-market-residential-fortification-nature-locations-characters";
 
-		var oldSuffix = "";
-		var currentSelectedMap = antaria;
-		var selectedOptionId = 'anOption1';
-		var iconChecked = 1;
-		var currentMap = 'Antaria';
-		var currentSelectedCategories = "civiccenters-market-residential-fortification-nature-locations-characters";
+      // Define a map to convert between optionIds when switching map types
+      var optionIdConversions = {
+        anOption2: "anCleanOption2",
+        tsOption2: "tsCleanOption2",
+      };
 
-		// Define a map to convert between optionIds when switching map types
-		var optionIdConversions = {
-			'anOption2': 'anCleanOption2',
-			'tsOption2': 'tsCleanOption2'
-		};
+      const regionMap = {
+        an: "an",
+        od: "od",
+        th: "th",
+        rh: "rh",
+        az: "az",
+        ts: "ts",
+        pr: "pr",
+        dr: "dr",
+        tc: "tc",
+        gi: "gi",
+        ac: "ac",
+      };
 
-		const regionMap = {
-			"an": "an",
-			"od": "od",
-			"th": "th",
-			"rh": "rh",
-			"az": "az",
-			"ts": "ts",
-			"pr": "pr",
-			"dr": "dr",
-			"tc": "tc",
-			"gi": "gi",
-			"ac": "ac",
-		};
+      const regionToFull = {
+        an: ["antaria"],
+        od: ["od"],
+        th: ["th"],
+        rh: ["rh"],
+        az: ["az"],
+        ts: ["tsuki"],
+        pr: ["pr"],
+        dr: ["dr"],
+        tc: ["tc"],
+        gi: ["gi"],
+        ac: ["ac"],
+      };
 
-		const regionToFull = {
-			"an": ["antaria"],
-			"od": ["od"],
-			"th": ["th"],
-			"rh": ["rh"],
-			"az": ["az"],
-			"ts": ["tsuki"],
-			"pr": ["pr"],
-			"dr": ["dr"],
-			"tc": ["tc"],
-			"gi": ["gi"],
-			"ac": ["ac"],
-		}
+      var southWest = L.latLng(-80, -185),
+        northEast = L.latLng(80, 185),
+        bounds = L.latLngBounds(southWest, northEast);
 
-		var southWest = L.latLng(-80, -185),
-			northEast = L.latLng(80, 185),
-			bounds = L.latLngBounds(southWest, northEast);
+      //Creating the Map
+      var map = L.map("map", {
+        maxBounds: bounds,
+        zoomSnap: 0.1,
+        zoomDelta: 0.5,
+        wheelPxPerZoomLevel: 120,
+      }).setView([0, 0], 0);
 
-		//Creating the Map
-		var map = L.map('map', {
-			maxBounds: bounds,
-			zoomSnap: 0.1,
-			zoomDelta: 0.5,
-			wheelPxPerZoomLevel: 120,
-		}).setView([0, 0], 0);
+      map.createPane("addPane");
+      map.createPane("basePane");
+      map.createPane("backgroundPane");
 
-		map.createPane('addPane');
-		map.createPane('basePane');
-		map.createPane('backgroundPane');
+      map.getPane("addPane").style.zIndex = 250;
+      map.getPane("basePane").style.zIndex = 220;
+      map.getPane("backgroundPane").style.zIndex = 150;
 
-		map.getPane('addPane').style.zIndex = 250;
-		map.getPane('basePane').style.zIndex = 220;
-		map.getPane('backgroundPane').style.zIndex = 150;
+      // Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
+      var antaria = createMap(
+        "Antaria",
+        "antaria",
+        true,
+        2,
+        5.4,
+        "basePane",
+        true
+      );
+      var tsuki = createMap(
+        "Antaria",
+        "getsuyosei",
+        true,
+        2,
+        5.4,
+        "basePane",
+        false
+      );
 
-		// Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
-		var antaria = createMap('Antaria', 'antaria', true, 2, 5.4, 'basePane', true);
-		var tsuki = createMap('Antaria', 'getsuyosei', true, 2, 5.4, 'basePane', false);
+      // Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
+      var defaultIconSettings = {
+        size: [31, 41],
+        anchor: [15, 41],
+        popupAnchor: [1, -44],
+      };
+      var oldIconSettings = {
+        size: [31, 41],
+        anchor: [15, 41],
+        popupAnchor: [1, -44],
+      };
+      var simpleIconSettings = {
+        size: [31, 41],
+        anchor: [15, 25],
+        popupAnchor: [1, -22],
+      };
 
-		// Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
-		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
-		var oldIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
-		var simpleIconSettings = { size: [31, 41], anchor: [15, 25], popupAnchor: [1, -22] };
+      // Icons
+      var icons = {
+        capital: createIcon(
+          "capital",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        cityBig: createIcon(
+          "cityBig",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        citySmall: createIcon(
+          "citySmall",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        town: createIcon(
+          "town",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        nature: createIcon(
+          "nature",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        important: createIcon(
+          "important",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        character: createIcon(
+          "character",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
 
-		// Icons
-		var icons = {
-			capital: createIcon('capital', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			cityBig: createIcon('cityBig', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			citySmall: createIcon('citySmall', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			town: createIcon('town', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			nature: createIcon('nature', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			important: createIcon('important', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			character: createIcon('character', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-	
-			capitalOld: createIcon('capitalOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			cityBigOld: createIcon('cityBigOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			citySmallOld: createIcon('citySmallOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			townOld: createIcon('townOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			natureOld: createIcon('natureOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			importantOld: createIcon('importantOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			characterOld: createIcon('characterOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+        capitalOld: createIcon(
+          "capitalOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        cityBigOld: createIcon(
+          "cityBigOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        citySmallOld: createIcon(
+          "citySmallOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        townOld: createIcon(
+          "townOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        natureOld: createIcon(
+          "natureOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        importantOld: createIcon(
+          "importantOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        characterOld: createIcon(
+          "characterOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
 
-			capitalSimple: createIcon('capitalSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] }).popupAnchor),
-			cityBigSimple: createIcon('cityBigSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
-			citySmallSimple: createIcon('citySmallSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 4] }).popupAnchor),
-			townSimple: createIcon('townSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] }).popupAnchor),
-			natureSimple: createIcon('natureSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] }).popupAnchor),
-			importantSimple: createIcon('importantSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] }).popupAnchor),
-			characterSimple: createIcon('characterSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+        capitalSimple: createIcon(
+          "capitalSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] })
+            .popupAnchor
+        ),
+        cityBigSimple: createIcon(
+          "cityBigSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          simpleIconSettings.popupAnchor
+        ),
+        citySmallSimple: createIcon(
+          "citySmallSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0, 4] })
+            .popupAnchor
+        ),
+        townSimple: createIcon(
+          "townSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] })
+            .popupAnchor
+        ),
+        natureSimple: createIcon(
+          "natureSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] })
+            .popupAnchor
+        ),
+        importantSimple: createIcon(
+          "importantSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] })
+            .popupAnchor
+        ),
+        characterSimple: createIcon(
+          "characterSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          simpleIconSettings.popupAnchor
+        ),
 
-			defaultIcon: createIcon('marker-icon', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor)
-		}
+        defaultIcon: createIcon(
+          "marker-icon",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+      };
 
-		var fileInput = createFileInput();
+      var fileInput = createFileInput();
 
-		var formHTML = `
+      var formHTML = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
 				<span class="custom-subtitle"><font size="-1">Coords</font></span>
@@ -201,327 +391,376 @@
 			</div>
 			`;
 
-		//Marker Maker
-		var marker = L.marker([0, 0], {
-			draggable: true,
-			id: "markerMaker"
-		}).on('dragend', function() {
-			resetAndOpenPopup();
-			markerMaker();
-		}).on('click', function(e) {
-			resetAndOpenPopup();
-			markerMaker();
-		});
+      //Marker Maker
+      var marker = L.marker([0, 0], {
+        draggable: true,
+        id: "markerMaker",
+      })
+        .on("dragend", function () {
+          resetAndOpenPopup();
+          markerMaker();
+        })
+        .on("click", function (e) {
+          resetAndOpenPopup();
+          markerMaker();
+        });
 
-		var regionLayerGroups = {
-			'an': {
-				'capital': L.layerGroup().addTo(map),
-				'cityBig': L.layerGroup().addTo(map),
-				'citySmall': L.layerGroup().addTo(map),
-				'town': L.layerGroup().addTo(map),
-				'nature': L.layerGroup().addTo(map),
-				'important': L.layerGroup().addTo(map),
-				'character': L.layerGroup().addTo(map)
-			},
-			'ts': {
-				'capital': L.layerGroup(),
-				'cityBig': L.layerGroup(),
-				'citySmall': L.layerGroup(),
-				'town': L.layerGroup(),
-				'nature': L.layerGroup(),
-				'important': L.layerGroup(),
-				'character': L.layerGroup()
-			},
-		};
+      var regionLayerGroups = {
+        an: {
+          capital: L.layerGroup().addTo(map),
+          cityBig: L.layerGroup().addTo(map),
+          citySmall: L.layerGroup().addTo(map),
+          town: L.layerGroup().addTo(map),
+          nature: L.layerGroup().addTo(map),
+          important: L.layerGroup().addTo(map),
+          character: L.layerGroup().addTo(map),
+        },
+        ts: {
+          capital: L.layerGroup(),
+          cityBig: L.layerGroup(),
+          citySmall: L.layerGroup(),
+          town: L.layerGroup(),
+          nature: L.layerGroup(),
+          important: L.layerGroup(),
+          character: L.layerGroup(),
+        },
+      };
 
-		//Marker Groups	
-		var dv_coord = L.layerGroup([marker]);
+      //Marker Groups
+      var dv_coord = L.layerGroup([marker]);
 
-		const regionCodes = ['an', 'ts'];
-		const layerTypes = ['capital', 'cityBig', 'citySmall', 'town', 'nature', 'important', 'character'];
+      const regionCodes = ["an", "ts"];
+      const layerTypes = [
+        "capital",
+        "cityBig",
+        "citySmall",
+        "town",
+        "nature",
+        "important",
+        "character",
+      ];
 
-		const layerGroups = [];
+      const layerGroups = [];
 
-		var an_all_layers = createLayerGroup(regionCodes[0], layerTypes);
-		var ts_all_layers = createLayerGroup(regionCodes[1], layerTypes);
-		
-		//Marker Overlay
-		var overlays = {
-			"Antaria": {
-				"Civic Centers": regionLayerGroups['an']['capital'],
-				"Market": regionLayerGroups['an']['cityBig'],
-				"Residential": regionLayerGroups['an']['citySmall'],
-				"Fortification": regionLayerGroups['an']['town'],
-				"Nature": regionLayerGroups['an']['nature'],
-				"Locations": regionLayerGroups['an']['important'],
-				"Characters": regionLayerGroups['an']['character'],
-			},
-			"Tsuki": {
-				"Civic Centers": regionLayerGroups['ts']['capital'],
-				"Market": regionLayerGroups['ts']['cityBig'],
-				"Residential": regionLayerGroups['ts']['citySmall'],
-				"Fortification": regionLayerGroups['ts']['town'],
-				"Nature": regionLayerGroups['ts']['nature'],
-				"Locations": regionLayerGroups['ts']['important'],
-				"Characters": regionLayerGroups['ts']['character'],
-			},
-			"Developer": {
-				"Marker Maker": dv_coord,
-			}
-		};
-		var options = {
-			groupCheckboxes: true
-		};
-		var mapLayers = {
-			"Antaria": antaria,
-			"Tsuki": tsuki,
-		}
+      var an_all_layers = createLayerGroup(regionCodes[0], layerTypes);
+      var ts_all_layers = createLayerGroup(regionCodes[1], layerTypes);
 
-		//GROUP CONTROLS
-		L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
+      //Marker Overlay
+      var overlays = {
+        Antaria: {
+          "Civic Centers": regionLayerGroups["an"]["capital"],
+          Market: regionLayerGroups["an"]["cityBig"],
+          Residential: regionLayerGroups["an"]["citySmall"],
+          Fortification: regionLayerGroups["an"]["town"],
+          Nature: regionLayerGroups["an"]["nature"],
+          Locations: regionLayerGroups["an"]["important"],
+          Characters: regionLayerGroups["an"]["character"],
+        },
+        Tsuki: {
+          "Civic Centers": regionLayerGroups["ts"]["capital"],
+          Market: regionLayerGroups["ts"]["cityBig"],
+          Residential: regionLayerGroups["ts"]["citySmall"],
+          Fortification: regionLayerGroups["ts"]["town"],
+          Nature: regionLayerGroups["ts"]["nature"],
+          Locations: regionLayerGroups["ts"]["important"],
+          Characters: regionLayerGroups["ts"]["character"],
+        },
+        Developer: {
+          "Marker Maker": dv_coord,
+        },
+      };
+      var options = {
+        groupCheckboxes: true,
+      };
+      var mapLayers = {
+        Antaria: antaria,
+        Tsuki: tsuki,
+      };
 
-		var controlSearchAn = new L.Control.Search({
-			position:'topleft',		
-			layer: an_all_layers, 
-			zoom: 5,
-			initial: false,
-			marker: false
-		}).on("search:locationfound", function (e) {
-			if (e.layer._popup) e.layer.openPopup();
-		});
-		var controlSearchTs = new L.Control.Search({
-			position:'topleft',		
-			layer: ts_all_layers, 
-			zoom: 5,
-			initial: false,
-			marker: false
-		}).on("search:locationfound", function (e) {
-			if (e.layer._popup) e.layer.openPopup();
-		});
+      //GROUP CONTROLS
+      L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
 
-		var allSearch = [
-			controlSearchAn,
-			controlSearchTs, 
-		];
+      var controlSearchAn = new L.Control.Search({
+        position: "topleft",
+        layer: an_all_layers,
+        zoom: 5,
+        initial: false,
+        marker: false,
+      }).on("search:locationfound", function (e) {
+        if (e.layer._popup) e.layer.openPopup();
+      });
+      var controlSearchTs = new L.Control.Search({
+        position: "topleft",
+        layer: ts_all_layers,
+        zoom: 5,
+        initial: false,
+        marker: false,
+      }).on("search:locationfound", function (e) {
+        if (e.layer._popup) e.layer.openPopup();
+      });
 
-		map.addControl( controlSearchAn );
+      var allSearch = [controlSearchAn, controlSearchTs];
 
-		// Background color and Search to use for map
-		var mapConfigurations = {
-			'Antaria': {
-				color: '#cc0000',
-				options: {
-					'anOption1': {
-						search: { controlSearch1: controlSearchAn },
-						mapLayer: antaria,
-						show: [an_all_layers],
-						checkboxIndex: 0,
-						checkboxState: true,
-						hideCheckboxes: [2],
-						form: formHTML,
-						defaultFormSelect: 0,
-					},
-					'anOption2': {
-						search: { controlSearch1: controlSearchAn },
-						mapLayer: antaria,
-						show: [an_all_layers],
-						checkboxIndex: 1,
-						checkboxState: true,
-						hideCheckboxes: [1],
-						form: formHTML,
-						defaultFormSelect: 0,
-					},
-				},
-				current: antaria,
-				defaultOptionId: 'anOption1',
-			},
-			'Tsuki': {
-				color: '#3c78d8',
-				options: {
-					'tsOption1': {
-						search: { controlSearch1: controlSearchTs },
-						mapLayer: tsuki,
-						show: [ts_all_layers],
-						checkboxIndex: 1,
-						checkboxState: true,
-						hideCheckboxes: [1],
-						form: formHTML,
-						defaultFormSelect: 0,
-					},
-					'tsOption2': {
-						search: { controlSearch1: controlSearchTs },
-						mapLayer: tsuki,
-						show: [ts_all_layers],
-						checkboxIndex: 1,
-						checkboxState: true,
-						hideCheckboxes: [1],
-						form: formHTML,
-						defaultFormSelect: 0,
-					},
-				},
-				current: tsuki,
-				defaultOptionId: 'tsOption1',
-			},
-		};
+      map.addControl(controlSearchAn);
 
-		function addYearSelect() {
-			var existingDropdown = document.getElementById('YearSelector');
-			if (existingDropdown) {
-				// If it exists, remove it before creating a new one
-				existingDropdown.remove();
-			}
+      // Background color and Search to use for map
+      var mapConfigurations = {
+        Antaria: {
+          color: "#cc0000",
+          options: {
+            anOption1: {
+              search: { controlSearch1: controlSearchAn },
+              mapLayer: antaria,
+              show: [an_all_layers],
+              checkboxIndex: 0,
+              checkboxState: true,
+              hideCheckboxes: [2],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+            anOption2: {
+              search: { controlSearch1: controlSearchAn },
+              mapLayer: antaria,
+              show: [an_all_layers],
+              checkboxIndex: 1,
+              checkboxState: true,
+              hideCheckboxes: [1],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+          },
+          current: antaria,
+          defaultOptionId: "anOption1",
+        },
+        Tsuki: {
+          color: "#3c78d8",
+          options: {
+            tsOption1: {
+              search: { controlSearch1: controlSearchTs },
+              mapLayer: tsuki,
+              show: [ts_all_layers],
+              checkboxIndex: 1,
+              checkboxState: true,
+              hideCheckboxes: [1],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+            tsOption2: {
+              search: { controlSearch1: controlSearchTs },
+              mapLayer: tsuki,
+              show: [ts_all_layers],
+              checkboxIndex: 1,
+              checkboxState: true,
+              hideCheckboxes: [1],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+          },
+          current: tsuki,
+          defaultOptionId: "tsOption1",
+        },
+      };
 
-			// Find the checked radio button
-			var checkedRadioButton = document.querySelector('.leaflet-control-layers-base input[type="radio"]:checked');
-			if (checkedRadioButton) {
-				var label = checkedRadioButton.nextElementSibling;
-			} else {
-				console.error("No radiobutton found.");
-			}
+      function addYearSelect() {
+        var existingDropdown = document.getElementById("YearSelector");
+        if (existingDropdown) {
+          // If it exists, remove it before creating a new one
+          existingDropdown.remove();
+        }
 
-			// Create the dropdown box
-			var dropdown = document.createElement('select');
-			dropdown.name = 'options';
-			dropdown.id = "YearSelector";
-			dropdown.className = 'custom-select';
+        // Find the checked radio button
+        var checkedRadioButton = document.querySelector(
+          '.leaflet-control-layers-base input[type="radio"]:checked'
+        );
+        if (checkedRadioButton) {
+          var label = checkedRadioButton.nextElementSibling;
+        } else {
+          console.error("No radiobutton found.");
+        }
 
-			// Add options to the dropdown
-			switch (label && label.textContent.trim()) {
-				case "Antaria": {
-					createSelect("Antaria", "anOption1", dropdown);
-					createSelect("Other City", "anOption2", dropdown);
-					break;
-				}
-				case "Tsuki": {
-					createSelect("Getsuyōsei", "tsOption1", dropdown);
-					createSelect("Other City", "tsOption2", dropdown);
-					break;
-				}
-			}
+        // Create the dropdown box
+        var dropdown = document.createElement("select");
+        dropdown.name = "options";
+        dropdown.id = "YearSelector";
+        dropdown.className = "custom-select";
 
-			// Insert the dropdown after the parent label of the checked radio button
-			if (checkedRadioButton) {
-				checkedRadioButton.closest('label').after(dropdown);
-			} else if (lastCheckedRadioButtonLabel) {
-				// Find the label with the text in lastCheckedRadioButtonLabel
-				var labels = document.getElementsByTagName('label');
-				for (var i = 0; i < labels.length; i++) {
-					var label = labels[i];
-					var span = label.querySelector('span');
-					if (span && span.textContent.trim() === lastCheckedRadioButtonLabel) {
-						console.log("Found Label")
-						label.after(dropdown);
-						break;
-					}
-				}
-			} else {
-				console.log("No radiobutton found");
-			}
-		}
+        // Add options to the dropdown
+        switch (label && label.textContent.trim()) {
+          case "Antaria": {
+            createSelect("Antaria", "anOption1", dropdown);
+            createSelect("Other City", "anOption2", dropdown);
+            break;
+          }
+          case "Tsuki": {
+            createSelect("Getsuyōsei", "tsOption1", dropdown);
+            createSelect("Other City", "tsOption2", dropdown);
+            break;
+          }
+        }
 
-		// Wait for the DOM to be ready
-		function addRadioButtons(checked) {
-			// Simplified createRadioButton function
-			function createRadioButton(label, value, isChecked) {
-				var radio = document.createElement("input");
-				radio.type = "radio";
-				radio.name = "layerSelector";
-				radio.value = value;
-				radio.checked = isChecked; // Direct assignment
-				radio.classList.add("custom-radio-class");
+        // Insert the dropdown after the parent label of the checked radio button
+        if (checkedRadioButton) {
+          checkedRadioButton.closest("label").after(dropdown);
+        } else if (lastCheckedRadioButtonLabel) {
+          // Find the label with the text in lastCheckedRadioButtonLabel
+          var labels = document.getElementsByTagName("label");
+          for (var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            var span = label.querySelector("span");
+            if (
+              span &&
+              span.textContent.trim() === lastCheckedRadioButtonLabel
+            ) {
+              console.log("Found Label");
+              label.after(dropdown);
+              break;
+            }
+          }
+        } else {
+          console.log("No radiobutton found");
+        }
+      }
 
-				var labelElement = document.createElement("label");
-				labelElement.appendChild(radio);
-				labelElement.appendChild(document.createTextNode(label));
-				return labelElement;
-			}
+      // Wait for the DOM to be ready
+      function addRadioButtons(checked) {
+        // Simplified createRadioButton function
+        function createRadioButton(label, value, isChecked) {
+          var radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = "layerSelector";
+          radio.value = value;
+          radio.checked = isChecked; // Direct assignment
+          radio.classList.add("custom-radio-class");
 
-			// Get the overlay control container
-			var overlayContainer = document.querySelector('.leaflet-control-layers-overlays');
+          var labelElement = document.createElement("label");
+          labelElement.appendChild(radio);
+          labelElement.appendChild(document.createTextNode(label));
+          return labelElement;
+        }
 
-			// Check and remove existing radio buttons and separators
-			var existingRadios = overlayContainer.querySelectorAll('.custom-radio-class');
-			var existingSeparators = overlayContainer.querySelectorAll('.leaflet-control-layers-separator');
+        // Get the overlay control container
+        var overlayContainer = document.querySelector(
+          ".leaflet-control-layers-overlays"
+        );
 
-			existingRadios.forEach(function(radio) {
-				radio.parentNode.remove(); // This assumes the radio button is wrapped in a label
-			});
-			existingSeparators.forEach(function(separator) {
-				separator.remove();
-			});
+        // Check and remove existing radio buttons and separators
+        var existingRadios = overlayContainer.querySelectorAll(
+          ".custom-radio-class"
+        );
+        var existingSeparators = overlayContainer.querySelectorAll(
+          ".leaflet-control-layers-separator"
+        );
 
-			// Create and append the separator div
-			var separatorDiv = document.createElement("div");
-			separatorDiv.classList.add("leaflet-control-layers-separator");
-			overlayContainer.appendChild(separatorDiv);
+        existingRadios.forEach(function (radio) {
+          radio.parentNode.remove(); // This assumes the radio button is wrapped in a label
+        });
+        existingSeparators.forEach(function (separator) {
+          separator.remove();
+        });
 
-			// Loop to create and append radio buttons
-			radioButtonsInfo.forEach(info => {
-				var radioButton = createRadioButton(info.label, info.option, checked === info.checkedIndex);
-				radioButton.classList.add("leaflet-control-layers-selector");
-				overlayContainer.appendChild(radioButton);
-			});
-		};
+        // Create and append the separator div
+        var separatorDiv = document.createElement("div");
+        separatorDiv.classList.add("leaflet-control-layers-separator");
+        overlayContainer.appendChild(separatorDiv);
 
-		document.addEventListener('DOMContentLoaded', function () {
-			setUp('data/markers/cityMarkers.json');
-		});
+        // Loop to create and append radio buttons
+        radioButtonsInfo.forEach((info) => {
+          var radioButton = createRadioButton(
+            info.label,
+            info.option,
+            checked === info.checkedIndex
+          );
+          radioButton.classList.add("leaflet-control-layers-selector");
+          overlayContainer.appendChild(radioButton);
+        });
+      }
 
-		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
+      document.addEventListener("DOMContentLoaded", function () {
+        setUp("data/markers/cityMarkers.json");
+      });
 
-		if (zoomControl) {
-			const wikiButton = createControlButton('wiki', 'Wiki', 'icons/web1.png', 'icons/web2.png', (e) => {
-				e.preventDefault();
-				window.open('wiki', '_blank');
-			});
+      const zoomControl = document.querySelector(
+        ".leaflet-control-zoom.leaflet-bar.leaflet-control"
+      );
 
-			const worldButton = createControlButton('world', 'Opens the world map', 'icons/world1.png', 'icons/world2.png', (e) => {
-				e.preventDefault();
-				window.open('world');
-			});
+      if (zoomControl) {
+        const wikiButton = createControlButton(
+          "wiki",
+          "Wiki",
+          "icons/web1.png",
+          "icons/web2.png",
+          (e) => {
+            e.preventDefault();
+            window.open("wiki", "_blank");
+          }
+        );
 
-			const exportButton = createControlButton('#', 'Export JSON', 'icons/export1.png', 'icons/export2.png', (e) => {
-				e.preventDefault();
-				exportMarkersToJson();
-			});
+        const worldButton = createControlButton(
+          "world",
+          "Opens the world map",
+          "icons/world1.png",
+          "icons/world2.png",
+          (e) => {
+            e.preventDefault();
+            window.open("world");
+          }
+        );
 
-			const importButton = createControlButton('#', 'Import JSON', 'icons/import1.png', 'icons/import2.png', (e) => {
-				e.preventDefault();
-				fileInput.click();
-			});
+        const exportButton = createControlButton(
+          "#",
+          "Export JSON",
+          "icons/export1.png",
+          "icons/export2.png",
+          (e) => {
+            e.preventDefault();
+            exportMarkersToJson();
+          }
+        );
 
-			zoomControl.insertAdjacentElement('beforeend', wikiButton);
-			zoomControl.insertAdjacentElement('beforeend', worldButton);
-			zoomControl.insertAdjacentElement('beforeend', exportButton);
-			zoomControl.insertAdjacentElement('beforeend', importButton);
-		} else {
-			console.error('Zoom control element not found');
-		}
+        const importButton = createControlButton(
+          "#",
+          "Import JSON",
+          "icons/import1.png",
+          "icons/import2.png",
+          (e) => {
+            e.preventDefault();
+            fileInput.click();
+          }
+        );
 
-		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
+        zoomControl.insertAdjacentElement("beforeend", wikiButton);
+        zoomControl.insertAdjacentElement("beforeend", worldButton);
+        zoomControl.insertAdjacentElement("beforeend", exportButton);
+        zoomControl.insertAdjacentElement("beforeend", importButton);
+      } else {
+        console.error("Zoom control element not found");
+      }
 
-		function createFileInput() {
-			var fileInput = document.createElement('input');
-			fileInput.type = 'file';
-			fileInput.accept = '.json';
-			fileInput.style.display = 'none';
+      document.getElementsByClassName(
+        "leaflet-control-attribution"
+      )[0].style.display = "none";
 
-			fileInput.addEventListener('change', function(event) {
-				var file = event.target.files[0];
-				if (file) {
-					var reader = new FileReader();
-					reader.onload = function(e) {
-						var jsonData = JSON.parse(e.target.result);
-						processImportedData(jsonData);
-					};
-					reader.readAsText(file);
-				}
-			});
+      function createFileInput() {
+        var fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = ".json";
+        fileInput.style.display = "none";
 
-			document.body.appendChild(fileInput);
-			return fileInput;
-		}
-	</script>		
-</body>
+        fileInput.addEventListener("change", function (event) {
+          var file = event.target.files[0];
+          if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var jsonData = JSON.parse(e.target.result);
+              processImportedData(jsonData);
+            };
+            reader.readAsText(file);
+          }
+        });
 
+        document.body.appendChild(fileInput);
+        return fileInput;
+      }
+    </script>
+  </body>
 </html>

@@ -1,177 +1,424 @@
 <!DOCTYPE html>
-<html = style="height: 100%;">
+<html style="height: 100%;">
+  <head>
+    <title>Arathia World Map</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="icons/arathia.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="scripts/leaflet.css" />
+    <link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
+    <link
+      rel="stylesheet"
+      href="scripts/leaflet-search/src/leaflet-search.css"
+    />
+    <link rel="stylesheet" href="style/style.css" />
+    <script src="scripts/leaflet.js"></script>
+    <script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
+    <script src="scripts/leaflet-search/src/leaflet-search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.0.0/Leaflet.Editable.min.js"></script>
+  </head>
 
-<head>
-	<title>Arathia World Map</title>
-	<meta charset="UTF-8">
-	<link rel="icon" href="icons/arathia.png">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="scripts/leaflet.css">
-	<link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
-	<link rel="stylesheet" href="scripts/leaflet-search/src/leaflet-search.css" />
-	<link rel="stylesheet" href="style/style.css">
-	<script src="scripts/leaflet.js"></script>
-	<script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
-	<script src="scripts/leaflet-search/src/leaflet-search.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.0.0/Leaflet.Editable.min.js"></script>
-</head>
+  <body style="height: 100%; margin: 0; overflow-y: hidden; overflow-x: hidden">
+    <div id="map" style="width: 100%; height: 100%; background: #31565a"></div>
+    <a
+      class="leaflet-control-zoom-out"
+      href="index"
+      title="Zoom out"
+      role="button"
+      aria-label="Zoom out"
+      aria-disabled="false"
+      ><span aria-hidden="true">−</span></a
+    >
+    <script src="data/markers/worldPolygons.js"></script>
+    <script src="scripts/custom-scripts.js"></script>
+    <script type="text/javascript">
+      // MAPS
+      var radioButtonsInfo = [
+        {
+          label: "Default Icons",
+          option: "option1",
+          checkedIndex: 1,
+          suffix: "",
+        },
+        {
+          label: "Old Icons",
+          option: "option2",
+          checkedIndex: 2,
+          suffix: "Old",
+        },
+        {
+          label: "Simple Icons",
+          option: "option3",
+          checkedIndex: 3,
+          suffix: "Simple",
+        },
+      ];
 
-<body style="height: 100%;margin: 0;overflow-y: hidden;overflow-x: hidden;">
-	<div id="map" style="width: 100%; height: 100%; background: #31565a;"></div>
-	<a class="leaflet-control-zoom-out" href="index" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
-	<script src="data/markers/worldPolygons.js"></script>
-	<script src="scripts/custom-scripts.js"></script>
-	<script type="text/javascript">
-		// MAPS
-		var radioButtonsInfo = [
-			{ label: "Default Icons", option: "option1", checkedIndex: 1, suffix: '' },
-			{ label: "Old Icons", option: "option2", checkedIndex: 2, suffix: 'Old' },
-			{ label: "Simple Icons", option: "option3", checkedIndex: 3, suffix: 'Simple' }
-		];
+      var neededMaps = [
+        { map: arathia, name: "arathia" },
+        { map: arathiaClean, name: "arathia clean" },
+        { map: morturia, name: "morturia" },
+      ];
 
-		var neededMaps = [
-			{ map: arathia, name: 'arathia' },
-			{ map: arathiaClean, name: 'arathia clean' },
-			{ map: morturia, name: 'morturia' }
-		];
+      const countryColors = {
+        Antaria: "#cc0000",
+        Primoria: "#674ea7",
+        Dryadalis: "#6aa84f",
+        Gigantoria: "#d5a6bd",
+        "Trade Company": "#ffd966",
+        Odrheim: "#a64d79",
+        Tunglheimr: "#45818e",
+        Arcarum: "#8e7cc3",
+        "Golden Order": "#f3cc52",
+        "Free People of Antaria": "#a61c00",
+        Rheinland: "#666666",
+        Azurith: "#e69138",
+        Tsuki: "#3c78d8",
+        Seraphyria: "#cc0000",
+        Talasir: "#3c78d8",
+        Thyrania: "#6aa84f",
+      };
 
-		const countryColors = {
-			"Antaria": "#cc0000",
-			"Primoria": "#674ea7",
-			"Dryadalis": "#6aa84f",
-			"Gigantoria": "#d5a6bd",
-			"Trade Company": "#ffd966",
-			"Odrheim": "#a64d79",
-			"Tunglheimr": "#45818e",
-			"Arcarum": "#8e7cc3",
-			"Golden Order": "#f3cc52",
-			"Free People of Antaria": "#a61c00",
-			"Rheinland": "#666666",
-			"Azurith": "#e69138",
-			"Tsuki": "#3c78d8",
-			"Seraphyria": "#cc0000",
-			"Talasir": "#3c78d8",
-			"Thyrania": "#6aa84f",
-		};
+      var oldSuffix = "";
+      var currentSelectedMap = arathia;
+      var selectedOptionId = "arOption1";
+      var iconChecked = 1;
+      var currentMap = "Arathia";
+      var currentSelectedCategories =
+        "capitals-largecities-smallcities-towns-nature-locations-characters";
 
-		var oldSuffix = "";
-		var currentSelectedMap = arathia;
-		var selectedOptionId = 'arOption1';
-		var iconChecked = 1;
-		var currentMap = 'Arathia';
-		var currentSelectedCategories = "capitals-largecities-smallcities-towns-nature-locations-characters";
+      // Define a map to convert between optionIds when switching map types
+      var optionIdConversions = {
+        arOption2: "arCleanOption2",
+        moOption2: "moCleanOption2",
+      };
 
-		// Define a map to convert between optionIds when switching map types
-		var optionIdConversions = {
-			'arOption2': 'arCleanOption2',
-			'moOption2': 'moCleanOption2'
-		};
+      const regionMap = {
+        arathia: "ar",
+        an: "ar",
+        od: "ar",
+        th: "ar",
+        rh: "ar",
+        az: "ar",
+        ts: "ar",
+        pr: "ar",
+        dr: "ar",
+        tc: "ar",
+        gi: "ar",
+        ac: "ar",
+        go: "ar",
+        fp: "ar",
+        se: "ar1213BR",
+        ta: "ar1213BR",
+        ty: "ar1213BR",
+        da: "ar1213BR",
+        sc: "mo",
+      };
 
-		const regionMap = {
-			"arathia": "ar",
-			"an": "ar",
-			"od": "ar",
-			"th": "ar",
-			"rh": "ar",
-			"az": "ar",
-			"ts": "ar",
-			"pr": "ar",
-			"dr": "ar",
-			"tc": "ar",
-			"gi": "ar",
-			"ac": "ar",
-			"go": "ar",
-			"fp": "ar",
-			"se": "ar1213BR",
-			"ta": "ar1213BR",
-			"ty": "ar1213BR",
-			"da": "ar1213BR",
-			"sc": "mo",
-		};
+      const regionToFull = {
+        ar: ["arathia", "arOption1"],
+        mo: ["morturia", "moOption1"],
+        ar1213BR: ["arathia", "arOption2"],
+      };
 
-		const regionToFull = {
-			"ar": ["arathia", "arOption1"],
-			"mo": ["morturia", "moOption1"],
-			"ar1213BR": ["arathia", "arOption2"],
-		}
+      var southWest = L.latLng(-70, -170),
+        northEast = L.latLng(70, 170),
+        bounds = L.latLngBounds(southWest, northEast);
 
-		var southWest = L.latLng(-70, -170),
-			northEast = L.latLng(70, 170),
-			bounds = L.latLngBounds(southWest, northEast);
+      worldSize = 126000000 * 2.005012531328321;
+      const maxLatitude = 70; // Maximum latitude considered in the model
+      const northPoleCorrection = 1.0985; // Correction at the north pole
+      const southPoleCorrection = 1.1545; // Correction at the south pole
+      polygonScale = 0.19;
 
-		worldSize = 126000000 * 2.005012531328321;
-		const maxLatitude = 70; // Maximum latitude considered in the model
-		const northPoleCorrection = 1.0985; // Correction at the north pole
-		const southPoleCorrection = 1.1545; // Correction at the south pole
-		polygonScale = 0.19;
+      //Creating the Map
+      var map = L.map("map", {
+        maxBounds: bounds,
+        zoomSnap: 0.1,
+        zoomDelta: 0.5,
+        wheelPxPerZoomLevel: 120,
+      }).setView([0, 0], 0);
 
-		//Creating the Map
-		var map = L.map('map', {
-			maxBounds: bounds,
-			zoomSnap: 0.1,
-			zoomDelta: 0.5,
-			wheelPxPerZoomLevel: 120,
-		}).setView([0, 0], 0);
+      map.createPane("addPane");
+      map.createPane("basePane");
+      map.createPane("backgroundPane");
 
-		map.createPane('addPane');
-		map.createPane('basePane');
-		map.createPane('backgroundPane');
+      map.getPane("addPane").style.zIndex = 250;
+      map.getPane("basePane").style.zIndex = 220;
+      map.getPane("backgroundPane").style.zIndex = 150;
 
-		map.getPane('addPane').style.zIndex = 250;
-		map.getPane('basePane').style.zIndex = 220;
-		map.getPane('backgroundPane').style.zIndex = 150;
+      // Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
+      var arathia = createMap(
+        "Main",
+        "arathia",
+        true,
+        2.75,
+        5.4,
+        "basePane",
+        true
+      );
+      var arathiaClean = createMap(
+        "Main",
+        "arathiaClean",
+        true,
+        2.75,
+        5.4,
+        "basePane",
+        false
+      );
+      var arathia1213BR = createMap(
+        "Main",
+        "arathia1213BR",
+        true,
+        2.75,
+        5.4,
+        "addPane",
+        false
+      );
+      var arathia1213BRClean = createMap(
+        "Main",
+        "arathia1213BRClean",
+        true,
+        2.75,
+        5.4,
+        "addPane",
+        false
+      );
+      var Test3 = createMap(
+        "Main",
+        "morturia",
+        true,
+        2.75,
+        5.4,
+        "addPane",
+        false
+      );
+      var Test4 = createMap(
+        "Main",
+        "morturia",
+        true,
+        2.75,
+        5.4,
+        "addPane",
+        false
+      );
+      var morturia = createMap(
+        "Main",
+        "morturia",
+        true,
+        2.75,
+        5.4,
+        "basePane",
+        false
+      );
+      var arathiaBackground = createMap(
+        "Main",
+        "arathiaBackground",
+        false,
+        2.75,
+        5.4,
+        "backgroundPane",
+        true
+      );
+      var morturiaBackground = createMap(
+        "Main",
+        "morturiaBackground",
+        false,
+        2.75,
+        5.4,
+        "backgroundPane",
+        false
+      );
 
-		// Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
-		var arathia = createMap('Main', 'arathia', true, 2.75, 5.4, 'basePane', true);
-		var arathiaClean = createMap('Main', 'arathiaClean', true, 2.75, 5.4, 'basePane', false);
-		var arathia1213BR = createMap('Main', 'arathia1213BR', true, 2.75, 5.4, 'addPane', false);
-		var arathia1213BRClean = createMap('Main', 'arathia1213BRClean', true, 2.75, 5.4, 'addPane', false);
-		var Test3 = createMap('Main', 'morturia', true, 2.75, 5.4, 'addPane', false);
-		var Test4 = createMap('Main', 'morturia', true, 2.75, 5.4, 'addPane', false);
-		var morturia = createMap('Main', 'morturia', true, 2.75, 5.4, 'basePane', false);
-		var arathiaBackground = createMap('Main', 'arathiaBackground', false, 2.75, 5.4, 'backgroundPane', true);
-		var morturiaBackground = createMap('Main', 'morturiaBackground', false, 2.75, 5.4, 'backgroundPane', false);
+      const backgrounds = [arathiaBackground, morturiaBackground];
 
-		const backgrounds = [arathiaBackground, morturiaBackground]
+      // Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
+      var defaultIconSettings = {
+        size: [31, 41],
+        anchor: [15, 41],
+        popupAnchor: [1, -44],
+      };
+      var oldIconSettings = {
+        size: [31, 41],
+        anchor: [15, 41],
+        popupAnchor: [1, -44],
+      };
+      var simpleIconSettings = {
+        size: [31, 41],
+        anchor: [15, 25],
+        popupAnchor: [1, -22],
+      };
 
-		// Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
-		var defaultIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
-		var oldIconSettings = { size: [31, 41], anchor: [15, 41], popupAnchor: [1, -44] };
-		var simpleIconSettings = { size: [31, 41], anchor: [15, 25], popupAnchor: [1, -22] };
+      // Icons
+      var icons = {
+        capital: createIcon(
+          "capital",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        cityBig: createIcon(
+          "cityBig",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        citySmall: createIcon(
+          "citySmall",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        town: createIcon(
+          "town",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        nature: createIcon(
+          "nature",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        important: createIcon(
+          "important",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+        character: createIcon(
+          "character",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
 
-		// Icons
-		var icons = {
-			capital: createIcon('capital', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			cityBig: createIcon('cityBig', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			citySmall: createIcon('citySmall', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			town: createIcon('town', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			nature: createIcon('nature', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			important: createIcon('important', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-			character: createIcon('character', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor),
-	
-			capitalOld: createIcon('capitalOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			cityBigOld: createIcon('cityBigOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			citySmallOld: createIcon('citySmallOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			townOld: createIcon('townOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			natureOld: createIcon('natureOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			importantOld: createIcon('importantOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
-			characterOld: createIcon('characterOld', 'defaultShadow', oldIconSettings.size, oldIconSettings.anchor, oldIconSettings.popupAnchor),
+        capitalOld: createIcon(
+          "capitalOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        cityBigOld: createIcon(
+          "cityBigOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        citySmallOld: createIcon(
+          "citySmallOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        townOld: createIcon(
+          "townOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        natureOld: createIcon(
+          "natureOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        importantOld: createIcon(
+          "importantOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
+        characterOld: createIcon(
+          "characterOld",
+          "defaultShadow",
+          oldIconSettings.size,
+          oldIconSettings.anchor,
+          oldIconSettings.popupAnchor
+        ),
 
-			capitalSimple: createIcon('capitalSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] }).popupAnchor),
-			cityBigSimple: createIcon('cityBigSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
-			citySmallSimple: createIcon('citySmallSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 4] }).popupAnchor),
-			townSimple: createIcon('townSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] }).popupAnchor),
-			natureSimple: createIcon('natureSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] }).popupAnchor),
-			importantSimple: createIcon('importantSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] }).popupAnchor),
-			characterSimple: createIcon('characterSimple', 'transparent', simpleIconSettings.size, simpleIconSettings.anchor, simpleIconSettings.popupAnchor),
+        capitalSimple: createIcon(
+          "capitalSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] })
+            .popupAnchor
+        ),
+        cityBigSimple: createIcon(
+          "cityBigSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          simpleIconSettings.popupAnchor
+        ),
+        citySmallSimple: createIcon(
+          "citySmallSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0, 4] })
+            .popupAnchor
+        ),
+        townSimple: createIcon(
+          "townSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] })
+            .popupAnchor
+        ),
+        natureSimple: createIcon(
+          "natureSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] })
+            .popupAnchor
+        ),
+        importantSimple: createIcon(
+          "importantSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] })
+            .popupAnchor
+        ),
+        characterSimple: createIcon(
+          "characterSimple",
+          "transparent",
+          simpleIconSettings.size,
+          simpleIconSettings.anchor,
+          simpleIconSettings.popupAnchor
+        ),
 
-			defaultIcon: createIcon('marker-icon', 'defaultShadow', defaultIconSettings.size, defaultIconSettings.anchor, defaultIconSettings.popupAnchor)
-		}
+        defaultIcon: createIcon(
+          "marker-icon",
+          "defaultShadow",
+          defaultIconSettings.size,
+          defaultIconSettings.anchor,
+          defaultIconSettings.popupAnchor
+        ),
+      };
 
-		var fileInput = createFileInput();
+      var fileInput = createFileInput();
 
-		var formHTML = `
+      var formHTML = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
 				<span class="custom-subtitle"><font size="-1">Coords</font></span>
@@ -226,7 +473,7 @@
 			</div>
 			`;
 
-		var formHTML1213BR = `
+      var formHTML1213BR = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
 				<span class="custom-subtitle"><font size="-1">Coords</font></span>
@@ -272,7 +519,7 @@
 			</div>
 			`;
 
-		var polygonHTML = `
+      var polygonHTML = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Polygon Maker</font></span>
 				<span class="custom-subtitle"><font size="-1">Coords</font></span>
@@ -284,432 +531,480 @@
 			</div>
 			`;
 
-		//Marker Maker
-		var marker = L.marker([0, 0], {
-			draggable: true,
-			id: "markerMaker"
-		}).on('dragend', function() {
-			resetAndOpenPopup();
-			markerMaker(true);
-		}).on('click', function() {
-			resetAndOpenPopup();
-			markerMaker(true);
-		});
+      //Marker Maker
+      var marker = L.marker([0, 0], {
+        draggable: true,
+        id: "markerMaker",
+      })
+        .on("dragend", function () {
+          resetAndOpenPopup();
+          markerMaker(true);
+        })
+        .on("click", function () {
+          resetAndOpenPopup();
+          markerMaker(true);
+        });
 
-		//Polygon Maker
-		var polygonMarker = L.marker([0, 0], {
-			draggable: true,
-			id: "markerMaker"
-		}).on('dragend', function() {
-			polygonMarker.openPopup();
-			polygonMaker(true);
-		});
+      //Polygon Maker
+      var polygonMarker = L.marker([0, 0], {
+        draggable: true,
+        id: "markerMaker",
+      }).on("dragend", function () {
+        polygonMarker.openPopup();
+        polygonMaker(true);
+      });
 
-		polygonMarker.bindPopup(polygonHTML).openPopup();
-		polygonMarker.on('click', function(e) {
-			polygonMaker();
-		});
+      polygonMarker.bindPopup(polygonHTML).openPopup();
+      polygonMarker.on("click", function (e) {
+        polygonMaker();
+      });
 
-		var regionLayerGroups = {
-			'ar': {
-				'capital': L.layerGroup().addTo(map),
-				'cityBig': L.layerGroup().addTo(map),
-				'citySmall': L.layerGroup().addTo(map),
-				'town': L.layerGroup().addTo(map),
-				'nature': L.layerGroup().addTo(map),
-				'important': L.layerGroup().addTo(map),
-				'character': L.layerGroup().addTo(map)
-			},
-			'ar1213BR': {
-				'capital': L.layerGroup(),
-				'cityBig': L.layerGroup(),
-				'citySmall': L.layerGroup(),
-				'town': L.layerGroup(),
-				'nature': L.layerGroup(),
-				'important': L.layerGroup(),
-				'character': L.layerGroup()
-			},
-			'mo': {
-				'capital': L.layerGroup(),
-				'cityBig': L.layerGroup(),
-				'citySmall': L.layerGroup(),
-				'town': L.layerGroup(),
-				'nature': L.layerGroup(),
-				'important': L.layerGroup(),
-				'character': L.layerGroup()
-			},
-		};
+      var regionLayerGroups = {
+        ar: {
+          capital: L.layerGroup().addTo(map),
+          cityBig: L.layerGroup().addTo(map),
+          citySmall: L.layerGroup().addTo(map),
+          town: L.layerGroup().addTo(map),
+          nature: L.layerGroup().addTo(map),
+          important: L.layerGroup().addTo(map),
+          character: L.layerGroup().addTo(map),
+        },
+        ar1213BR: {
+          capital: L.layerGroup(),
+          cityBig: L.layerGroup(),
+          citySmall: L.layerGroup(),
+          town: L.layerGroup(),
+          nature: L.layerGroup(),
+          important: L.layerGroup(),
+          character: L.layerGroup(),
+        },
+        mo: {
+          capital: L.layerGroup(),
+          cityBig: L.layerGroup(),
+          citySmall: L.layerGroup(),
+          town: L.layerGroup(),
+          nature: L.layerGroup(),
+          important: L.layerGroup(),
+          character: L.layerGroup(),
+        },
+      };
 
-		//Marker Groups		
-		var dv_coord = L.layerGroup([marker, polygonMarker]);
+      //Marker Groups
+      var dv_coord = L.layerGroup([marker, polygonMarker]);
 
-		const regionCodes = ['ar', 'ar1213BR', 'mo'];
-		const layerTypes = ['capital', 'cityBig', 'citySmall', 'town', 'nature', 'important', 'character'];
+      const regionCodes = ["ar", "ar1213BR", "mo"];
+      const layerTypes = [
+        "capital",
+        "cityBig",
+        "citySmall",
+        "town",
+        "nature",
+        "important",
+        "character",
+      ];
 
-		const layerGroups = [];
+      const layerGroups = [];
 
-		var ar_all_layers = createLayerGroup(regionCodes[0], layerTypes);
-		var ar1213BR_all_layers = createLayerGroup(regionCodes[1], layerTypes);
-		var mo_all_layers = createLayerGroup(regionCodes[2], layerTypes);
-		
-		//Marker Overlay
-		var overlays = {
-			"Arathia": {
-				"Capitals": regionLayerGroups['ar']['capital'],
-				"Large Cities": regionLayerGroups['ar']['cityBig'],
-				"Small Cities": regionLayerGroups['ar']['citySmall'],
-				"Towns": regionLayerGroups['ar']['town'],
-				"Nature": regionLayerGroups['ar']['nature'],
-				"Locations": regionLayerGroups['ar']['important'],
-				"Characters": regionLayerGroups['ar']['character'],
-			},
-			"Morturia": {
-				"Capitals": regionLayerGroups['mo']['capital'],
-				"Large Cities": regionLayerGroups['mo']['cityBig'],
-				"Small Cities": regionLayerGroups['mo']['citySmall'],
-				"Towns": regionLayerGroups['mo']['town'],
-				"Nature": regionLayerGroups['mo']['nature'],
-				"Locations": regionLayerGroups['mo']['important'],
-				"Characters": regionLayerGroups['mo']['character'],
-			},
-			"Arathia 1213 B.R": {
-				"Capitals": regionLayerGroups['ar1213BR']['capital'],
-				"Large Cities": regionLayerGroups['ar1213BR']['cityBig'],
-				"Small Cities": regionLayerGroups['ar1213BR']['citySmall'],
-				"Towns": regionLayerGroups['ar1213BR']['town'],
-				"Nature": regionLayerGroups['ar1213BR']['nature'],
-				"Locations": regionLayerGroups['ar1213BR']['important'],
-				"Characters": regionLayerGroups['ar1213BR']['character'],
-			},
-			"Developer": {
-				"Marker Maker": marker,
-				"Polygon Maker": polygonMarker,
-			}
-		};
-		var options = {
-			groupCheckboxes: true
-		};
-		var mapLayers = {
-			"Arathia": arathia,
-			"Arathia Clean": arathiaClean,
-			"Morturia": morturia,
-		}
+      var ar_all_layers = createLayerGroup(regionCodes[0], layerTypes);
+      var ar1213BR_all_layers = createLayerGroup(regionCodes[1], layerTypes);
+      var mo_all_layers = createLayerGroup(regionCodes[2], layerTypes);
 
-		//GROUP CONTROLS
-		L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
+      //Marker Overlay
+      var overlays = {
+        Arathia: {
+          Capitals: regionLayerGroups["ar"]["capital"],
+          "Large Cities": regionLayerGroups["ar"]["cityBig"],
+          "Small Cities": regionLayerGroups["ar"]["citySmall"],
+          Towns: regionLayerGroups["ar"]["town"],
+          Nature: regionLayerGroups["ar"]["nature"],
+          Locations: regionLayerGroups["ar"]["important"],
+          Characters: regionLayerGroups["ar"]["character"],
+        },
+        Morturia: {
+          Capitals: regionLayerGroups["mo"]["capital"],
+          "Large Cities": regionLayerGroups["mo"]["cityBig"],
+          "Small Cities": regionLayerGroups["mo"]["citySmall"],
+          Towns: regionLayerGroups["mo"]["town"],
+          Nature: regionLayerGroups["mo"]["nature"],
+          Locations: regionLayerGroups["mo"]["important"],
+          Characters: regionLayerGroups["mo"]["character"],
+        },
+        "Arathia 1213 B.R": {
+          Capitals: regionLayerGroups["ar1213BR"]["capital"],
+          "Large Cities": regionLayerGroups["ar1213BR"]["cityBig"],
+          "Small Cities": regionLayerGroups["ar1213BR"]["citySmall"],
+          Towns: regionLayerGroups["ar1213BR"]["town"],
+          Nature: regionLayerGroups["ar1213BR"]["nature"],
+          Locations: regionLayerGroups["ar1213BR"]["important"],
+          Characters: regionLayerGroups["ar1213BR"]["character"],
+        },
+        Developer: {
+          "Marker Maker": marker,
+          "Polygon Maker": polygonMarker,
+        },
+      };
+      var options = {
+        groupCheckboxes: true,
+      };
+      var mapLayers = {
+        Arathia: arathia,
+        "Arathia Clean": arathiaClean,
+        Morturia: morturia,
+      };
 
-		var controlSearchAr = new L.Control.Search({
-			position:'topleft',		
-			layer: ar_all_layers, 
-			zoom: 5,
-			initial: false,
-			marker: false
-		}).on("search:locationfound", function (e) {
-			if (e.layer._popup) e.layer.openPopup();
-		});
+      //GROUP CONTROLS
+      L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
 
-		var controlSearchMo = new L.Control.Search({
-			position:'topleft',		
-			layer: mo_all_layers, 
-			zoom: 5,
-			initial: false,
-			marker: false
-		}).on("search:locationfound", function (e) {
-			if (e.layer._popup) e.layer.openPopup();
-		});
+      var controlSearchAr = new L.Control.Search({
+        position: "topleft",
+        layer: ar_all_layers,
+        zoom: 5,
+        initial: false,
+        marker: false,
+      }).on("search:locationfound", function (e) {
+        if (e.layer._popup) e.layer.openPopup();
+      });
 
-		var controlSearchAr1213BR = new L.Control.Search({
-			position:'topleft',		
-			layer: ar1213BR_all_layers, 
-			zoom: 5,
-			initial: false,
-			marker: false
-		}).on("search:locationfound", function (e) {
-			if (e.layer._popup) e.layer.openPopup();
-		});
+      var controlSearchMo = new L.Control.Search({
+        position: "topleft",
+        layer: mo_all_layers,
+        zoom: 5,
+        initial: false,
+        marker: false,
+      }).on("search:locationfound", function (e) {
+        if (e.layer._popup) e.layer.openPopup();
+      });
 
-		var allSearch = [
-			controlSearchAr, 
-			controlSearchMo,
-			controlSearchAr1213BR
-		];
+      var controlSearchAr1213BR = new L.Control.Search({
+        position: "topleft",
+        layer: ar1213BR_all_layers,
+        zoom: 5,
+        initial: false,
+        marker: false,
+      }).on("search:locationfound", function (e) {
+        if (e.layer._popup) e.layer.openPopup();
+      });
 
-		map.addControl( controlSearchAr );
+      var allSearch = [controlSearchAr, controlSearchMo, controlSearchAr1213BR];
 
-		// Background color and Search to use for map
-		var mapConfigurations = {
-			'Arathia': {
-				color: '#31565a',
-				options: {
-					'arOption1': {
-						search: { controlSearch1: controlSearchAr },
-						mapLayer: arathia,
-						show: [ar_all_layers, arathiaBackground],
-						checkboxIndex: 0,
-						checkboxState: true,
-						hideCheckboxes: [2, 3],
-						form: formHTML,
-						defaultFormSelect: 0,
-					},
-					'arOption2': {
-						search: { controlSearch1: controlSearchAr1213BR },
-						mapLayer: arathia1213BR,
-						show: [ar1213BR_all_layers, arathiaBackground],
-						checkboxIndex: 2,
-						checkboxState: true,
-						hideCheckboxes: [1, 2],
-						form: formHTML1213BR,
-						defaultFormSelect: 0,
-					},
-				},
-				current: arathia, 
-				defaultOptionId: 'arOption1',
-			},
-			'Arathia Clean': {
-				color: '#31565a',
-				options: {
-					'arCleanOption1': {
-						search: { controlSearch1: controlSearchAr },
-						mapLayer: arathiaClean,
-						show: [arathiaBackground],
-						checkboxIndex: 0,
-						checkboxState: false,
-						hideCheckboxes: [2, 3],
-						form: formHTML,
-						defaultFormSelect: 0,
-					},
-					'arCleanOption2': {
-						search: { controlSearch1: controlSearchAr1213BR },
-						mapLayer: arathia1213BRClean,
-						show: [arathiaBackground],
-						checkboxIndex: 2,
-						checkboxState: false,
-						hideCheckboxes: [1, 2],
-						form: formHTML1213BR,
-						defaultFormSelect: 0,
-					},
-				},
-				current: arathiaClean,
-				defaultOptionId: 'arCleanOption1',
-			},
-			'Morturia': {
-				color: '#374539',
-				options: {
-					'moOption1': {
-						search: { controlSearch1: controlSearchMo },
-						mapLayer: morturia,
-						show: [mo_all_layers, morturiaBackground],
-						checkboxIndex: 1,
-						checkboxState: true,
-						hideCheckboxes: [1, 3],
-						form: formHTML,
-						defaultFormSelect: 0,
-					},
-					'moOption2': {
-						search: { controlSearch1: controlSearchAr },
-						mapLayer: morturia,
-						show: [mo_all_layers, morturiaBackground],
-						checkboxIndex: 1,
-						checkboxState: true,
-						hideCheckboxes: [1, 3],
-						form: formHTML1213BR,
-						defaultFormSelect: 0,
-					},
-				},
-				current: morturia,
-				defaultOptionId: 'moOption1',
-			},
-			'Morturia Clean': {
-				color: '#374539',
-				options: {
-					'moCleanOption1': {
-						search: { controlSearch1: controlSearchMo },
-						mapLayer: morturia,
-						show: [mo_all_layers, morturiaBackground],
-						checkboxIndex: 1,
-						checkboxState: true,
-						hideCheckboxes: [1, 3],
-						form: formHTML,
-						defaultFormSelect: 0,
-					},
-					'moCleanOption2': {
-						search: { controlSearch1: controlSearchAr },
-						mapLayer: morturia,
-						show: [morturiaBackground],
-						checkboxIndex: 1,
-						checkboxState: true,
-						hideCheckboxes: [1, 3],
-						form: formHTML1213BR,
-						defaultFormSelect: 0,
-					},
-				},
-				current: morturia,
-				defaultOptionId: 'moCleanOption1',
-			},
-		};
+      map.addControl(controlSearchAr);
 
-		function addYearSelect() {
-			var existingDropdown = document.getElementById('YearSelector');
-			if (existingDropdown) {
-				// If it exists, remove it before creating a new one
-				existingDropdown.remove();
-			}
+      // Background color and Search to use for map
+      var mapConfigurations = {
+        Arathia: {
+          color: "#31565a",
+          options: {
+            arOption1: {
+              search: { controlSearch1: controlSearchAr },
+              mapLayer: arathia,
+              show: [ar_all_layers, arathiaBackground],
+              checkboxIndex: 0,
+              checkboxState: true,
+              hideCheckboxes: [2, 3],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+            arOption2: {
+              search: { controlSearch1: controlSearchAr1213BR },
+              mapLayer: arathia1213BR,
+              show: [ar1213BR_all_layers, arathiaBackground],
+              checkboxIndex: 2,
+              checkboxState: true,
+              hideCheckboxes: [1, 2],
+              form: formHTML1213BR,
+              defaultFormSelect: 0,
+            },
+          },
+          current: arathia,
+          defaultOptionId: "arOption1",
+        },
+        "Arathia Clean": {
+          color: "#31565a",
+          options: {
+            arCleanOption1: {
+              search: { controlSearch1: controlSearchAr },
+              mapLayer: arathiaClean,
+              show: [arathiaBackground],
+              checkboxIndex: 0,
+              checkboxState: false,
+              hideCheckboxes: [2, 3],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+            arCleanOption2: {
+              search: { controlSearch1: controlSearchAr1213BR },
+              mapLayer: arathia1213BRClean,
+              show: [arathiaBackground],
+              checkboxIndex: 2,
+              checkboxState: false,
+              hideCheckboxes: [1, 2],
+              form: formHTML1213BR,
+              defaultFormSelect: 0,
+            },
+          },
+          current: arathiaClean,
+          defaultOptionId: "arCleanOption1",
+        },
+        Morturia: {
+          color: "#374539",
+          options: {
+            moOption1: {
+              search: { controlSearch1: controlSearchMo },
+              mapLayer: morturia,
+              show: [mo_all_layers, morturiaBackground],
+              checkboxIndex: 1,
+              checkboxState: true,
+              hideCheckboxes: [1, 3],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+            moOption2: {
+              search: { controlSearch1: controlSearchAr },
+              mapLayer: morturia,
+              show: [mo_all_layers, morturiaBackground],
+              checkboxIndex: 1,
+              checkboxState: true,
+              hideCheckboxes: [1, 3],
+              form: formHTML1213BR,
+              defaultFormSelect: 0,
+            },
+          },
+          current: morturia,
+          defaultOptionId: "moOption1",
+        },
+        "Morturia Clean": {
+          color: "#374539",
+          options: {
+            moCleanOption1: {
+              search: { controlSearch1: controlSearchMo },
+              mapLayer: morturia,
+              show: [mo_all_layers, morturiaBackground],
+              checkboxIndex: 1,
+              checkboxState: true,
+              hideCheckboxes: [1, 3],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+            moCleanOption2: {
+              search: { controlSearch1: controlSearchAr },
+              mapLayer: morturia,
+              show: [morturiaBackground],
+              checkboxIndex: 1,
+              checkboxState: true,
+              hideCheckboxes: [1, 3],
+              form: formHTML1213BR,
+              defaultFormSelect: 0,
+            },
+          },
+          current: morturia,
+          defaultOptionId: "moCleanOption1",
+        },
+      };
 
-			// Find the checked radio button
-			var checkedRadioButton = document.querySelector('.leaflet-control-layers-base input[type="radio"]:checked');
-			if (checkedRadioButton) {
-				var label = checkedRadioButton.nextElementSibling;
-			} else {
-				console.error("No radiobutton found.");
-			}
+      function addYearSelect() {
+        var existingDropdown = document.getElementById("YearSelector");
+        if (existingDropdown) {
+          // If it exists, remove it before creating a new one
+          existingDropdown.remove();
+        }
 
-			// Create the dropdown box
-			var dropdown = document.createElement('select');
-			dropdown.name = 'options';
-			dropdown.id = "YearSelector";
-			dropdown.className = 'custom-select';
+        // Find the checked radio button
+        var checkedRadioButton = document.querySelector(
+          '.leaflet-control-layers-base input[type="radio"]:checked'
+        );
+        if (checkedRadioButton) {
+          var label = checkedRadioButton.nextElementSibling;
+        } else {
+          console.error("No radiobutton found.");
+        }
 
-			// Add options to the dropdown
-			switch (label && label.textContent.trim()) {
-				case "Arathia": {
-					createSelect("1257 A.A", "arOption1", dropdown);
-					createSelect("1213 B.R", "arOption2", dropdown);
-					break;
-				}
-				case "Arathia Clean": {
-					createSelect("1257 A.A", "arCleanOption1", dropdown);
-					createSelect("1213 B.R", "arCleanOption2", dropdown); 
-					break;
-				}
-				case "Morturia": {
-					createSelect("1257 A.A", "moOption1", dropdown);
-					createSelect("???", "moOption2", dropdown); 
-					break;
-				}
-			}
+        // Create the dropdown box
+        var dropdown = document.createElement("select");
+        dropdown.name = "options";
+        dropdown.id = "YearSelector";
+        dropdown.className = "custom-select";
 
-			// Insert the dropdown after the parent label of the checked radio button
-			if (checkedRadioButton) {
-				checkedRadioButton.closest('label').after(dropdown);
-			} else if (lastCheckedRadioButtonLabel) {
-				// Find the label with the text in lastCheckedRadioButtonLabel
-				var labels = document.getElementsByTagName('label');
-				for (var i = 0; i < labels.length; i++) {
-					var label = labels[i];
-					var span = label.querySelector('span');
-					if (span && span.textContent.trim() === lastCheckedRadioButtonLabel) {
-						console.log("Found Label")
-						label.after(dropdown);
-						break;
-					}
-				}
-			} else {
-				console.log("No radiobutton found");
-			}
-		}
+        // Add options to the dropdown
+        switch (label && label.textContent.trim()) {
+          case "Arathia": {
+            createSelect("1257 A.A", "arOption1", dropdown);
+            createSelect("1213 B.R", "arOption2", dropdown);
+            break;
+          }
+          case "Arathia Clean": {
+            createSelect("1257 A.A", "arCleanOption1", dropdown);
+            createSelect("1213 B.R", "arCleanOption2", dropdown);
+            break;
+          }
+          case "Morturia": {
+            createSelect("1257 A.A", "moOption1", dropdown);
+            createSelect("???", "moOption2", dropdown);
+            break;
+          }
+        }
 
-		function addRadioButtons(checked) {
-			// Simplified createRadioButton function
-			function createRadioButton(label, value, isChecked) {
-				var radio = document.createElement("input");
-				radio.type = "radio";
-				radio.name = "layerSelector";
-				radio.value = value;
-				radio.checked = isChecked; // Direct assignment
-				radio.classList.add("custom-radio-class");
+        // Insert the dropdown after the parent label of the checked radio button
+        if (checkedRadioButton) {
+          checkedRadioButton.closest("label").after(dropdown);
+        } else if (lastCheckedRadioButtonLabel) {
+          // Find the label with the text in lastCheckedRadioButtonLabel
+          var labels = document.getElementsByTagName("label");
+          for (var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            var span = label.querySelector("span");
+            if (
+              span &&
+              span.textContent.trim() === lastCheckedRadioButtonLabel
+            ) {
+              console.log("Found Label");
+              label.after(dropdown);
+              break;
+            }
+          }
+        } else {
+          console.log("No radiobutton found");
+        }
+      }
 
-				var labelElement = document.createElement("label");
-				labelElement.appendChild(radio);
-				labelElement.appendChild(document.createTextNode(label));
-				return labelElement;
-			}
+      function addRadioButtons(checked) {
+        // Simplified createRadioButton function
+        function createRadioButton(label, value, isChecked) {
+          var radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = "layerSelector";
+          radio.value = value;
+          radio.checked = isChecked; // Direct assignment
+          radio.classList.add("custom-radio-class");
 
-			// Get the overlay control container
-			var overlayContainer = document.querySelector('.leaflet-control-layers-overlays');
+          var labelElement = document.createElement("label");
+          labelElement.appendChild(radio);
+          labelElement.appendChild(document.createTextNode(label));
+          return labelElement;
+        }
 
-			// Check and remove existing radio buttons and separators
-			var existingRadios = overlayContainer.querySelectorAll('.custom-radio-class');
-			var existingSeparators = overlayContainer.querySelectorAll('.leaflet-control-layers-separator');
+        // Get the overlay control container
+        var overlayContainer = document.querySelector(
+          ".leaflet-control-layers-overlays"
+        );
 
-			existingRadios.forEach(function(radio) {
-				radio.parentNode.remove(); // This assumes the radio button is wrapped in a label
-			});
-			existingSeparators.forEach(function(separator) {
-				separator.remove();
-			});
+        // Check and remove existing radio buttons and separators
+        var existingRadios = overlayContainer.querySelectorAll(
+          ".custom-radio-class"
+        );
+        var existingSeparators = overlayContainer.querySelectorAll(
+          ".leaflet-control-layers-separator"
+        );
 
-			// Create and append the separator div
-			var separatorDiv = document.createElement("div");
-			separatorDiv.classList.add("leaflet-control-layers-separator");
-			overlayContainer.appendChild(separatorDiv);
+        existingRadios.forEach(function (radio) {
+          radio.parentNode.remove(); // This assumes the radio button is wrapped in a label
+        });
+        existingSeparators.forEach(function (separator) {
+          separator.remove();
+        });
 
-			// Loop to create and append radio buttons
-			radioButtonsInfo.forEach(info => {
-				var radioButton = createRadioButton(info.label, info.option, checked === info.checkedIndex);
-				radioButton.classList.add("leaflet-control-layers-selector");
-				overlayContainer.appendChild(radioButton);
-			});
-		};
+        // Create and append the separator div
+        var separatorDiv = document.createElement("div");
+        separatorDiv.classList.add("leaflet-control-layers-separator");
+        overlayContainer.appendChild(separatorDiv);
 
-		document.addEventListener('DOMContentLoaded', function () {
-			setUp('data/markers/markers.json');
-		});
+        // Loop to create and append radio buttons
+        radioButtonsInfo.forEach((info) => {
+          var radioButton = createRadioButton(
+            info.label,
+            info.option,
+            checked === info.checkedIndex
+          );
+          radioButton.classList.add("leaflet-control-layers-selector");
+          overlayContainer.appendChild(radioButton);
+        });
+      }
 
-		const zoomControl = document.querySelector('.leaflet-control-zoom.leaflet-bar.leaflet-control');
+      document.addEventListener("DOMContentLoaded", function () {
+        setUp("data/markers/markers.json");
+      });
 
-		if (zoomControl) {
-			const wikiButton = createControlButton('wiki', 'Wiki', 'icons/web1.png', 'icons/web2.png', (e) => {
-				e.preventDefault();
-				window.open('wiki', '_blank');
-			});
+      const zoomControl = document.querySelector(
+        ".leaflet-control-zoom.leaflet-bar.leaflet-control"
+      );
 
-			const cityButton = createControlButton('city', 'Opens the city map', 'icons/city1.png', 'icons/city2.png', (e) => {
-				e.preventDefault();
-				window.open('cities');
-			});
+      if (zoomControl) {
+        const wikiButton = createControlButton(
+          "wiki",
+          "Wiki",
+          "icons/web1.png",
+          "icons/web2.png",
+          (e) => {
+            e.preventDefault();
+            window.open("wiki", "_blank");
+          }
+        );
 
-			const exportButton = createControlButton('#', 'Export JSON', 'icons/export1.png', 'icons/export2.png', (e) => {
-				e.preventDefault();
-				exportMarkersToJson();
-			});
+        const cityButton = createControlButton(
+          "city",
+          "Opens the city map",
+          "icons/city1.png",
+          "icons/city2.png",
+          (e) => {
+            e.preventDefault();
+            window.open("cities");
+          }
+        );
 
-			const importButton = createControlButton('#', 'Import JSON', 'icons/import1.png', 'icons/import2.png', (e) => {
-				e.preventDefault();
-				fileInput.click();
-			});
+        const exportButton = createControlButton(
+          "#",
+          "Export JSON",
+          "icons/export1.png",
+          "icons/export2.png",
+          (e) => {
+            e.preventDefault();
+            exportMarkersToJson();
+          }
+        );
 
-			zoomControl.insertAdjacentElement('beforeend', wikiButton);
-			zoomControl.insertAdjacentElement('beforeend', cityButton);
-			zoomControl.insertAdjacentElement('beforeend', exportButton);
-			zoomControl.insertAdjacentElement('beforeend', importButton);
-		} else {
-			console.error('Zoom control element not found');
-		}
+        const importButton = createControlButton(
+          "#",
+          "Import JSON",
+          "icons/import1.png",
+          "icons/import2.png",
+          (e) => {
+            e.preventDefault();
+            fileInput.click();
+          }
+        );
 
-		document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
+        zoomControl.insertAdjacentElement("beforeend", wikiButton);
+        zoomControl.insertAdjacentElement("beforeend", cityButton);
+        zoomControl.insertAdjacentElement("beforeend", exportButton);
+        zoomControl.insertAdjacentElement("beforeend", importButton);
+      } else {
+        console.error("Zoom control element not found");
+      }
 
-		function createFileInput() {
-			var fileInput = document.createElement('input');
-			fileInput.type = 'file';
-			fileInput.accept = '.json';
-			fileInput.style.display = 'none';
+      document.getElementsByClassName(
+        "leaflet-control-attribution"
+      )[0].style.display = "none";
 
-			fileInput.addEventListener('change', function(event) {
-				var file = event.target.files[0];
-				if (file) {
-					var reader = new FileReader();
-					reader.onload = function(e) {
-						var jsonData = JSON.parse(e.target.result);
-						processImportedData(jsonData);
-					};
-					reader.readAsText(file);
-				}
-			});
+      function createFileInput() {
+        var fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = ".json";
+        fileInput.style.display = "none";
 
-			document.body.appendChild(fileInput);
-			return fileInput;
-		}
-	</script>		
-</body>
+        fileInput.addEventListener("change", function (event) {
+          var file = event.target.files[0];
+          if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var jsonData = JSON.parse(e.target.result);
+              processImportedData(jsonData);
+            };
+            reader.readAsText(file);
+          }
+        });
 
+        document.body.appendChild(fileInput);
+        return fileInput;
+      }
+    </script>
+  </body>
 </html>
