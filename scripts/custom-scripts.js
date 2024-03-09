@@ -1434,14 +1434,7 @@ function addCityPolygons() {
 
 function setUp(dataUrl) {
     // Check the main checkbox
-    var checkbox = document.querySelector('.leaflet-control-layers-group-selector');
-    checkbox.checked = true;
-    addRadioButtons(1)
-    hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
-    addYearSelect();
-    attachEventListenersToCheckboxes();
-    document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-    addCityPolygons();
+    performActions(mapConfigurations[currentMap].options[selectedOptionId].mapLayer, mapConfigurations[currentMap].options[selectedOptionId].show, mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState, mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
     fetch(dataUrl)
         .then(response => response.json())
         .then(data => processImportedData(data))
