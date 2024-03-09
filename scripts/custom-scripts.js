@@ -1,4 +1,4 @@
-var allMarkers = {};
+var allMarkers = [];
 let isDragging = false;
 
 function generatePopupContent(title, category, description, linkEnabled, linkTitle) {
@@ -659,8 +659,6 @@ getTotalArea(); Get total area of all polygons
 }
 
 function countCountryMarkers() {
-    // Assuming getAllMarkersFromGroups() and formHTML are defined elsewhere
-    var allMarkers = getAllMarkersFromGroups();
     var counts = {};
 
     // Create idToLabelMap once and reuse if formHTML doesn't change frequently
@@ -670,12 +668,16 @@ function countCountryMarkers() {
         return map;
     }, {});
 
-    allMarkers.forEach(marker => {
-        var id = marker.options.id;
-        if (id === "markerMaker") return; // Skip markerMaker markers
-        
-        var idPrefix = id.substring(0, 2).toLowerCase();
-        counts[idPrefix] = (counts[idPrefix] || 0) + 1;
+    Object.keys(allMarkers).forEach(groupKey  => {
+        const group = allMarkers[groupKey];
+        Object.keys(group).forEach(markerKey => {
+            const marker = group[markerKey];
+            var id = marker.options.id;
+            if (id === "markerMaker") return; // Skip markerMaker markers
+            
+            var idPrefix = id.substring(0, 2).toLowerCase();
+            counts[idPrefix] = (counts[idPrefix] || 0) + 1;
+        });
     });
 
     // Convert counts to array, sort, and map to labels in one go
@@ -725,13 +727,24 @@ function getTotalArea(log = true) {
 }
 
 function removeMarker(title) {
-    var allMarkers = getAllMarkersFromGroups(); // Retrieve all markers
+    // Iterate over each group in allMarkers by its keys to potentially modify the object
+    Object.keys(allMarkers).forEach(groupKey => {
+        const group = allMarkers[groupKey];
+        // Now, iterate over each marker in the group by its keys
+        Object.keys(group).forEach(markerKey => {
+            const marker = group[markerKey];
+            // Check if this marker has the matching title
+            if (marker.options && marker.options.title.toLowerCase() === title.toLowerCase()) {
+                // Remove the marker from the map
+                marker.remove();
+                // Remove the marker from the allMarkers object
+                delete allMarkers[groupKey][markerKey];
+            }
+        });
 
-    allMarkers.forEach(function(marker) {
-        if (marker.options.title === title) {
-            // Remove the marker from the map
-            marker.remove();
-            return;
+        // After removing markers from a group, check if the group is now empty and consider removing it too
+        if (Object.keys(allMarkers[groupKey]).length === 0) {
+            delete allMarkers[groupKey];
         }
     });
 }
@@ -777,36 +790,44 @@ function openAllPopupsInLayerGroup(region, group) {
 
 // Run from the console, openAllPopupsInCountry(an);
 function openAllPopupsInCountry(prefix) {
-    var markers = getAllMarkersFromGroups();
-    // Loop through all markers
-    for (var i = 0; i < markers.length; i++) {
-        var marker = markers[i];
-        var markerId = marker.options.id;
+    // Iterate over each group in the allMarkers object
+    Object.values(allMarkers).forEach(group => {
+        // Now, iterate over each marker in the group
+        Object.values(group).forEach(marker => {
+            // Ensure the marker has an 'options' object and an 'id' within it
+            if (marker.options && marker.options.id) {
+                var markerId = marker.options.id;
 
-        // Check if the first two letters of the marker's ID match the specified prefix
-        if (markerId && markerId.substring(0, 2) === prefix) {
-            // Create a non-closable popup and bind it to the marker
-            var nonClosablePopup = L.popup({ autoClose: false, closeOnClick: false }).setContent(marker.getPopup().getContent());
-            marker.bindPopup(nonClosablePopup);
+                // Check if the first two letters of the marker's ID match the specified prefix
+                if (markerId.substring(0, 2) === prefix) {
+                    // Assuming marker.getPopup() returns a valid popup, we create a non-closable popup
+                    var nonClosablePopup = L.popup({ autoClose: false, closeOnClick: false }).setContent(marker.getPopup().getContent());
+                    marker.bindPopup(nonClosablePopup);
 
-            // Open the popup
-            marker.openPopup();
-        }
-    }
+                    // Open the popup
+                    marker.openPopup();
+                }
+            }
+        });
+    });
 }
 
 function isolateCountryMarkers(prefixArray) {
-    var markers = getAllMarkersFromGroups();
-    // Loop through all markers
-    for (var i = 0; i < markers.length; i++) {
-        var marker = markers[i];
-        var markerId = marker.options.id;
+    // Iterate over each group in the allMarkers object
+    Object.values(allMarkers).forEach(group => {
+        // Now, iterate over each marker in the group
+        Object.values(group).forEach(marker => {
+            // Ensure the marker has an 'options' object and an 'id' within it
+            if (marker.options && marker.options.id) {
+                var markerId = marker.options.id;
 
-        // Check if the first two letters of the marker's ID match the specified prefix
-        if (markerId && !prefixArray.some(prefix => markerId.substring(0, 2) === prefix)) {
-            map.removeLayer(marker)
-        }
-    }
+                // Check if the first two letters of the marker's ID match the specified prefix
+                if (markerId && !prefixArray.some(prefix => markerId.substring(0, 2) === prefix)) {
+                    map.removeLayer(marker)
+                }
+            }
+        });
+    });
 }
 
 // Run from the console
@@ -831,59 +852,41 @@ function closeAllPopups() {
     }
 }
 
-function getAllMarkersFromGroups() {
-    var allMarkers = [];
-
-    layerGroups.forEach(function(group) {
-        extractMarkersFromLayer(group, allMarkers);
-    });
-
-    return allMarkers;
-}
-
-function extractMarkersFromLayer(layer, allMarkers) {
-    if (layer instanceof L.Marker) {
-        allMarkers.push(layer);
-    } else if (layer instanceof L.LayerGroup || layer instanceof L.FeatureGroup) {
-        layer.eachLayer(function(innerLayer) {
-            extractMarkersFromLayer(innerLayer, allMarkers);
-        });
-    }
-}
-
 function exportMarkersToJson() {
     var markersData = [];
-    var allMarkers = getAllMarkersFromGroups();
-    console.log(allMarkers);
 
-    allMarkers.forEach(function(marker) {
-        var id = marker.options.id || "";
-        if (id === "markerMaker") {
-            return; // Skip this marker
-        }
-        var idPrefix = id.substring(0, 2).toLowerCase();
-        var region = regionMap[idPrefix] || "mo";
+    // Iterate over each group in the allMarkers object
+    Object.values(allMarkers).forEach(group => {
+        // Now, iterate over each marker in the group
+        Object.values(group).forEach(marker => {
+            var id = marker.options.id || "";
+            if (id === "markerMaker") {
+                return; // Skip this marker
+            }
+            var idPrefix = id.substring(0, 2).toLowerCase();
+            var region = regionMap[idPrefix] || "mo";
 
-        var coords = [marker.getLatLng().lat, marker.getLatLng().lng];
-        var icon = marker.options.icon.options.className;
-        var title = marker.options.title;
-        var popupContent = marker._popup._content;
+            var coords = [marker.getLatLng().lat, marker.getLatLng().lng];
+            var icon = marker.options.icon.options.className;
+            var title = marker.options.title || "";
+            var popupContent = marker.getPopup() ? marker.getPopup().getContent() : "";
 
-        if (popupContent){
-            var popupData = parsePopupContent(popupContent);
-        }
+            // Assuming parsePopupContent is a function you've defined to extract popup data
+            var popupData = popupContent ? parsePopupContent(popupContent) : {};
 
-        markersData.push({
-            region: region,
-            coordinates: coords,
-            icon: icon,
-            title: title,
-            id: id,
-            popuptitle: popupData.popuptitle,
-            category: popupData.category,
-            description: popupData.description,
-            link: popupData.link,
-            customlink: popupData.customlink
+            markersData.push({
+                region: region,
+                coordinates: coords,
+                icon: icon,
+                title: title,
+                id: id,
+                // Using optional chaining to safely access popupData properties
+                popuptitle: popupData.popuptitle,
+                category: popupData.category,
+                description: popupData.description,
+                link: popupData.link,
+                customlink: popupData.customlink
+            });
         });
     });
 
@@ -1081,30 +1084,37 @@ function changeAllIcons(suffix) {
     oldSuffix = suffix;
 }
 
+function refreshAllMarkers(suffix) {
+    // Use Object.keys() to iterate over properties since the array is used like an object
+    Object.keys(allMarkers).forEach(groupKey => {
+        const group = allMarkers[groupKey];
+
+        // Now, assuming each 'group' is an object containing markers as properties
+        Object.keys(group).forEach(markerKey => {
+            const marker = group[markerKey];
+
+            if (marker && marker.options && marker.options.icon && marker.options.icon.options.className) {
+                const oldIconClassName = marker.options.icon.options.className;
+                const baseIconName = oldIconClassName.replace(oldSuffix, ''); // Ensure oldSuffix is defined
+                const newIconName = `${baseIconName}${suffix}`;
+
+                // Check and set the new icon
+                if (icons[newIconName]) {
+                    const newIcon = icons[newIconName];
+                    marker.setIcon(newIcon);
+                } else {
+                    console.error('Icon not found:', newIconName);
+                }
+            }
+        });
+    });
+
+    oldSuffix = suffix; // Update oldSuffix globally or within the scope as necessary
+}
+
 function updateIcons(currentMap, iconChecked) {
     var suffix = radioButtonsInfo.find(item => item.checkedIndex === iconChecked)?.suffix || '';
-    changeAllIcons(suffix);
-
-    // Common update map styles and layers
-    updateLayers(map, mapConfigurations[currentMap].options[selectedOptionId].show);
-    updateCheckbox(mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState);
-    hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
-    addRadioButtons(iconChecked);
-
-    // Remove current layer if it's not the selected map
-    if (currentSelectedMap && map.hasLayer(currentSelectedMap)){
-        if (currentSelectedMap != mapConfigurations[currentMap].current) {
-            map.removeLayer(currentSelectedMap);
-        }
-    }
-
-    updateMapConfiguration(currentMap, selectedOptionId);
-
-    // Add year select dropdown
-    addYearSelect();
-    document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-    setYearSelectorToLastDropdown();
-    updateSelectedOptionId();
+    refreshAllMarkers(suffix);
 }
 
 function createSelect(year, optionId, dropdown) {
@@ -1158,8 +1168,12 @@ function processImportedData(jsonData) {
             }
         }
 
-        // Store all existing markers
-        var oldMarkers = getAllMarkersFromGroups();
+        // Remove old markers before adding new ones
+        Object.values(allMarkers).forEach(group => {
+            Object.values(group).forEach(marker => {
+                marker.remove(); // Remove each marker from the map
+            });
+        });
 
         jsonData.forEach(markerData => {
             var iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
@@ -1185,9 +1199,6 @@ function processImportedData(jsonData) {
                 popupContent
             );
         });
-
-        // Remove old markers after new data has been processed
-        oldMarkers.forEach(marker => marker.remove());
         resolve();
     });
 }
@@ -1230,36 +1241,8 @@ document.addEventListener('change', function (event) {
     if (radioButton.classList.contains('leaflet-control-layers-selector')) {
         if (neededMaps.some(map => map.name === getTrimmedText(radioButton).toLowerCase())) {
             currentMap = getTrimmedText(radioButton);
-            // Common update map styles and layers
             selectedOptionId = getConvertedOptionId(selectedOptionId);
-            updateLayers(map, mapConfigurations[currentMap].options[selectedOptionId].show);
-            updateCheckbox(mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState);
-            hideCheckBoxes(mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
-            addRadioButtons(iconChecked);
-    
-            // Remove current layer if it's not the selected map
-            if (currentSelectedMap && map.hasLayer(currentSelectedMap)){
-                if (currentSelectedMap != mapConfigurations[currentMap].current) {
-                    map.removeLayer(currentSelectedMap);
-                }
-            }
-    
-            updateMapConfiguration(currentMap, selectedOptionId);
-    
-            // Add year select dropdown
-            addYearSelect();
-            document.getElementById('YearSelector').addEventListener('change', updateSelectedOptionId);
-            setYearSelectorToLastDropdown();
-            updateSelectedOptionId();
-            clearAllVectors();
-            if (currentMap.slice(-5).toLowerCase() == "clean") {
-                updateCategorySelection();
-                attachEventListenersToCheckboxes();
-            } else {
-                updateCategorySelection(currentSelectedCategories.split('-'));
-                attachEventListenersToCheckboxes();
-            }
-            addCityPolygons();
+            performActions(mapConfigurations[currentMap].options[selectedOptionId].mapLayer, mapConfigurations[currentMap].options[selectedOptionId].show, mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex, mapConfigurations[currentMap].options[selectedOptionId].checkboxState, mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes);
         }
     } else if (radioButton.classList.contains('custom-radio-class')) {
         var iconType = getTrimmedText(radioButton);
@@ -1316,7 +1299,7 @@ function changeMapToSelected() {
     var dropdown = document.getElementById('YearSelector');
     var selectedOption = dropdown.options[dropdown.selectedIndex].id;
 
-    performActions(mapConfigurations[currentMap].options[selectedOption].mapLayer, mapConfigurations[currentMap].options[selectedOption].show, mapConfigurations[currentMap].options[selectedOption].checkboxIndex, mapConfigurations[currentMap].options[selectedOption].checkboxState, mapConfigurations[currentMap].options[selectedOption].hideCheckboxes)
+    performActions(mapConfigurations[currentMap].options[selectedOption].mapLayer, mapConfigurations[currentMap].options[selectedOption].show, mapConfigurations[currentMap].options[selectedOption].checkboxIndex, mapConfigurations[currentMap].options[selectedOption].checkboxState, mapConfigurations[currentMap].options[selectedOption].hideCheckboxes);
 }
 
 // Function to update the variable with the selected option's ID
@@ -1372,14 +1355,18 @@ function enableDevMode() {
             let marker = markers[markerId]; // Get the marker object
             // Assume the title is stored in marker.options.title
             let title = marker.options.title || 'No Title'; // Fallback to 'No Title' if undefined
-            let newContent = `${title}<br>${markerId}`; // Combine title and ID with a newline in between
+
+            // Create a button in the popup content with an onclick event to call removeMarkerById
+            let buttonHTML = `<button onclick="removeMarker('${title}')">Remove Marker</button>`;
+            let newContent = `${title}<br>${markerId}<br>${buttonHTML}`; // Combine title, ID, and button with newlines
+
             if (marker.getPopup()) {
                 marker.getPopup().setContent(newContent); // Set the popup content to the new content
             } else {
                 marker.bindPopup(newContent).openPopup();
             }
         }
-    }    
+    }
 }
 
 function updateSelectedCategoriesString() {
@@ -1431,7 +1418,6 @@ function addCityPolygons() {
                 const countryDetails = options[country];
                 for (const city in countryDetails) {
                     const cityDetails = countryDetails[city];
-                    console.log(cityDetails);
             
                     // Extract the polygon and URL for the current city
                     const polygon = cityDetails.polygons;
