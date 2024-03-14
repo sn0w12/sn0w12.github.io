@@ -1700,8 +1700,38 @@ function setUp(dataUrl) {
     .then((data) => processImportedData(data))
     .then(() => {
       map.whenReady(() => {
+        centerMap();
         checkUrl();
       });
     })
     .catch((error) => console.error(`Error loading ${dataUrl}:`, error));
+
+  // Context menu logic
+  if (document.addEventListener) {
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      var contextMenu = document.getElementById("customContextMenu");
+      contextMenu.style.display = "block";
+      contextMenu.style.left = e.pageX + "px";
+      contextMenu.style.top = e.pageY + "px";
+    }, false);
+  } else {
+    document.attachEvent('oncontextmenu', function() {
+      window.event.returnValue = false;
+      var contextMenu = document.getElementById("customContextMenu");
+      contextMenu.style.display = "block";
+      contextMenu.style.left = e.pageX + "px";
+      contextMenu.style.top = e.pageY + "px";
+    });
+  }
+
+  // Hide the context menu when clicking elsewhere
+  document.addEventListener("click", function(e) {
+    document.getElementById("customContextMenu").style.display = "none";
+  });
+}
+
+function centerMap() {
+  map.setView([0, 0], 0);
+  document.getElementById("customContextMenu").style.display = "none"; // Hide the menu
 }

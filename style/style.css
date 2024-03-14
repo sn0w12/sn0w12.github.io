@@ -192,6 +192,40 @@
     text-align: left;
 }
 
+.custom-context-menu {
+    display: none;
+    position: absolute;
+    z-index: 10000;
+    background-color: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--highlight2);
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.custom-context-menu button {
+    display: block;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    background-color: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--highlight);
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.custom-context-menu button:last-of-type {
+    margin-bottom: 0px;
+}
+
+.custom-context-menu button:hover {
+    background-color: var(--highlight);
+    color: var(--background);
+}
+
 /* scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
