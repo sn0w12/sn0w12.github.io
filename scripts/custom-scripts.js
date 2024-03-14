@@ -165,6 +165,11 @@ function switchToMarkerMap(markerId) {
 function openMapFromUrl(map) {
   const submap = getFromUrl("submap");
 
+  openMap(map, submap);
+}
+
+function openMap(map, submap) {
+  map = map.toLowerCase();
   if (map != currentMap.toLowerCase()) {
     let labels = document.querySelectorAll("label span");
     let targetLabel = Array.from(labels).find(
@@ -184,12 +189,17 @@ function openMapFromUrl(map) {
   }
 
   if (submap) {
+    submap = submap.toLowerCase();
     const yearSelector = document.getElementById("YearSelector");
 
     for (const option of yearSelector.options) {
       const normalizedOptionText = option.text.replace(/[\s.]/g, "");
 
-      if (normalizedOptionText === submap) {
+      if (normalizedOptionText.toLowerCase() === submap) {
+        option.selected = true;
+        yearSelector.dispatchEvent(new Event("change"));
+        break; // Exit the loop as we found our match
+      } else if (option.id === submap) {
         option.selected = true;
         yearSelector.dispatchEvent(new Event("change"));
         break; // Exit the loop as we found our match
@@ -1734,4 +1744,21 @@ function setUp(dataUrl) {
 function centerMap() {
   map.setView([0, 0], 0);
   document.getElementById("customContextMenu").style.display = "none"; // Hide the menu
+}
+
+function resetMap() {
+  defaultMap = neededMaps[0].name.charAt(0).toUpperCase() + neededMaps[0].name.slice(1);
+  defaultSubMap = mapConfigurations[defaultMap].defaultOptionId;
+
+  openMap(defaultMap, defaultSubMap);
+
+  performActions(
+    mapConfigurations[defaultMap].options[defaultSubMap].mapLayer,
+    mapConfigurations[defaultMap].options[defaultSubMap].show,
+    mapConfigurations[defaultMap].options[defaultSubMap].checkboxIndex,
+    mapConfigurations[defaultMap].options[defaultSubMap].checkboxState,
+    mapConfigurations[defaultMap].options[defaultSubMap].hideCheckboxes
+  );
+
+  centerMap();
 }
