@@ -1,7 +1,10 @@
-let allMarkers = [];
+let allMarkers = {};
 let isDragging = false;
 let openPopupsSet = new Set();
-const safeContextBtns = new Set(["centerBtn", "resetBtn", "zoomIn", "zoomOut", "zoomDivider"]);
+let showingPolygon = false;
+let devMode = false;
+let markerDataPath;
+const safeContextBtns = new Set(["centerBtn", "resetBtn", "zoomIn", "zoomOut"]);
 
 function generatePopupContent(
   title,
@@ -468,6 +471,7 @@ function clearAllVectors() {
       map.removeLayer(layer);
     }
   });
+  showingPolygon = false;
 }
 
 function resetAndOpenPopup() {
@@ -1438,11 +1442,23 @@ function processImportedData(jsonData) {
       }
     }
 
-    // Remove old markers before adding new ones
-    Object.values(allMarkers).forEach((group) => {
-      Object.values(group).forEach((marker) => {
-        marker.remove(); // Remove each marker from the map
+    // Iterate over each group in allMarkers by its keys to potentially modify the object
+    Object.keys(allMarkers).forEach((groupKey) => {
+      const group = allMarkers[groupKey];
+      // Now, iterate over each marker in the group by its keys
+      Object.keys(group).forEach((markerKey) => {
+        const marker = group[markerKey];
+        // Remove the marker from the map
+        marker.remove();
+        map.removeLayer(marker)
+        // Remove the marker from the allMarkers object
+        delete allMarkers[groupKey][markerKey];
       });
+
+      // After removing markers from a group, check if the group is now empty and consider removing it too
+      if (Object.keys(allMarkers[groupKey]).length === 0) {
+        delete allMarkers[groupKey];
+      }
     });
 
     jsonData.forEach((markerData) => {
@@ -1473,6 +1489,13 @@ function processImportedData(jsonData) {
         popupContent
       );
     });
+    performActions(
+      mapConfigurations[currentMap].options[selectedOptionId].mapLayer,
+      mapConfigurations[currentMap].options[selectedOptionId].show,
+      mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex,
+      mapConfigurations[currentMap].options[selectedOptionId].checkboxState,
+      mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes
+    );
     resolve();
   });
 }
@@ -1698,6 +1721,7 @@ function enableDevMode() {
       }
     }
   }
+  devMode = true;
 }
 
 function updateSelectedCategoriesString() {
@@ -1778,14 +1802,7 @@ function addCityPolygons() {
 }
 
 function setUp(dataUrl) {
-  // Check the main checkbox
-  performActions(
-    mapConfigurations[currentMap].options[selectedOptionId].mapLayer,
-    mapConfigurations[currentMap].options[selectedOptionId].show,
-    mapConfigurations[currentMap].options[selectedOptionId].checkboxIndex,
-    mapConfigurations[currentMap].options[selectedOptionId].checkboxState,
-    mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes
-  );
+  markerDataPath = dataUrl;
 
   fetch(dataUrl)
     .then((response) => response.json())
@@ -1800,7 +1817,11 @@ function setUp(dataUrl) {
   fetch('contextMenu.html')
     .then(response => response.text())
     .then(html => {
-      document.body.insertAdjacentHTML('beforeend', html);
+      // Check if a div with the ID 'customContextMenu' already exists
+      if (!document.getElementById('customContextMenu')) {
+        // If it doesn't exist, insert the new HTML into the body
+        document.body.insertAdjacentHTML('beforeend', html);
+      }
     })
     .then(() => {
       centerMap();
@@ -1837,6 +1858,16 @@ function setUp(dataUrl) {
   });
 }
 
+function pageCoordsToLatLng(x, y) {
+  // Convert page coordinates to map container point
+  let containerPoint = map.containerPointToLayerPoint([x, y]);
+
+  // Convert container point to geographical coordinates (LatLng)
+  let latLng = map.layerPointToLatLng(containerPoint);
+
+  return `${latLng}`;
+}
+
 function displayContextMenu(e, customizeContextMenu = null) {
   clearContextMenu();
 
@@ -1857,6 +1888,34 @@ function displayContextMenu(e, customizeContextMenu = null) {
   const zoomLevel = isZoomMax();
   document.getElementById("zoomIn").style.display = zoomLevel === "max" ? "none" : "block";
   document.getElementById("zoomOut").style.display = zoomLevel === "min" ? "none" : "block";
+
+  if(devMode) {
+    let polygonBtn = document.getElementById("showPolygonBtn")
+    let clearPolygonBtn = document.getElementById("clearPolygonBtn")
+    let polygonDivider = document.getElementById("polygonDivider")
+    polygonBtn.style.display = "none";
+    polygonDivider.style.display = "none";
+    if (countryPolygons[currentMap][selectedOptionId]) {
+      for (const region in countryPolygons[currentMap][selectedOptionId]) {
+        const polygon = countryPolygons[currentMap][selectedOptionId][region];
+        if (isPointInsidePolygon(pageCoordsToLatLng(x, y), polygon)) {
+          polygonBtn.style.display = "block";
+          polygonDivider.style.display = "block";
+          polygonBtn.addEventListener("click", function () {
+            clearAllVectors();
+            displayPolygon(polygon, region);
+            showingPolygon = true;
+          });
+          break;
+        }
+      }
+    }
+    if (showingPolygon) {
+      clearPolygonBtn.style.display = "block";
+    } else {
+      clearPolygonBtn.style.display = "none";
+    }
+  }
   
   adjustLastButtonMargin();
 
@@ -1886,9 +1945,9 @@ function centerMap() {
 function resetMap() {
   defaultMap = neededMaps[0].name.charAt(0).toUpperCase() + neededMaps[0].name.slice(1);
   defaultSubMap = mapConfigurations[defaultMap].defaultOptionId;
-
+  
   openMap(defaultMap, defaultSubMap);
-
+  
   performActions(
     mapConfigurations[defaultMap].options[defaultSubMap].mapLayer,
     mapConfigurations[defaultMap].options[defaultSubMap].show,
@@ -1896,8 +1955,6 @@ function resetMap() {
     mapConfigurations[defaultMap].options[defaultSubMap].checkboxState,
     mapConfigurations[defaultMap].options[defaultSubMap].hideCheckboxes
   );
-
-  centerMap();
 }
 
 function isZoomMax() {
@@ -1935,14 +1992,10 @@ function adjustLastButtonMargin() {
 
   // Find the last visible button
   buttons.forEach(button => {
+    button.style.marginBottom = '5px';
     if (button.style.display !== 'none') {
       lastVisibleButton = button;
     }
-  });
-
-  // First, reset the margin for all buttons to avoid stacking effects
-  buttons.forEach(button => {
-    button.style.marginBottom = '5px'; // Assuming 5px is your default margin
   });
 
   // Remove the bottom margin from the last visible button
