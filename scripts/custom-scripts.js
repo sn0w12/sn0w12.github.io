@@ -1,6 +1,7 @@
 let allMarkers = [];
 let isDragging = false;
 let openPopupsSet = new Set();
+const safeContextBtns = new Set(["centerBtn", "resetBtn", "zoomIn", "zoomOut", "zoomDivider"]);
 
 function generatePopupContent(
   title,
@@ -115,6 +116,24 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
         closeMarkerBtn.style.display = "none";
       }
       openMarkerDivider.style.display = "block";
+
+      const href = extractHrefFromPopupContent(popupContent);
+      if (href != null) {
+        // Show the "Open in new tab" button and set its onclick event
+        let openInNewTabBtn = document.getElementById("openWikiInNewTab");
+        openInNewTabBtn.style.display = "block";
+        openInNewTabBtn.onclick = function() {
+          window.open(href, "_blank");
+        };
+
+        let openBtn = document.getElementById("openWiki");
+        openBtn.style.display = "block";
+        openBtn.onclick = function() {
+          window.open(href,"_self");
+        };
+
+        document.getElementById("openWikiDivider").style.display = "block";
+      }
     }
     
     // Display the customized context menu for the marker
@@ -122,6 +141,16 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
   });
 
   return marker;
+}
+
+function extractHrefFromPopupContent(popupContent) {
+  // Use DOMParser to parse the HTML string
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(popupContent, 'text/html');
+  
+  // Query the document for the first <a> element and extract its href
+  const link = doc.querySelector('a');
+  return link ? link.href : null;
 }
 
 function checkUrl() {
@@ -1757,16 +1786,28 @@ function setUp(dataUrl) {
     mapConfigurations[currentMap].options[selectedOptionId].checkboxState,
     mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes
   );
+
   fetch(dataUrl)
     .then((response) => response.json())
     .then((data) => processImportedData(data))
     .then(() => {
       map.whenReady(() => {
-        centerMap();
         checkUrl();
       });
     })
     .catch((error) => console.error(`Error loading ${dataUrl}:`, error));
+
+  fetch('contextMenu.html')
+    .then(response => response.text())
+    .then(html => {
+      document.body.insertAdjacentHTML('beforeend', html);
+    })
+    .then(() => {
+      centerMap();
+    })
+    .catch(error => {
+      console.error('Error loading the context menu:', error);
+    });
 
   map.on('popupopen', function(e) {
     openPopupsSet.add(e.popup._source);
@@ -1803,7 +1844,7 @@ function displayContextMenu(e, customizeContextMenu = null) {
   let x = e.pageX || e.originalEvent.pageX;
   let y = e.pageY || e.originalEvent.pageY;
   
-  if (openPopupsSet != 0) {
+  if (openPopupsSet.size != 0) {
     document.getElementById("closeMarker").style.display = "block";
     document.getElementById("openMarkerDivider").style.display = "block";
   }
@@ -1826,13 +1867,15 @@ function displayContextMenu(e, customizeContextMenu = null) {
 }
 
 function clearContextMenu() {
-  document.getElementById("customContextMenu").style.display = "none";
-  document.getElementById("openInNewTab").style.display = "none";
-  document.getElementById("openLink").style.display = "none";
-  document.getElementById("openInNewTabDivider").style.display = "none";
-  document.getElementById("openMarker").style.display = "none";
-  document.getElementById("closeMarker").style.display = "none";
-  document.getElementById("openMarkerDivider").style.display = "none";
+  const contextMenu = document.getElementById("customContextMenu");
+  contextMenu.style.display = "none";
+
+  // Select and iterate over each child element of the context menu
+  Array.from(contextMenu.children).forEach(child => {
+    if (safeContextBtns.has(child.id) === false) {
+      child.style.display = "none";
+    }
+  });
 }
 
 function centerMap() {
