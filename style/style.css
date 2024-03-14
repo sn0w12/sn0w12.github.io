@@ -196,12 +196,16 @@
     display: none;
     position: absolute;
     z-index: 10000;
-    background-color: var(--background);
-    color: var(--foreground);
-    border: 1px solid var(--highlight2);
-    border-radius: 4px;
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background: var(--background);
+    color: var(--foreground);
+    border: 7px solid var(--background);
+    border-image-source: url(../icons/border.png);
+    border-image-width: 20px 40px;
+    border-image-repeat: round;
+    border-image-slice: 30 50 fill;
+    border-radius: 4px;
 }
 
 .custom-context-menu button {
@@ -215,10 +219,6 @@
     border: 1px solid var(--highlight);
     border-radius: 4px;
     transition: background-color 0.3s, color 0.3s;
-}
-
-.custom-context-menu button:last-of-type {
-    margin-bottom: 0px;
 }
 
 .custom-context-menu button:hover {

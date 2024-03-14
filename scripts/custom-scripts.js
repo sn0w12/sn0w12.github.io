@@ -1,5 +1,6 @@
 let allMarkers = [];
 let isDragging = false;
+let openPopupsSet = new Set();
 
 function generatePopupContent(
   title,
@@ -104,9 +105,7 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
       let closeMarkerBtn = document.getElementById("closeMarker");
       let openMarkerDivider = document.getElementById("openMarkerDivider");
     
-      let openedMarker = findOpenPopupMarker();
-    
-      if (openedMarker === marker) {
+      if (openPopupsSet.has(marker)) {
         closeMarkerBtn.style.display = "block";
       } else {
         openMarkerBtn.style.display = "block";
@@ -1064,43 +1063,6 @@ function closeAllPopups() {
   }
 }
 
-function findOpenPopupMarker() {
-  let openPopupMarker = null; // Initially, no marker is found
-
-  // Check for open popups directly on the map
-  map.eachLayer(function(layer) {
-    if (layer instanceof L.Popup && layer._source instanceof L.Marker) {
-      openPopupMarker = layer._source; // Assign the marker associated with the open popup
-      return;
-    }
-  });
-
-  if (openPopupMarker) return openPopupMarker; // Return the marker if found
-
-  // Iterate through each region in regionLayerGroups
-  for (let region in regionLayerGroups) {
-    if (regionLayerGroups.hasOwnProperty(region)) {
-      // Iterate through each group in the region
-      for (let group in regionLayerGroups[region]) {
-        if (regionLayerGroups[region].hasOwnProperty(group)) {
-          let layerGroup = regionLayerGroups[region][group];
-
-          // Check each layer in the group for an open popup
-          layerGroup.eachLayer(function(layer) {
-            if (layer instanceof L.Marker && layer.getPopup() && layer.isPopupOpen()) {
-              openPopupMarker = layer; // Assign the marker with the open popup
-              return; // Exit the loop early if an open popup is found
-            }
-          });
-        }
-      }
-    }
-    if (openPopupMarker) break; // Exit the outer loop early if an open popup is found
-  }
-
-  return openPopupMarker; // Return the marker with an open popup, or null if none found
-}
-
 function exportMarkersToJson() {
   let markersData = [];
 
@@ -1806,6 +1768,14 @@ function setUp(dataUrl) {
     })
     .catch((error) => console.error(`Error loading ${dataUrl}:`, error));
 
+  map.on('popupopen', function(e) {
+    openPopupsSet.add(e.popup._source);
+  });
+  
+  map.on('popupclose', function(e) {
+    openPopupsSet.delete(e.popup._source);
+  });      
+
   // Context menu logic
   document.addEventListener('contextmenu', function(e) {
     // Check if the event target is within the Leaflet control container
@@ -1833,7 +1803,7 @@ function displayContextMenu(e, customizeContextMenu = null) {
   let x = e.pageX || e.originalEvent.pageX;
   let y = e.pageY || e.originalEvent.pageY;
   
-  if (findOpenPopupMarker()) {
+  if (openPopupsSet != 0) {
     document.getElementById("closeMarker").style.display = "block";
     document.getElementById("openMarkerDivider").style.display = "block";
   }
