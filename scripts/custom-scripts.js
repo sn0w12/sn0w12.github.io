@@ -1808,8 +1808,16 @@ function setUp(dataUrl) {
 
   // Context menu logic
   document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    displayContextMenu(e);
+    // Check if the event target is within the Leaflet control container
+    var leafletControlContainer = document.querySelector('.leaflet-control-container');
+    
+    if (leafletControlContainer && !leafletControlContainer.contains(e.target)) {
+        // Prevent the default context menu only if the right-click is outside Leaflet controls
+        e.preventDefault();
+
+        // Display the custom context menu
+        displayContextMenu(e);
+    }
   }, false);
 
   // Hide the context menu when clicking elsewhere
