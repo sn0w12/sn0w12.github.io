@@ -1,4 +1,4 @@
-var allMarkers = [];
+let allMarkers = [];
 let isDragging = false;
 
 function generatePopupContent(
@@ -40,13 +40,13 @@ function generateMarker(
     coords.replace("LatLng", "").replace("(", "[").replace(")", "]")
   );
 
-  var firstTitle = title.split(" ")[0].toLowerCase();
-  var newId = `${id}_${customId || firstTitle}`;
+  let firstTitle = title.split(" ")[0].toLowerCase();
+  let newId = `${id}_${customId || firstTitle}`;
   if (linkTitle) linkTitle = ", '" + linkTitle + "'";
 
-  var region = regionMap[id] || "default"; // Determine the region
-  var markerIcon = icons[icon]; // Determine the icon based on the icon type
-  var popupContent = generatePopupContent(
+  let region = regionMap[id] || "default"; // Determine the region
+  let markerIcon = icons[icon]; // Determine the icon based on the icon type
+  let popupContent = generatePopupContent(
     title,
     category,
     description,
@@ -81,7 +81,7 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
     return; // Stop execution if the icon is invalid
   }
 
-  var marker = L.marker(coords, { icon: icon, title: title, id: id }).bindPopup(
+  let marker = L.marker(coords, { icon: icon, title: title, id: id }).bindPopup(
     popupContent
   );
 
@@ -96,27 +96,30 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
   allMarkers[region][id] = marker;
   
   marker.on('contextmenu', function(e) {
-    clearContextMenu();
-    // Prevent the default context menu from showing
+    e.originalEvent.stopPropagation();
     e.originalEvent.preventDefault();
-    
-    // Get your custom context menu element
-    var contextMenu = document.getElementById("customContextMenu");
-    var openMarkerBtn = document.getElementById("openMarker");
-    var openMarkerDivider = document.getElementById("openMarkerDivider");
 
-    openMarkerBtn.style.display = "block";
-    openMarkerDivider.style.display = "block";
-
-    openMarkerBtn.onclick = function() {
-      console.log(marker.options.id);
-      openPopupFromUrl(marker.options.id);
-    };
+    function customizeContextMenuForMarker() {
+      let openMarkerBtn = document.getElementById("openMarker");
+      let closeMarkerBtn = document.getElementById("closeMarker");
+      let openMarkerDivider = document.getElementById("openMarkerDivider");
     
-    // Display the menu at the mouse position
-    contextMenu.style.display = "block";
-    contextMenu.style.left = e.originalEvent.pageX + "px";
-    contextMenu.style.top = e.originalEvent.pageY + "px";
+      let openedMarker = findOpenPopupMarker();
+    
+      if (openedMarker === marker) {
+        closeMarkerBtn.style.display = "block";
+      } else {
+        openMarkerBtn.style.display = "block";
+        openMarkerBtn.onclick = function() {
+          openPopupFromUrl(marker.options.id);
+        };
+        closeMarkerBtn.style.display = "none";
+      }
+      openMarkerDivider.style.display = "block";
+    }
+    
+    // Display the customized context menu for the marker
+    displayContextMenu(e, customizeContextMenuForMarker);
   });
 
   return marker;
@@ -360,21 +363,21 @@ function createLayerGroup(regionCode, layerTypes) {
 
 function setSelectValueFromCheckedRadioButton(region) {
   // Find the text of the checked radio button's next sibling span
-  var checkedRadioSpanText = document.querySelector(
+  let checkedRadioSpanText = document.querySelector(
     'input[name="leaflet-base-layers"]:checked + span'
   );
   if (!checkedRadioSpanText) return; // Exit if no checked radio button with a span
 
-  var spanText = checkedRadioSpanText.textContent.trim();
+  let spanText = checkedRadioSpanText.textContent.trim();
 
   // Map the text to the select option values
-  var select = document.getElementById("Id");
-  var options = select.options;
+  let select = document.getElementById("Id");
+  let options = select.options;
 
-  var found = false;
+  let found = false;
 
   if (region) {
-    for (var i = 0; i < options.length; i++) {
+    for (let i = 0; i < options.length; i++) {
       if (options[i].text === region) {
         select.value = options[i].value;
         found = true;
@@ -382,7 +385,7 @@ function setSelectValueFromCheckedRadioButton(region) {
       }
     }
   } else {
-    for (var i = 0; i < options.length; i++) {
+    for (let i = 0; i < options.length; i++) {
       if (options[i].text === spanText) {
         select.value = options[i].value;
         found = true;
@@ -450,9 +453,9 @@ function resetAndOpenPopup() {
 function markerMaker(isPolygon = false) {
   // Load saved data
   loadFormData();
-  var formData = getFormData(marker);
+  let formData = getFormData(marker);
 
-  var coords = marker
+  let coords = marker
     .getLatLng()
     .toString()
     .replace("LatLng", "")
@@ -475,7 +478,7 @@ function markerMaker(isPolygon = false) {
   }
 
   // Add event listeners for each form element
-  var formElements = document.querySelectorAll(
+  let formElements = document.querySelectorAll(
     "#Id, #Title, #Category, #Description, #Link, #LinkText, #CustomId"
   );
   formElements.forEach(function (element) {
@@ -485,7 +488,7 @@ function markerMaker(isPolygon = false) {
   document.getElementById("DevButton").addEventListener("click", function () {
     // Get updated form data
     formData = getFormData(marker);
-    var output = generateMarker(
+    let output = generateMarker(
       formData.id,
       formData.title,
       formData.category,
@@ -508,12 +511,12 @@ function markerMaker(isPolygon = false) {
   };
 }
 
-var pointsArray = [];
-var firstPolygonPoint = null;
-var polylineLayers = [];
+let pointsArray = [];
+let firstPolygonPoint = null;
+let polylineLayers = [];
 
 function addPolylineToMap(lineString, color) {
-  var polyline = L.geoJSON(lineString, { color: color }).addTo(map);
+  let polyline = L.geoJSON(lineString, { color: color }).addTo(map);
   polylineLayers.push(polyline); // Store the reference for later removal
 }
 
@@ -527,8 +530,8 @@ function removeAllPolylines() {
 function polygonMaker(isDropped = false) {
   formData = getFormData(polygonMarker);
 
-  var latLng = polygonMarker.getLatLng();
-  var coords = [latLng.lat, latLng.lng];
+  let latLng = polygonMarker.getLatLng();
+  let coords = [latLng.lat, latLng.lng];
   document.getElementById("Coords").value = latLng
     .toString()
     .replace("LatLng", "")
@@ -548,14 +551,14 @@ function polygonMaker(isDropped = false) {
 
   function drawTemporaryLine() {
     if (pointsArray.length > 0) {
-      var tempPointsArray = [pointsArray[pointsArray.length - 1], coords];
+      let tempPointsArray = [pointsArray[pointsArray.length - 1], coords];
       addPolylineToMap(createLineStringFromPoints(tempPointsArray), "blue");
     }
     if (pointsArray.length > 3) {
       clearAllVectors();
-      var tempPointsArray = pointsArray.slice(); // Clone the pointsArray
+      let tempPointsArray = pointsArray.slice(); // Clone the pointsArray
       tempPointsArray.push(coords); // Add the new point to the temporary array
-      var tempTurfPolygon = convertArrayToTurfPolygon(tempPointsArray);
+      let tempTurfPolygon = convertArrayToTurfPolygon(tempPointsArray);
       displayPolygon(tempTurfPolygon, "", false, "blue");
     }
   }
@@ -566,7 +569,7 @@ function polygonMaker(isDropped = false) {
   }
 
   document.getElementById("DevButton").addEventListener("click", function () {
-    var lastPoint = pointsArray[pointsArray.length - 1];
+    let lastPoint = pointsArray[pointsArray.length - 1];
 
     // Check if the new point is different from the last point
     if (
@@ -610,7 +613,7 @@ function polygonMaker(isDropped = false) {
 }
 
 function createLineStringFromPoints(pointsArray) {
-  var lineCoordinates = pointsArray.map((point) => [point[1], point[0]]); // Convert to [lng, lat] for GeoJSON
+  let lineCoordinates = pointsArray.map((point) => [point[1], point[0]]); // Convert to [lng, lat] for GeoJSON
   return turf.lineString(lineCoordinates);
 }
 
@@ -667,13 +670,13 @@ function getFormData(currentMarker) {
 
 // Save form data to localStorage
 function saveFormData() {
-  var formData = getFormData(marker);
+  let formData = getFormData(marker);
   localStorage.setItem("markerFormData", JSON.stringify(formData));
 }
 
 // Load form data from localStorage
 function loadFormData() {
-  var savedData = localStorage.getItem("markerFormData");
+  let savedData = localStorage.getItem("markerFormData");
   if (savedData) {
     savedData = JSON.parse(savedData);
     document.getElementById("Title").value = savedData.title;
@@ -716,7 +719,7 @@ function displayPolygon(
   url = null
 ) {
   // Get the hex color for the current region from the mapping
-  var regionColor = countryColors[region] || "#CCCCCC"; // Default to gray if no color defined
+  let regionColor = countryColors[region] || "#CCCCCC"; // Default to gray if no color defined
   if (color != null) {
     regionColor = color;
   }
@@ -771,21 +774,29 @@ function displayPolygon(
     });
 
     geoJsonLayer.on('contextmenu', function(e) {
-      clearContextMenu();
-      var contextMenu = document.getElementById("customContextMenu");
+      e.originalEvent.stopPropagation();
 
-      contextMenu.style.display = "block";
-      contextMenu.style.left = e.originalEvent.pageX + "px";
-      contextMenu.style.top = e.originalEvent.pageY + "px";
+      function customizeContextMenuForGeo() {
+        clearContextMenu();
+  
+        // Show the "Open in new tab" button and set its onclick event
+        let openInNewTabBtn = document.getElementById("openInNewTab");
+        openInNewTabBtn.style.display = "block";
+        openInNewTabBtn.onclick = function() {
+          window.open(url, "_blank");
+        };
 
-      // Show the "Open in new tab" button and set its onclick event
-      var openInNewTabBtn = document.getElementById("openInNewTab");
-      openInNewTabBtn.style.display = "block";
-      openInNewTabBtn.onclick = function() {
-        window.open(url, "_blank");
-      };
-      var openInNewTabDivider = document.getElementById("openInNewTabDivider");
-      openInNewTabDivider.style.display = "block";
+        let openBtn = document.getElementById("openLink");
+        openBtn.style.display = "block";
+        openBtn.onclick = function() {
+          window.open(url,"_self");
+        };
+
+        let openInNewTabDivider = document.getElementById("openInNewTabDivider");
+        openInNewTabDivider.style.display = "block";
+      }
+
+      displayContextMenu(e, customizeContextMenuForGeo);
     });
   }
 
@@ -838,7 +849,7 @@ getTotalArea(); Get total area of all polygons
 }
 
 function countCountryMarkers() {
-  var counts = {};
+  let counts = {};
 
   // Create idToLabelMap once and reuse if formHTML doesn't change frequently
   const select = new DOMParser()
@@ -853,16 +864,16 @@ function countCountryMarkers() {
     const group = allMarkers[groupKey];
     Object.keys(group).forEach((markerKey) => {
       const marker = group[markerKey];
-      var id = marker.options.id;
+      let id = marker.options.id;
       if (id === "markerMaker") return; // Skip markerMaker markers
 
-      var idPrefix = id.substring(0, 2).toLowerCase();
+      let idPrefix = id.substring(0, 2).toLowerCase();
       counts[idPrefix] = (counts[idPrefix] || 0) + 1;
     });
   });
 
   // Convert counts to array, sort, and map to labels in one go
-  var combinedCounts = Object.entries(counts)
+  let combinedCounts = Object.entries(counts)
     .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
     .map(([id, count]) => `${idToLabelMap[id] || id}: ${count}`); // Map to label: count
 
@@ -879,8 +890,8 @@ function displayAllPolygons() {
 }
 
 function getTotalArea(log = true) {
-  var totalArea = 0;
-  var countryAreas = {};
+  let totalArea = 0;
+  let countryAreas = {};
   if (countryPolygons[currentMap][selectedOptionId]) {
     for (const region in countryPolygons[currentMap][selectedOptionId]) {
       const polygon = countryPolygons[currentMap][selectedOptionId][region];
@@ -898,7 +909,7 @@ function getTotalArea(log = true) {
       .toFixed(2)
       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    var combinedCountryAreas = Object.entries(countryAreas)
+    let combinedCountryAreas = Object.entries(countryAreas)
       .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
       .map(
         ([region, area]) =>
@@ -964,12 +975,12 @@ function printRegionGroups() {
 // Run from the console, openAllPopupsInLayerGroup(ar, cityBig);
 function openAllPopupsInLayerGroup(region, group) {
   if (regionLayerGroups[region] && regionLayerGroups[region][group]) {
-    var layerGroup = regionLayerGroups[region][group];
+    let layerGroup = regionLayerGroups[region][group];
 
     layerGroup.eachLayer(function (layer) {
       if (layer instanceof L.Marker && layer.getPopup()) {
         // Create a non-closable popup and bind it to the marker
-        var nonClosablePopup = L.popup({
+        let nonClosablePopup = L.popup({
           autoClose: false,
           closeOnClick: false,
         }).setContent(layer.getPopup().getContent());
@@ -992,11 +1003,11 @@ function openAllPopupsInCountry(prefix) {
     Object.values(group).forEach((marker) => {
       // Ensure the marker has an 'options' object and an 'id' within it
       if (marker.options && marker.options.id) {
-        var markerId = marker.options.id;
+        let markerId = marker.options.id;
 
         // Check if the first two letters of the marker's ID match the specified prefix
         if (markerId.substring(0, 2) === prefix) {
-          var nonClosablePopup = L.popup({
+          let nonClosablePopup = L.popup({
             autoClose: false,
             closeOnClick: false,
           }).setContent(marker.getPopup().getContent());
@@ -1017,7 +1028,7 @@ function isolateCountryMarkers(prefixArray) {
     Object.values(group).forEach((marker) => {
       // Ensure the marker has an 'options' object and an 'id' within it
       if (marker.options && marker.options.id) {
-        var markerId = marker.options.id;
+        let markerId = marker.options.id;
 
         // Check if the first two letters of the marker's ID match the specified prefix
         if (
@@ -1034,12 +1045,12 @@ function isolateCountryMarkers(prefixArray) {
 // Run from the console
 function closeAllPopups() {
   // Iterate through each region in the regionLayerGroups
-  for (var region in regionLayerGroups) {
+  for (let region in regionLayerGroups) {
     if (regionLayerGroups.hasOwnProperty(region)) {
       // Iterate through each group in the region
-      for (var group in regionLayerGroups[region]) {
+      for (let group in regionLayerGroups[region]) {
         if (regionLayerGroups[region].hasOwnProperty(group)) {
-          var layerGroup = regionLayerGroups[region][group];
+          let layerGroup = regionLayerGroups[region][group];
 
           // Close popup of each layer in the group
           layerGroup.eachLayer(function (layer) {
@@ -1053,28 +1064,65 @@ function closeAllPopups() {
   }
 }
 
+function findOpenPopupMarker() {
+  let openPopupMarker = null; // Initially, no marker is found
+
+  // Check for open popups directly on the map
+  map.eachLayer(function(layer) {
+    if (layer instanceof L.Popup && layer._source instanceof L.Marker) {
+      openPopupMarker = layer._source; // Assign the marker associated with the open popup
+      return;
+    }
+  });
+
+  if (openPopupMarker) return openPopupMarker; // Return the marker if found
+
+  // Iterate through each region in regionLayerGroups
+  for (let region in regionLayerGroups) {
+    if (regionLayerGroups.hasOwnProperty(region)) {
+      // Iterate through each group in the region
+      for (let group in regionLayerGroups[region]) {
+        if (regionLayerGroups[region].hasOwnProperty(group)) {
+          let layerGroup = regionLayerGroups[region][group];
+
+          // Check each layer in the group for an open popup
+          layerGroup.eachLayer(function(layer) {
+            if (layer instanceof L.Marker && layer.getPopup() && layer.isPopupOpen()) {
+              openPopupMarker = layer; // Assign the marker with the open popup
+              return; // Exit the loop early if an open popup is found
+            }
+          });
+        }
+      }
+    }
+    if (openPopupMarker) break; // Exit the outer loop early if an open popup is found
+  }
+
+  return openPopupMarker; // Return the marker with an open popup, or null if none found
+}
+
 function exportMarkersToJson() {
-  var markersData = [];
+  let markersData = [];
 
   // Iterate over each group in the allMarkers object
   Object.values(allMarkers).forEach((group) => {
     // Now, iterate over each marker in the group
     Object.values(group).forEach((marker) => {
-      var id = marker.options.id || "";
+      let id = marker.options.id || "";
       if (id === "markerMaker") {
         return; // Skip this marker
       }
-      var idPrefix = id.substring(0, 2).toLowerCase();
-      var region = regionMap[idPrefix] || "mo";
+      let idPrefix = id.substring(0, 2).toLowerCase();
+      let region = regionMap[idPrefix] || "mo";
 
-      var coords = [marker.getLatLng().lat, marker.getLatLng().lng];
-      var icon = marker.options.icon.options.className;
-      var title = marker.options.title || "";
-      var popupContent = marker.getPopup()
+      let coords = [marker.getLatLng().lat, marker.getLatLng().lng];
+      let icon = marker.options.icon.options.className;
+      let title = marker.options.title || "";
+      let popupContent = marker.getPopup()
         ? marker.getPopup().getContent()
         : "";
 
-      var popupData = popupContent ? parsePopupContent(popupContent) : {};
+      let popupData = popupContent ? parsePopupContent(popupContent) : {};
 
       markersData.push({
         region: region,
@@ -1096,20 +1144,20 @@ function exportMarkersToJson() {
 }
 
 function parsePopupContent(popupContent) {
-  var parser = new DOMParser();
-  var doc = parser.parseFromString(popupContent, "text/html");
+  let parser = new DOMParser();
+  let doc = parser.parseFromString(popupContent, "text/html");
 
-  var popuptitle = doc.querySelector("b font")?.textContent || "";
-  var category = doc.querySelector("i font")?.textContent || "";
-  var description = getDescription(doc);
+  let popuptitle = doc.querySelector("b font")?.textContent || "";
+  let category = doc.querySelector("i font")?.textContent || "";
+  let description = getDescription(doc);
 
-  var linkElement = doc.querySelector("a");
-  var link = !!linkElement; // Boolean: true if a link exists, false otherwise
+  let linkElement = doc.querySelector("a");
+  let link = !!linkElement; // Boolean: true if a link exists, false otherwise
 
-  var customlink = null;
+  let customlink = null;
   if (linkElement) {
-    var href = linkElement.getAttribute("href");
-    var linkText = href.split("#").pop(); // Extracting text after '#'
+    let href = linkElement.getAttribute("href");
+    let linkText = href.split("#").pop(); // Extracting text after '#'
     linkText = decodeURIComponent(linkText); // Decoding to plain text
 
     customlink = linkText !== popuptitle ? linkText : null;
@@ -1125,13 +1173,13 @@ function parsePopupContent(popupContent) {
 }
 
 function getDescription(doc) {
-  var foundCategory = false;
-  var foundBrTag = false;
+  let foundCategory = false;
+  let foundBrTag = false;
 
-  var description = "";
-  var childNodes = doc.body.childNodes;
-  for (var i = 0; i < childNodes.length; i++) {
-    var node = childNodes[i];
+  let description = "";
+  let childNodes = doc.body.childNodes;
+  for (let i = 0; i < childNodes.length; i++) {
+    let node = childNodes[i];
 
     // Check if we found the category and are at the <br /> tag
     if (foundCategory && node.nodeName === "BR") {
@@ -1156,11 +1204,11 @@ function getDescription(doc) {
 
 // Function to trigger the download of JSON file
 function downloadJson(data) {
-  var jsonStr = JSON.stringify(data, null, 2);
-  var blob = new Blob([jsonStr], { type: "application/json" });
-  var url = URL.createObjectURL(blob);
+  let jsonStr = JSON.stringify(data, null, 2);
+  let blob = new Blob([jsonStr], { type: "application/json" });
+  let url = URL.createObjectURL(blob);
 
-  var a = document.createElement("a");
+  let a = document.createElement("a");
   a.href = url;
   a.download = "markers.json";
   document.body.appendChild(a);
@@ -1211,7 +1259,7 @@ function updateLayers(map, addLayers) {
 }
 
 function updateCheckbox(selectorIndex, checked) {
-  var checkbox = document.querySelectorAll(
+  let checkbox = document.querySelectorAll(
     ".leaflet-control-layers-group-selector"
   )[selectorIndex];
   checkbox.checked = checked;
@@ -1223,8 +1271,8 @@ function getTrimmedText(node) {
 
 function hideCheckBoxes(groupNumbers) {
   groupNumbers.forEach(function (groupNumber) {
-    var elementId = "leaflet-control-layers-group-" + groupNumber;
-    var element = document.getElementById(elementId);
+    let elementId = "leaflet-control-layers-group-" + groupNumber;
+    let element = document.getElementById(elementId);
     if (element) {
       element.hidden = true;
     }
@@ -1232,14 +1280,14 @@ function hideCheckBoxes(groupNumbers) {
 }
 
 function updateMapConfiguration(currentMap, selectedOptionId) {
-  var mapStyle = mapConfigurations[currentMap];
+  let mapStyle = mapConfigurations[currentMap];
 
   if (!mapStyle) {
     console.error("No configuration found for currentMap:", currentMap);
     return; // Exit if no configuration is found for the currentMap
   }
 
-  var optionConfig = mapStyle.options[selectedOptionId];
+  let optionConfig = mapStyle.options[selectedOptionId];
   if (!optionConfig) {
     console.warn(
       "No configuration found for selectedOptionId:",
@@ -1286,7 +1334,7 @@ function changeAllIcons(suffix) {
     layers.forEach((layer) => {
       const subLayers = layer.getLayers();
       subLayers.forEach((subLayer) => {
-        var newIconName =
+        let newIconName =
           subLayer.options.icon.options.className.replace(oldSuffix, "") +
           suffix;
 
@@ -1335,14 +1383,14 @@ function refreshAllMarkers(suffix) {
 }
 
 function updateIcons(currentMap, iconChecked) {
-  var suffix =
+  let suffix =
     radioButtonsInfo.find((item) => item.checkedIndex === iconChecked)
       ?.suffix || "";
   refreshAllMarkers(suffix);
 }
 
 function createSelect(year, optionId, dropdown) {
-  var option = document.createElement("option");
+  let option = document.createElement("option");
   option.id = optionId; // Use the optionId parameter
   option.textContent = year;
   dropdown.appendChild(option);
@@ -1407,7 +1455,7 @@ function processImportedData(jsonData) {
     });
 
     jsonData.forEach((markerData) => {
-      var iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
+      let iconType = icons[markerData.icon]; // Check if this returns a valid Leaflet icon
       if (!iconType) {
         console.warn(
           "Icon not found for:",
@@ -1417,7 +1465,7 @@ function processImportedData(jsonData) {
         iconType = icons.defaultIcon;
       }
 
-      var popupContent = generatePopupContent(
+      let popupContent = generatePopupContent(
         markerData.popuptitle,
         markerData.category,
         markerData.description,
@@ -1466,7 +1514,7 @@ function isValidMarkerData(markerData) {
 }
 
 function getCheckedIndex(iconType) {
-  for (var i = 0; i < radioButtonsInfo.length; i++) {
+  for (let i = 0; i < radioButtonsInfo.length; i++) {
     if (radioButtonsInfo[i].label === iconType) {
       return radioButtonsInfo[i].checkedIndex;
     }
@@ -1498,7 +1546,7 @@ function adjustSettings(defaultSettings, adjustments) {
 }
 
 document.addEventListener("change", function (event) {
-  var radioButton = event.target;
+  let radioButton = event.target;
 
   if (radioButton.classList.contains("leaflet-control-layers-selector")) {
     if (
@@ -1517,7 +1565,7 @@ document.addEventListener("change", function (event) {
       );
     }
   } else if (radioButton.classList.contains("custom-radio-class")) {
-    var iconType = getTrimmedText(radioButton);
+    let iconType = getTrimmedText(radioButton);
     if (iconType) {
       if (iconChecked !== null) {
         iconChecked = getCheckedIndex(iconType);
@@ -1575,8 +1623,8 @@ function performActions(
 }
 
 function changeMapToSelected() {
-  var dropdown = document.getElementById("YearSelector");
-  var selectedOption = dropdown.options[dropdown.selectedIndex].id;
+  let dropdown = document.getElementById("YearSelector");
+  let selectedOption = dropdown.options[dropdown.selectedIndex].id;
 
   performActions(
     mapConfigurations[currentMap].options[selectedOption].mapLayer,
@@ -1589,25 +1637,25 @@ function changeMapToSelected() {
 
 // Function to update the variable with the selected option's ID
 function updateSelectedOptionId() {
-  var dropdown = document.getElementById("YearSelector");
+  let dropdown = document.getElementById("YearSelector");
   selectedOptionId = dropdown.options[dropdown.selectedIndex].id;
 
   changeMapToSelected();
 }
 
 function setYearSelectorToLastDropdown() {
-  var dropdown = document.getElementById("YearSelector");
+  let dropdown = document.getElementById("YearSelector");
 
   // Check if the dropdown has options
   if (dropdown.options.length > 0) {
     // Find the option that matches the selectedOptionId
-    var matchingOptionExists = Array.from(dropdown.options).some(
+    let matchingOptionExists = Array.from(dropdown.options).some(
       (option) => option.id === selectedOptionId
     );
 
     if (matchingOptionExists) {
       // Set the dropdown's value to the matching option's value
-      for (var i = 0; i < dropdown.options.length; i++) {
+      for (let i = 0; i < dropdown.options.length; i++) {
         if (dropdown.options[i].id === selectedOptionId) {
           dropdown.selectedIndex = i;
           break;
@@ -1759,23 +1807,10 @@ function setUp(dataUrl) {
     .catch((error) => console.error(`Error loading ${dataUrl}:`, error));
 
   // Context menu logic
-  if (document.addEventListener) {
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-      var contextMenu = document.getElementById("customContextMenu");
-      contextMenu.style.display = "block";
-      contextMenu.style.left = e.pageX + "px";
-      contextMenu.style.top = e.pageY + "px";
-    }, false);
-  } else {
-    document.attachEvent('oncontextmenu', function() {
-      window.event.returnValue = false;
-      var contextMenu = document.getElementById("customContextMenu");
-      contextMenu.style.display = "block";
-      contextMenu.style.left = e.pageX + "px";
-      contextMenu.style.top = e.pageY + "px";
-    });
-  }
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    displayContextMenu(e);
+  }, false);
 
   // Hide the context menu when clicking elsewhere
   document.addEventListener("click", function(e) {
@@ -1783,11 +1818,42 @@ function setUp(dataUrl) {
   });
 }
 
+function displayContextMenu(e, customizeContextMenu = null) {
+  clearContextMenu();
+
+  // Use provided event's page coordinates
+  let x = e.pageX || e.originalEvent.pageX;
+  let y = e.pageY || e.originalEvent.pageY;
+  
+  if (findOpenPopupMarker()) {
+    document.getElementById("closeMarker").style.display = "block";
+    document.getElementById("openMarkerDivider").style.display = "block";
+  }
+  
+  // Customize the context menu based on the current context
+  if (typeof customizeContextMenu === "function") {
+    customizeContextMenu();
+  }
+  
+  const zoomLevel = isZoomMax();
+  document.getElementById("zoomIn").style.display = zoomLevel === "max" ? "none" : "block";
+  document.getElementById("zoomOut").style.display = zoomLevel === "min" ? "none" : "block";
+  
+  adjustLastButtonMargin();
+
+  let contextMenu = document.getElementById("customContextMenu");
+  contextMenu.style.display = "block";
+  contextMenu.style.left = x + "px";
+  contextMenu.style.top = y + "px";
+}
+
 function clearContextMenu() {
   document.getElementById("customContextMenu").style.display = "none";
   document.getElementById("openInNewTab").style.display = "none";
+  document.getElementById("openLink").style.display = "none";
   document.getElementById("openInNewTabDivider").style.display = "none";
   document.getElementById("openMarker").style.display = "none";
+  document.getElementById("closeMarker").style.display = "none";
   document.getElementById("openMarkerDivider").style.display = "none";
 }
 
@@ -1811,4 +1877,55 @@ function resetMap() {
   );
 
   centerMap();
+}
+
+function isZoomMax() {
+  let currentZoom = map._zoom;
+  let maxZoom = map._layersMaxZoom;
+  let minZoom = map._layersMinZoom;
+  if (currentZoom == maxZoom) {
+    return "max";
+  } else if (currentZoom == minZoom) {
+    return "min";
+  }
+  return false;
+}
+
+function zoomToContextMenu(zoomAmount) {
+  let currentZoom = map._zoom;
+  let zoomMultiplier = 1.5;
+  contextMenu = document.getElementById("customContextMenu");
+
+  // Use getBoundingClientRect to get the position of the context menu
+  var rect = contextMenu.getBoundingClientRect();
+
+  // The x and y coordinates (relative to the viewport)
+  var x = rect.left;
+  var y = rect.top;
+
+  let latLng = map.containerPointToLatLng(L.point(x, y));
+
+  map.setView(latLng, currentZoom += ((map.options.zoomDelta * zoomAmount) * zoomMultiplier));
+}
+
+function adjustLastButtonMargin() {
+  const buttons = document.querySelectorAll('.custom-context-menu button');
+  let lastVisibleButton = null;
+
+  // Find the last visible button
+  buttons.forEach(button => {
+    if (button.style.display !== 'none') {
+      lastVisibleButton = button;
+    }
+  });
+
+  // First, reset the margin for all buttons to avoid stacking effects
+  buttons.forEach(button => {
+    button.style.marginBottom = '5px'; // Assuming 5px is your default margin
+  });
+
+  // Remove the bottom margin from the last visible button
+  if (lastVisibleButton) {
+    lastVisibleButton.style.marginBottom = '0px';
+  }
 }
