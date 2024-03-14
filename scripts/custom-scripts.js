@@ -94,6 +94,30 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
 
   if (!allMarkers[region]) allMarkers[region] = {};
   allMarkers[region][id] = marker;
+  
+  marker.on('contextmenu', function(e) {
+    clearContextMenu();
+    // Prevent the default context menu from showing
+    e.originalEvent.preventDefault();
+    
+    // Get your custom context menu element
+    var contextMenu = document.getElementById("customContextMenu");
+    var openMarkerBtn = document.getElementById("openMarker");
+    var openMarkerDivider = document.getElementById("openMarkerDivider");
+
+    openMarkerBtn.style.display = "block";
+    openMarkerDivider.style.display = "block";
+
+    openMarkerBtn.onclick = function() {
+      console.log(marker.options.id);
+      openPopupFromUrl(marker.options.id);
+    };
+    
+    // Display the menu at the mouse position
+    contextMenu.style.display = "block";
+    contextMenu.style.left = e.originalEvent.pageX + "px";
+    contextMenu.style.top = e.originalEvent.pageY + "px";
+  });
 
   return marker;
 }
@@ -744,6 +768,24 @@ function displayPolygon(
         window.open(url, "_blank");
         map.dragging.enable();
       }
+    });
+
+    geoJsonLayer.on('contextmenu', function(e) {
+      clearContextMenu();
+      var contextMenu = document.getElementById("customContextMenu");
+
+      contextMenu.style.display = "block";
+      contextMenu.style.left = e.originalEvent.pageX + "px";
+      contextMenu.style.top = e.originalEvent.pageY + "px";
+
+      // Show the "Open in new tab" button and set its onclick event
+      var openInNewTabBtn = document.getElementById("openInNewTab");
+      openInNewTabBtn.style.display = "block";
+      openInNewTabBtn.onclick = function() {
+        window.open(url, "_blank");
+      };
+      var openInNewTabDivider = document.getElementById("openInNewTabDivider");
+      openInNewTabDivider.style.display = "block";
     });
   }
 
@@ -1737,8 +1779,16 @@ function setUp(dataUrl) {
 
   // Hide the context menu when clicking elsewhere
   document.addEventListener("click", function(e) {
-    document.getElementById("customContextMenu").style.display = "none";
+    clearContextMenu();
   });
+}
+
+function clearContextMenu() {
+  document.getElementById("customContextMenu").style.display = "none";
+  document.getElementById("openInNewTab").style.display = "none";
+  document.getElementById("openInNewTabDivider").style.display = "none";
+  document.getElementById("openMarker").style.display = "none";
+  document.getElementById("openMarkerDivider").style.display = "none";
 }
 
 function centerMap() {
