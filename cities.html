@@ -59,6 +59,25 @@
         { map: tsuki, name: "tsuki" },
       ];
 
+      const countryColors = {
+        Antaria: "#cc0000",
+        Primoria: "#674ea7",
+        Dryadalis: "#6aa84f",
+        Gigantoria: "#d5a6bd",
+        "Trade Company": "#ffd966",
+        Odrheim: "#a64d79",
+        Tunglheimr: "#45818e",
+        Arcarum: "#8e7cc3",
+        "Golden Order": "#f3cc52",
+        "Free People of Antaria": "#a61c00",
+        Rheinland: "#666666",
+        Azurith: "#e69138",
+        Tsuki: "#3c78d8",
+        Seraphyria: "#cc0000",
+        Talasir: "#3c78d8",
+        Thyrania: "#6aa84f",
+      };
+
       var oldSuffix = "";
       var currentSelectedMap = antaria;
       var selectedOptionId = "anOption1";
@@ -105,7 +124,8 @@
         northEast = L.latLng(80, 185),
         bounds = L.latLngBounds(southWest, northEast);
 
-      meterConversion = 1000000;
+      meterConversion = 100;
+      const useFlatDistance = true;
 
       //Creating the Map
       var map = L.map("map", {

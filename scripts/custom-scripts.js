@@ -440,19 +440,49 @@ function setSelectValueFromCheckedRadioButton(region) {
   }
 }
 
-function parseLatLng(latlngString) {
-  // Extract the numbers from the LatLng string
-  const match = latlngString.match(/LatLng\(([^,]+),\s*([^)]+)\)/);
-  if (match) {
-    return [parseFloat(match[1]), parseFloat(match[2])];
+function parseLatLng(latlngInput) {
+  // Check if input is an object with lat and lng properties
+  if (typeof latlngInput === 'object' && latlngInput !== null && 'lat' in latlngInput && 'lng' in latlngInput) {
+    const lat = parseFloat(latlngInput.lat);
+    const lng = parseFloat(latlngInput.lng);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      return [lat, lng]; // Return the coordinates as an array
+    }
   }
-  return null; // Return null if the format doesn't match
+
+  // If input is a string, check for various string formats
+  if (typeof latlngInput === 'string') {
+    // Attempt to extract numbers from a LatLng string format
+    const match = latlngInput.match(/LatLng\(([^,]+),\s*([^)]+)\)/);
+    if (match) {
+      return [parseFloat(match[1]), parseFloat(match[2])];
+    }
+    
+    // Attempt to parse a string that directly represents coordinates
+    const parts = latlngInput.split(',');
+    if (parts.length === 2) {
+      const lat = parseFloat(parts[0]);
+      const lng = parseFloat(parts[1]);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        return [lat, lng];
+      }
+    }
+  }
+
+  // Check if input is already in the expected array format
+  if (Array.isArray(latlngInput) && latlngInput.length === 2 && !isNaN(latlngInput[0]) && !isNaN(latlngInput[1])) {
+    return latlngInput; // Already in the correct format, return it directly
+  }
+
+  // If none of the above, log a warning and return null
+  console.warn('parseLatLng expects input in a recognizable format.');
+  return null;
 }
 
 function isPointInsidePolygon(latlngString, polygon) {
   const point = parseLatLng(latlngString);
   if (!point) {
-    console.warn("Invalid point format.");
+    console.warn("Invalid point format or not parseable.");
     return false;
   }
 
@@ -2062,44 +2092,121 @@ function drawMeasurementLine(latlng) {
     tempLine = null;
   }
 
-  // Draw the final measurement line
-  measurementLine = L.polyline([firstPoint, point], {color: 'blue'}).addTo(map);
+  let color1;
+  let color2;
+  if (typeof countryPolygons != "undefined") {
+    console.log(typeof countryPolygons)
+    color1 = colorToRGB(getPointCountryColor(firstPoint));
+    color2 = colorToRGB(getPointCountryColor(point));
+  } else {
+    color1 = colorToRGB(countryColors[currentMap]);
+    color2 = colorToRGB(countryColors[currentMap]);
+  }
+  console.log(color1);
 
-  // Calculate the uncorrected distance
-  var distance = firstPoint.distanceTo(point);
+  const segments = 10; // Increase for smoother gradient
+  let latlngs = [];
+  let gradientSegments = [];
 
-  // Calculate correction factors for both points and average them
-  var correctionFactorStart = calculateCorrectionFactor(firstPoint.lat);
-  var correctionFactorEnd = calculateCorrectionFactor(point.lat);
-  var averageCorrectionFactor = (correctionFactorStart + correctionFactorEnd) / 2;
-  
-  // Apply the correction factor
-  var correctedDistance = distance * averageCorrectionFactor;
+  // Draw each segment of the gradient line
+  for (let i = 0; i <= segments; i++) {
+    let lat = firstPoint.lat + (i / segments) * (point.lat - firstPoint.lat);
+    let lng = firstPoint.lng + (i / segments) * (point.lng - firstPoint.lng);
+    latlngs.push([lat, lng]);
+
+    if (i > 0) {
+      let color = interpolateColor(color1, color2, i / segments);
+      gradientPolyLine = L.polyline([latlngs[i-1], latlngs[i]], {color: rgbToHex(color)}).addTo(map);
+      polylineLayers.push(gradientPolyLine);
+      gradientSegments.push(gradientPolyLine);
+    }
+  }
+
+  // Draw an invisible overarching line for the popup
+  let overarchingLine = L.polyline(latlngs, {color: 'rgba(0,0,0,0)', weight: 10}).addTo(map);
+
+  var distance;
+  if (useFlatDistance) {
+    // Calculate distance on a flat plane using Cartesian coordinates
+    const dx = point.lat - firstPoint.lat;
+    const dy = point.lng - firstPoint.lng;
+    distance = Math.sqrt(dx * dx + dy * dy); // Euclidean distance in the same units as your map's coordinate system
+  } else {
+    // Calculate the uncorrected distance using globe-based logic
+    distance = firstPoint.distanceTo(point);
+
+    // Calculate correction factors for both points and average them
+    var correctionFactorStart = calculateCorrectionFactor(firstPoint.lat);
+    var correctionFactorEnd = calculateCorrectionFactor(point.lat);
+    var averageCorrectionFactor = (correctionFactorStart + correctionFactorEnd) / 2;
+    
+    // Apply the correction factor
+    distance *= averageCorrectionFactor;
+  }
   
   // Convert distance to kilometers and display it
-  var distanceInKm = (correctedDistance / meterConversion).toFixed(2);
+  var distanceInKm = (distance / meterConversion).toFixed(2);
   var popupContent = `
-    Distance: ${distanceInKm} km
-    <br>
-    <button id="removeMeasurementLineBtn" class="custom-context-menu">Remove</button>
+  <div class="leaflet-popup-content">
+    <div>Distance: ${distanceInKm} km</div>
+    <button id="removeMeasurementLineBtn" class="custom-button">Remove</button>
+  </div>
   `;
 
   // Bind a popup to the measurement line with the distance text
-  measurementLine.bindPopup(popupContent);
-  measurementLine.openPopup();
-
+  overarchingLine.bindPopup(popupContent);
+  
   // Listen for the popup's open event to attach the event listener to the "Remove" button
-  measurementLine.on('popupopen', function() {
+  overarchingLine.on('popupopen', function() {
     var removeBtn = document.getElementById('removeMeasurementLineBtn');
     if (removeBtn) {
       removeBtn.onclick = function() {
-        map.removeLayer(measurementLine); // Remove the measurement line from the map
+        gradientSegments.forEach(segment => map.removeLayer(segment));
+        map.removeLayer(overarchingLine); // Remove the measurement line from the map
       };
     }
   });
-
-  polylineLayers.push(measurementLine);
+  
+  overarchingLine.openPopup();
+  polylineLayers.push(overarchingLine);
+  console.log(polylineLayers);
 
   // Reset for a new measurement or adjust logic to allow for continuous measurements
   firstPoint = null;
+}
+
+function getPointCountryColor(coords) {
+  if (countryPolygons[currentMap][selectedOptionId]) {
+    for (const region in countryPolygons[currentMap][selectedOptionId]) {
+      const polygon = countryPolygons[currentMap][selectedOptionId][region];
+      if (isPointInsidePolygon(coords, polygon)) {
+        console.log(region);
+        return countryColors[region];
+      }
+    }
+  }
+}
+
+function interpolateColor(color1, color2, factor) {
+  if (arguments.length < 3) { 
+      factor = 0.5; 
+  }
+  var result = color1.slice();
+  for (var i = 0; i < 3; i++) {
+      result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
+  }
+  return result;
+}
+
+function colorToRGB(color) {
+  if (color.startsWith('#')) {
+      let r = parseInt(color.slice(1, 3), 16),
+          g = parseInt(color.slice(3, 5), 16),
+          b = parseInt(color.slice(5, 7), 16);
+      return [r, g, b];
+  }
+}
+
+function rgbToHex(rgb) {
+  return '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
 }
