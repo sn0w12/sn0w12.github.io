@@ -1992,7 +1992,7 @@ function displayContextMenu(e, customizeContextMenu = null) {
     };
   }
 
-  document.getElementById("removeDistance").style.display =
+  document.getElementById("removeAllDistance").style.display =
     polylineLayers.length != 0 ? "block" : "none";
 
   if (map._zoom == map._layersMinZoom) {
@@ -2219,6 +2219,24 @@ function drawMeasurementLine(latlng) {
         map.removeLayer(overarchingLine); // Remove the measurement line from the map
       };
     }
+  });
+
+  overarchingLine.on("contextmenu", function (e) {
+    e.originalEvent.stopPropagation();
+    e.originalEvent.preventDefault();
+
+    function customizeContextMenuForLine() {
+      let removeDistanceBtn = document.getElementById("removeDistance");
+
+      removeDistanceBtn.style.display = "block";
+      removeDistanceBtn.onclick = function () {
+        gradientSegments.forEach((segment) => map.removeLayer(segment));
+        map.removeLayer(overarchingLine); // Remove the measurement line from the map
+      };
+    }
+
+    // Display the customized context menu for the marker
+    displayContextMenu(e, customizeContextMenuForLine);
   });
 
   overarchingLine.openPopup();
