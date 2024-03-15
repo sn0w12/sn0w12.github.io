@@ -2102,7 +2102,6 @@ function drawMeasurementLine(latlng) {
     color1 = colorToRGB(countryColors[currentMap]);
     color2 = colorToRGB(countryColors[currentMap]);
   }
-  console.log(color1);
 
   const segments = 10; // Increase for smoother gradient
   let latlngs = [];
@@ -2169,7 +2168,6 @@ function drawMeasurementLine(latlng) {
   
   overarchingLine.openPopup();
   polylineLayers.push(overarchingLine);
-  console.log(polylineLayers);
 
   // Reset for a new measurement or adjust logic to allow for continuous measurements
   firstPoint = null;
@@ -2180,7 +2178,6 @@ function getPointCountryColor(coords) {
     for (const region in countryPolygons[currentMap][selectedOptionId]) {
       const polygon = countryPolygons[currentMap][selectedOptionId][region];
       if (isPointInsidePolygon(coords, polygon)) {
-        console.log(region);
         return countryColors[region];
       }
     }
