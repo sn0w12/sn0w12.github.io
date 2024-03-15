@@ -105,6 +105,8 @@
         northEast = L.latLng(80, 185),
         bounds = L.latLngBounds(southWest, northEast);
 
+      meterConversion = 1000000;
+
       //Creating the Map
       var map = L.map("map", {
         maxBounds: bounds,

@@ -730,28 +730,32 @@ function loadFormData() {
 }
 
 function calculateCorrectionFactor(latitude) {
-  const equatorCorrection = 0.5; // Baseline correction at the equator
-  const maxLatitude = 70; // The latitude at which the maximum correction is applied
-
-  // Normalized latitude varies between 0 (equator) and 1 (maxLatitude or -maxLatitude)
-  const normalizedLatitude = Math.min(Math.abs(latitude) / maxLatitude, 1);
-
-  // Exponential growth factor - controls how quickly correction factor increases. 
-  const growthFactor = 0.5;
-
-  // Calculate correction increase using an exponential function for a more pronounced effect towards the poles
-  const correctionIncrease = Math.pow(normalizedLatitude, growthFactor);
-
-  let correctionFactor;
-  if (latitude >= 0) {
-    // Northern Hemisphere
-    correctionFactor = equatorCorrection + (northPoleCorrection - equatorCorrection) * correctionIncrease;
+  if (typeof northPoleCorrection != "undefined") {
+    const equatorCorrection = 0.5; // Baseline correction at the equator
+    const maxLatitude = 70; // The latitude at which the maximum correction is applied
+  
+    // Normalized latitude varies between 0 (equator) and 1 (maxLatitude or -maxLatitude)
+    const normalizedLatitude = Math.min(Math.abs(latitude) / maxLatitude, 1);
+  
+    // Exponential growth factor - controls how quickly correction factor increases. 
+    const growthFactor = 0.5;
+  
+    // Calculate correction increase using an exponential function for a more pronounced effect towards the poles
+    const correctionIncrease = Math.pow(normalizedLatitude, growthFactor);
+  
+    let correctionFactor;
+    if (latitude >= 0) {
+      // Northern Hemisphere
+      correctionFactor = equatorCorrection + (northPoleCorrection - equatorCorrection) * correctionIncrease;
+    } else {
+      // Southern Hemisphere
+      correctionFactor = equatorCorrection + (southPoleCorrection - equatorCorrection) * correctionIncrease;
+    }
+  
+    return correctionFactor;
   } else {
-    // Southern Hemisphere
-    correctionFactor = equatorCorrection + (southPoleCorrection - equatorCorrection) * correctionIncrease;
+    return 1;
   }
-
-  return correctionFactor;
 }
 
 function displayPolygon(
@@ -1919,10 +1923,12 @@ function displayContextMenu(e, customizeContextMenu = null) {
     };
   }
 
-  if (polylineLayers.length != 0) {
-    document.getElementById("removeDistance").style.display = "block";
+  document.getElementById("removeDistance").style.display = polylineLayers.length != 0 ? "block" : "none";
+
+  if (map._zoom == map._layersMinZoom) {
+    document.getElementById("centerBtn").style.display = "none";
   } else {
-    document.getElementById("removeDistance").style.display = "none";
+    document.getElementById("centerBtn").style.display = "block";
   }
 
   if(devMode) {
@@ -2071,7 +2077,7 @@ function drawMeasurementLine(latlng) {
   var correctedDistance = distance * averageCorrectionFactor;
   
   // Convert distance to kilometers and display it
-  var distanceInKm = (correctedDistance / 1000).toFixed(2);
+  var distanceInKm = (correctedDistance / meterConversion).toFixed(2);
   var popupContent = `
     Distance: ${distanceInKm} km
     <br>
