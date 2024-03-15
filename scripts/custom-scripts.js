@@ -4,12 +4,19 @@ let openPopupsSet = new Set();
 let showingPolygon = false;
 let devMode = false;
 let markerDataPath;
-const safeContextBtns = new Set(["centerBtn", "resetBtn", "zoomIn", "zoomOut", "measureDistance", "measureDistanceDivider"]);
+const safeContextBtns = new Set([
+  "centerBtn",
+  "resetBtn",
+  "zoomIn",
+  "zoomOut",
+  "measureDistance",
+  "measureDistanceDivider",
+]);
 
 var firstPoint = null;
 var tempLine = null;
 var measurementLine = null;
-var tempLineUpdate = function(e) {
+var tempLineUpdate = function (e) {
   if (firstPoint && tempLine) {
     tempLine.setLatLngs([firstPoint, e.latlng]);
   }
@@ -108,8 +115,8 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
 
   if (!allMarkers[region]) allMarkers[region] = {};
   allMarkers[region][id] = marker;
-  
-  marker.on('contextmenu', function(e) {
+
+  marker.on("contextmenu", function (e) {
     e.originalEvent.stopPropagation();
     e.originalEvent.preventDefault();
 
@@ -117,12 +124,12 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
       let openMarkerBtn = document.getElementById("openMarker");
       let closeMarkerBtn = document.getElementById("closeMarker");
       let openMarkerDivider = document.getElementById("openMarkerDivider");
-    
+
       if (openPopupsSet.has(marker)) {
         closeMarkerBtn.style.display = "block";
       } else {
         openMarkerBtn.style.display = "block";
-        openMarkerBtn.onclick = function() {
+        openMarkerBtn.onclick = function () {
           openPopupFromUrl(marker.options.id);
         };
         closeMarkerBtn.style.display = "none";
@@ -134,20 +141,20 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
         // Show the "Open in new tab" button and set its onclick event
         let openInNewTabBtn = document.getElementById("openWikiInNewTab");
         openInNewTabBtn.style.display = "block";
-        openInNewTabBtn.onclick = function() {
+        openInNewTabBtn.onclick = function () {
           window.open(href, "_blank");
         };
 
         let openBtn = document.getElementById("openWiki");
         openBtn.style.display = "block";
-        openBtn.onclick = function() {
-          window.open(href,"_self");
+        openBtn.onclick = function () {
+          window.open(href, "_self");
         };
 
         document.getElementById("openWikiDivider").style.display = "block";
       }
     }
-    
+
     // Display the customized context menu for the marker
     displayContextMenu(e, customizeContextMenuForMarker);
   });
@@ -158,10 +165,10 @@ function createAndAddMarker(region, coords, icon, title, id, popupContent) {
 function extractHrefFromPopupContent(popupContent) {
   // Use DOMParser to parse the HTML string
   const parser = new DOMParser();
-  const doc = parser.parseFromString(popupContent, 'text/html');
-  
+  const doc = parser.parseFromString(popupContent, "text/html");
+
   // Query the document for the first <a> element and extract its href
-  const link = doc.querySelector('a');
+  const link = doc.querySelector("a");
   return link ? link.href : null;
 }
 
@@ -442,7 +449,12 @@ function setSelectValueFromCheckedRadioButton(region) {
 
 function parseLatLng(latlngInput) {
   // Check if input is an object with lat and lng properties
-  if (typeof latlngInput === 'object' && latlngInput !== null && 'lat' in latlngInput && 'lng' in latlngInput) {
+  if (
+    typeof latlngInput === "object" &&
+    latlngInput !== null &&
+    "lat" in latlngInput &&
+    "lng" in latlngInput
+  ) {
     const lat = parseFloat(latlngInput.lat);
     const lng = parseFloat(latlngInput.lng);
     if (!isNaN(lat) && !isNaN(lng)) {
@@ -451,15 +463,15 @@ function parseLatLng(latlngInput) {
   }
 
   // If input is a string, check for various string formats
-  if (typeof latlngInput === 'string') {
+  if (typeof latlngInput === "string") {
     // Attempt to extract numbers from a LatLng string format
     const match = latlngInput.match(/LatLng\(([^,]+),\s*([^)]+)\)/);
     if (match) {
       return [parseFloat(match[1]), parseFloat(match[2])];
     }
-    
+
     // Attempt to parse a string that directly represents coordinates
-    const parts = latlngInput.split(',');
+    const parts = latlngInput.split(",");
     if (parts.length === 2) {
       const lat = parseFloat(parts[0]);
       const lng = parseFloat(parts[1]);
@@ -470,12 +482,17 @@ function parseLatLng(latlngInput) {
   }
 
   // Check if input is already in the expected array format
-  if (Array.isArray(latlngInput) && latlngInput.length === 2 && !isNaN(latlngInput[0]) && !isNaN(latlngInput[1])) {
+  if (
+    Array.isArray(latlngInput) &&
+    latlngInput.length === 2 &&
+    !isNaN(latlngInput[0]) &&
+    !isNaN(latlngInput[1])
+  ) {
     return latlngInput; // Already in the correct format, return it directly
   }
 
   // If none of the above, log a warning and return null
-  console.warn('parseLatLng expects input in a recognizable format.');
+  console.warn("parseLatLng expects input in a recognizable format.");
   return null;
 }
 
@@ -763,25 +780,29 @@ function calculateCorrectionFactor(latitude) {
   if (typeof northPoleCorrection != "undefined") {
     const equatorCorrection = 0.5; // Baseline correction at the equator
     const maxLatitude = 70; // The latitude at which the maximum correction is applied
-  
+
     // Normalized latitude varies between 0 (equator) and 1 (maxLatitude or -maxLatitude)
     const normalizedLatitude = Math.min(Math.abs(latitude) / maxLatitude, 1);
-  
-    // Exponential growth factor - controls how quickly correction factor increases. 
+
+    // Exponential growth factor - controls how quickly correction factor increases.
     const growthFactor = 0.5;
-  
+
     // Calculate correction increase using an exponential function for a more pronounced effect towards the poles
     const correctionIncrease = Math.pow(normalizedLatitude, growthFactor);
-  
+
     let correctionFactor;
     if (latitude >= 0) {
       // Northern Hemisphere
-      correctionFactor = equatorCorrection + (northPoleCorrection - equatorCorrection) * correctionIncrease;
+      correctionFactor =
+        equatorCorrection +
+        (northPoleCorrection - equatorCorrection) * correctionIncrease;
     } else {
       // Southern Hemisphere
-      correctionFactor = equatorCorrection + (southPoleCorrection - equatorCorrection) * correctionIncrease;
+      correctionFactor =
+        equatorCorrection +
+        (southPoleCorrection - equatorCorrection) * correctionIncrease;
     }
-  
+
     return correctionFactor;
   } else {
     return 1;
@@ -852,26 +873,28 @@ function displayPolygon(
       }
     });
 
-    geoJsonLayer.on('contextmenu', function(e) {
+    geoJsonLayer.on("contextmenu", function (e) {
       e.originalEvent.stopPropagation();
 
       function customizeContextMenuForGeo() {
         clearContextMenu();
-  
+
         // Show the "Open in new tab" button and set its onclick event
         let openInNewTabBtn = document.getElementById("openInNewTab");
         openInNewTabBtn.style.display = "block";
-        openInNewTabBtn.onclick = function() {
+        openInNewTabBtn.onclick = function () {
           window.open(url, "_blank");
         };
 
         let openBtn = document.getElementById("openLink");
         openBtn.style.display = "block";
-        openBtn.onclick = function() {
-          window.open(url,"_self");
+        openBtn.onclick = function () {
+          window.open(url, "_self");
         };
 
-        let openInNewTabDivider = document.getElementById("openInNewTabDivider");
+        let openInNewTabDivider = document.getElementById(
+          "openInNewTabDivider"
+        );
         openInNewTabDivider.style.display = "block";
       }
 
@@ -1497,7 +1520,7 @@ function processImportedData(jsonData) {
         const marker = group[markerKey];
         // Remove the marker from the map
         marker.remove();
-        map.removeLayer(marker)
+        map.removeLayer(marker);
         // Remove the marker from the allMarkers object
         delete allMarkers[groupKey][markerKey];
       });
@@ -1861,46 +1884,55 @@ function setUp(dataUrl) {
     })
     .catch((error) => console.error(`Error loading ${dataUrl}:`, error));
 
-  fetch('contextMenu.html')
-    .then(response => response.text())
-    .then(html => {
+  fetch("contextMenu.html")
+    .then((response) => response.text())
+    .then((html) => {
       // Check if a div with the ID 'customContextMenu' already exists
-      if (!document.getElementById('customContextMenu')) {
+      if (!document.getElementById("customContextMenu")) {
         // If it doesn't exist, insert the new HTML into the body
-        document.body.insertAdjacentHTML('beforeend', html);
+        document.body.insertAdjacentHTML("beforeend", html);
       }
     })
     .then(() => {
       centerMap();
     })
-    .catch(error => {
-      console.error('Error loading the context menu:', error);
+    .catch((error) => {
+      console.error("Error loading the context menu:", error);
     });
 
-  map.on('popupopen', function(e) {
+  map.on("popupopen", function (e) {
     openPopupsSet.add(e.popup._source);
   });
-  
-  map.on('popupclose', function(e) {
+
+  map.on("popupclose", function (e) {
     openPopupsSet.delete(e.popup._source);
-  });      
+  });
 
   // Context menu logic
-  document.addEventListener('contextmenu', function(e) {
-    // Check if the event target is within the Leaflet control container
-    var leafletControlContainer = document.querySelector('.leaflet-control-container');
-    
-    if (leafletControlContainer && !leafletControlContainer.contains(e.target)) {
+  document.addEventListener(
+    "contextmenu",
+    function (e) {
+      // Check if the event target is within the Leaflet control container
+      var leafletControlContainer = document.querySelector(
+        ".leaflet-control-container"
+      );
+
+      if (
+        leafletControlContainer &&
+        !leafletControlContainer.contains(e.target)
+      ) {
         // Prevent the default context menu only if the right-click is outside Leaflet controls
         e.preventDefault();
 
         // Display the custom context menu
         displayContextMenu(e);
-    }
-  }, false);
+      }
+    },
+    false
+  );
 
   // Hide the context menu when clicking elsewhere
-  document.addEventListener("click", function(e) {
+  document.addEventListener("click", function (e) {
     clearContextMenu();
   });
 }
@@ -1921,39 +1953,44 @@ function displayContextMenu(e, customizeContextMenu = null) {
   // Use provided event's page coordinates
   let x = e.pageX || e.originalEvent.pageX;
   let y = e.pageY || e.originalEvent.pageY;
-  
+
   if (openPopupsSet.size != 0) {
     document.getElementById("closeMarker").style.display = "block";
     document.getElementById("openMarkerDivider").style.display = "block";
   }
-  
+
   // Customize the context menu based on the current context
   if (typeof customizeContextMenu === "function") {
     customizeContextMenu();
   }
-  
+
   const zoomLevel = isZoomMax();
-  document.getElementById("zoomIn").style.display = zoomLevel === "max" ? "none" : "block";
-  document.getElementById("zoomOut").style.display = zoomLevel === "min" ? "none" : "block";
+  document.getElementById("zoomIn").style.display =
+    zoomLevel === "max" ? "none" : "block";
+  document.getElementById("zoomOut").style.display =
+    zoomLevel === "min" ? "none" : "block";
 
   const measureDistanceBtn = document.getElementById("measureDistance");
-  const measureDistanceFinalBtn = document.getElementById("measureDistanceFinal");
+  const measureDistanceFinalBtn = document.getElementById(
+    "measureDistanceFinal"
+  );
 
-  if(!firstPoint) {
+  if (!firstPoint) {
     measureDistanceBtn.style.display = "block";
     measureDistanceFinalBtn.style.display = "none";
-    measureDistanceBtn.onclick = function() {
+    measureDistanceBtn.onclick = function () {
       createFirstMeasurementPoint(pageCoordsToLatLng(x, y));
     };
   } else {
     measureDistanceBtn.style.display = "none";
     measureDistanceFinalBtn.style.display = "block";
-    measureDistanceFinalBtn.onclick = function() {
+    measureDistanceFinalBtn.onclick = function () {
       drawMeasurementLine(pageCoordsToLatLng(x, y));
     };
   }
 
-  document.getElementById("removeDistance").style.display = polylineLayers.length != 0 ? "block" : "none";
+  document.getElementById("removeDistance").style.display =
+    polylineLayers.length != 0 ? "block" : "none";
 
   if (map._zoom == map._layersMinZoom) {
     document.getElementById("centerBtn").style.display = "none";
@@ -1961,10 +1998,10 @@ function displayContextMenu(e, customizeContextMenu = null) {
     document.getElementById("centerBtn").style.display = "block";
   }
 
-  if(devMode) {
-    let polygonBtn = document.getElementById("showPolygonBtn")
-    let clearPolygonBtn = document.getElementById("clearPolygonBtn")
-    let polygonDivider = document.getElementById("polygonDivider")
+  if (devMode) {
+    let polygonBtn = document.getElementById("showPolygonBtn");
+    let clearPolygonBtn = document.getElementById("clearPolygonBtn");
+    let polygonDivider = document.getElementById("polygonDivider");
     polygonBtn.style.display = "none";
     polygonDivider.style.display = "none";
     if (countryPolygons[currentMap][selectedOptionId]) {
@@ -1988,7 +2025,7 @@ function displayContextMenu(e, customizeContextMenu = null) {
       clearPolygonBtn.style.display = "none";
     }
   }
-  
+
   adjustLastButtonMargin();
 
   let contextMenu = document.getElementById("customContextMenu");
@@ -2002,7 +2039,7 @@ function clearContextMenu() {
   contextMenu.style.display = "none";
 
   // Select and iterate over each child element of the context menu
-  Array.from(contextMenu.children).forEach(child => {
+  Array.from(contextMenu.children).forEach((child) => {
     if (safeContextBtns.has(child.id) === false) {
       child.style.display = "none";
     }
@@ -2015,11 +2052,12 @@ function centerMap() {
 }
 
 function resetMap() {
-  defaultMap = neededMaps[0].name.charAt(0).toUpperCase() + neededMaps[0].name.slice(1);
+  defaultMap =
+    neededMaps[0].name.charAt(0).toUpperCase() + neededMaps[0].name.slice(1);
   defaultSubMap = mapConfigurations[defaultMap].defaultOptionId;
-  
+
   openMap(defaultMap, defaultSubMap);
-  
+
   performActions(
     mapConfigurations[defaultMap].options[defaultSubMap].mapLayer,
     mapConfigurations[defaultMap].options[defaultSubMap].show,
@@ -2055,38 +2093,41 @@ function zoomToContextMenu(zoomAmount) {
 
   let latLng = map.containerPointToLatLng(L.point(x, y));
 
-  map.setView(latLng, currentZoom += ((map.options.zoomDelta * zoomAmount) * zoomMultiplier));
+  map.setView(
+    latLng,
+    (currentZoom += map.options.zoomDelta * zoomAmount * zoomMultiplier)
+  );
 }
 
 function adjustLastButtonMargin() {
-  const buttons = document.querySelectorAll('.custom-context-menu button');
+  const buttons = document.querySelectorAll(".custom-context-menu button");
   let lastVisibleButton = null;
 
   // Find the last visible button
-  buttons.forEach(button => {
-    button.style.marginBottom = '5px';
-    if (button.style.display !== 'none') {
+  buttons.forEach((button) => {
+    button.style.marginBottom = "5px";
+    if (button.style.display !== "none") {
       lastVisibleButton = button;
     }
   });
 
   // Remove the bottom margin from the last visible button
   if (lastVisibleButton) {
-    lastVisibleButton.style.marginBottom = '0px';
+    lastVisibleButton.style.marginBottom = "0px";
   }
 }
 
 function createFirstMeasurementPoint(latlng) {
   firstPoint = L.latLng(parseLatLng(latlng));
   // Initialize the temporary line (to cursor)
-  tempLine = L.polyline([firstPoint, firstPoint], {color: 'red'}).addTo(map);
-  map.on('mousemove', tempLineUpdate);
+  tempLine = L.polyline([firstPoint, firstPoint], { color: "red" }).addTo(map);
+  map.on("mousemove", tempLineUpdate);
 }
 
 function drawMeasurementLine(latlng) {
   point = parseLatLng(latlng);
   point = L.latLng(point); // Ensure point is a LatLng object
-  map.off('mousemove', tempLineUpdate);
+  map.off("mousemove", tempLineUpdate);
   if (tempLine) {
     map.removeLayer(tempLine);
     tempLine = null;
@@ -2095,7 +2136,6 @@ function drawMeasurementLine(latlng) {
   let color1;
   let color2;
   if (typeof countryPolygons != "undefined") {
-    console.log(typeof countryPolygons)
     color1 = colorToRGB(getPointCountryColor(firstPoint));
     color2 = colorToRGB(getPointCountryColor(point));
   } else {
@@ -2103,7 +2143,8 @@ function drawMeasurementLine(latlng) {
     color2 = colorToRGB(countryColors[currentMap]);
   }
 
-  const segments = 10; // Increase for smoother gradient
+  let segments = Math.ceil(Math.sqrt(deltaE(color1, color2))) * 3; // Calculate amound of segments based on color distance
+  if (segments <= 0) segments = 1;
   let latlngs = [];
   let gradientSegments = [];
 
@@ -2115,14 +2156,19 @@ function drawMeasurementLine(latlng) {
 
     if (i > 0) {
       let color = interpolateColor(color1, color2, i / segments);
-      gradientPolyLine = L.polyline([latlngs[i-1], latlngs[i]], {color: rgbToHex(color)}).addTo(map);
+      gradientPolyLine = L.polyline([latlngs[i - 1], latlngs[i]], {
+        color: rgbToHex(color),
+      }).addTo(map);
       polylineLayers.push(gradientPolyLine);
       gradientSegments.push(gradientPolyLine);
     }
   }
 
   // Draw an invisible overarching line for the popup
-  let overarchingLine = L.polyline(latlngs, {color: 'rgba(0,0,0,0)', weight: 10}).addTo(map);
+  let overarchingLine = L.polyline(latlngs, {
+    color: "rgba(0,0,0,0)",
+    weight: 10,
+  }).addTo(map);
 
   var distance;
   if (useFlatDistance) {
@@ -2137,12 +2183,13 @@ function drawMeasurementLine(latlng) {
     // Calculate correction factors for both points and average them
     var correctionFactorStart = calculateCorrectionFactor(firstPoint.lat);
     var correctionFactorEnd = calculateCorrectionFactor(point.lat);
-    var averageCorrectionFactor = (correctionFactorStart + correctionFactorEnd) / 2;
-    
+    var averageCorrectionFactor =
+      (correctionFactorStart + correctionFactorEnd) / 2;
+
     // Apply the correction factor
     distance *= averageCorrectionFactor;
   }
-  
+
   // Convert distance to kilometers and display it
   var distanceInKm = (distance / meterConversion).toFixed(2);
   var popupContent = `
@@ -2154,18 +2201,18 @@ function drawMeasurementLine(latlng) {
 
   // Bind a popup to the measurement line with the distance text
   overarchingLine.bindPopup(popupContent);
-  
+
   // Listen for the popup's open event to attach the event listener to the "Remove" button
-  overarchingLine.on('popupopen', function() {
-    var removeBtn = document.getElementById('removeMeasurementLineBtn');
+  overarchingLine.on("popupopen", function () {
+    var removeBtn = document.getElementById("removeMeasurementLineBtn");
     if (removeBtn) {
-      removeBtn.onclick = function() {
-        gradientSegments.forEach(segment => map.removeLayer(segment));
+      removeBtn.onclick = function () {
+        gradientSegments.forEach((segment) => map.removeLayer(segment));
         map.removeLayer(overarchingLine); // Remove the measurement line from the map
       };
     }
   });
-  
+
   overarchingLine.openPopup();
   polylineLayers.push(overarchingLine);
 
@@ -2182,28 +2229,69 @@ function getPointCountryColor(coords) {
       }
     }
   }
+  return "#ffffff";
 }
 
 function interpolateColor(color1, color2, factor) {
-  if (arguments.length < 3) { 
-      factor = 0.5; 
+  if (arguments.length < 3) {
+    factor = 0.5;
   }
   var result = color1.slice();
   for (var i = 0; i < 3; i++) {
-      result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
+    result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
   }
   return result;
 }
 
 function colorToRGB(color) {
-  if (color.startsWith('#')) {
-      let r = parseInt(color.slice(1, 3), 16),
-          g = parseInt(color.slice(3, 5), 16),
-          b = parseInt(color.slice(5, 7), 16);
-      return [r, g, b];
+  if (color.startsWith("#")) {
+    let r = parseInt(color.slice(1, 3), 16),
+      g = parseInt(color.slice(3, 5), 16),
+      b = parseInt(color.slice(5, 7), 16);
+    return [r, g, b];
   }
 }
 
 function rgbToHex(rgb) {
-  return '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+  return "#" + rgb.map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+
+function deltaE(rgbA, rgbB) {
+  let labA = rgb2lab(rgbA);
+  let labB = rgb2lab(rgbB);
+  let deltaL = labA[0] - labB[0];
+  let deltaA = labA[1] - labB[1];
+  let deltaB = labA[2] - labB[2];
+  let c1 = Math.sqrt(labA[1] * labA[1] + labA[2] * labA[2]);
+  let c2 = Math.sqrt(labB[1] * labB[1] + labB[2] * labB[2]);
+  let deltaC = c1 - c2;
+  let deltaH = deltaA * deltaA + deltaB * deltaB - deltaC * deltaC;
+  deltaH = deltaH < 0 ? 0 : Math.sqrt(deltaH);
+  let sc = 1.0 + 0.045 * c1;
+  let sh = 1.0 + 0.015 * c1;
+  let deltaLKlsl = deltaL / 1.0;
+  let deltaCkcsc = deltaC / sc;
+  let deltaHkhsh = deltaH / sh;
+  let i =
+    deltaLKlsl * deltaLKlsl + deltaCkcsc * deltaCkcsc + deltaHkhsh * deltaHkhsh;
+  return i < 0 ? 0 : Math.sqrt(i);
+}
+
+function rgb2lab(rgb) {
+  let r = rgb[0] / 255,
+    g = rgb[1] / 255,
+    b = rgb[2] / 255,
+    x,
+    y,
+    z;
+  r = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
+  g = g > 0.04045 ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
+  b = b > 0.04045 ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
+  x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;
+  y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.0;
+  z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
+  x = x > 0.008856 ? Math.pow(x, 1 / 3) : 7.787 * x + 16 / 116;
+  y = y > 0.008856 ? Math.pow(y, 1 / 3) : 7.787 * y + 16 / 116;
+  z = z > 0.008856 ? Math.pow(z, 1 / 3) : 7.787 * z + 16 / 116;
+  return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
 }
