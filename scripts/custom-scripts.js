@@ -2069,7 +2069,6 @@ function drawMeasurementLine(latlng) {
   
   // Apply the correction factor
   var correctedDistance = distance * averageCorrectionFactor;
-  console.log(averageCorrectionFactor);
   
   // Convert distance to kilometers and display it
   var distanceInKm = (correctedDistance / 1000).toFixed(2);
