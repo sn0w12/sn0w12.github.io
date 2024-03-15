@@ -30,8 +30,20 @@
     alt="map popup divider"
   />
 
+  <button id="measureDistance">Measure Distance</button>
+  <button id="measureDistanceFinal" style="display: none">Measure Distance To</button>
+  <img
+    id="measureDistanceDivider"
+    class="small-divider"
+    src="icons/divider_small.png"
+    alt="map popup divider"
+  />
+
   <button id="centerBtn" onclick="centerMap()">Center Map</button>
   <button id="resetBtn" onclick="resetMap()">Reset Map</button>
+
+  <button id="zoomIn" onclick="zoomToContextMenu(1)">Zoom In</button>
+  <button id="zoomOut" onclick="zoomToContextMenu(-1)">Zoom Out</button>
 
   <img
     id="polygonDivider"
@@ -41,7 +53,4 @@
   />
   <button id="showPolygonBtn">Show Polygon</button>
   <button id="clearPolygonBtn" onclick="clearAllVectors()">Clear Polygon</button>
-
-  <button id="zoomIn" onclick="zoomToContextMenu(1)">Zoom In</button>
-  <button id="zoomOut" onclick="zoomToContextMenu(-1)">Zoom Out</button>
 </div>

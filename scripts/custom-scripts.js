@@ -4,7 +4,16 @@ let openPopupsSet = new Set();
 let showingPolygon = false;
 let devMode = false;
 let markerDataPath;
-const safeContextBtns = new Set(["centerBtn", "resetBtn", "zoomIn", "zoomOut"]);
+const safeContextBtns = new Set(["centerBtn", "resetBtn", "zoomIn", "zoomOut", "measureDistance", "measureDistanceDivider"]);
+
+var firstPoint = null;
+var tempLine = null;
+var measurementLine = null;
+var tempLineUpdate = function(e) {
+  if (firstPoint && tempLine) {
+    tempLine.setLatLngs([firstPoint, e.latlng]);
+  }
+};
 
 function generatePopupContent(
   title,
@@ -721,21 +730,25 @@ function loadFormData() {
 }
 
 function calculateCorrectionFactor(latitude) {
-  // Normalize latitude to range [0, 1]
-  const normalizedLatitude = Math.abs(latitude) / maxLatitude;
+  const equatorCorrection = 0.5; // Baseline correction at the equator
+  const maxLatitude = 70; // The latitude at which the maximum correction is applied
 
-  // Calculate correction factor using a sine function
+  // Normalized latitude varies between 0 (equator) and 1 (maxLatitude or -maxLatitude)
+  const normalizedLatitude = Math.min(Math.abs(latitude) / maxLatitude, 1);
+
+  // Exponential growth factor - controls how quickly correction factor increases. 
+  const growthFactor = 0.5;
+
+  // Calculate correction increase using an exponential function for a more pronounced effect towards the poles
+  const correctionIncrease = Math.pow(normalizedLatitude, growthFactor);
+
   let correctionFactor;
   if (latitude >= 0) {
     // Northern Hemisphere
-    correctionFactor =
-      1 +
-      (northPoleCorrection - 1) * Math.sin((normalizedLatitude * Math.PI) / 2);
+    correctionFactor = equatorCorrection + (northPoleCorrection - equatorCorrection) * correctionIncrease;
   } else {
     // Southern Hemisphere
-    correctionFactor =
-      1 +
-      (southPoleCorrection - 1) * Math.sin((normalizedLatitude * Math.PI) / 2);
+    correctionFactor = equatorCorrection + (southPoleCorrection - equatorCorrection) * correctionIncrease;
   }
 
   return correctionFactor;
@@ -1889,6 +1902,23 @@ function displayContextMenu(e, customizeContextMenu = null) {
   document.getElementById("zoomIn").style.display = zoomLevel === "max" ? "none" : "block";
   document.getElementById("zoomOut").style.display = zoomLevel === "min" ? "none" : "block";
 
+  const measureDistanceBtn = document.getElementById("measureDistance");
+  const measureDistanceFinalBtn = document.getElementById("measureDistanceFinal");
+
+  if(!firstPoint) {
+    measureDistanceBtn.style.display = "block";
+    measureDistanceFinalBtn.style.display = "none";
+    measureDistanceBtn.onclick = function() {
+      createFirstMeasurementPoint(pageCoordsToLatLng(x, y));
+    };
+  } else {
+    measureDistanceBtn.style.display = "none";
+    measureDistanceFinalBtn.style.display = "block";
+    measureDistanceFinalBtn.onclick = function() {
+      drawMeasurementLine(pageCoordsToLatLng(x, y));
+    };
+  }
+
   if(devMode) {
     let polygonBtn = document.getElementById("showPolygonBtn")
     let clearPolygonBtn = document.getElementById("clearPolygonBtn")
@@ -2002,4 +2032,61 @@ function adjustLastButtonMargin() {
   if (lastVisibleButton) {
     lastVisibleButton.style.marginBottom = '0px';
   }
+}
+
+function createFirstMeasurementPoint(latlng) {
+  firstPoint = L.latLng(parseLatLng(latlng));
+  // Initialize the temporary line (to cursor)
+  tempLine = L.polyline([firstPoint, firstPoint], {color: 'red'}).addTo(map);
+  map.on('mousemove', tempLineUpdate);
+}
+
+function drawMeasurementLine(latlng) {
+  point = parseLatLng(latlng);
+  point = L.latLng(point); // Ensure point is a LatLng object
+  map.off('mousemove', tempLineUpdate);
+  if (tempLine) {
+    map.removeLayer(tempLine);
+    tempLine = null;
+  }
+
+  // Draw the final measurement line
+  measurementLine = L.polyline([firstPoint, point], {color: 'blue'}).addTo(map);
+
+  // Calculate the uncorrected distance
+  var distance = firstPoint.distanceTo(point);
+
+  // Calculate correction factors for both points and average them
+  var correctionFactorStart = calculateCorrectionFactor(firstPoint.lat);
+  var correctionFactorEnd = calculateCorrectionFactor(point.lat);
+  var averageCorrectionFactor = (correctionFactorStart + correctionFactorEnd) / 2;
+  
+  // Apply the correction factor
+  var correctedDistance = distance * averageCorrectionFactor;
+  console.log(averageCorrectionFactor);
+  
+  // Convert distance to kilometers and display it
+  var distanceInKm = (correctedDistance / 1000).toFixed(2);
+  var popupContent = `
+    Distance: ${distanceInKm} km
+    <br>
+    <button id="removeMeasurementLineBtn" class="custom-context-menu">Remove</button>
+  `;
+
+  // Bind a popup to the measurement line with the distance text
+  measurementLine.bindPopup(popupContent);
+  measurementLine.openPopup();
+
+  // Listen for the popup's open event to attach the event listener to the "Remove" button
+  measurementLine.on('popupopen', function() {
+    var removeBtn = document.getElementById('removeMeasurementLineBtn');
+    if (removeBtn) {
+      removeBtn.onclick = function() {
+        map.removeLayer(measurementLine); // Remove the measurement line from the map
+      };
+    }
+  });
+
+  // Reset for a new measurement or adjust logic to allow for continuous measurements
+  firstPoint = null;
 }
