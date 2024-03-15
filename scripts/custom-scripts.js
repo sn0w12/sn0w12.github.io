@@ -2210,13 +2210,21 @@ function drawMeasurementLine(latlng) {
   // Bind a popup to the measurement line with the distance text
   overarchingLine.bindPopup(popupContent);
 
+  function removePolyLine() {
+    gradientSegments.forEach((segment) => {
+      map.removeLayer(segment)
+      polylineLayers.splice(polylineLayers.indexOf(segment), 1);
+    });
+    map.removeLayer(overarchingLine); // Remove the measurement line from the map
+    polylineLayers.splice(polylineLayers.indexOf(overarchingLine), 1);
+  }
+
   // Listen for the popup's open event to attach the event listener to the "Remove" button
   overarchingLine.on("popupopen", function () {
     var removeBtn = document.getElementById("removeMeasurementLineBtn");
     if (removeBtn) {
       removeBtn.onclick = function () {
-        gradientSegments.forEach((segment) => map.removeLayer(segment));
-        map.removeLayer(overarchingLine); // Remove the measurement line from the map
+        removePolyLine();
       };
     }
   });
@@ -2231,8 +2239,7 @@ function drawMeasurementLine(latlng) {
 
       removeDistanceBtn.style.display = "block";
       removeDistanceBtn.onclick = function () {
-        gradientSegments.forEach((segment) => map.removeLayer(segment));
-        map.removeLayer(overarchingLine); // Remove the measurement line from the map
+        removePolyLine();
       };
 
       removeDistanceOpenBtn.style.display = "block";
