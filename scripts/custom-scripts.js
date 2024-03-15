@@ -2211,13 +2211,19 @@ function drawMeasurementLine(latlng) {
   overarchingLine.bindPopup(popupContent);
 
   function removePolyLine() {
-    gradientSegments.forEach((segment) => {
-      map.removeLayer(segment)
-      polylineLayers.splice(polylineLayers.indexOf(segment), 1);
-    });
-    map.removeLayer(overarchingLine); // Remove the measurement line from the map
-    polylineLayers.splice(polylineLayers.indexOf(overarchingLine), 1);
-  }
+    // Create a Set for more efficient lookup
+    const segmentsSet = new Set(gradientSegments);
+  
+    // Remove each segment from the map and filter out removed items from polylineLayers
+    gradientSegments.forEach(segment => map.removeLayer(segment));
+    polylineLayers = polylineLayers.filter(segment => !segmentsSet.has(segment));
+  
+    // Check if overarchingLine is present before removal to avoid errors
+    if (polylineLayers.includes(overarchingLine)) {
+      map.removeLayer(overarchingLine); // Remove the overarching line from the map
+      polylineLayers.splice(polylineLayers.indexOf(overarchingLine), 1);
+    }
+  }  
 
   // Listen for the popup's open event to attach the event listener to the "Remove" button
   overarchingLine.on("popupopen", function () {
