@@ -14,17 +14,17 @@ const safeContextBtns = new Set([
 ]);
 
 let pointsArray = [];
-let firstPolygonPoint = null;
 let polylineLayers = [];
 
 let firstPoint = null;
 let tempLine = null;
-let measurementLine = null;
 let tempLineUpdate = function (e) {
   if (firstPoint && tempLine) {
     tempLine.setLatLngs([firstPoint, e.latlng]);
   }
 };
+
+leafletPolycolor(L);
 
 function generatePopupContent(
   title,
@@ -37,8 +37,8 @@ function generatePopupContent(
   // If linkEnabled is false, it just displays the title without a hyperlink.
   const titleLink = linkEnabled
     ? `<a href="wiki#${encodeURIComponent(
-        linkTitle || title
-      )}" target="_blank"><b><font size="+0.5">${title}</font></b><br /></a>`
+      linkTitle || title
+    )}" target="_blank"><b><font size="+0.5">${title}</font></b><br /></a>`
     : `<b><font size="+0.5">${title}</font></b><br />`;
 
   // Image styles
@@ -95,9 +95,8 @@ function generateMarker(
   )}, icons.${icon}, "${title}", "${newId.replace(
     ",",
     ""
-  )}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${
-    linkTitle || ""
-  }));`;
+  )}", generatePopupContent("${title}", "${category}", "${description}", ${linkEnabled}${linkTitle || ""
+    }));`;
 }
 
 function createAndAddMarker(region, coords, icon, title, id, popupContent) {
@@ -368,6 +367,7 @@ function createMap(prefix, title, noWrap, minZoom, maxZoom, pane, add) {
     minZoom: minZoom,
     maxZoom: maxZoom,
     pane: pane,
+    preferCanvas: true,
   });
 
   // Conditionally add the tile layer to the map
@@ -913,11 +913,11 @@ function displayPolygon(
       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     geoJsonLayer.bindPopup(`Area: ${formattedArea} square kilometers
         <br />% of world: ${areaOfWorld
-          .toFixed(2)
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%
+        .toFixed(2)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%
         <br />% of land: ${areaOfLand
-          .toFixed(2)
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%`);
+        .toFixed(2)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%`);
   }
 }
 
@@ -1015,8 +1015,7 @@ function getTotalArea(log = true) {
       .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
       .map(
         ([region, area]) =>
-          `${region}: ${
-            area.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "Km^2"
+          `${region}: ${area.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "Km^2"
           }`
       );
 
@@ -1376,7 +1375,7 @@ function getConvertedOptionId(selectedOptionId) {
   if (optionIdConversions[selectedOptionId]) {
     if (
       mapConfigurations[currentMap].options[
-        optionIdConversions[selectedOptionId]
+      optionIdConversions[selectedOptionId]
       ]
     ) {
       return optionIdConversions[selectedOptionId];
@@ -1613,21 +1612,21 @@ function adjustSettings(defaultSettings, adjustments) {
   return {
     size: adjustments.size
       ? [
-          defaultSettings.size[0] + adjustments.size[0],
-          defaultSettings.size[1] + adjustments.size[1],
-        ]
+        defaultSettings.size[0] + adjustments.size[0],
+        defaultSettings.size[1] + adjustments.size[1],
+      ]
       : defaultSettings.size,
     anchor: adjustments.anchor
       ? [
-          defaultSettings.anchor[0] + adjustments.anchor[0],
-          defaultSettings.anchor[1] + adjustments.anchor[1],
-        ]
+        defaultSettings.anchor[0] + adjustments.anchor[0],
+        defaultSettings.anchor[1] + adjustments.anchor[1],
+      ]
       : defaultSettings.anchor,
     popupAnchor: adjustments.popupAnchor
       ? [
-          defaultSettings.popupAnchor[0] + adjustments.popupAnchor[0],
-          defaultSettings.popupAnchor[1] + adjustments.popupAnchor[1],
-        ]
+        defaultSettings.popupAnchor[0] + adjustments.popupAnchor[0],
+        defaultSettings.popupAnchor[1] + adjustments.popupAnchor[1],
+      ]
       : defaultSettings.popupAnchor,
   };
 }
@@ -2151,37 +2150,10 @@ function drawMeasurementLine(latlng) {
     color2 = colorToRGB(countryColors[currentMap]);
   }
 
-  // Determine the number of color segments based on the color difference
-  colorSegments = Math.ceil(Math.sqrt(deltaE(color1, color2))) * 3;
-
-  // Adjust the number of line segments based on distance
-  distanceSegmentMultiplier = Math.ceil(Math.sqrt(distance / 50));
-
-  let segments = colorSegments * distanceSegmentMultiplier; // Calculate amound of segments based on color distance and line distance
-  if (segments <= 0) segments = 1;
-  let latlngs = [];
-  let gradientSegments = [];
-
-  // Draw each segment of the gradient line
-  for (let i = 0; i <= segments; i++) {
-    let lat = firstPoint.lat + (i / segments) * (point.lat - firstPoint.lat);
-    let lng = firstPoint.lng + (i / segments) * (point.lng - firstPoint.lng);
-    latlngs.push([lat, lng]);
-
-    if (i > 0) {
-      let color = interpolateColor(color1, color2, i / segments);
-      gradientPolyLine = L.polyline([latlngs[i - 1], latlngs[i]], {
-        color: rgbToHex(color),
-      }).addTo(map);
-      polylineLayers.push(gradientPolyLine);
-      gradientSegments.push(gradientPolyLine);
-    }
-  }
-
   // Draw an invisible overarching line for the popup
-  let overarchingLine = L.polyline(latlngs, {
-    color: "rgba(0,0,0,0)",
-    weight: 10,
+  let overarchingLine = L.polycolor([firstPoint, point], {
+    colors: [arrayToRgbString(color1), arrayToRgbString(color2)],
+    useGradient: true,
   }).addTo(map);
 
   if (!useFlatDistance) {
@@ -2213,17 +2185,17 @@ function drawMeasurementLine(latlng) {
   function removePolyLine() {
     // Create a Set for more efficient lookup
     const segmentsSet = new Set(gradientSegments);
-  
+
     // Remove each segment from the map and filter out removed items from polylineLayers
     gradientSegments.forEach(segment => map.removeLayer(segment));
     polylineLayers = polylineLayers.filter(segment => !segmentsSet.has(segment));
-  
+
     // Check if overarchingLine is present before removal to avoid errors
     if (polylineLayers.includes(overarchingLine)) {
       map.removeLayer(overarchingLine); // Remove the overarching line from the map
       polylineLayers.splice(polylineLayers.indexOf(overarchingLine), 1);
     }
-  }  
+  }
 
   // Listen for the popup's open event to attach the event listener to the "Remove" button
   overarchingLine.on("popupopen", function () {
@@ -2299,6 +2271,10 @@ function colorToRGB(color) {
 
 function rgbToHex(rgb) {
   return "#" + rgb.map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+
+function arrayToRgbString(rgbArray) {
+  return `rgb(${rgbArray[0]}, ${rgbArray[1]}, ${rgbArray[2]})`;
 }
 
 function deltaE(rgbA, rgbB) {

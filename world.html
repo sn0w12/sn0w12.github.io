@@ -17,6 +17,7 @@
     <script src="scripts/leaflet-search/src/leaflet-search.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.0.0/Leaflet.Editable.min.js"></script>
+    <script src="scripts/leaflet-polycolor.min.js"></script>
   </head>
 
   <body style="height: 100%; margin: 0; overflow-y: hidden; overflow-x: hidden">
@@ -140,6 +141,7 @@
         zoomSnap: 0.1,
         zoomDelta: 0.5,
         wheelPxPerZoomLevel: 120,
+        preferCanvas: true,
       }).setView([0, 0], 0);
 
       map.createPane("addPane");
