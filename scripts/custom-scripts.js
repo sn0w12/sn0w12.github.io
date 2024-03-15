@@ -819,7 +819,7 @@ function displayPolygon(
   opacity = 0.4,
   outline = 1,
   url = null,
-  popupTitle = null
+  toolTipTitle = null
 ) {
   // Get the hex color for the current region from the mapping
   let regionColor = countryColors[region] || "#CCCCCC"; // Default to gray if no color defined
@@ -846,15 +846,17 @@ function displayPolygon(
   const geoJsonLayer = L.geoJSON(polygon, {
     style: normalStyle,
     onEachFeature: function (feature, layer) {
-      // Bind tooltips dynamically based on feature properties
-      layer.bindTooltip(popupTitle, {
-        direction: 'auto',
-        permanent: false, // Tooltip should not be permanent
-        sticky: true, // Makes the tooltip follow the mouse
-        offset: [5, 0],
-        opacity: 1,
-        className: 'custom-context-menu tooltip'
-      });
+      // Adjusted tooltip options
+      if (toolTipTitle != null) {
+        layer.bindTooltip(toolTipTitle, {
+          direction: 'auto',
+          permanent: true,
+          sticky: true,
+          offset: [5, 0],
+          opacity: 0,
+          className: `custom-context-menu tooltip ${toolTipTitle}`
+        });
+      }
     }
   }).addTo(map);
   
@@ -862,10 +864,20 @@ function displayPolygon(
     // Change the style on hover to indicate interactivity
     geoJsonLayer.on("mouseover", function () {
       this.setStyle(highlightStyle);
+
+      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.${toolTipTitle}`);
+      if (tooltipElement) {
+        tooltipElement.style.opacity = '1';
+      }
     });
 
     geoJsonLayer.on("mouseout", function () {
       this.setStyle(normalStyle);
+
+      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.${toolTipTitle}`);
+      if (tooltipElement) {
+        tooltipElement.style.opacity = '0';
+      }
     });
 
     geoJsonLayer.on("click", function (e) {
