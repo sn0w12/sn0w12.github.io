@@ -2143,8 +2143,13 @@ function drawMeasurementLine(latlng) {
   let color1;
   let color2;
   if (typeof countryPolygons != "undefined") {
-    color1 = colorToRGB(getPointCountryColor(firstPoint));
-    color2 = colorToRGB(getPointCountryColor(point));
+    try {
+      color1 = colorToRGB(getPointCountryColor(firstPoint));
+      color2 = colorToRGB(getPointCountryColor(point));
+    } catch {
+      color1 = colorToRGB("#ffffff");
+      color2 = colorToRGB("#ffffff");
+    }
   } else {
     color1 = colorToRGB(countryColors[currentMap]);
     color2 = colorToRGB(countryColors[currentMap]);
@@ -2231,15 +2236,19 @@ function drawMeasurementLine(latlng) {
 }
 
 function getPointCountryColor(coords) {
-  if (countryPolygons[currentMap][selectedOptionId]) {
-    for (const region in countryPolygons[currentMap][selectedOptionId]) {
-      const polygon = countryPolygons[currentMap][selectedOptionId][region];
-      if (isPointInsidePolygon(coords, polygon)) {
-        return countryColors[region];
+  try {
+    if (countryPolygons[currentMap][selectedOptionId]) {
+      for (const region in countryPolygons[currentMap][selectedOptionId]) {
+        const polygon = countryPolygons[currentMap][selectedOptionId][region];
+        if (isPointInsidePolygon(coords, polygon)) {
+          return countryColors[region];
+        }
       }
     }
+    return "#ffffff";
+  } catch {
+    return "#ffffff";
   }
-  return "#ffffff";
 }
 
 function interpolateColor(color1, color2, factor) {
