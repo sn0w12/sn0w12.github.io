@@ -13,10 +13,14 @@ const safeContextBtns = new Set([
   "measureDistanceDivider",
 ]);
 
-var firstPoint = null;
-var tempLine = null;
-var measurementLine = null;
-var tempLineUpdate = function (e) {
+let pointsArray = [];
+let firstPolygonPoint = null;
+let polylineLayers = [];
+
+let firstPoint = null;
+let tempLine = null;
+let measurementLine = null;
+let tempLineUpdate = function (e) {
   if (firstPoint && tempLine) {
     tempLine.setLatLngs([firstPoint, e.latlng]);
   }
@@ -599,10 +603,6 @@ function markerMaker(isPolygon = false) {
   };
 }
 
-let pointsArray = [];
-let firstPolygonPoint = null;
-let polylineLayers = [];
-
 function addPolylineToMap(lineString, color) {
   let polyline = L.geoJSON(lineString, { color: color }).addTo(map);
   polylineLayers.push(polyline); // Store the reference for later removal
@@ -1164,6 +1164,9 @@ function closeAllPopups() {
       }
     }
   }
+  Object.values(polylineLayers).forEach((layer) => {
+    layer.closePopup();
+  });
 }
 
 function exportMarkersToJson() {
