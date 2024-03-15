@@ -2227,11 +2227,17 @@ function drawMeasurementLine(latlng) {
 
     function customizeContextMenuForLine() {
       let removeDistanceBtn = document.getElementById("removeDistance");
+      let removeDistanceOpenBtn = document.getElementById("measureDistanceOpen");
 
       removeDistanceBtn.style.display = "block";
       removeDistanceBtn.onclick = function () {
         gradientSegments.forEach((segment) => map.removeLayer(segment));
         map.removeLayer(overarchingLine); // Remove the measurement line from the map
+      };
+
+      removeDistanceOpenBtn.style.display = "block";
+      removeDistanceOpenBtn.onclick = function () {
+        overarchingLine.openPopup();
       };
     }
 
