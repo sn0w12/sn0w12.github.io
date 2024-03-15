@@ -2162,16 +2162,24 @@ function drawMeasurementLine(latlng) {
   let latlngs = [];
   let gradientSegments = [];
 
+  let firstDecimalPoint = { lat: new Decimal(firstPoint.lat), lng: new Decimal(firstPoint.lng) };
+  let decimalPoint = { lat: new Decimal(point.lat), lng: new Decimal(point.lng) };
   // Draw each segment of the gradient line
   for (let i = 0; i <= segments; i++) {
-    let lat = firstPoint.lat + (i / segments) * (point.lat - firstPoint.lat);
-    let lng = firstPoint.lng + (i / segments) * (point.lng - firstPoint.lng);
+
+    // Assuming i and segments are numbers, convert them to Decimal objects
+    let iDecimal = new Decimal(i);
+    let segmentsDecimal = new Decimal(segments);
+
+    let lat = firstDecimalPoint.lat.plus(iDecimal.dividedBy(segmentsDecimal).times(decimalPoint.lat.minus(firstPoint.lat)));
+    let lng = firstDecimalPoint.lng.plus(iDecimal.dividedBy(segmentsDecimal).times(decimalPoint.lng.minus(firstPoint.lng)));
     latlngs.push([lat, lng]);
 
     if (i > 0) {
       let color = interpolateColor(color1, color2, i / segments);
       gradientPolyLine = L.polyline([latlngs[i - 1], latlngs[i]], {
         color: rgbToHex(color),
+        smoothFactor: 1.0,
       }).addTo(map);
       polylineLayers.push(gradientPolyLine);
       gradientSegments.push(gradientPolyLine);
