@@ -1919,6 +1919,12 @@ function displayContextMenu(e, customizeContextMenu = null) {
     };
   }
 
+  if (polylineLayers.length != 0) {
+    document.getElementById("removeDistance").style.display = "block";
+  } else {
+    document.getElementById("removeDistance").style.display = "none";
+  }
+
   if(devMode) {
     let polygonBtn = document.getElementById("showPolygonBtn")
     let clearPolygonBtn = document.getElementById("clearPolygonBtn")
@@ -2086,6 +2092,8 @@ function drawMeasurementLine(latlng) {
       };
     }
   });
+
+  polylineLayers.push(measurementLine);
 
   // Reset for a new measurement or adjust logic to allow for continuous measurements
   firstPoint = null;
