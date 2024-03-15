@@ -2136,6 +2136,11 @@ function drawMeasurementLine(latlng) {
     tempLine = null;
   }
 
+  // Calculate distance on a flat plane using Cartesian coordinates
+  const dx = point.lat - firstPoint.lat;
+  const dy = point.lng - firstPoint.lng;
+  let distance = Math.sqrt(dx * dx + dy * dy); // Euclidean distance in the same units as your map's coordinate system
+
   let color1;
   let color2;
   if (typeof countryPolygons != "undefined") {
@@ -2146,7 +2151,13 @@ function drawMeasurementLine(latlng) {
     color2 = colorToRGB(countryColors[currentMap]);
   }
 
-  let segments = Math.ceil(Math.sqrt(deltaE(color1, color2))) * 3; // Calculate amound of segments based on color distance
+  // Determine the number of color segments based on the color difference
+  colorSegments = Math.ceil(Math.sqrt(deltaE(color1, color2))) * 3;
+
+  // Adjust the number of line segments based on distance
+  distanceSegmentMultiplier = Math.ceil(Math.sqrt(distance / 50));
+
+  let segments = colorSegments * distanceSegmentMultiplier; // Calculate amound of segments based on color distance and line distance
   if (segments <= 0) segments = 1;
   let latlngs = [];
   let gradientSegments = [];
@@ -2173,13 +2184,7 @@ function drawMeasurementLine(latlng) {
     weight: 10,
   }).addTo(map);
 
-  var distance;
-  if (useFlatDistance) {
-    // Calculate distance on a flat plane using Cartesian coordinates
-    const dx = point.lat - firstPoint.lat;
-    const dy = point.lng - firstPoint.lng;
-    distance = Math.sqrt(dx * dx + dy * dy); // Euclidean distance in the same units as your map's coordinate system
-  } else {
+  if (!useFlatDistance) {
     // Calculate the uncorrected distance using globe-based logic
     distance = firstPoint.distanceTo(point);
 
