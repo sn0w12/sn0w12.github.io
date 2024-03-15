@@ -221,6 +221,12 @@
     transition: background-color 0.3s, color 0.3s;
 }
 
+.custom-context-menu.tooltip {
+    display: block;
+    padding: 0px 5px 0px 5px;
+    transition: opacity 0.2s 0.5s ease-in-out, transform 0.05s linear;
+}
+
 .custom-context-menu button:hover {
     background-color: var(--highlight);
     color: var(--background);
@@ -234,6 +240,13 @@
     margin-right: auto;
     margin-bottom: 5px;
     margin-top: 0px;
+}
+
+.leaflet-tooltip-top:before, 
+.leaflet-tooltip-bottom:before, 
+.leaflet-tooltip-left:before, 
+.leaflet-tooltip-right:before {
+    border: none !important;
 }
 
 /* scrollbar */

@@ -129,9 +129,6 @@
 
       worldSize = 126000000 * 2.005012531328321;
       const maxLatitude = 70; // Maximum latitude considered in the model
-      const northPoleCorrection = 0.6437979938976461; // Correction at the north pole
-      const southPoleCorrection = 0.6934982662543344; // Correction at the south pole
-      const meterConversion = 1000;
       const useFlatDistance = false;
       polygonScale = 0.19;
 
@@ -721,6 +718,9 @@
           },
           current: arathia,
           defaultOptionId: "arOption1",
+          northPoleCorrection: 0.6437979938976461,
+          southPoleCorrection: 0.6934982662543344,
+          meterConversion: 1000,
         },
         "Arathia Clean": {
           color: "#31565a",
@@ -748,6 +748,9 @@
           },
           current: arathiaClean,
           defaultOptionId: "arCleanOption1",
+          northPoleCorrection: 0.6437979938976461,
+          southPoleCorrection: 0.6934982662543344,
+          meterConversion: 1000,
         },
         Morturia: {
           color: "#374539",
@@ -775,6 +778,9 @@
           },
           current: morturia,
           defaultOptionId: "moOption1",
+          northPoleCorrection: 0.6437979938976461,
+          southPoleCorrection: 0.6934982662543344,
+          meterConversion: 1000,
         },
         "Morturia Clean": {
           color: "#374539",
@@ -802,6 +808,9 @@
           },
           current: morturia,
           defaultOptionId: "moCleanOption1",
+          northPoleCorrection: 0.6437979938976461,
+          southPoleCorrection: 0.6934982662543344,
+          meterConversion: 1000,
         },
       };
 

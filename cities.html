@@ -125,7 +125,6 @@
         northEast = L.latLng(80, 185),
         bounds = L.latLngBounds(southWest, northEast);
 
-      meterConversion = 100;
       const useFlatDistance = true;
 
       //Creating the Map
@@ -555,6 +554,7 @@
           },
           current: antaria,
           defaultOptionId: "anOption1",
+          meterConversion: 100,
         },
         Tsuki: {
           color: "#3c78d8",
@@ -582,6 +582,7 @@
           },
           current: tsuki,
           defaultOptionId: "tsOption1",
+          meterConversion: 100,
         },
       };
 

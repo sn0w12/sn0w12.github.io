@@ -777,6 +777,8 @@ function loadFormData() {
 }
 
 function calculateCorrectionFactor(latitude) {
+  northPoleCorrection = mapConfigurations[currentMap].northPoleCorrection;
+  southPoleCorrection = mapConfigurations[currentMap].southPoleCorrection;
   if (typeof northPoleCorrection != "undefined") {
     const equatorCorrection = 0.5; // Baseline correction at the equator
     const maxLatitude = 70; // The latitude at which the maximum correction is applied
@@ -816,7 +818,8 @@ function displayPolygon(
   color = null,
   opacity = 0.4,
   outline = 1,
-  url = null
+  url = null,
+  popupTitle = null
 ) {
   // Get the hex color for the current region from the mapping
   let regionColor = countryColors[region] || "#CCCCCC"; // Default to gray if no color defined
@@ -839,16 +842,28 @@ function displayPolygon(
     weight: outline,
   };
 
-  // Create a GeoJSON layer with the specified hex color and opacity
+  // Create a GeoJSON layer
   const geoJsonLayer = L.geoJSON(polygon, {
     style: normalStyle,
+    onEachFeature: function (feature, layer) {
+      // Bind tooltips dynamically based on feature properties
+      layer.bindTooltip(popupTitle, {
+        direction: 'auto',
+        permanent: false, // Tooltip should not be permanent
+        sticky: true, // Makes the tooltip follow the mouse
+        offset: [5, 0],
+        opacity: 1,
+        className: 'custom-context-menu tooltip'
+      });
+    }
   }).addTo(map);
-
+  
   if (url) {
     // Change the style on hover to indicate interactivity
     geoJsonLayer.on("mouseover", function () {
       this.setStyle(highlightStyle);
     });
+
     geoJsonLayer.on("mouseout", function () {
       this.setStyle(normalStyle);
     });
@@ -1864,7 +1879,7 @@ function addCityPolygons() {
           const polygon = cityDetails.polygons;
           const url = cityDetails.url;
 
-          displayPolygon(polygon, country, false, null, 0, 0, url);
+          displayPolygon(polygon, country, false, null, 0, 0, url, city);
         }
       }
     } else {
@@ -2176,7 +2191,7 @@ function drawMeasurementLine(latlng) {
   }
 
   // Convert distance to kilometers and display it
-  var distanceInKm = (distance / meterConversion).toFixed(2);
+  var distanceInKm = (distance / mapConfigurations[currentMap].meterConversion).toFixed(2);
   var popupContent = `
   <div class="leaflet-popup-content">
     <div>Distance: ${distanceInKm} km</div>
