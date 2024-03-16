@@ -56,6 +56,19 @@
         },
       ];
 
+      var displaySettings = [
+        {
+          label: "None",
+          option: "displayOption1",
+          checkedIndex: 1,
+        },
+        {
+          label: "Religion",
+          option: "displayOption2",
+          checkedIndex: 2,
+        },
+      ];
+
       var neededMaps = [
         { map: arathia, name: "arathia" },
         { map: arathiaClean, name: "arathia clean" },
@@ -141,10 +154,12 @@
         preferCanvas: true,
       }).setView([0, 0], 0);
 
+      map.createPane("overlayPane");
       map.createPane("addPane");
       map.createPane("basePane");
       map.createPane("backgroundPane");
 
+      map.getPane("overlayPane").style.zIndex = 300;
       map.getPane("addPane").style.zIndex = 250;
       map.getPane("basePane").style.zIndex = 220;
       map.getPane("backgroundPane").style.zIndex = 150;
@@ -881,10 +896,10 @@
 
       function addRadioButtons(checked) {
         // Simplified createRadioButton function
-        function createRadioButton(label, value, isChecked) {
+        function createRadioButton(label, value, isChecked, name) {
           var radio = document.createElement("input");
           radio.type = "radio";
-          radio.name = "layerSelector";
+          radio.name = name;
           radio.value = value;
           radio.checked = isChecked; // Direct assignment
           radio.classList.add("custom-radio-class");
@@ -925,9 +940,27 @@
           var radioButton = createRadioButton(
             info.label,
             info.option,
-            checked === info.checkedIndex
+            checked === info.checkedIndex,
+            "layerSelector"
           );
           radioButton.classList.add("leaflet-control-layers-selector");
+          overlayContainer.appendChild(radioButton);
+        });
+
+        // Create and append the separator div
+        var separatorDiv = document.createElement("div");
+        separatorDiv.classList.add("leaflet-control-layers-separator");
+        overlayContainer.appendChild(separatorDiv);
+
+        // Loop to create and append radio buttons
+        displaySettings.forEach((info) => {
+          var radioButton = createRadioButton(
+            info.label,
+            info.option,
+            checked === info.checkedIndex,
+            "displayOptions"
+          );
+          radioButton.classList.add("leaflet-control-display-options");
           overlayContainer.appendChild(radioButton);
         });
       }

@@ -52,6 +52,9 @@
     background: var(--background);
     color: var(--foreground);
 }
+.leaflet-control-display-options {
+    accent-color: var(--highlight);
+}
 .leaflet-control-layers-selector {
     accent-color: var(--highlight);
 }

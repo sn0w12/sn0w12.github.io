@@ -4,6 +4,7 @@ let openPopupsSet = new Set();
 let showingPolygon = false;
 let devMode = false;
 let markerDataPath;
+let customVectors = [];
 const safeContextBtns = new Set([
   "centerBtn",
   "resetBtn",
@@ -534,6 +535,16 @@ function clearAllVectors() {
   showingPolygon = false;
 }
 
+function clearAllCustomVectors() {
+  // Clear all existing GeoJSON layers from the map
+  customVectors.forEach(function (layer) {
+    if (layer instanceof L.GeoJSON) {
+      map.removeLayer(layer);
+    }
+  })
+  customVectors = [];
+}
+
 function resetAndOpenPopup() {
   marker.unbindPopup(); // Unbind any existing popup
   marker.bindPopup(
@@ -819,7 +830,8 @@ function displayPolygon(
   opacity = 0.4,
   outline = 1,
   url = null,
-  toolTipTitle = null
+  toolTipTitle = null,
+  pane = "addPane"
 ) {
   // Get the hex color for the current region from the mapping
   let regionColor = countryColors[region] || "#CCCCCC"; // Default to gray if no color defined
@@ -845,6 +857,7 @@ function displayPolygon(
   // Create a GeoJSON layer
   const geoJsonLayer = L.geoJSON(polygon, {
     style: normalStyle,
+    pane: pane,
     onEachFeature: function (feature, layer) {
       // Adjusted tooltip options
       if (toolTipTitle != null) {
@@ -864,20 +877,10 @@ function displayPolygon(
     // Change the style on hover to indicate interactivity
     geoJsonLayer.on("mouseover", function () {
       this.setStyle(highlightStyle);
-
-      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.${toolTipTitle}`);
-      if (tooltipElement) {
-        tooltipElement.style.opacity = '1';
-      }
     });
 
     geoJsonLayer.on("mouseout", function () {
       this.setStyle(normalStyle);
-
-      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.${toolTipTitle}`);
-      if (tooltipElement) {
-        tooltipElement.style.opacity = '0';
-      }
     });
 
     geoJsonLayer.on("click", function (e) {
@@ -927,6 +930,22 @@ function displayPolygon(
 
       displayContextMenu(e, customizeContextMenuForGeo);
     });
+  } 
+  
+  if (toolTipTitle != null) {
+    geoJsonLayer.on("mouseover", function () {
+      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.tooltip.${toolTipTitle}`);
+      if (tooltipElement) {
+        tooltipElement.style.opacity = '1';
+      }
+    });
+
+    geoJsonLayer.on("mouseout", function () {
+      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.tooltip.${toolTipTitle}`);
+      if (tooltipElement) {
+        tooltipElement.style.opacity = '0';
+      }
+    });
   }
 
   // Calculate and display area if required
@@ -946,6 +965,8 @@ function displayPolygon(
         .toFixed(2)
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%`);
   }
+
+  return geoJsonLayer;
 }
 
 function getPolygonArea(polygon) {
@@ -1677,13 +1698,24 @@ document.addEventListener("change", function (event) {
         mapConfigurations[currentMap].options[selectedOptionId].hideCheckboxes
       );
     }
-  } else if (radioButton.classList.contains("custom-radio-class")) {
+  } else if (radioButton.name == "layerSelector") {
     let iconType = getTrimmedText(radioButton);
     if (iconType) {
       if (iconChecked !== null) {
         iconChecked = getCheckedIndex(iconType);
         updateIcons(currentMap, iconChecked);
       }
+    }
+  } else if (radioButton.name == "displayOptions") {
+    switch(radioButton.value) {
+      case "displayOption1":
+        clearAllCustomVectors();
+        break;
+      case "displayOption2":
+        addReligionPolygons();
+        break
+      case "displayOption3":
+        break
     }
   }
 });
@@ -1891,8 +1923,35 @@ function addCityPolygons() {
           const polygon = cityDetails.polygons;
           const url = cityDetails.url;
 
-          displayPolygon(polygon, country, false, null, 0, 0, url, city);
+          displayPolygon(polygon, country, false, null, 0, 0, url, city, 'overlayPane');
         }
+      }
+    } else {
+      console.warn("No config found for:", currentMap, selectedOptionId);
+    }
+  }
+}
+
+function addReligionPolygons() {
+  if (typeof religionPolygons != "undefined") {
+    // Access the relevant polygons for the current map and selected option
+    if (
+      religionPolygons[currentMap] &&
+      typeof religionPolygons[currentMap][selectedOptionId] != "undefined"
+    ) {
+      const options = religionPolygons[currentMap][selectedOptionId];
+      
+      // Iterate through the options object to get each city's details
+      for (const religion in options) {
+        const religionDetails = options[religion];
+
+        // Extract the polygon and URL for the current city
+        const polygon = religionDetails.polygons;
+        const region = religionDetails.region;
+        const url = religionDetails.url;
+
+        const religionPolygon = displayPolygon(polygon, region, false, null, 0.2, 1, url, religion, 'overlayPane');
+        customVectors.push(religionPolygon);
       }
     } else {
       console.warn("No config found for:", currentMap, selectedOptionId);
