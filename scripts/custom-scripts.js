@@ -1970,7 +1970,7 @@ function addCityPolygons() {
           const cityDetails = countryDetails[city];
 
           // Extract the polygon and URL for the current city
-          const polygon = cityDetails.polygons;
+          const polygon = cityDetails.points;
           const url = cityDetails.url;
 
           displayPolygon(polygon, country, false, null, 0, 0, url, city, 'overlayPane');
@@ -1996,7 +1996,7 @@ function addReligionPolygons() {
         const religionDetails = options[religion];
 
         // Extract the polygon and URL for the current city
-        const polygon = religionDetails.polygons;
+        const polygon = religionDetails.points;
         const region = religionDetails.region;
         const url = religionDetails.url;
 
@@ -2009,55 +2009,67 @@ function addReligionPolygons() {
   }
 }
 
-function drawFrontLines(openPopup = null, latLng = null) {
-  if (typeof fontLinePoints != "undefined") {
-    if (
-      fontLinePoints[currentMap] &&
-      typeof fontLinePoints[currentMap][selectedOptionId] != "undefined"
-    ) {
-      const options = fontLinePoints[currentMap][selectedOptionId];
-      for (const frontline in options) {
-        const frontlineDetails = options[frontline];
-
-        const points = frontlineDetails.points;
-        const drawArrows = frontlineDetails.drawArrows;
-        const description = frontlineDetails.description;
-        const linkEnabled = frontlineDetails.linkEnabled;
-        const linkTitle = frontlineDetails.linkTitle;
-        const region = frontlineDetails.region;
-
-        let color = countryColors[region] || region;
-
-        let popupContent = generatePopupContent(frontline, "Frontline", description, linkEnabled, linkTitle);
-
-        let frontLineLine = L.polyline(points, {color: color}).addTo(map);
-        let frontLineClickLine = L.polyline(points, {color: color, opacity: 0, weight: 15}).addTo(map);
-        frontLineClickLine.bindPopup(`<div id="frontline-popup">${popupContent}</div>`);
-        customVectors.push(frontLineLine);
-        customVectors.push(frontLineClickLine);
-
-        if (openPopup) {
-          if (frontline == openPopup) {
-            frontLineClickLine.openPopup(latLng);
-          }
-        }
-
-        if (drawArrows) {
-          const rotation = frontlineDetails.rotation;
-          const zoomLevel = Math.round(map._zoom);
-  
-          let base = 2;
-          let fontSize = Math.round(Math.log(zoomLevel) / Math.log(base) * 8);
-          let density = Math.pow(fontSize, base) * 0.002;
-  
-          let arrows = L.featureGroup(getArrows(points, color, density, fontSize, map, rotation, 5)).addTo(map);
-          lineDecorators.push(arrows);
-        }
-      }
-    } else {
-      console.warn("No config found for:", currentMap, selectedOptionId);
-    }
+function drawFrontLines(openPopup = null, latLng = null, drawOnlyArrows = false) {
+  if (typeof fontLinePoints === "undefined" || !fontLinePoints[currentMap] || typeof fontLinePoints[currentMap][selectedOptionId] === "undefined") {
+    console.warn("No config found for:", currentMap, selectedOptionId);
+    return;
   }
+
+  const options = fontLinePoints[currentMap][selectedOptionId];
+  Object.entries(options).forEach(([frontline, details]) => {
+    const {points, drawArrows, description, linkEnabled, linkTitle, region, rotation} = details;
+
+    if (!drawOnlyArrows) {
+      const popupContent = generatePopupContent(frontline, "Frontline", generateFrontLineDescription(description), linkEnabled, linkTitle);
+      const color = countryColors[region] || region;
+
+      let frontLineLine = L.polyline(points, {color}).addTo(map);
+      let frontLineClickLine = L.polyline(points, {color, opacity: 0, weight: 15}).addTo(map);
+      frontLineClickLine.bindPopup(`<div id="frontline-popup">${popupContent}</div>`);
+
+      customVectors.push(frontLineLine, frontLineClickLine);
+
+      if (openPopup && frontline == openPopup) {
+        frontLineClickLine.openPopup(latLng);
+      }
+    }
+
+    if (drawArrows) {
+      if (drawOnlyArrows) {
+        clearLineDecorators();
+      }
+
+      const zoomLevel = map._zoom;
+      const fontSize = Math.round(Math.log(zoomLevel) / Math.log(2) * 8);
+      const density = Math.pow(fontSize, 2) * 0.002;
+      const color = countryColors[region] || region;
+
+      let arrows = L.featureGroup(getArrows(points, color, density, fontSize, map, rotation, 5)).addTo(map);
+      lineDecorators.push(arrows);
+    }
+  });
+
+  function clearLineDecorators() {
+    lineDecorators.forEach(layer => map.removeLayer(layer));
+    lineDecorators = [];
+  }
+}
+
+function generateFrontLineDescription(data) {
+  const separator =
+    '<img style="height:3px;width: 65%; display: block; margin-left: auto; margin-right: auto;" src="icons/divider_small.png" alt="map popup divider">';
+  const description = `
+  <div>
+    ${data[0]}<br>${separator}
+    <b>Winner: </b>${data[4]}<br>
+    <b>Total Casualties: </b>${data[1]}<br>
+    <b>Attacking Casualties: </b>${data[2]}<br>
+    <b>Defending Casualties: </b>${data[3]}<br>
+    <b>Started: </b>${data[5]}<br>
+    <b>Ended: </b>${data[6]}<br>
+  </div>
+  `
+  return description;
 }
 
 function setUp(dataUrl) {
@@ -2128,29 +2140,15 @@ function setUp(dataUrl) {
   });
 
   map.on('zoomend', function() {
-    if (Math.round(map._zoom) != Math.round(currentZoom)) {
-      let radioButtons = document.getElementsByName("displayOptions");
-      if (typeof radioButtons != "undefined") {
-        radioButtons.forEach(radioButton => {
-          if (radioButton.checked == true && radioButton.value == "displayOption2") {
-            const popUp = document.getElementById("frontline-popup");
-            if (popUp) {
-              const titleElement = popUp.querySelector('b font');
-              const title = titleElement.textContent;
-  
-              let openPopups = findAllOpenPopups(map);
-  
-              clearAllCustomVectors();
-              drawFrontLines(title, openPopups[0].getLatLng());
-            } else {
-              clearAllCustomVectors();
-              drawFrontLines();
-            }
-          }
-        })
-      }
-      currentZoom = Math.round(map._zoom);
+    let radioButtons = document.getElementsByName("displayOptions");
+    if (typeof radioButtons != "undefined") {
+      radioButtons.forEach(radioButton => {
+        if (radioButton.checked == true && radioButton.value == "displayOption2") {
+          drawFrontLines(null, null, true);
+        }
+      })
     }
+    currentZoom = Math.round(map._zoom);
   });
 }
 

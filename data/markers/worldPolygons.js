@@ -391,7 +391,7 @@ cityPolygons = {
     arOption1: {
       Antaria: {
         Antaria: {
-          polygons: turf.polygon([
+          points: turf.polygon([
             [
               [29.660676332711276, -47.929664069030096],
               [30.477367286124487, -52.84507550030189],
@@ -431,7 +431,7 @@ cityPolygons = {
       },
       Tsuki: {
         Getsuyōsei: {
-          polygons: turf.polygon([
+          points: turf.polygon([
             [
               [-16.99403880653882, 5.755142752639921],
               [-14.866098203935126, 8.039602617391816],
@@ -463,7 +463,7 @@ religionPolygons = {
   Arathia: {
     arOption1: {
       Solarism: {
-        polygons: turf.polygon([
+        points: turf.polygon([
           [
             [-11.324858, -53.056488],
             [-20.92278, -65.849245],
@@ -507,7 +507,7 @@ religionPolygons = {
         url: "https://sn0w12.github.io/wiki",
       },
       Gekkōshinjuuko: {
-        polygons: turf.polygon([
+        points: turf.polygon([
           [
             [-9.227056, -8.281838],
             [-26.778009, -19.584528],
@@ -537,7 +537,7 @@ religionPolygons = {
 fontLinePoints = {
   Arathia: {
     arOption1: {
-      "Antaria-Primoria": {
+      "Antaria > Primoria": {
         points: [
           [-13.086530054395036, -55.6575318854379],
           [-14.12939908748528, -58.87343702350361],
@@ -546,7 +546,15 @@ fontLinePoints = {
         ],
         region: "Antaria",
         rotation: 270,
-        description: "The war",
+        description: [
+          "The battle for Primorium is considered the bloodiest battle in history, during which 4.6 million people died during the battle's 124 day span. If rounded, approximately 37 thousand people died per day.",
+          "4.6 million",
+          "2.6 million",
+          "2 million",
+          "Primoria",
+          "1256 A.A / 8 / 1",
+          "1256 A.A / 12 / 2",
+        ],
         linkEnabled: false,
         linkTitle: "",
         drawArrows: true,
