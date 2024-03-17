@@ -2049,7 +2049,6 @@ function drawFrontLines(openPopup = null, latLng = null) {
           let base = 2;
           let fontSize = Math.round(Math.log(zoomLevel) / Math.log(base) * 8);
           let density = Math.pow(fontSize, base) * 0.002;
-          console.log(density)
   
           let arrows = L.featureGroup(getArrows(points, color, density, fontSize, map, rotation, 5)).addTo(map);
           lineDecorators.push(arrows);
