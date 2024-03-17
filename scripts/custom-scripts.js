@@ -2049,27 +2049,8 @@ function drawFrontLines(openPopup = null, latLng = null) {
   
           let density = zoomLevel / 10;
           let fontSize = zoomLevel * 4;
-          let offset;
   
-          switch (zoomLevel) {
-            case 3:
-              offset = 2.8;
-              break;
-            case 4:
-              offset = 0;
-              break;
-            case 5:
-              offset = -5;
-              break;
-            case 6:
-              offset = -8;
-              break;
-            default:
-              offset = 0;
-              break;
-          }
-  
-          let arrows = L.featureGroup(getArrows(points, color, density, fontSize, map, rotation, offset)).addTo(map);
+          let arrows = L.featureGroup(getArrows(points, color, density, fontSize, map, rotation, 5)).addTo(map);
           lineDecorators.push(arrows);
         }
       }

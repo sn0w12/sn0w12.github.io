@@ -22,9 +22,9 @@ function getArrows(arrLatlngs, color, density, fontSize, mapObj, rotateDeg, base
         var segmentDistance = getDistance(arrLatlngs[i - 1], arrLatlngs[i]);
         var arrowCount = Math.max(1, Math.round(segmentDistance * density));
         
-        var dynamicOffsetAmount = calculateDynamicOffset(segmentDistance, fontSize, baseOffsetAmount);
-
         var totalRotation = parseFloat(getAngle(arrLatlngs[i - 1], arrLatlngs[i], -1)) + rotateDeg;
+        var dynamicOffsetAmount = calculateDynamicOffset(totalRotation, fontSize, baseOffsetAmount);
+
         var transform = 'rotate(' + totalRotation + 'deg) translate(' + dynamicOffsetAmount + 'px)';
         var iconHtml = '<div style="' + color + '; font-size: ' + fontSize + 'px; transform: ' + transform + '; transform-origin: 50% 50%;">▶</div>';
         var icon = L.divIcon({ 
@@ -41,11 +41,12 @@ function getArrows(arrLatlngs, color, density, fontSize, mapObj, rotateDeg, base
     return result;
 }
 
-// Dynamic offset calculation based on segment length and font size
-function calculateDynamicOffset(segmentDistance, fontSize, baseOffset) {
+function calculateDynamicOffset(totalRotation, fontSize, baseOffset) {
+    var rotationAdjustmentFactor = Math.abs(totalRotation % 360) / 180; // Normalize rotation between 0 and 2
     var fontSizeValue = parseFloat(fontSize);
-    var adjustmentFactor = fontSizeValue * 0.05;
-    return baseOffset + (segmentDistance * adjustmentFactor);
+    fontSizeValue = Math.floor((((fontSizeValue / 2) * (fontSizeValue / 2)) / 2) - 200 / fontSizeValue);
+    var adjustmentFactor = fontSizeValue * rotationAdjustmentFactor * -0.4;
+    return baseOffset + adjustmentFactor;
 }
 
 
