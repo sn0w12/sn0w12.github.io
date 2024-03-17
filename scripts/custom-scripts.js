@@ -4,6 +4,7 @@ let openPopupsSet = new Set();
 let showingPolygon = false;
 let devMode = false;
 let markerDataPath;
+let startPosition;
 
 let customVectors = [];
 let lineDecorators = [];
@@ -827,6 +828,20 @@ function calculateCorrectionFactor(latitude) {
   }
 }
 
+function onMouseMove(e) {
+  // Calculate the distance moved
+  const currentPos = { x: e.clientX, y: e.clientY };
+  const dx = currentPos.x - startPosition.x;
+  const dy = currentPos.y - startPosition.y;
+
+  // Set isDragging to true if the mouse has moved more than a threshold (e.g., 10 pixels)
+  if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+    isDragging = true;
+    // Once dragging is detected, no need to listen for mousemove anymore
+    document.removeEventListener('mousemove', onMouseMove);
+  }
+}
+
 function displayPolygon(
   polygon,
   region,
@@ -901,12 +916,35 @@ function displayPolygon(
     });
 
     geoJsonLayer.on("mousedown", function (e) {
-      if (e.originalEvent.button === 1) {
-        map.dragging.disable();
-        window.open(url, "_blank");
-        map.dragging.enable();
-      }
+      // Reset dragging flag and store the starting position of the mouse
+      isDragging = false;
+      startPosition = { x: e.originalEvent.clientX, y: e.originalEvent.clientY };
+    
+      // Listen for mousemove on the document to detect dragging
+      document.addEventListener('mousemove', onMouseMove);
     });
+
+    geoJsonLayer.on("mouseup", function (e) {
+      // Remove the mousemove listener in case the mouse didn't move enough to be considered dragging
+      document.removeEventListener('mousemove', onMouseMove);
+    
+      if (!isDragging && e.originalEvent.button === 1) { // Middle mouse button
+        map.dragging.disable();
+    
+        // Event listener to re-enable dragging once the window regains focus
+        const enableDraggingOnFocus = () => {
+          map.dragging.enable();
+          window.removeEventListener('focus', enableDraggingOnFocus);
+        };
+    
+        window.addEventListener('focus', enableDraggingOnFocus);
+    
+        window.open(url, "_blank");
+      }
+    
+      // Reset startPosition for the next mousedown event
+      startPosition = null;
+    });   
 
     geoJsonLayer.on("contextmenu", function (e) {
       e.originalEvent.stopPropagation();
