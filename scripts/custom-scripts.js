@@ -1765,7 +1765,6 @@ document.addEventListener("change", function (event) {
 });
 
 document.addEventListener("radioDeselected", function (event) {
-  console.log(event);
   clearAllCustomVectors();
 });
 
