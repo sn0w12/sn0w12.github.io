@@ -2130,7 +2130,7 @@ function setUp(dataUrl) {
     let radioButtons = document.getElementsByName("displayOptions");
     if (typeof radioButtons != "undefined") {
       radioButtons.forEach(radioButton => {
-        if (radioButton.checked == true && radioButton.value == "displayOption3") {
+        if (radioButton.checked == true && radioButton.value == "displayOption2") {
           clearAllCustomVectors();
           drawFrontLines();
         }
