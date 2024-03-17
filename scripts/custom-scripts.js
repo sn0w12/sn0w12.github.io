@@ -2009,7 +2009,7 @@ function addReligionPolygons() {
   }
 }
 
-function drawFrontLines(openPopup = null) {
+function drawFrontLines(openPopup = null, latLng = null) {
   if (typeof fontLinePoints != "undefined") {
     if (
       fontLinePoints[currentMap] &&
@@ -2038,7 +2038,7 @@ function drawFrontLines(openPopup = null) {
 
         if (openPopup) {
           if (frontline == openPopup) {
-            frontLineClickLine.openPopup();
+            frontLineClickLine.openPopup(latLng);
           }
         }
 
@@ -2153,16 +2153,41 @@ function setUp(dataUrl) {
         radioButtons.forEach(radioButton => {
           if (radioButton.checked == true && radioButton.value == "displayOption2") {
             const popUp = document.getElementById("frontline-popup");
-            const titleElement = popUp.querySelector('b font');
-            const title = titleElement.textContent;
-            clearAllCustomVectors();
-            drawFrontLines(title);
+            if (popUp) {
+              const titleElement = popUp.querySelector('b font');
+              const title = titleElement.textContent;
+  
+              let openPopups = findAllOpenPopups(map);
+  
+              clearAllCustomVectors();
+              drawFrontLines(title, openPopups[0].getLatLng());
+            } else {
+              clearAllCustomVectors();
+              drawFrontLines();
+            }
           }
         })
       }
       currentZoom = Math.round(map._zoom);
     }
   });
+}
+
+function findAllOpenPopups(map) {
+  const openPopups = [];
+
+  // Iterate over all layers on the map
+  map.eachLayer(function(layer) {
+      // Check if the layer has a popup
+      if (layer.getPopup && layer.getPopup()) {
+          // Check if the popup is open
+          if (map.hasLayer(layer.getPopup())) {
+              openPopups.push(layer.getPopup());
+          }
+      }
+  });
+
+  return openPopups;
 }
 
 function pageCoordsToLatLng(x, y) {
