@@ -55,6 +55,49 @@
         },
       ];
 
+      const buttonsConfig = [
+        {
+          id: "wiki",
+          tooltip: "Wiki",
+          iconDefault: "icons/web1.png",
+          iconHover: "icons/web2.png",
+          action: (e) => {
+            e.preventDefault();
+            window.open("wiki", "_blank");
+          }
+        },
+        {
+          id: "world",
+          tooltip: "Opens the world map",
+          iconDefault: "icons/world1.png",
+          iconHover: "icons/world2.png",
+          action: (e) => {
+            e.preventDefault();
+            window.open("world");
+          }
+        },
+        {
+          id: "export",
+          tooltip: "Export JSON",
+          iconDefault: "icons/export1.png",
+          iconHover: "icons/export2.png",
+          action: (e) => {
+            e.preventDefault();
+            exportMarkersToJson();
+          }
+        },
+        {
+          id: "import",
+          tooltip: "Import JSON",
+          iconDefault: "icons/import1.png",
+          iconHover: "icons/import2.png",
+          action: (e) => {
+            e.preventDefault();
+            fileInput.click();
+          }
+        }
+      ];
+
       var neededMaps = [
         { map: antaria, name: "antaria" },
         { map: tsuki, name: "tsuki" },
@@ -709,54 +752,10 @@
       );
 
       if (zoomControl) {
-        const wikiButton = createControlButton(
-          "wiki",
-          "Wiki",
-          "icons/web1.png",
-          "icons/web2.png",
-          (e) => {
-            e.preventDefault();
-            window.open("wiki", "_blank");
-          }
-        );
-
-        const worldButton = createControlButton(
-          "world",
-          "Opens the world map",
-          "icons/world1.png",
-          "icons/world2.png",
-          (e) => {
-            e.preventDefault();
-            window.open("world");
-          }
-        );
-
-        const exportButton = createControlButton(
-          "#",
-          "Export JSON",
-          "icons/export1.png",
-          "icons/export2.png",
-          (e) => {
-            e.preventDefault();
-            exportMarkersToJson();
-          }
-        );
-
-        const importButton = createControlButton(
-          "#",
-          "Import JSON",
-          "icons/import1.png",
-          "icons/import2.png",
-          (e) => {
-            e.preventDefault();
-            fileInput.click();
-          }
-        );
-
-        zoomControl.insertAdjacentElement("beforeend", wikiButton);
-        zoomControl.insertAdjacentElement("beforeend", worldButton);
-        zoomControl.insertAdjacentElement("beforeend", exportButton);
-        zoomControl.insertAdjacentElement("beforeend", importButton);
+        buttonsConfig.forEach(({ id, tooltip, iconDefault, iconHover, action }) => {
+          const controlButton = createControlButton(id, tooltip, iconDefault, iconHover, action);
+          zoomControl.insertAdjacentElement("beforeend", controlButton);
+        });
       } else {
         console.error("Zoom control element not found");
       }

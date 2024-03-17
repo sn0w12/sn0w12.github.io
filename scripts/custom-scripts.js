@@ -1715,17 +1715,18 @@ document.addEventListener("change", function (event) {
     switch(radioButton.value) {
       case "displayOption1":
         clearAllCustomVectors();
-        break;
-      case "displayOption2":
-        clearAllCustomVectors();
         addReligionPolygons();
         break
-      case "displayOption3":
+      case "displayOption2":
         clearAllCustomVectors();
         drawFrontLines();
         break
     }
   }
+});
+
+document.addEventListener("radioDeselected", function (event) {
+  clearAllCustomVectors();
 });
 
 function performActions(
@@ -1773,6 +1774,7 @@ function performActions(
     .addEventListener("change", updateSelectedOptionId);
   setYearSelectorToLastDropdown();
   addCityPolygons();
+  clearAllCustomVectors();
 }
 
 function changeMapToSelected() {
@@ -2477,4 +2479,98 @@ function rgb2lab(rgb) {
   y = y > 0.008856 ? Math.pow(y, 1 / 3) : 7.787 * y + 16 / 116;
   z = z > 0.008856 ? Math.pow(z, 1 / 3) : 7.787 * z + 16 / 116;
   return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
+}
+
+function addRadioButtons(checked) {
+  // Simplified createRadioButton function
+  function createRadioButton(label, value, isChecked, name, clickDeselect = false) {
+    var radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = name;
+    radio.value = value;
+    radio.checked = isChecked; // Direct assignment
+    radio.classList.add("custom-radio-class");
+
+    if (clickDeselect) {
+      // Custom attribute to track last clicked radio button
+      radio.setAttribute('data-last-clicked', 'false');
+  
+      radio.addEventListener('click', function(e) {
+        // If this was the last clicked radio button and it is checked, uncheck it
+        if (this.getAttribute('data-last-clicked') === 'true' && this.checked) {
+          this.checked = false;
+          this.setAttribute('data-last-clicked', 'false');
+          const deselectionEvent = new CustomEvent('radioDeselected', { detail: { name: this.name, value: this.value } });
+          document.dispatchEvent(deselectionEvent);
+        } else {
+          // Mark all radios in the group as not last clicked
+          var radios = document.querySelectorAll(`input[type="radio"][name="${this.name}"]`);
+          radios.forEach(radio => radio.setAttribute('data-last-clicked', 'false'));
+          // Mark this radio as the last clicked
+          this.setAttribute('data-last-clicked', 'true');
+        }
+      });
+    }
+
+    var labelElement = document.createElement("label");
+    labelElement.appendChild(radio);
+    labelElement.appendChild(document.createTextNode(label));
+
+    return labelElement;
+  }
+
+  // Get the overlay control container
+  var overlayContainer = document.querySelector(
+    ".leaflet-control-layers-overlays"
+  );
+
+  // Check and remove existing radio buttons and separators
+  var existingRadios = overlayContainer.querySelectorAll(
+    ".custom-radio-class"
+  );
+  var existingSeparators = overlayContainer.querySelectorAll(
+    ".leaflet-control-layers-separator"
+  );
+
+  existingRadios.forEach(function (radio) {
+    radio.parentNode.remove(); // This assumes the radio button is wrapped in a label
+  });
+  existingSeparators.forEach(function (separator) {
+    separator.remove();
+  });
+
+  // Create and append the separator div
+  var separatorDiv = document.createElement("div");
+  separatorDiv.classList.add("leaflet-control-layers-separator");
+  overlayContainer.appendChild(separatorDiv);
+
+  // Loop to create and append radio buttons
+  radioButtonsInfo.forEach((info) => {
+    var radioButton = createRadioButton(
+      info.label,
+      info.option,
+      checked === info.checkedIndex,
+      "layerSelector"
+    );
+    radioButton.classList.add("leaflet-control-layers-selector");
+    overlayContainer.appendChild(radioButton);
+  });
+
+  // Create and append the separator div
+  var separatorDiv = document.createElement("div");
+  separatorDiv.classList.add("leaflet-control-layers-separator");
+  overlayContainer.appendChild(separatorDiv);
+
+  // Loop to create and append radio buttons
+  displaySettings.forEach((info) => {
+    var radioButton = createRadioButton(
+      info.label,
+      info.option,
+      checked === info.checkedIndex,
+      "displayOptions",
+      info.clickDeselect,
+    );
+    radioButton.classList.add("leaflet-control-display-options");
+    overlayContainer.appendChild(radioButton);
+  });
 }

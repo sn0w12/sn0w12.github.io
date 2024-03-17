@@ -59,20 +59,60 @@
 
       var displaySettings = [
         {
-          label: "None",
-          option: "displayOption1",
-          checkedIndex: 1,
-        },
-        {
           label: "Religion",
-          option: "displayOption2",
-          checkedIndex: 2,
+          option: "displayOption1",
+          checkedIndex: 4,
+          clickDeselect: true,
         },
         {
           label: "Frontlines",
-          option: "displayOption3",
-          checkedIndex: 3,
+          option: "displayOption2",
+          checkedIndex: 5,
+          clickDeselect: true,
         },
+      ];
+
+      const buttonsConfig = [
+        {
+          id: "wiki",
+          tooltip: "Wiki",
+          iconDefault: "icons/web1.png",
+          iconHover: "icons/web2.png",
+          action: (e) => {
+            e.preventDefault();
+            window.open("wiki", "_blank");
+          }
+        },
+        {
+          id: "city",
+          tooltp: "Opens the city map",
+          iconDefault:"icons/city1.png",
+          iconHover: "icons/city2.png",
+          action: (e) => {
+            e.preventDefault();
+            window.open("cities");
+          }
+        },
+        {
+          id: "export",
+          tooltip: "Export JSON",
+          iconDefault: "icons/export1.png",
+          iconHover: "icons/export2.png",
+          action: (e) => {
+            e.preventDefault();
+            exportMarkersToJson();
+          }
+        },
+        {
+          id: "import",
+          tooltip: "Import JSON",
+          iconDefault: "icons/import1.png",
+          iconHover: "icons/import2.png",
+          action: (e) => {
+            e.preventDefault();
+            fileInput.click();
+          }
+        }
       ];
 
       var neededMaps = [
@@ -900,77 +940,6 @@
         }
       }
 
-      function addRadioButtons(checked) {
-        // Simplified createRadioButton function
-        function createRadioButton(label, value, isChecked, name) {
-          var radio = document.createElement("input");
-          radio.type = "radio";
-          radio.name = name;
-          radio.value = value;
-          radio.checked = isChecked; // Direct assignment
-          radio.classList.add("custom-radio-class");
-
-          var labelElement = document.createElement("label");
-          labelElement.appendChild(radio);
-          labelElement.appendChild(document.createTextNode(label));
-          return labelElement;
-        }
-
-        // Get the overlay control container
-        var overlayContainer = document.querySelector(
-          ".leaflet-control-layers-overlays"
-        );
-
-        // Check and remove existing radio buttons and separators
-        var existingRadios = overlayContainer.querySelectorAll(
-          ".custom-radio-class"
-        );
-        var existingSeparators = overlayContainer.querySelectorAll(
-          ".leaflet-control-layers-separator"
-        );
-
-        existingRadios.forEach(function (radio) {
-          radio.parentNode.remove(); // This assumes the radio button is wrapped in a label
-        });
-        existingSeparators.forEach(function (separator) {
-          separator.remove();
-        });
-
-        // Create and append the separator div
-        var separatorDiv = document.createElement("div");
-        separatorDiv.classList.add("leaflet-control-layers-separator");
-        overlayContainer.appendChild(separatorDiv);
-
-        // Loop to create and append radio buttons
-        radioButtonsInfo.forEach((info) => {
-          var radioButton = createRadioButton(
-            info.label,
-            info.option,
-            checked === info.checkedIndex,
-            "layerSelector"
-          );
-          radioButton.classList.add("leaflet-control-layers-selector");
-          overlayContainer.appendChild(radioButton);
-        });
-
-        // Create and append the separator div
-        var separatorDiv = document.createElement("div");
-        separatorDiv.classList.add("leaflet-control-layers-separator");
-        overlayContainer.appendChild(separatorDiv);
-
-        // Loop to create and append radio buttons
-        displaySettings.forEach((info) => {
-          var radioButton = createRadioButton(
-            info.label,
-            info.option,
-            checked === info.checkedIndex,
-            "displayOptions"
-          );
-          radioButton.classList.add("leaflet-control-display-options");
-          overlayContainer.appendChild(radioButton);
-        });
-      }
-
       document.addEventListener("DOMContentLoaded", function () {
         setUp("data/markers/markers.json");
       });
@@ -980,54 +949,10 @@
       );
 
       if (zoomControl) {
-        const wikiButton = createControlButton(
-          "wiki",
-          "Wiki",
-          "icons/web1.png",
-          "icons/web2.png",
-          (e) => {
-            e.preventDefault();
-            window.open("wiki", "_blank");
-          }
-        );
-
-        const cityButton = createControlButton(
-          "city",
-          "Opens the city map",
-          "icons/city1.png",
-          "icons/city2.png",
-          (e) => {
-            e.preventDefault();
-            window.open("cities");
-          }
-        );
-
-        const exportButton = createControlButton(
-          "#",
-          "Export JSON",
-          "icons/export1.png",
-          "icons/export2.png",
-          (e) => {
-            e.preventDefault();
-            exportMarkersToJson();
-          }
-        );
-
-        const importButton = createControlButton(
-          "#",
-          "Import JSON",
-          "icons/import1.png",
-          "icons/import2.png",
-          (e) => {
-            e.preventDefault();
-            fileInput.click();
-          }
-        );
-
-        zoomControl.insertAdjacentElement("beforeend", wikiButton);
-        zoomControl.insertAdjacentElement("beforeend", cityButton);
-        zoomControl.insertAdjacentElement("beforeend", exportButton);
-        zoomControl.insertAdjacentElement("beforeend", importButton);
+        buttonsConfig.forEach(({ id, tooltip, iconDefault, iconHover, action }) => {
+          const controlButton = createControlButton(id, tooltip, iconDefault, iconHover, action);
+          zoomControl.insertAdjacentElement("beforeend", controlButton);
+        });
       } else {
         console.error("Zoom control element not found");
       }
