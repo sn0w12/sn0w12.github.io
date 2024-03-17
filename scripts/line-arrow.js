@@ -32,8 +32,11 @@ function getArrows(arrLatlngs, color, density, fontSize, mapObj, rotateDeg, base
             html: iconHtml
         });
         for (var c = 1; c <= arrowCount; c++) {
-            result.push(L.marker(myMidPoint(arrLatlngs[i], arrLatlngs[i - 1], (c / (arrowCount + 1)), mapObj), { icon: icon }));
-        }
+            result.push(L.marker(myMidPoint(arrLatlngs[i], arrLatlngs[i - 1], (c / (arrowCount + 1)), mapObj), { 
+                icon: icon, 
+                interactive: false
+            }));
+        }        
     }
     return result;
 }

@@ -547,6 +547,10 @@ fontLinePoints = {
         ],
         region: "Antaria",
         rotation: 270,
+        description: "The war",
+        linkEnabled: false,
+        linkTitle: "",
+        drawArrows: true,
       }
     },
   },

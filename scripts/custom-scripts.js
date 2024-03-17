@@ -5,6 +5,7 @@ let showingPolygon = false;
 let devMode = false;
 let markerDataPath;
 let startPosition;
+let currentZoom = Math.round(map._zoom);
 
 let customVectors = [];
 let lineDecorators = [];
@@ -1764,6 +1765,7 @@ document.addEventListener("change", function (event) {
 });
 
 document.addEventListener("radioDeselected", function (event) {
+  console.log(event);
   clearAllCustomVectors();
 });
 
@@ -2007,53 +2009,69 @@ function addReligionPolygons() {
   }
 }
 
-function drawFrontLines() {
+function drawFrontLines(openPopup = null) {
   if (typeof fontLinePoints != "undefined") {
-    // Access the relevant polygons for the current map and selected option
     if (
       fontLinePoints[currentMap] &&
       typeof fontLinePoints[currentMap][selectedOptionId] != "undefined"
     ) {
       const options = fontLinePoints[currentMap][selectedOptionId];
-      
-      // Iterate through the options object to get each city's details
       for (const frontline in options) {
         const frontlineDetails = options[frontline];
 
-        // Extract the polygon and URL for the current city
         const points = frontlineDetails.points;
+        const drawArrows = frontlineDetails.drawArrows;
+        const description = frontlineDetails.description;
+        const linkEnabled = frontlineDetails.linkEnabled;
+        const linkTitle = frontlineDetails.linkTitle;
         const region = frontlineDetails.region;
-        const rotation = frontlineDetails.rotation;
-        const zoomLevel = Math.round(map._zoom);
 
         let color = countryColors[region] || region;
 
-        let density = zoomLevel / 10;
-        let fontSize = zoomLevel * 4;
-        let offset;
-
-        switch (zoomLevel) {
-          case 3:
-            offset = 2.8;
-            break;
-          case 4:
-            offset = 0;
-            break;
-          case 5:
-            offset = -5;
-            break;
-          case 6:
-            offset = -8;
-            break;
-          default:
-            offset = 0;
-            break;
-        }
+        let popupContent = generatePopupContent(frontline, "Frontline", description, linkEnabled, linkTitle);
 
         let frontLineLine = L.polyline(points, {color: color}).addTo(map);
-        let arrows = L.featureGroup(getArrows(points, color, density, fontSize, map, rotation, offset)).addTo(map);
+        let frontLineClickLine = L.polyline(points, {color: color, opacity: 0, weight: 15}).addTo(map);
+        frontLineClickLine.bindPopup(`<div id="frontline-popup">${popupContent}</div>`);
         customVectors.push(frontLineLine);
-        lineDecorators.push(arrows);
+        customVectors.push(frontLineClickLine);
+
+        if (openPopup) {
+          if (frontline == openPopup) {
+            frontLineClickLine.openPopup();
+          }
+        }
+
+        if (drawArrows) {
+          const rotation = frontlineDetails.rotation;
+  
+          const zoomLevel = Math.round(map._zoom);
+  
+          let density = zoomLevel / 10;
+          let fontSize = zoomLevel * 4;
+          let offset;
+  
+          switch (zoomLevel) {
+            case 3:
+              offset = 2.8;
+              break;
+            case 4:
+              offset = 0;
+              break;
+            case 5:
+              offset = -5;
+              break;
+            case 6:
+              offset = -8;
+              break;
+            default:
+              offset = 0;
+              break;
+          }
+  
+          let arrows = L.featureGroup(getArrows(points, color, density, fontSize, map, rotation, offset)).addTo(map);
+          lineDecorators.push(arrows);
+        }
       }
     } else {
       console.warn("No config found for:", currentMap, selectedOptionId);
@@ -2098,6 +2116,8 @@ function setUp(dataUrl) {
     openPopupsSet.delete(e.popup._source);
   });
 
+  currentZoom = Math.round(map._zoom);
+
   // Context menu logic
   document.addEventListener(
     "contextmenu",
@@ -2127,14 +2147,20 @@ function setUp(dataUrl) {
   });
 
   map.on('zoomend', function() {
-    let radioButtons = document.getElementsByName("displayOptions");
-    if (typeof radioButtons != "undefined") {
-      radioButtons.forEach(radioButton => {
-        if (radioButton.checked == true && radioButton.value == "displayOption2") {
-          clearAllCustomVectors();
-          drawFrontLines();
-        }
-      })
+    if (Math.round(map._zoom) != Math.round(currentZoom)) {
+      let radioButtons = document.getElementsByName("displayOptions");
+      if (typeof radioButtons != "undefined") {
+        radioButtons.forEach(radioButton => {
+          if (radioButton.checked == true && radioButton.value == "displayOption2") {
+            const popUp = document.getElementById("frontline-popup");
+            const titleElement = popUp.querySelector('b font');
+            const title = titleElement.textContent;
+            clearAllCustomVectors();
+            drawFrontLines(title);
+          }
+        })
+      }
+      currentZoom = Math.round(map._zoom);
     }
   });
 }
