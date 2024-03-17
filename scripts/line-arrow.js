@@ -44,7 +44,7 @@ function getArrows(arrLatlngs, color, density, fontSize, mapObj, rotateDeg, base
 function calculateDynamicOffset(totalRotation, fontSize, baseOffset) {
     var rotationAdjustmentFactor = Math.abs(totalRotation % 360) / 180; // Normalize rotation between 0 and 2
     var fontSizeValue = parseFloat(fontSize);
-    fontSizeValue = Math.floor((((fontSizeValue / 2) * (fontSizeValue / 2)) / 2) - 200 / fontSizeValue);
+    fontSizeValue = Math.floor((Math.pow(fontSizeValue, 2) / 8) - 200 / fontSizeValue);
     var adjustmentFactor = fontSizeValue * rotationAdjustmentFactor * -0.4;
     return baseOffset + adjustmentFactor;
 }
