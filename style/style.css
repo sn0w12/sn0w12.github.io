@@ -271,3 +271,15 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+.arrow-icon {
+    width: 14px;
+    height: 14px;
+}
+
+    .arrow-icon > div {
+        margin-left: -1px;
+        margin-top: -3px;
+        transform-origin: 50% 50%; /* Adjust as needed */
+        font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+    }

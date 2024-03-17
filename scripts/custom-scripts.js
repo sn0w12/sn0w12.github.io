@@ -4,7 +4,10 @@ let openPopupsSet = new Set();
 let showingPolygon = false;
 let devMode = false;
 let markerDataPath;
+
 let customVectors = [];
+let lineDecorators = [];
+
 const safeContextBtns = new Set([
   "centerBtn",
   "resetBtn",
@@ -538,10 +541,12 @@ function clearAllVectors() {
 function clearAllCustomVectors() {
   // Clear all existing GeoJSON layers from the map
   customVectors.forEach(function (layer) {
-    if (layer instanceof L.GeoJSON) {
-      map.removeLayer(layer);
-    }
+    map.removeLayer(layer);
   })
+  lineDecorators.forEach(function (layer) {
+    map.removeLayer(layer);
+  })
+  lineDecorators = []
   customVectors = [];
 }
 
@@ -1712,9 +1717,12 @@ document.addEventListener("change", function (event) {
         clearAllCustomVectors();
         break;
       case "displayOption2":
+        clearAllCustomVectors();
         addReligionPolygons();
         break
       case "displayOption3":
+        clearAllCustomVectors();
+        drawFrontLines();
         break
     }
   }
@@ -1959,6 +1967,57 @@ function addReligionPolygons() {
   }
 }
 
+function drawFrontLines() {
+  if (typeof fontLinePoints != "undefined") {
+    // Access the relevant polygons for the current map and selected option
+    if (
+      fontLinePoints[currentMap] &&
+      typeof fontLinePoints[currentMap][selectedOptionId] != "undefined"
+    ) {
+      const options = fontLinePoints[currentMap][selectedOptionId];
+      
+      // Iterate through the options object to get each city's details
+      for (const frontline in options) {
+        const frontlineDetails = options[frontline];
+
+        // Extract the polygon and URL for the current city
+        const points = frontlineDetails.points;
+        const region = frontlineDetails.region;
+        const rotation = frontlineDetails.rotation;
+        const zoomLevel = Math.ceil(map._zoom);
+
+        let density = zoomLevel / 10;
+        let fontSize = zoomLevel * 4;
+        let offset;
+
+        switch (zoomLevel) {
+          case 3:
+            offset = 2.8;
+            break;
+          case 4:
+            offset = 0;
+            break;
+          case 5:
+            offset = -5;
+            break;
+          case 6:
+            offset = -8;
+            break;
+        }
+
+        console.log("Offset:", offset)
+
+        let frontLineLine = L.polyline(points, {color: countryColors[region]}).addTo(map);
+        let arrows = L.featureGroup(getArrows(points, countryColors[region], density, fontSize, map, rotation, offset)).addTo(map);
+        customVectors.push(frontLineLine);
+        lineDecorators.push(arrows);
+      }
+    } else {
+      console.warn("No config found for:", currentMap, selectedOptionId);
+    }
+  }
+}
+
 function setUp(dataUrl) {
   markerDataPath = dataUrl;
 
@@ -2022,6 +2081,18 @@ function setUp(dataUrl) {
   // Hide the context menu when clicking elsewhere
   document.addEventListener("click", function (e) {
     clearContextMenu();
+  });
+
+  map.on('zoomend', function() {
+    let radioButtons = document.getElementsByName("displayOptions");
+    if (typeof radioButtons != "undefined") {
+      radioButtons.forEach(radioButton => {
+        if (radioButton.checked == true && radioButton.value == "displayOption3") {
+          clearAllCustomVectors();
+          drawFrontLines();
+        }
+      })
+    }
   });
 }
 
