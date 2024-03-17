@@ -1984,7 +1984,9 @@ function drawFrontLines() {
         const points = frontlineDetails.points;
         const region = frontlineDetails.region;
         const rotation = frontlineDetails.rotation;
-        const zoomLevel = Math.ceil(map._zoom);
+        const zoomLevel = Math.round(map._zoom);
+
+        let color = countryColors[region] || region;
 
         let density = zoomLevel / 10;
         let fontSize = zoomLevel * 4;
@@ -2003,12 +2005,13 @@ function drawFrontLines() {
           case 6:
             offset = -8;
             break;
+          default:
+            offset = 0;
+            break;
         }
 
-        console.log("Offset:", offset)
-
-        let frontLineLine = L.polyline(points, {color: countryColors[region]}).addTo(map);
-        let arrows = L.featureGroup(getArrows(points, countryColors[region], density, fontSize, map, rotation, offset)).addTo(map);
+        let frontLineLine = L.polyline(points, {color: color}).addTo(map);
+        let arrows = L.featureGroup(getArrows(points, color, density, fontSize, map, rotation, offset)).addTo(map);
         customVectors.push(frontLineLine);
         lineDecorators.push(arrows);
       }
