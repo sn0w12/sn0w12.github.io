@@ -2016,10 +2016,10 @@ function drawFrontLines(openPopup = null, latLng = null, drawOnlyArrows = false)
 
   const options = fontLinePoints[currentMap][selectedOptionId];
   Object.entries(options).forEach(([frontline, details]) => {
-    const {points, drawArrows, description, linkEnabled, linkTitle, region, rotation} = details;
+    const {points, drawArrows, description, linkEnabled, linkTitle, region, rotation, category} = details;
 
     if (!drawOnlyArrows) {
-      const popupContent = generatePopupContent(frontline, "Frontline", generateFrontLineDescription(description), linkEnabled, linkTitle);
+      const popupContent = generatePopupContent(frontline, category, generateFrontLineDescription(description), linkEnabled, linkTitle);
       const color = countryColors[region] || region;
 
       let frontLineLine = L.polyline(points, {color}).addTo(map);

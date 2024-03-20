@@ -545,6 +545,7 @@ fontLinePoints = {
           [-26.900853635372673, -67.94705333677629],
         ],
         region: "Antaria",
+        category: "Frontline",
         rotation: 270,
         description: [
           "The battle for Primorium is considered the bloodiest battle in history, during which 4.6 million people died during the battle's 124 day span. If rounded, approximately 37 thousand people died per day.",
