@@ -213,8 +213,8 @@ function searchEvents() {
 function openModal(event) {
     const modal = document.getElementById('eventModal');
     const content = document.getElementById('modalContent');
-    const img = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">';
-    const img2 = '<img style="height:3px;width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">';
+    const img = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="images/divider_small.png" alt="map popup divider">';
+    const img2 = '<img style="height:3px;width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="images/divider_small.png" alt="map popup divider">';
 
 
     content.innerHTML = `<span class="close" onclick="closeModal()">&times;</span><h1>${event.title}</h1>${img}<h2>${event.level}</h2>${img2}<p>${event.description}</p>`;

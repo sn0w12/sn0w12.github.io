@@ -12,7 +12,7 @@
     background: var(--background);
     color: var(--foreground);
     border: 7px solid var(--background);
-    border-image-source: url(../icons/border.png);
+    border-image-source: url(../images/border.png);
     border-image-width: 20px 40px;
     border-image-repeat: round;
     border-image-slice: 30 50 fill;
@@ -45,7 +45,7 @@
     color: var(--foreground);
 }
 .leaflet-control-layers-toggle {
-    background-image: url(../icons/layers.png);
+    background-image: url(../images/layers.png);
     background-size: 30px 30px;
 }
 .leaflet-bar a.leaflet-disabled {
@@ -85,7 +85,7 @@
 }
 .leaflet-control-zoom.leaflet-bar.leaflet-control {
     border: 7px solid transparent;
-    border-image-source: url(../icons/border.png);
+    border-image-source: url(../images/border.png);
     border-image-width: 20px 40px;
     border-image-repeat: round;
     border-image-slice: 30 50 fill;
@@ -93,7 +93,7 @@
 .leaflet-control-layers.leaflet-control {
     border-radius: 12px;
     border: 9px solid transparent;
-    border-image-source: url(../icons/border.png);
+    border-image-source: url(../images/border.png);
     border-image-width: 20px 40px;
     border-image-repeat: round;
     border-image-slice: 30 50 fill;
@@ -101,7 +101,7 @@
 .leaflet-control-layers.leaflet-control.leaflet-control-layers-expanded {
     border-radius: 15px;
     border: 12px solid transparent;
-    border-image-source: url(../icons/border.png);
+    border-image-source: url(../images/border.png);
     border-image-width: 20px 40px;
     border-image-repeat: round;
     border-image-slice: 30 50 fill;
@@ -204,7 +204,7 @@
     background: var(--background);
     color: var(--foreground);
     border: 7px solid var(--background);
-    border-image-source: url(../icons/border.png);
+    border-image-source: url(../images/border.png);
     border-image-width: 20px 40px;
     border-image-repeat: round;
     border-image-slice: 30 50 fill;

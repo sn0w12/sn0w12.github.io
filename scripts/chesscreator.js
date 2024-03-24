@@ -533,8 +533,8 @@ $( document ).ready(function() {
             this.subSizeX = 480; //the width of each piece from the pieces image, see github for more info
             this.subSizeY = 600; //the height of each piece from the pieces image, see github for more info
             this.imageSrcs = [ //make sure to name each as such, the extension doesn't matter but keep order as follows
-                "./icons/pieces.png", 
-                "./icons/board.png" 
+                "./images/pieces.png", 
+                "./images/board.png" 
             ];
             this.coordinates = { //holds information about where the piece sprites are from the images file
                 0: [0, 0], //emperor white (w)

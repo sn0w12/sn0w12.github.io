@@ -49,9 +49,9 @@ function generatePopupContent(
 
   // Image styles
   const img1 =
-    '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="icons/divider.png" alt="map popup divider">';
+    '<img style="height:17.5px;width: 100%;min-width: 175px; display: block; margin-left: auto; margin-right: auto; margin-bottom: -8px; margin-top: -4px;" src="images/divider.png" alt="map popup divider">';
   const img2 =
-    '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="icons/divider_small.png" alt="map popup divider">';
+    '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="images/divider_small.png" alt="map popup divider">';
 
   return `${titleLink}${img1}<i><font size="+0.5">${category}</font></i>${img2}<br />${description}`;
 }
@@ -386,9 +386,9 @@ function createMap(prefix, title, noWrap, minZoom, maxZoom, pane, add) {
 
 function createIcon(icon, shadow, iconSize, iconAnchor, popupAnchor) {
   return L.icon({
-    iconUrl: `icons/${icon}.png`,
-    iconRetinaUrl: `icons/${icon}.png`,
-    shadowUrl: `icons/${shadow}.png`,
+    iconUrl: `images/${icon}.png`,
+    iconRetinaUrl: `images/${icon}.png`,
+    shadowUrl: `images/${shadow}.png`,
     iconSize: iconSize,
     iconAnchor: iconAnchor,
     popupAnchor: popupAnchor,
@@ -2056,7 +2056,7 @@ function drawFrontLines(openPopup = null, latLng = null, drawOnlyArrows = false)
 
 function generateFrontLineDescription(data) {
   const separator =
-    '<img style="height:3px;width: 65%; display: block; margin-left: auto; margin-right: auto;" src="icons/divider_small.png" alt="map popup divider">';
+    '<img style="height:3px;width: 65%; display: block; margin-left: auto; margin-right: auto;" src="images/divider_small.png" alt="map popup divider">';
   const description = `
   <div>
     ${data[0]}<br>${separator}
