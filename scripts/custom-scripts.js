@@ -37,15 +37,19 @@ function generatePopupContent(
   category,
   description,
   linkEnabled,
-  linkTitle
+  linkTitle,
+  region,
+  customImage = null
 ) {
+  const fontIncrease = 1.5;
+
   // If linkEnabled is true and linkTitle is provided, it uses linkTitle for the hyperlink otherwise it uses the title for the hyperlink.
   // If linkEnabled is false, it just displays the title without a hyperlink.
   const titleLink = linkEnabled
     ? `<a href="wiki#${encodeURIComponent(
       linkTitle || title
-    )}" target="_blank"><b><font size="+0.5">${title}</font></b><br /></a>`
-    : `<b><font size="+0.5">${title}</font></b><br />`;
+    )}" target="_blank"><b><font size="+${fontIncrease}">${title}</font></b></a>`
+    : `<b><font size="+${fontIncrease}">${title}</font></b>`;
 
   // Image styles
   const img1 =
@@ -53,7 +57,24 @@ function generatePopupContent(
   const img2 =
     '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="images/divider_small.png" alt="map popup divider">';
 
-  return `${titleLink}${img1}<i><font size="+0.5">${category}</font></i>${img2}<br />${description}`;
+  const customImg = customImage ? 
+    `<img style="height: ${fontIncrease}em; width: auto;" src="${customImage.url}" alt="${customImage.alt}" onerror="this.style.display='none';">` :
+    (region && regionMap[region] && regionMap[region]["titleImg"] ? 
+      `<img style="height: ${fontIncrease}em; width: auto;" src="${regionMap[region]["titleImg"].url}" alt="${regionMap[region]["titleImg"].alt}" onerror="this.style.display='none';">` : 
+      '');
+
+  return `
+    <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+      <div style="flex: none; display: flex; align-items: center; gap: 5px;">
+        ${titleLink}
+        ${customImg}
+      </div>
+    </div>
+    ${img1}
+    <i><font size="+0.5">${category}</font></i>
+    ${img2}<br />
+    ${description}
+    `;
 }
 
 function generateMarker(
@@ -75,13 +96,14 @@ function generateMarker(
   let newId = `${id}_${customId || firstTitle}`;
   if (linkTitle) linkTitle = ", '" + linkTitle + "'";
 
-  let region = regionMap[id] || "default"; // Determine the region
+  let region = regionMap[id]["region"] || "default"; // Determine the region
   let markerIcon = icons[icon]; // Determine the icon based on the icon type
   let popupContent = generatePopupContent(
     title,
     category,
     description,
     linkEnabled,
+    id,
     linkTitle || ""
   );
 
@@ -205,7 +227,7 @@ function getFromUrl(search) {
 
 function switchToMarkerMap(markerId) {
   let markerPrefix = markerId.slice(0, 2);
-  let markerRegion = regionMap[markerPrefix] || "default";
+  let markerRegion = regionMap[markerPrefix]["region"] || "default";
 
   let fullRegionName = regionToFull[markerRegion][0];
   let submap = regionToFull[markerRegion][1];
@@ -1272,7 +1294,7 @@ function exportMarkersToJson() {
         return; // Skip this marker
       }
       let idPrefix = id.substring(0, 2).toLowerCase();
-      let region = regionMap[idPrefix] || "mo";
+      let region = regionMap[idPrefix]["region"] || "mo";
 
       let coords = [marker.getLatLng().lat, marker.getLatLng().lng];
       let icon = marker.options.icon.options.className;
@@ -1641,7 +1663,12 @@ function processImportedData(jsonData) {
         markerData.category,
         markerData.description,
         markerData.link,
-        markerData.customlink
+        markerData.customlink,
+        markerData.id.slice(0, 2),
+        markerData.customimage ? {
+          url: markerData.customimage.url,
+          alt: markerData.customimage.alt
+        } : null
       );
 
       createAndAddMarker(
@@ -2019,7 +2046,7 @@ function drawFrontLines(openPopup = null, latLng = null, drawOnlyArrows = false)
     const {points, drawArrows, description, linkEnabled, linkTitle, region, rotation, category} = details;
 
     if (!drawOnlyArrows) {
-      const popupContent = generatePopupContent(frontline, category, generateFrontLineDescription(description), linkEnabled, linkTitle);
+      const popupContent = generatePopupContent(frontline, category, generateFrontLineDescription(description), linkEnabled, linkTitle, null);
       const color = countryColors[region] || region;
 
       let frontLineLine = L.polyline(points, {color}).addTo(map);
