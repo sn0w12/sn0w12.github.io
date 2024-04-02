@@ -331,9 +331,9 @@
                             ages.push(age);
                             highestAge = Math.max(highestAge, age);
                             lowestAge = Math.min(lowestAge, age);
-                            characterCount++;
                         }
-
+                        characterCount++;
+                        
                         // Nation count calculations (skipping "Unknown")
                         const nation = character.nationality;
                         if (nation && nation !== "Unknown") {
@@ -375,6 +375,8 @@
 
                     container.appendChild(mainDetailsElement);
                 });
+                document.getElementById('total-characters').textContent = characterCount;
+
                 // Sort the ages array
                 ages.sort((a, b) => a - b);
 
@@ -549,23 +551,6 @@
         divider.classList.add('search-result-divider');
         container.appendChild(divider);
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('/data/characters.json')
-            .then(response => response.json())
-            .then(data => {
-            const container = document.querySelector('.main-container');
-            let characterCount = 0; // Initialize character count
-
-            Object.entries(data).forEach(([mainCategory, characters]) => {
-                characterCount += characters.length;
-            });
-
-            // After all characters have been processed, update the character count display
-            document.getElementById('total-characters').textContent = characterCount;
-            })
-            .catch(error => console.error('Error loading character data:', error));
-        });
 
     window.addEventListener('load', function() {
         let touchStartY = 0;
