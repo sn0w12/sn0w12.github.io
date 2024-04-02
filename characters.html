@@ -343,9 +343,15 @@
                         const clone = document.importNode(template, true);
                         clone.querySelector('.character-name').textContent = character.name;
                         clone.querySelector('.character-summary').textContent = character.summary || "Unknown";
-                        clone.querySelector('.character-image').src = character.image || '';
-                        clone.querySelector('.character-image').alt = character.name;
-                        clone.querySelector('.character-image').style.display = character.image ? 'block' : 'none';
+
+                        if (typeof character.image != "undefined") {
+                            clone.querySelector('.character-image').src = character.image;
+                            clone.querySelector('.character-image').alt = character.name;
+                            clone.querySelector('.character-image').style.display = 'block';
+                        } else {
+                            clone.querySelector('.character-image').display = "none";
+                            clone.querySelector('.info-item .gender').parentElement.style.borderTop = "0";
+                        }
 
                         // Set additional fields
                         clone.querySelector('.info-item .gender').textContent = character.gender || "Unknown";
