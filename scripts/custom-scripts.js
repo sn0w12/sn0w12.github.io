@@ -58,9 +58,9 @@ function generatePopupContent(
     '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="images/divider_small.png" alt="map popup divider">';
 
   const customImg = customImage ? 
-    `<img style="height: ${fontIncrease}em; width: auto;" src="${customImage.url}" alt="${customImage.alt}" onerror="this.style.display='none';">` :
+    `<img style="height: ${fontIncrease - 0.25}em; width: auto;" src="${customImage.url}" alt="${customImage.alt}" onerror="this.style.display='none';">` :
     (region && regionMap[region] && regionMap[region]["titleImg"] ? 
-      `<img style="height: ${fontIncrease}em; width: auto;" src="${regionMap[region]["titleImg"].url}" alt="${regionMap[region]["titleImg"].alt}" onerror="this.style.display='none';">` : 
+      `<img style="height: ${fontIncrease - 0.25}em; width: auto;" src="${regionMap[region]["titleImg"].url}" alt="${regionMap[region]["titleImg"].alt}" onerror="this.style.display='none';">` : 
       '');
 
   return `

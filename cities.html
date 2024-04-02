@@ -18,6 +18,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.0.0/Leaflet.Editable.min.js"></script>
     <script src="scripts/leaflet-polycolor.min.js"></script>
+
+    <link rel="preload" href="images/border.png" as="image">
+    <link rel="preload" href="images/export1.png" as="image">
+    <link rel="preload" href="images/export2.png" as="image">
+    <link rel="preload" href="images/import1.png" as="image">
+    <link rel="preload" href="images/import2.png" as="image">
+    <link rel="preload" href="images/web1.png" as="image">
+    <link rel="preload" href="images/web2.png" as="image">
+    <link rel="preload" href="images/world1.png" as="image">
+    <link rel="preload" href="images/world2.png" as="image">
+    <link rel="preload" href="images/divider.png" as="image">
+    <link rel="preload" href="images/divider_small.png" as="image">
+    <link rel="preload" href="images/AntariaFlag.png" as="image">
+    <link rel="preload" href="images/TsukiFlag.png" as="image">
   </head>
 
   <body style="height: 100%; margin: 0; overflow-y: hidden; overflow-x: hidden">
@@ -137,17 +151,97 @@
       };
 
       const regionMap = {
-        an: "an",
-        od: "od",
-        th: "th",
-        rh: "rh",
-        az: "az",
-        ts: "ts",
-        pr: "pr",
-        dr: "dr",
-        tc: "tc",
-        gi: "gi",
-        ac: "ac",
+        an: {
+          region: "an",
+          titleImg: {
+            url: "images/AntariaFlag.png",
+            alt: "Antarian Flag"
+          }
+        },
+        od: {
+          region: "od",
+          titleImg: {
+            url: "images/OdrheimFlag.png",
+            alt: "Odrheim Flag"
+          }
+        },
+        th: {
+          region: "th",
+          titleImg: {
+            url: "images/TunglheimrFlag.png",
+            alt: "Tunglheimr Flag"
+          }
+        },
+        rh: {
+          region: "rh",
+          titleImg: {
+            url: "images/RheinlandFlag.png",
+            alt: "Rheinland Flag"
+          }
+        },
+        az: {
+          region: "az",
+          titleImg: {
+            url: "images/AzurithFlag.png",
+            alt: "Azurith Flag"
+          }
+        },
+        ts: {
+          region: "ts",
+          titleImg: {
+            url: "images/TsukiFlag.png",
+            alt: "Tsuki Flag"
+          }
+        },
+        pr: {
+          region: "pr",
+          titleImg: {
+            url: "images/PrimoriaFlag.png",
+            alt: "Primorian Flag"
+          }
+        },
+        dr: {
+          region: "dr",
+          titleImg: {
+            url: "images/DryadalisFlag.png",
+            alt: "Dryadalis Flag"
+          }
+        },
+        tc: {
+          region: "tc",
+          titleImg: {
+            url: "images/TradeCompanyFlag.png",
+            alt: "Trade Company Flag"
+          }
+        },
+        gi: {
+          region: "gi",
+          titleImg: {
+            url: "images/GigantoriaFlag.png",
+            alt: "Gigantoria Flag"
+          }
+        },
+        ac: {
+          region: "ac",
+          titleImg: {
+            url: "images/ArcarumFlag.png",
+            alt: "Arcarum Flag"
+          }
+        },
+        go: {
+          region: "go",
+          titleImg: {
+            url: "images/GoldenOrderFlag.png",
+            alt: "Golden Order Flag"
+          }
+        },
+        fp: {
+          region: "fp",
+          titleImg: {
+            url: "images/FreePeopleFlag.png",
+            alt: "Free People Flag"
+          }
+        },
       };
 
       const regionToFull = {
