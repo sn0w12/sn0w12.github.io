@@ -19,6 +19,12 @@
                         "level": "National Event"
                     },
                     {
+                        "year": "37000 B.R - 36000 B.R",
+                        "title": "The Draconian, Eldarin, and Moros Are created",
+                        "description": "The Draconian, Eldarin, and Moros Are created.",
+                        "level": "Universe Changing Event"
+                    },
+                    {
                         "year": "36543 B.R",
                         "title": "Seraphis creates humans",
                         "description": "Seraphis sacrificed his grace and expended his aether to breathe life into humanity. Drawn by the wonder of entities shaped by the aether, he yearned to contribute his own creation. His own power, meager and devoid of Aether's abundance, could not foster a race in great numbers. Thus, he offered up every ounce of his aether, birthing a modest number of humans into existence.",
@@ -29,12 +35,6 @@
                         "title": "Some lesser deities start becoming jealous",
                         "description": "Some lesser deities start becoming jealous of the primordials power.",
                         "level": "Local Event"
-                    },
-                    {
-                        "year": "25000 B.R - 20000 B.R",
-                        "title": "The Draconian, Eldarin, and Moros Are created",
-                        "description": "The Draconian, Eldarin, and Moros Are created.",
-                        "level": "Universe Changing Event"
                     }
                 ]
             },
