@@ -33,33 +33,55 @@ function loadSelectedTimeline(selectedTimeline) {
         document.getElementById('timelineDropdown').value = selectedTimeline;
     }
 
-    const apiUrl = `https://www.arathia.net/w/api.php?action=query&format=json&prop=revisions&rvprop=content&titles=${selectedTimeline}&origin=*`;
+    // Generate a unique key for the session storage based on the timeline
+    const storageKey = `timelineData-${selectedTimeline}`;
 
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            // Parsing the response to get the content of the page
-            const pages = data.query.pages;
-            const pageId = Object.keys(pages)[0]; // Assuming single page result
-            const content = pages[pageId].revisions['0']['*']; // Updated to handle rvslots
-            const timelineData = JSON.parse(content); // Assuming the content is JSON-formatted within <nowiki> tags
+    // Try to retrieve cached data
+    const cachedTimelineData = sessionStorage.getItem(storageKey);
 
-            allEvents = timelineData;
-            timelineData.forEach(era => {
-                const currentSubcategories = uniqueSubcategories.get(era.era) || new Set();
-                era.subcategories.forEach(subcat => currentSubcategories.add(subcat.title));
-                uniqueSubcategories.set(era.era, currentSubcategories);
-            });
-            createSubcategoryFilters();
-            createTimeline(timelineData);
-            populateSidebar(timelineData);
-            applyFilters();
-            searchEvents();
-            addSubEventListeners();
-        })
-        .catch(error => console.error('Error loading the timeline:', error));
+    if (cachedTimelineData) {
+        // If data is found in the cache, parse it and use it
+        const timelineData = JSON.parse(cachedTimelineData);
+        processTimelineData(timelineData);
+    } else {
+        // If no cached data, fetch it from the API
+        const apiUrl = `https://www.arathia.net/w/api.php?action=query&format=json&prop=revisions&rvprop=content&titles=${selectedTimeline}&origin=*`;
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                // Parsing the response to get the content of the page
+                const pages = data.query.pages;
+                const pageId = Object.keys(pages)[0]; // Assuming single page result
+                const content = pages[pageId].revisions['0']['*']; // Updated to handle rvslots
+                const timelineData = JSON.parse(content); // Assuming the content is JSON-formatted within <nowiki> tags
 
+                // Cache the fetched data
+                sessionStorage.setItem(storageKey, JSON.stringify(timelineData));
+
+                // Process the fetched data
+                processTimelineData(timelineData);
+            })
+            .catch(error => console.error('Error loading the timeline:', error));
+    }
+
+    // Always set the session storage for selected timeline to reselect on page reload
     sessionStorage.setItem('selectedTimeline', selectedTimeline);
+}
+
+// Refactored code to process timeline data
+function processTimelineData(timelineData) {
+    allEvents = timelineData;
+    timelineData.forEach(era => {
+        const currentSubcategories = uniqueSubcategories.get(era.era) || new Set();
+        era.subcategories.forEach(subcat => currentSubcategories.add(subcat.title));
+        uniqueSubcategories.set(era.era, currentSubcategories);
+    });
+    createSubcategoryFilters();
+    createTimeline(timelineData);
+    populateSidebar(timelineData);
+    applyFilters();
+    searchEvents();
+    addSubEventListeners();
 }
 
 function resetSubFilters() {
