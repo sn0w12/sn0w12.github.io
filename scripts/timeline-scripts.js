@@ -33,18 +33,26 @@ function loadSelectedTimeline(selectedTimeline) {
         document.getElementById('timelineDropdown').value = selectedTimeline;
     }
 
-    fetch(selectedTimeline)
+    const apiUrl = `https://www.arathia.net/w/api.php?action=query&format=json&prop=revisions&rvprop=content&titles=${selectedTimeline}&origin=*`;
+
+    fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            allEvents = data;
-            data.forEach(era => {
+            // Parsing the response to get the content of the page
+            const pages = data.query.pages;
+            const pageId = Object.keys(pages)[0]; // Assuming single page result
+            const content = pages[pageId].revisions['0']['*']; // Updated to handle rvslots
+            const timelineData = JSON.parse(content); // Assuming the content is JSON-formatted within <nowiki> tags
+
+            allEvents = timelineData;
+            timelineData.forEach(era => {
                 const currentSubcategories = uniqueSubcategories.get(era.era) || new Set();
                 era.subcategories.forEach(subcat => currentSubcategories.add(subcat.title));
-                uniqueSubcategories.set(era.era, currentSubcategories); // Use Map's set method
+                uniqueSubcategories.set(era.era, currentSubcategories);
             });
             createSubcategoryFilters();
-            createTimeline(data);
-            populateSidebar(data);
+            createTimeline(timelineData);
+            populateSidebar(timelineData);
             applyFilters();
             searchEvents();
             addSubEventListeners();
@@ -213,8 +221,8 @@ function searchEvents() {
 function openModal(event) {
     const modal = document.getElementById('eventModal');
     const content = document.getElementById('modalContent');
-    const img = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="images/divider_small.png" alt="map popup divider">';
-    const img2 = '<img style="height:3px;width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="images/divider_small.png" alt="map popup divider">';
+    const img = '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="../images/divider_small.png" alt="map popup divider">';
+    const img2 = '<img style="height:3px;width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: -2px;" src="../images/divider_small.png" alt="map popup divider">';
 
 
     content.innerHTML = `<span class="close" onclick="closeModal()">&times;</span><h1>${event.title}</h1>${img}<h2>${event.level}</h2>${img2}<p>${event.description}</p>`;
@@ -351,8 +359,6 @@ function updateVisualization(data) {
 
 function generateDensityPlot(processedEvents) {
     if (processedEvents) {
-        console.time("Total generateDensityPlot");
-    
         let minYear = processedEvents[0].plotYear, maxYear = processedEvents[0].plotYear;
         processedEvents.forEach(event => {
             if (event.plotYear < minYear) minYear = event.plotYear;
@@ -377,18 +383,13 @@ function generateDensityPlot(processedEvents) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save(); // Save the clean state of the canvas
         ctx.translate(margin.left, margin.top); // Adjust coordinate system for margin
-    
-        console.time("Compute density data");
+
         const plotYears = processedEvents.map(d => d.plotYear);
         const kde = kernelDensityEstimator(kernelEpanechnikov(7), d3.range(minYear, maxYear + 1));
         const densityData = kde(plotYears);
-        console.timeEnd("Compute density data");
-    
-        console.time("Rendering to Canvas");
     
         // Calculate tick interval based on the span of years
         const yearSpan = maxYear - minYear;
-        console.log(yearSpan);
         let tickInterval;
         if(yearSpan > 50000) {
             tickInterval = 3000;
@@ -438,9 +439,6 @@ function generateDensityPlot(processedEvents) {
         ctx.save();
         drawDynamicTicks(ctx, minYear, maxYear, tickInterval, x, height, width);
         ctx.restore(); // Restore to the clean state to remove any applied transformations
-    
-        console.timeEnd("Rendering to Canvas");
-        console.timeEnd("Total generateDensityPlot");
     }
     
     function drawDynamicTicks(ctx, minYear, maxYear, interval, scaleX, chartHeight, chartWidth) {

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
+<script src="data/markers/worldPolygons.js"></script>
+<title>Floating Polygons</title>
+<style>
+  body, html { margin: 0; padding: 0; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+</style>
+</head>
+<body>
+<canvas id="polygonCanvas"></canvas>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('polygonCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const scale = 5; // Scale factor for better visualization
+
+    function drawPolygon(coordinates, internalConnections) {
+        const canvas = document.getElementById('polygonCanvas');
+        const ctx = canvas.getContext('2d');
+        const scale = 5; // Scale factor for better visualization
+
+        // Draw the outer boundary of the polygon
+        ctx.beginPath();
+        coordinates[0].forEach((point, index) => {
+            const x = point[0] * scale + canvas.width / 2;
+            const y = -point[1] * scale + canvas.height / 2;
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+        ctx.closePath();
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Draw internal connections
+        internalConnections.forEach(connection => {
+            ctx.beginPath();
+            connection.forEach((point, index) => {
+                const x = point[0] * scale + canvas.width / 2;
+                const y = -point[1] * scale + canvas.height / 2;
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+        });
+
+        // Draw points as dots
+        internalConnections.forEach(connection => {
+            connection.forEach(point => {
+                const x = point[0] * scale + canvas.width / 2;
+                const y = -point[1] * scale + canvas.height / 2;
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, 2 * Math.PI); // Draw a small circle for each point
+                ctx.fillStyle = 'red';
+                ctx.fill();
+            });
+        });
+    }
+
+    function reversePolygonCoordinates(polygon) {
+        if (!polygon || !polygon.geometry || !polygon.geometry.coordinates) {
+            return null; // Return null if the input is not a valid polygon
+        }
+
+        const reversedCoordinates = polygon.geometry.coordinates.map((ring) => {
+            return ring.map((coord) => [coord[1], coord[0]]);
+        });
+
+        return turf.polygon(reversedCoordinates, polygon.properties);
+    }
+
+    function generateInternalPoints(coordinates) {
+        let points = [];
+        const polygon = turf.polygon(coordinates);
+        const area = turf.area(polygon); // Calculate the area of the polygon
+        const density = Math.sqrt(area) / 900000; // Density factor to determine grid spacing
+        const bbox = turf.bbox(polygon);
+        const [minX, minY, maxX, maxY] = bbox;
+        
+        const stepX = (maxX - minX) / density; // Horizontal spacing of grid points
+        const stepY = (maxY - minY) / density; // Vertical spacing of grid points
+        
+        for (let y = minY; y <= maxY; y += stepY) {
+            for (let x = minX; x <= maxX; x += stepX) {
+                // Apply a random offset to each point, within half of the step size
+                const randomOffsetX = (Math.random() - 0.5) * stepX;
+                const pointX = x + randomOffsetX;
+                if (pointX < maxX) { // Ensure the point is still within the bounding box
+                    const point = [pointX, y];
+                    if (turf.booleanPointInPolygon(turf.point(point), polygon)) {
+                        points.push(point);
+                    }
+                }
+            }
+        }
+        return points;
+    }
+
+    function subdividePolygonEdges(coordinates, maxEdgeLength = 30) {
+        let newCoordinates = [];
+        const vertices = coordinates[0]; // Assuming polygon coordinates are in a nested array
+
+        vertices.forEach((vertex, i) => {
+            newCoordinates.push(vertex);
+            let nextVertex = vertices[(i + 1) % vertices.length];
+            let edgeLength = Math.sqrt(
+                Math.pow(vertex[0] - nextVertex[0], 2) + 
+                Math.pow(vertex[1] - nextVertex[1], 2)
+            );
+
+            if (edgeLength > maxEdgeLength) {
+                let numDivisions = Math.floor(edgeLength / maxEdgeLength);
+                for (let j = 1; j <= numDivisions; j++) {
+                    let fraction = j / (numDivisions + 1);
+                    let intermediatePoint = [
+                        vertex[0] + fraction * (nextVertex[0] - vertex[0]),
+                        vertex[1] + fraction * (nextVertex[1] - vertex[1])
+                    ];
+                    newCoordinates.push(intermediatePoint);
+                }
+            }
+        });
+
+        return [newCoordinates]; // Return in a format suitable for Turf.js polygon functions
+    }
+
+    function createInternalConnections(coordinates, internalPoints, maxConnections = 6) {
+        const subdividedCoordinates = subdividePolygonEdges(coordinates);
+
+        let allPoints = [...internalPoints]; // Start with internal points
+        subdividedCoordinates[0].forEach(vertex => allPoints.push(vertex)); // Add subdivided polygon vertices
+
+        let connections = [];
+
+        allPoints.forEach((point, index, array) => {
+            let distances = array.map((otherPoint, otherIndex) => {
+                if (index !== otherIndex) { // Avoid connecting point to itself
+                    let distance = Math.sqrt(
+                        Math.pow(point[0] - otherPoint[0], 2) +
+                        Math.pow(point[1] - otherPoint[1], 2)
+                    );
+                    return { distance, point: otherPoint };
+                }
+                return { distance: Infinity, point: otherPoint }; // Infinity to exclude self
+            });
+
+            // Sort distances and connect to the nearest 'maxConnections' points
+            distances.sort((a, b) => a.distance - b.distance);
+            for (let i = 0; i < maxConnections && i < distances.length; i++) {
+                connections.push([point, distances[i].point]);
+            }
+        });
+
+        return connections;
+    }
+
+    Object.keys(countryPolygons["Arathia"]["arOption1"]).forEach(region => {
+        const polygon = countryPolygons["Arathia"]["arOption1"][region];
+        const reversedPolygon = reversePolygonCoordinates(polygon);
+        if (reversedPolygon) {
+            const internalPoints = generateInternalPoints(reversedPolygon.geometry.coordinates);
+            const connections = createInternalConnections(reversedPolygon.geometry.coordinates, internalPoints); // Updated function
+            drawPolygon(reversedPolygon.geometry.coordinates, connections);
+        }
+    });
+});
+</script>
+</body>
+</html>
