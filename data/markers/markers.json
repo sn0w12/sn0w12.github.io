@@ -12,7 +12,7 @@
     "category": "Capital",
     "description": "The capital of the Holy Antarian Enpire",
     "link": true,
-    "customlink": "Antaria (Capital)"
+    "customlink": "Antaria (City)"
   },
   {
     "region": "ar",
@@ -747,7 +747,7 @@
     "category": "Character ",
     "description": "Currently in hiding after the great dragon purge.",
     "link": true,
-    "customlink": null
+    "customlink": "Nihil"
   },
   {
     "region": "ar",
@@ -762,7 +762,7 @@
     "category": "Character ",
     "description": "Currently in hiding in a small town after the great dragon purge, has taken human form to blend in.",
     "link": true,
-    "customlink": null
+    "customlink": "Aurumoria"
   },
   {
     "region": "ar",
