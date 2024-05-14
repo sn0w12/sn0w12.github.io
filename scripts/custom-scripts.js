@@ -50,9 +50,7 @@ function generatePopupContent(
   // If linkEnabled is true and linkTitle is provided, it uses linkTitle for the hyperlink otherwise it uses the title for the hyperlink.
   // If linkEnabled is false, it just displays the title without a hyperlink.
   const titleLink = linkEnabled
-    ? `<a href="wiki#${encodeURIComponent(
-      linkTitle || title
-    )}" target="_blank"><b><font size="+${fontIncrease}">${title}</font></b></a>`
+    ? `<a href="wiki/${(linkTitle || title).replace(" ", "_")}" target="_blank"><b><font size="+${fontIncrease}">${title}</font></b></a>`
     : `<b><font size="+${fontIncrease}">${title}</font></b>`;
 
   // Image styles
