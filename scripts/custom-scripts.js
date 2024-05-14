@@ -234,9 +234,6 @@ function fitPolygonOnScreen(polygon, map) {
   const tempGeoJsonLayer = L.geoJSON(polygon);
   const bounds = tempGeoJsonLayer.getBounds();
   map.fitBounds(bounds);
-  setTimeout(function () {
-    map.fitBounds(bounds);
-  }, 200); // In case it fails to zoom for some reason
 }
 
 
