@@ -32,6 +32,10 @@ let tempLineUpdate = function (e) {
 
 leafletPolycolor(L);
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function generatePopupContent(
   title,
   category,
@@ -217,6 +221,29 @@ function checkUrl() {
   const categories = getFromUrl("categories");
   if (categories) {
     updateCategorySelection(categories.split("-"));
+  }
+
+  const country = getFromUrl("country");
+  if (country) {
+    showCountry(country);
+  }
+}
+
+function fitPolygonOnScreen(polygon, region, map) {
+  console.log(map)
+  polygon = reversePolygonCoordinates(polygon);
+  const tempGeoJsonLayer = L.geoJSON(polygon);
+  const bounds = tempGeoJsonLayer.getBounds();
+  map.fitBounds(bounds);
+}
+
+
+function showCountry(selectedCountry) {
+  if (countryPolygons[currentMap]) {
+    selectedCountry = capitalizeFirstLetter(selectedCountry);
+    console.log(countryPolygons[currentMap][selectedOptionId])
+    const polygon = countryPolygons[currentMap][selectedOptionId][selectedCountry];
+    fitPolygonOnScreen(polygon, selectedCountry, map);
   }
 }
 
