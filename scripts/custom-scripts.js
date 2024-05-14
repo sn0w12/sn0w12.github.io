@@ -229,21 +229,22 @@ function checkUrl() {
   }
 }
 
-function fitPolygonOnScreen(polygon, region, map) {
-  console.log(map)
+function fitPolygonOnScreen(polygon, map) {
   polygon = reversePolygonCoordinates(polygon);
   const tempGeoJsonLayer = L.geoJSON(polygon);
   const bounds = tempGeoJsonLayer.getBounds();
   map.fitBounds(bounds);
+  setTimeout(function () {
+    map.fitBounds(bounds);
+  }, 200); // In case it fails to zoom for some reason
 }
 
 
 function showCountry(selectedCountry) {
   if (countryPolygons[currentMap]) {
     selectedCountry = capitalizeFirstLetter(selectedCountry);
-    console.log(countryPolygons[currentMap][selectedOptionId])
     const polygon = countryPolygons[currentMap][selectedOptionId][selectedCountry];
-    fitPolygonOnScreen(polygon, selectedCountry, map);
+    fitPolygonOnScreen(polygon, map);
   }
 }
 
