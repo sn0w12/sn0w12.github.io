@@ -349,9 +349,6 @@ function openPopupFromUrl(markerId) {
       const latlng = marker.getLatLng();
       allMarkers[region][markerId].openPopup();
       map.setView(latlng, 4);
-      setTimeout(function () {
-        map.setView(latlng, 4);
-      }, 150); // In case it fails to zoom for some reason, happens on city map
       break;
     }
   }
