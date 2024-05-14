@@ -2327,8 +2327,10 @@ function clearContextMenu() {
 }
 
 function centerMap() {
-  map.setView([0, 0], 0);
-  document.getElementById("customContextMenu").style.display = "none"; // Hide the menu
+  if (getFromUrl("country") == null && getFromUrl("markerid") == null) {
+    map.setView([0, 0], 0);
+    document.getElementById("customContextMenu").style.display = "none"; // Hide the menu
+  }
 }
 
 function resetMap() {
