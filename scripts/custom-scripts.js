@@ -234,7 +234,6 @@ function fitPolygonOnScreen(polygon, map) {
   map.fitBounds(bounds);
 }
 
-
 function showCountry(selectedCountry) {
   if (countryPolygons[currentMap]) {
     selectedCountry = capitalizeFirstLetter(selectedCountry);
