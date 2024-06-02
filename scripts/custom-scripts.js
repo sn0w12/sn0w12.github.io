@@ -2140,7 +2140,9 @@ function setUp(dataUrl) {
       }
     })
     .then(() => {
-      centerMap();
+      if (getFromUrl("country") == null && getFromUrl("markerid") == null) {
+        centerMap();
+      }
     })
     .catch((error) => {
       console.error("Error loading the context menu:", error);
@@ -2324,10 +2326,8 @@ function clearContextMenu() {
 }
 
 function centerMap() {
-  if (getFromUrl("country") == null && getFromUrl("markerid") == null) {
-    map.setView([0, 0], 0);
-    document.getElementById("customContextMenu").style.display = "none"; // Hide the menu
-  }
+  map.setView([0, 0], 0);
+  document.getElementById("customContextMenu").style.display = "none"; // Hide the menu
 }
 
 function resetMap() {
