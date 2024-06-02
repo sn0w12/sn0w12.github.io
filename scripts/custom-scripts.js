@@ -2344,6 +2344,8 @@ function resetMap() {
     mapConfigurations[defaultMap].options[defaultSubMap].checkboxState,
     mapConfigurations[defaultMap].options[defaultSubMap].hideCheckboxes
   );
+
+  centerMap();
 }
 
 function isZoomMax() {
