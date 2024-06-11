@@ -142,6 +142,7 @@
         { map: arathia, name: "arathia" },
         { map: arathiaClean, name: "arathia clean" },
         { map: morturia, name: "morturia" },
+        { map: elysium, name: "elysium" },
       ];
 
       const countryColors = {
@@ -175,6 +176,7 @@
       var optionIdConversions = {
         arOption2: "arCleanOption2",
         moOption2: "moCleanOption2",
+        elOption2: "elCleanOption2",
       };
 
       const regionMap = {
@@ -316,6 +318,7 @@
       const regionToFull = {
         ar: ["arathia", "arOption1"],
         mo: ["morturia", "moOption1"],
+        el: ["elysium", "elOption1"],
         ar1213BR: ["arathia", "arOption2"],
       };
 
@@ -411,6 +414,15 @@
         "basePane",
         false
       );
+      var elysium = createMap(
+        "Main",
+        "elysium",
+        true,
+        2.5,
+        5.4,
+        "basePane",
+        false
+      );
       var arathiaBackground = createMap(
         "Main",
         "arathiaBackground",
@@ -429,8 +441,17 @@
         "backgroundPane",
         false
       );
+      var elysiumBackground = createMap(
+        "Main",
+        "elysiumBackground",
+        false,
+        2.5,
+        5.4,
+        "backgroundPane",
+        false
+      );
 
-      const backgrounds = [arathiaBackground, morturiaBackground];
+      const backgrounds = [arathiaBackground, morturiaBackground, elysiumBackground];
 
       // Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
       var defaultIconSettings = {
@@ -786,12 +807,21 @@
           important: L.layerGroup(),
           character: L.layerGroup(),
         },
+        el: {
+          capital: L.layerGroup(),
+          cityBig: L.layerGroup(),
+          citySmall: L.layerGroup(),
+          town: L.layerGroup(),
+          nature: L.layerGroup(),
+          important: L.layerGroup(),
+          character: L.layerGroup(),
+        },
       };
 
       //Marker Groups
       var dv_coord = L.layerGroup([marker, polygonMarker]);
 
-      const regionCodes = ["ar", "ar1213BR", "mo"];
+      const regionCodes = ["ar", "ar1213BR", "mo", "el"];
       const layerTypes = [
         "capital",
         "cityBig",
@@ -807,6 +837,7 @@
       var ar_all_layers = createLayerGroup(regionCodes[0], layerTypes);
       var ar1213BR_all_layers = createLayerGroup(regionCodes[1], layerTypes);
       var mo_all_layers = createLayerGroup(regionCodes[2], layerTypes);
+      var el_all_layers = createLayerGroup(regionCodes[3], layerTypes);
 
       //Marker Overlay
       var overlays = {
@@ -827,6 +858,15 @@
           Nature: regionLayerGroups["mo"]["nature"],
           Locations: regionLayerGroups["mo"]["important"],
           Characters: regionLayerGroups["mo"]["character"],
+        },
+        Elysium: {
+          Capitals: regionLayerGroups["el"]["capital"],
+          "Large Cities": regionLayerGroups["el"]["cityBig"],
+          "Small Cities": regionLayerGroups["el"]["citySmall"],
+          Towns: regionLayerGroups["el"]["town"],
+          Nature: regionLayerGroups["el"]["nature"],
+          Locations: regionLayerGroups["el"]["important"],
+          Characters: regionLayerGroups["el"]["character"],
         },
         "Arathia 1213 B.R": {
           Capitals: regionLayerGroups["ar1213BR"]["capital"],
@@ -849,6 +889,7 @@
         Arathia: arathia,
         "Arathia Clean": arathiaClean,
         Morturia: morturia,
+        Elysium: elysium,
       };
 
       //GROUP CONTROLS
@@ -867,6 +908,16 @@
       var controlSearchMo = new L.Control.Search({
         position: "topleft",
         layer: mo_all_layers,
+        zoom: 5,
+        initial: false,
+        marker: false,
+      }).on("search:locationfound", function (e) {
+        if (e.layer._popup) e.layer.openPopup();
+      });
+
+      var controlSearchEl = new L.Control.Search({
+        position: "topleft",
+        layer: el_all_layers,
         zoom: 5,
         initial: false,
         marker: false,
@@ -899,7 +950,7 @@
               show: [ar_all_layers, arathiaBackground],
               checkboxIndex: 0,
               checkboxState: true,
-              hideCheckboxes: [2, 3],
+              hideCheckboxes: [2, 3, 4],
               form: formHTML,
               defaultFormSelect: 0,
             },
@@ -907,9 +958,9 @@
               search: { controlSearch1: controlSearchAr1213BR },
               mapLayer: arathia1213BR,
               show: [ar1213BR_all_layers, arathiaBackground],
-              checkboxIndex: 2,
+              checkboxIndex: 3,
               checkboxState: true,
-              hideCheckboxes: [1, 2],
+              hideCheckboxes: [1, 2, 3],
               form: formHTML1213BR,
               defaultFormSelect: 0,
             },
@@ -929,7 +980,7 @@
               show: [arathiaBackground],
               checkboxIndex: 0,
               checkboxState: false,
-              hideCheckboxes: [2, 3],
+              hideCheckboxes: [2, 3, 4],
               form: formHTML,
               defaultFormSelect: 0,
             },
@@ -939,7 +990,7 @@
               show: [arathiaBackground],
               checkboxIndex: 2,
               checkboxState: false,
-              hideCheckboxes: [1, 2],
+              hideCheckboxes: [1, 2, 3],
               form: formHTML1213BR,
               defaultFormSelect: 0,
             },
@@ -959,7 +1010,7 @@
               show: [mo_all_layers, morturiaBackground],
               checkboxIndex: 1,
               checkboxState: true,
-              hideCheckboxes: [1, 3],
+              hideCheckboxes: [1, 3, 4],
               form: formHTML,
               defaultFormSelect: 0,
             },
@@ -969,7 +1020,7 @@
               show: [mo_all_layers, morturiaBackground],
               checkboxIndex: 1,
               checkboxState: true,
-              hideCheckboxes: [1, 3],
+              hideCheckboxes: [1, 3, 4],
               form: formHTML1213BR,
               defaultFormSelect: 0,
             },
@@ -989,7 +1040,7 @@
               show: [mo_all_layers, morturiaBackground],
               checkboxIndex: 1,
               checkboxState: true,
-              hideCheckboxes: [1, 3],
+              hideCheckboxes: [1, 3, 4],
               form: formHTML,
               defaultFormSelect: 0,
             },
@@ -999,13 +1050,43 @@
               show: [morturiaBackground],
               checkboxIndex: 1,
               checkboxState: true,
-              hideCheckboxes: [1, 3],
+              hideCheckboxes: [1, 3, 4],
               form: formHTML1213BR,
               defaultFormSelect: 0,
             },
           },
           current: morturia,
           defaultOptionId: "moCleanOption1",
+          northPoleCorrection: 0.6437979938976461,
+          southPoleCorrection: 0.6934982662543344,
+          meterConversion: 1000,
+        },
+        Elysium: {
+          color: "#31565a",
+          options: {
+            elOption1: {
+              search: { controlSearch1: controlSearchEl },
+              mapLayer: elysium,
+              show: [el_all_layers, elysiumBackground],
+              checkboxIndex: 2,
+              checkboxState: true,
+              hideCheckboxes: [1, 2, 4],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+            elOption2: {
+              search: { controlSearch1: controlSearchEl },
+              mapLayer: elysium,
+              show: [el_all_layers, elysiumBackground],
+              checkboxIndex: 2,
+              checkboxState: true,
+              hideCheckboxes: [1, 2, 4],
+              form: formHTML,
+              defaultFormSelect: 0,
+            },
+          },
+          current: elysium,
+          defaultOptionId: "elOption1",
           northPoleCorrection: 0.6437979938976461,
           southPoleCorrection: 0.6934982662543344,
           meterConversion: 1000,
@@ -1050,6 +1131,11 @@
           case "Morturia": {
             createSelect("1257 A.A", "moOption1", dropdown);
             createSelect("???", "moOption2", dropdown);
+            break;
+          }
+          case "Elysium": {
+            createSelect("1257 A.A", "elOption1", dropdown);
+            createSelect("???", "elOption2", dropdown);
             break;
           }
         }
