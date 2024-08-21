@@ -59,10 +59,10 @@ function generatePopupContent(
   const img2 =
     '<img style="height:3px;width: 75%; display: block; margin-left: auto; margin-right: auto; margin-bottom: -14px; margin-top: -2px;" src="images/divider_small.png" alt="map popup divider">';
 
-  const customImg = customImage ? 
+  const customImg = customImage ?
     `<img style="height: ${fontIncrease - 0.25}em; width: auto;" src="${customImage.url}" alt="${customImage.alt}" onerror="this.style.display='none';">` :
-    (region && regionMap[region] && regionMap[region]["titleImg"] ? 
-      `<img style="height: ${fontIncrease - 0.25}em; width: auto;" src="${regionMap[region]["titleImg"].url}" alt="${regionMap[region]["titleImg"].alt}" onerror="this.style.display='none';">` : 
+    (region && regionMap[region] && regionMap[region]["titleImg"] ?
+      `<img style="height: ${fontIncrease - 0.25}em; width: auto;" src="${regionMap[region]["titleImg"].url}" alt="${regionMap[region]["titleImg"].alt}" onerror="this.style.display='none';">` :
       '');
 
   return `
@@ -884,6 +884,10 @@ function onMouseMove(e) {
   }
 }
 
+function getTooltipId(tooltip) {
+  return tooltip.replace(/\s+/g, '-');
+}
+
 function displayPolygon(
   polygon,
   region,
@@ -929,12 +933,12 @@ function displayPolygon(
           sticky: true,
           offset: [5, 0],
           opacity: 0,
-          className: `custom-context-menu tooltip ${toolTipTitle}`
+          className: `custom-context-menu tooltip ${getTooltipId(toolTipTitle)}`
         });
       }
     }
   }).addTo(map);
-  
+
   if (url) {
     // Change the style on hover to indicate interactivity
     geoJsonLayer.on("mouseover", function () {
@@ -961,7 +965,7 @@ function displayPolygon(
       // Reset dragging flag and store the starting position of the mouse
       isDragging = false;
       startPosition = { x: e.originalEvent.clientX, y: e.originalEvent.clientY };
-    
+
       // Listen for mousemove on the document to detect dragging
       document.addEventListener('mousemove', onMouseMove);
     });
@@ -969,24 +973,24 @@ function displayPolygon(
     geoJsonLayer.on("mouseup", function (e) {
       // Remove the mousemove listener in case the mouse didn't move enough to be considered dragging
       document.removeEventListener('mousemove', onMouseMove);
-    
+
       if (!isDragging && e.originalEvent.button === 1) { // Middle mouse button
         map.dragging.disable();
-    
+
         // Event listener to re-enable dragging once the window regains focus
         const enableDraggingOnFocus = () => {
           map.dragging.enable();
           window.removeEventListener('focus', enableDraggingOnFocus);
         };
-    
+
         window.addEventListener('focus', enableDraggingOnFocus);
-    
+
         window.open(url, "_blank");
       }
-    
+
       // Reset startPosition for the next mousedown event
       startPosition = null;
-    });   
+    });
 
     geoJsonLayer.on("contextmenu", function (e) {
       e.originalEvent.stopPropagation();
@@ -1015,18 +1019,18 @@ function displayPolygon(
 
       displayContextMenu(e, customizeContextMenuForGeo);
     });
-  } 
-  
+  }
+
   if (toolTipTitle != null) {
     geoJsonLayer.on("mouseover", function () {
-      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.tooltip.${toolTipTitle}`);
+      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.tooltip.${getTooltipId(toolTipTitle)}`);
       if (tooltipElement) {
         tooltipElement.style.opacity = '1';
       }
     });
 
     geoJsonLayer.on("mouseout", function () {
-      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.tooltip.${toolTipTitle}`);
+      let tooltipElement = document.querySelector(`.leaflet-tooltip.custom-context-menu.tooltip.${getTooltipId(toolTipTitle)}`);
       if (tooltipElement) {
         tooltipElement.style.opacity = '0';
       }
@@ -1800,12 +1804,16 @@ document.addEventListener("change", function (event) {
     switch(radioButton.value) {
       case "displayOption1":
         clearAllCustomVectors();
-        addReligionPolygons();
-        break
+        addPolygons(religionPolygons);
+        break;
       case "displayOption2":
         clearAllCustomVectors();
         drawFrontLines();
-        break
+        break;
+      case "displayOption3":
+        clearAllCustomVectors();
+        addPolygons(regionPolygons);
+        break;
     }
   }
 });
@@ -2027,29 +2035,29 @@ function addCityPolygons() {
   }
 }
 
-function addReligionPolygons() {
-  if (typeof religionPolygons != "undefined") {
+function addPolygons(dataPolygons) {
+  if (typeof dataPolygons !== "undefined") {
     // Access the relevant polygons for the current map and selected option
     if (
-      religionPolygons[currentMap] &&
-      typeof religionPolygons[currentMap][selectedOptionId] != "undefined"
+      dataPolygons[currentMap] &&
+      typeof dataPolygons[currentMap][selectedOptionId] !== "undefined"
     ) {
-      const options = religionPolygons[currentMap][selectedOptionId];
-      
-      // Iterate through the options object to get each city's details
-      for (const religion in options) {
-        const religionDetails = options[religion];
+      const options = dataPolygons[currentMap][selectedOptionId];
 
-        // Extract the polygon and URL for the current city
-        const polygon = religionDetails.points;
-        const region = religionDetails.region;
-        const url = religionDetails.url;
+      // Iterate through the options object to get each entity's details
+      for (const entity in options) {
+        const entityDetails = options[entity];
 
-        const religionPolygon = displayPolygon(polygon, region, false, null, 0.2, 1, url, religion, 'overlayPane');
-        customVectors.push(religionPolygon);
+        // Extract the polygon and URL for the current entity
+        const polygon = entityDetails.points;
+        const country = entityDetails.country;
+        const url = entityDetails.url;
+
+        const polygonElement = displayPolygon(polygon, country, false, null, 0.2, 1, url, entity.toString(), 'overlayPane');
+        customVectors.push(polygonElement);
       }
     } else {
-      console.warn("No config found for:", currentMap, selectedOptionId);
+      console.warn(`No config found for:`, currentMap, selectedOptionId);
     }
   }
 }
@@ -2611,7 +2619,7 @@ function addRadioButtons(checked) {
     if (clickDeselect) {
       // Custom attribute to track last clicked radio button
       radio.setAttribute('data-last-clicked', 'false');
-  
+
       radio.addEventListener('click', function(e) {
         // If this was the last clicked radio button and it is checked, uncheck it
         if (this.getAttribute('data-last-clicked') === 'true' && this.checked) {
