@@ -9,6 +9,7 @@ html {
   padding: 0;
   height: 100%;
   font-family: Arial, sans-serif;
+  overflow: hidden;
 }
 
 .background {
@@ -145,10 +146,6 @@ html {
 }
 
 @media only screen and (max-width: 600px) {
-  .background {
-    background-position: -30% center;
-  }
-
   .content {
     flex-wrap: wrap;
     justify-content: center;
