@@ -2,33 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="icons/arathia.png">
+    <link rel="icon" href="./images/arathia.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arathia</title>
     <link rel="stylesheet" href="style/homepage.css">
 </head>
 <body>
-    <header class="header">
-        <h1>Arathia</h1>
-    </header>
+    <div class="background">
+        <!-- Background content or image applied through CSS -->
+    </div>
 
-    <main class="main">
-        <section id="description">
-            <h2>Welcome to Arathia</h2>
-            <p>Arathia is a vibrant fantasy world filled with magic, mystery, and adventure. Explore the rich history, diverse cultures, and breathtaking landscapes that make Arathia unforgettable.</p>
-        </section>
+    <div class="content top-mid-left">
+        <div class="text-content">
+            <h1 class="header">Arathia</h1>
+            <div class="separator"></div>
+            <!-- <div class="separator wide"></div>
+            <div class="separator wide"></div>
+            <div class="separator"></div> -->
+            <ul class="subheaders">
+                <li><a href="/wiki" class="subheader-link">Wiki</a></li>
+                <li><a href="/world" class="subheader-link">Map</a></li>
+                <li><a href="/timeline" class="subheader-link">Timeline</a></li>
+            </ul>
+        </div>
 
-        <section id="features" class="features">
-            <h3>Explore More</h3>
-            <a href="/world" class="map">Map</a>
-            <a href="/wiki" class="wiki">Wiki</a>
-            <a href="/characters" class="characters">Character Catalog</a>
-            <a href="/timeline" class="timeline">Timeline</a>
-        </section>
-    </main>
+        <img src="./images/Antaria.svg" id="arathia-svg" alt="SVG Image" class="svg-image">
+    </div>
 
-    <footer class="footer">
-        &copy; 2024 Arathia Project. All rights reserved.
-    </footer>
+    <script src="scripts/homepage.js"></script>
 </body>
 </html>
