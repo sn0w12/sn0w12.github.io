@@ -9,7 +9,13 @@
 </head>
 <body>
     <div class="background">
-        <!-- Background content or image applied through CSS -->
+        <picture>
+            <source media="(max-width: 1400px)" srcset="./images/home-background-25.webp" />
+            <source media="(max-width: 2800px)" srcset="./images/home-background-50.webp" />
+            <source media="(max-width: 4200px)" srcset="./images/home-background-75.webp" />
+            <source media="(min-width: 4201px)" srcset="./images/home-background-100.webp" />
+            <img src="./images/home-background-100.webp" alt="" loading="lazy" />
+        </picture>
     </div>
 
     <div class="content top-mid-left">
@@ -27,6 +33,12 @@
         </div>
 
         <img src="./images/Antaria.svg" id="arathia-svg" alt="SVG Image" class="svg-image">
+    </div>
+
+    <div class="footer bottom-left">
+        <p>&copy; 2024 Arathia Project. All rights reserved.</p>
+        <div class="separator med"></div>
+        <p>Art by <a href="https://www.artstation.com/winterkeep">Ben J</a></p>
     </div>
 
     <script src="scripts/homepage.js"></script>
