@@ -145,5 +145,8 @@
   "license": "BSD-2-Clause",
   "lint-staged": {
     "*.(js|md)": "eslint --cache --fix"
+  },
+  "dependencies": {
+    "leaflet": "file:"
   }
 }

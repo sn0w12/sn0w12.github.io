@@ -1661,11 +1661,92 @@ function updateIcons(currentMap, iconChecked) {
     refreshAllMarkers(suffix);
 }
 
-function createSelect(year, optionId, dropdown) {
-    let option = document.createElement("option");
-    option.id = optionId; // Use the optionId parameter
+function createSelect(year, optionId, dropdown, yearSelector) {
+    let option = document.createElement("div");
+    option.className = "custom-dropdown-item";
+    option.id = optionId;
     option.textContent = year;
+    option.setAttribute("data-value", year);
+
+    if (!yearSelector.options) {
+        yearSelector.options = [];
+        dropdown.selectedIndex = 0;
+    }
+
+    yearSelector.options.push({
+        id: optionId,
+        value: year,
+        text: year,
+    });
+
     dropdown.appendChild(option);
+}
+
+function createYearSelector() {
+    // Create custom dropdown container
+    var dropdownContainer = document.createElement("div");
+    dropdownContainer.className = "custom-dropdown-container";
+    dropdownContainer.id = "YearSelector";
+
+    // Create selected value display
+    var selectedDisplay = document.createElement("div");
+    selectedDisplay.className = "custom-dropdown-selected";
+    selectedDisplay.textContent = "Select Year";
+
+    // Create options container
+    var optionsContainer = document.createElement("div");
+    optionsContainer.className = "custom-dropdown-options";
+
+    selectedDisplay.addEventListener("click", function (e) {
+        e.stopPropagation();
+        optionsContainer.classList.toggle("show");
+    });
+
+    optionsContainer.addEventListener("click", function (e) {
+        if (e.target.classList.contains("custom-dropdown-item")) {
+            dropdownContainer.selectedIndex =
+                dropdownContainer.options.findIndex(
+                    (opt) => opt.id === e.target.id
+                );
+            selectedOptionId = e.target.id;
+            dropdownContainer.dispatchEvent(new Event("change"));
+            selectedDisplay.textContent = e.target.textContent;
+            optionsContainer.classList.toggle("show");
+        }
+    });
+
+    return { dropdownContainer, optionsContainer, selectedDisplay };
+}
+
+function setYearSelectorOption(
+    dropdownContainer,
+    optionsContainer,
+    selectedDisplay
+) {
+    const firstOption = optionsContainer.querySelector(".custom-dropdown-item");
+    if (firstOption) {
+        if (selectedOptionId) {
+            // Find option matching selectedOptionId
+            const selectedOption = dropdownContainer.options.find(
+                (opt) => opt.id === selectedOptionId
+            );
+            if (selectedOption) {
+                selectedDisplay.textContent = selectedOption.text;
+                dropdownContainer.selectedIndex =
+                    dropdownContainer.options.findIndex(
+                        (opt) => opt.id === selectedOptionId
+                    );
+            } else {
+                // Fall back to first option if no match
+                selectedDisplay.textContent = firstOption.textContent;
+                dropdownContainer.selectedIndex = 0;
+            }
+        } else {
+            // Fall back to first option if no selectedOptionId
+            selectedDisplay.textContent = firstOption.textContent;
+            dropdownContainer.selectedIndex = 0;
+        }
+    }
 }
 
 function createControlButton(
@@ -1941,7 +2022,7 @@ function performActions(
     addYearSelect();
     document
         .getElementById("YearSelector")
-        .addEventListener("change", updateSelectedOptionId);
+        .addEventListener("change", changeMapToSelected);
     setYearSelectorToLastDropdown();
     addCityPolygons();
     clearAllCustomVectors();
@@ -1958,14 +2039,6 @@ function changeMapToSelected() {
         mapConfigurations[currentMap].options[selectedOption].checkboxState,
         mapConfigurations[currentMap].options[selectedOption].hideCheckboxes
     );
-}
-
-// Function to update the variable with the selected option's ID
-function updateSelectedOptionId() {
-    let dropdown = document.getElementById("YearSelector");
-    selectedOptionId = dropdown.options[dropdown.selectedIndex].id;
-
-    changeMapToSelected();
 }
 
 function setYearSelectorToLastDropdown() {

@@ -1,650 +1,664 @@
 <!DOCTYPE html>
-<html style="height: 100%;">
-  <head>
-    <title>Arathia World Map</title>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="images/arathia.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="scripts/leaflet.css" />
-    <link rel="stylesheet" href="scripts/src/leaflet.groupedlayercontrol.css" />
-    <link
-      rel="stylesheet"
-      href="scripts/leaflet-search/src/leaflet-search.css"
-    />
-    <link rel="stylesheet" href="style/style.css" />
-    <script src="scripts/leaflet.js"></script>
-    <script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
-    <script src="scripts/leaflet-search/src/leaflet-search.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.0.0/Leaflet.Editable.min.js"></script>
-    <script src="scripts/leaflet-polycolor.min.js"></script>
-    <script src="scripts/line-arrow.js"></script>
+<html style="height: 100%">
+    <head>
+        <title>Arathia World Map</title>
+        <meta charset="UTF-8" />
+        <link rel="icon" href="images/arathia.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="scripts/leaflet.css" />
+        <link
+            rel="stylesheet"
+            href="scripts/src/leaflet.groupedlayercontrol.css"
+        />
+        <link
+            rel="stylesheet"
+            href="scripts/leaflet-search/src/leaflet-search.css"
+        />
+        <link rel="stylesheet" href="style/style.css" />
+        <script src="scripts/leaflet.js"></script>
+        <script src="scripts/src/leaflet.groupedlayercontrol.js"></script>
+        <script src="scripts/leaflet-search/src/leaflet-search.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.0.0/Leaflet.Editable.min.js"></script>
+        <script src="scripts/leaflet-polycolor.min.js"></script>
+        <script src="scripts/line-arrow.js"></script>
 
-    <link rel="preload" href="images/border.png" as="image">
-    <link rel="preload" href="images/export1.png" as="image">
-    <link rel="preload" href="images/export2.png" as="image">
-    <link rel="preload" href="images/import1.png" as="image">
-    <link rel="preload" href="images/import2.png" as="image">
-    <link rel="preload" href="images/web1.png" as="image">
-    <link rel="preload" href="images/web2.png" as="image">
-    <link rel="preload" href="images/city1.png" as="image">
-    <link rel="preload" href="images/city2.png" as="image">
-    <link rel="preload" href="images/divider.png" as="image">
-    <link rel="preload" href="images/divider_small.png" as="image">
-    <link rel="preload" href="images/AntariaFlag.png" as="image">
-    <link rel="preload" href="images/AzurithFlag.png" as="image">
-    <link rel="preload" href="images/DryadalisFlag.png" as="image">
-    <link rel="preload" href="images/FreePeopleFlag.png" as="image">
-    <link rel="preload" href="images/GoldenOrderFlag.png" as="image">
-    <link rel="preload" href="images/OdrheimrFlag.png" as="image">
-    <link rel="preload" href="images/PrimoriaFlag.png" as="image">
-    <link rel="preload" href="images/RheinlandFlag.png" as="image">
-    <link rel="preload" href="images/SeraphyriaFlag.png" as="image">
-    <link rel="preload" href="images/TsukiFlag.png" as="image">
-    <link rel="preload" href="images/TunglheimrFlag.png" as="image">
-  </head>
+        <link rel="preload" href="images/border.png" as="image" />
+        <link rel="preload" href="images/export1.png" as="image" />
+        <link rel="preload" href="images/export2.png" as="image" />
+        <link rel="preload" href="images/import1.png" as="image" />
+        <link rel="preload" href="images/import2.png" as="image" />
+        <link rel="preload" href="images/web1.png" as="image" />
+        <link rel="preload" href="images/web2.png" as="image" />
+        <link rel="preload" href="images/city1.png" as="image" />
+        <link rel="preload" href="images/city2.png" as="image" />
+        <link rel="preload" href="images/divider.png" as="image" />
+        <link rel="preload" href="images/divider_small.png" as="image" />
+        <link rel="preload" href="images/AntariaFlag.png" as="image" />
+        <link rel="preload" href="images/AzurithFlag.png" as="image" />
+        <link rel="preload" href="images/DryadalisFlag.png" as="image" />
+        <link rel="preload" href="images/FreePeopleFlag.png" as="image" />
+        <link rel="preload" href="images/GoldenOrderFlag.png" as="image" />
+        <link rel="preload" href="images/OdrheimrFlag.png" as="image" />
+        <link rel="preload" href="images/PrimoriaFlag.png" as="image" />
+        <link rel="preload" href="images/RheinlandFlag.png" as="image" />
+        <link rel="preload" href="images/SeraphyriaFlag.png" as="image" />
+        <link rel="preload" href="images/TsukiFlag.png" as="image" />
+        <link rel="preload" href="images/TunglheimrFlag.png" as="image" />
+    </head>
 
-  <body style="height: 100%; margin: 0; overflow-y: hidden; overflow-x: hidden">
-    <div id="map" style="width: 100%; height: 100%; background: #31565a"></div>
-    <a
-      class="leaflet-control-zoom-out"
-      href="index"
-      title="Zoom out"
-      role="button"
-      aria-label="Zoom out"
-      aria-disabled="false"
-      ><span aria-hidden="true">−</span></a
+    <body
+        style="height: 100%; margin: 0; overflow-y: hidden; overflow-x: hidden"
     >
-    <script src="data/markers/worldPolygons.js"></script>
-    <script src="scripts/custom-scripts.js"></script>
-    <script type="text/javascript">
-      // MAPS
-      var radioButtonsInfo = [
-        {
-          label: "Default Icons",
-          option: "option1",
-          checkedIndex: 1,
-          suffix: "",
-        },
-        {
-          label: "Old Icons",
-          option: "option2",
-          checkedIndex: 2,
-          suffix: "Old",
-        },
-        {
-          label: "Simple Icons",
-          option: "option3",
-          checkedIndex: 3,
-          suffix: "Simple",
-        },
-      ];
+        <div
+            id="map"
+            style="width: 100%; height: 100%; background: #31565a"
+        ></div>
+        <a
+            class="leaflet-control-zoom-out"
+            href="index"
+            title="Zoom out"
+            role="button"
+            aria-label="Zoom out"
+            aria-disabled="false"
+            ><span aria-hidden="true">−</span></a
+        >
+        <script src="data/markers/worldPolygons.js"></script>
+        <script src="scripts/custom-scripts.js"></script>
+        <script type="text/javascript">
+            // MAPS
+            var radioButtonsInfo = [
+                {
+                    label: "Default Icons",
+                    option: "option1",
+                    checkedIndex: 1,
+                    suffix: "",
+                },
+                {
+                    label: "Old Icons",
+                    option: "option2",
+                    checkedIndex: 2,
+                    suffix: "Old",
+                },
+                {
+                    label: "Simple Icons",
+                    option: "option3",
+                    checkedIndex: 3,
+                    suffix: "Simple",
+                },
+            ];
 
-      var displaySettings = [
-        {
-          label: "Religion",
-          option: "displayOption1",
-          checkedIndex: 4,
-          clickDeselect: true,
-        },
-        {
-          label: "Frontlines",
-          option: "displayOption2",
-          checkedIndex: 5,
-          clickDeselect: true,
-        },
-        {
-          label: "Regions",
-          option: "displayOption3",
-          checkedIndex: 6,
-          clickDeselect: true,
-        },
-      ];
+            var displaySettings = [
+                {
+                    label: "Religion",
+                    option: "displayOption1",
+                    checkedIndex: 4,
+                    clickDeselect: true,
+                },
+                {
+                    label: "Frontlines",
+                    option: "displayOption2",
+                    checkedIndex: 5,
+                    clickDeselect: true,
+                },
+                {
+                    label: "Regions",
+                    option: "displayOption3",
+                    checkedIndex: 6,
+                    clickDeselect: true,
+                },
+            ];
 
-      const buttonsConfig = [
-        {
-          href: "wiki",
-          tooltip: "Opens the Wiki",
-          iconDefault: "images/web1.png",
-          iconHover: "images/web2.png",
-          action: (e) => {
-            e.preventDefault();
-            window.open("wiki", "_blank");
-          }
-        },
-        {
-          href: "cities",
-          tooltip: "Opens the city map",
-          iconDefault:"images/city1.png",
-          iconHover: "images/city2.png",
-          action: (e) => {
-            e.preventDefault();
-            window.open("cities");
-          }
-        },
-        {
-          href: "export",
-          tooltip: "Export JSON",
-          iconDefault: "images/export1.png",
-          iconHover: "images/export2.png",
-          action: (e) => {
-            e.preventDefault();
-            exportMarkersToJson();
-          }
-        },
-        {
-          href: "import",
-          tooltip: "Import JSON",
-          iconDefault: "images/import1.png",
-          iconHover: "images/import2.png",
-          action: (e) => {
-            e.preventDefault();
-            fileInput.click();
-          }
-        }
-      ];
+            const buttonsConfig = [
+                {
+                    href: "wiki",
+                    tooltip: "Opens the Wiki",
+                    iconDefault: "images/web1.png",
+                    iconHover: "images/web2.png",
+                    action: (e) => {
+                        e.preventDefault();
+                        window.open("wiki", "_blank");
+                    },
+                },
+                {
+                    href: "cities",
+                    tooltip: "Opens the city map",
+                    iconDefault: "images/city1.png",
+                    iconHover: "images/city2.png",
+                    action: (e) => {
+                        e.preventDefault();
+                        window.open("cities");
+                    },
+                },
+                {
+                    href: "export",
+                    tooltip: "Export JSON",
+                    iconDefault: "images/export1.png",
+                    iconHover: "images/export2.png",
+                    action: (e) => {
+                        e.preventDefault();
+                        exportMarkersToJson();
+                    },
+                },
+                {
+                    href: "import",
+                    tooltip: "Import JSON",
+                    iconDefault: "images/import1.png",
+                    iconHover: "images/import2.png",
+                    action: (e) => {
+                        e.preventDefault();
+                        fileInput.click();
+                    },
+                },
+            ];
 
-      var neededMaps = [
-        { map: arathia, name: "arathia" },
-        { map: arathiaClean, name: "arathia clean" },
-        { map: morturia, name: "morturia" },
-        { map: elysium, name: "elysium" },
-      ];
+            var neededMaps = [
+                { map: arathia, name: "arathia" },
+                { map: arathiaClean, name: "arathia clean" },
+                { map: morturia, name: "morturia" },
+                { map: elysium, name: "elysium" },
+            ];
 
-      const countryColors = {
-        Antaria: "#cc0000",
-        Primoria: "#674ea7",
-        Dryadalis: "#6aa84f",
-        Gigantoria: "#d5a6bd",
-        "Trade Company": "#ffd966",
-        Odrheim: "#a64d79",
-        Tunglheimr: "#45818e",
-        Arcarum: "#8e7cc3",
-        "Golden Order": "#f3cc52",
-        "Free People of Antaria": "#a61c00",
-        Rheinland: "#666666",
-        Azurith: "#e69138",
-        Tsuki: "#3c78d8",
-        Seraphyria: "#cc0000",
-        Talasir: "#3c78d8",
-        Thyrania: "#6aa84f",
-      };
+            const countryColors = {
+                Antaria: "#cc0000",
+                Primoria: "#674ea7",
+                Dryadalis: "#6aa84f",
+                Gigantoria: "#d5a6bd",
+                "Trade Company": "#ffd966",
+                Odrheim: "#a64d79",
+                Tunglheimr: "#45818e",
+                Arcarum: "#8e7cc3",
+                "Golden Order": "#f3cc52",
+                "Free People of Antaria": "#a61c00",
+                Rheinland: "#666666",
+                Azurith: "#e69138",
+                Tsuki: "#3c78d8",
+                Seraphyria: "#cc0000",
+                Talasir: "#3c78d8",
+                Thyrania: "#6aa84f",
+            };
 
-      var oldSuffix = "";
-      var currentSelectedMap = arathia;
-      var selectedOptionId = "arOption1";
-      var iconChecked = 1;
-      var currentMap = "Arathia";
-      var currentSelectedCategories =
-        "capitals-largecities-smallcities-towns-nature-locations-characters";
+            var oldSuffix = "";
+            var currentSelectedMap = arathia;
+            var selectedOptionId = "arOption1";
+            var iconChecked = 1;
+            var currentMap = "Arathia";
+            var currentSelectedCategories =
+                "capitals-largecities-smallcities-towns-nature-locations-characters";
 
-      // Define a map to convert between optionIds when switching map types
-      var optionIdConversions = {
-        arOption2: "arCleanOption2",
-        moOption2: "moCleanOption2",
-        elOption2: "elCleanOption2",
-      };
+            // Define a map to convert between optionIds when switching map types
+            var optionIdConversions = {
+                arOption2: "arCleanOption2",
+                moOption2: "moCleanOption2",
+                elOption2: "elCleanOption2",
+            };
 
-      const regionMap = {
-        arathia: {
-          region: "ar",
-          titleImg: {
-            url: "images/AntariaFlag.png",
-            alt: "Antarian Flag"
-          }
-        },
-        an: {
-          region: "ar",
-          titleImg: {
-            url: "images/AntariaFlag.png",
-            alt: "Antarian Flag"
-          }
-        },
-        od: {
-          region: "ar",
-          titleImg: {
-            url: "images/OdrheimrFlag.png",
-            alt: "Odrheimr Flag"
-          }
-        },
-        th: {
-          region: "ar",
-          titleImg: {
-            url: "images/TunglheimrFlag.png",
-            alt: "Tunglheimr Flag"
-          }
-        },
-        rh: {
-          region: "ar",
-          titleImg: {
-            url: "images/RheinlandFlag.png",
-            alt: "Rheinland Flag"
-          }
-        },
-        az: {
-          region: "ar",
-          titleImg: {
-            url: "images/AzurithFlag.png",
-            alt: "Azurith Flag"
-          }
-        },
-        ts: {
-          region: "ar",
-          titleImg: {
-            url: "images/TsukiFlag.png",
-            alt: "Tsuki Flag"
-          }
-        },
-        pr: {
-          region: "ar",
-          titleImg: {
-            url: "images/PrimoriaFlag.png",
-            alt: "Primorian Flag"
-          }
-        },
-        dr: {
-          region: "ar",
-          titleImg: {
-            url: "images/DryadalisFlag.png",
-            alt: "Dryadalis Flag"
-          }
-        },
-        tc: {
-          region: "ar",
-          titleImg: {
-            url: "images/TradeCompanyFlag.png",
-            alt: "Trade Company Flag"
-          }
-        },
-        gi: {
-          region: "ar",
-          titleImg: {
-            url: "images/GigantoriaFlag.png",
-            alt: "Gigantoria Flag"
-          }
-        },
-        ac: {
-          region: "ar",
-          titleImg: {
-            url: "images/ArcarumFlag.png",
-            alt: "Arcarum Flag"
-          }
-        },
-        go: {
-          region: "ar",
-          titleImg: {
-            url: "images/GoldenOrderFlag.png",
-            alt: "Golden Order Flag"
-          }
-        },
-        fp: {
-          region: "ar",
-          titleImg: {
-            url: "images/FreePeopleFlag.png",
-            alt: "Free People Flag"
-          }
-        },
-        se: {
-          region: "ar1213BR",
-          titleImg: {
-            url: "images/SeraphyriaFlag.png",
-            alt: "Seraphyrian Flag"
-          }
-        },
-        ta: {
-          region: "ar1213BR",
-          titleImg: {
-            url: "images/TalasirFlag.png",
-            alt: "Talasir Flag"
-          }
-        },
-        ty: {
-          region: "ar1213BR",
-          titleImg: {
-            url: "images/ThyraniaFlag.png",
-            alt: "Thyranian Flag"
-          }
-        },
-        da: {
-          region: "ar1213BR",
-          titleImg: {
-            url: "images/DrakoriaFlag.png",
-            alt: "Drakorian Flag"
-          }
-        },
-        sc: {
-          region: "mo",
-          titleImg: {
-            url: "images/ScientiaFlag.png",
-            alt: "Scientian Flag"
-          }
-        }
-      };
+            const regionMap = {
+                arathia: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/AntariaFlag.png",
+                        alt: "Antarian Flag",
+                    },
+                },
+                an: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/AntariaFlag.png",
+                        alt: "Antarian Flag",
+                    },
+                },
+                od: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/OdrheimrFlag.png",
+                        alt: "Odrheimr Flag",
+                    },
+                },
+                th: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/TunglheimrFlag.png",
+                        alt: "Tunglheimr Flag",
+                    },
+                },
+                rh: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/RheinlandFlag.png",
+                        alt: "Rheinland Flag",
+                    },
+                },
+                az: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/AzurithFlag.png",
+                        alt: "Azurith Flag",
+                    },
+                },
+                ts: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/TsukiFlag.png",
+                        alt: "Tsuki Flag",
+                    },
+                },
+                pr: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/PrimoriaFlag.png",
+                        alt: "Primorian Flag",
+                    },
+                },
+                dr: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/DryadalisFlag.png",
+                        alt: "Dryadalis Flag",
+                    },
+                },
+                tc: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/TradeCompanyFlag.png",
+                        alt: "Trade Company Flag",
+                    },
+                },
+                gi: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/GigantoriaFlag.png",
+                        alt: "Gigantoria Flag",
+                    },
+                },
+                ac: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/ArcarumFlag.png",
+                        alt: "Arcarum Flag",
+                    },
+                },
+                go: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/GoldenOrderFlag.png",
+                        alt: "Golden Order Flag",
+                    },
+                },
+                fp: {
+                    region: "ar",
+                    titleImg: {
+                        url: "images/FreePeopleFlag.png",
+                        alt: "Free People Flag",
+                    },
+                },
+                se: {
+                    region: "ar1213BR",
+                    titleImg: {
+                        url: "images/SeraphyriaFlag.png",
+                        alt: "Seraphyrian Flag",
+                    },
+                },
+                ta: {
+                    region: "ar1213BR",
+                    titleImg: {
+                        url: "images/TalasirFlag.png",
+                        alt: "Talasir Flag",
+                    },
+                },
+                ty: {
+                    region: "ar1213BR",
+                    titleImg: {
+                        url: "images/ThyraniaFlag.png",
+                        alt: "Thyranian Flag",
+                    },
+                },
+                da: {
+                    region: "ar1213BR",
+                    titleImg: {
+                        url: "images/DrakoriaFlag.png",
+                        alt: "Drakorian Flag",
+                    },
+                },
+                sc: {
+                    region: "mo",
+                    titleImg: {
+                        url: "images/ScientiaFlag.png",
+                        alt: "Scientian Flag",
+                    },
+                },
+            };
 
-      const regionToFull = {
-        ar: ["arathia", "arOption1"],
-        mo: ["morturia", "moOption1"],
-        el: ["elysium", "elOption1"],
-        ar1213BR: ["arathia", "arOption2"],
-      };
+            const regionToFull = {
+                ar: ["arathia", "arOption1"],
+                mo: ["morturia", "moOption1"],
+                el: ["elysium", "elOption1"],
+                ar1213BR: ["arathia", "arOption2"],
+            };
 
-      var southWest = L.latLng(-70, -170),
-        northEast = L.latLng(70, 170),
-        bounds = L.latLngBounds(southWest, northEast);
+            var southWest = L.latLng(-70, -170),
+                northEast = L.latLng(70, 170),
+                bounds = L.latLngBounds(southWest, northEast);
 
-      worldSize = 126000000 * 2.005012531328321;
-      const maxLatitude = 70; // Maximum latitude considered in the model
-      const useFlatDistance = false;
-      polygonScale = 0.19;
+            worldSize = 126000000 * 2.005012531328321;
+            const maxLatitude = 70; // Maximum latitude considered in the model
+            const useFlatDistance = false;
+            polygonScale = 0.19;
 
-      //Creating the Map
-      var map = L.map("map", {
-        maxBounds: bounds,
-        zoomSnap: 0.1,
-        zoomDelta: 0.5,
-        wheelPxPerZoomLevel: 120,
-        preferCanvas: true,
-      }).setView([0, 0], 0);
+            //Creating the Map
+            var map = L.map("map", {
+                maxBounds: bounds,
+                zoomSnap: 0.1,
+                zoomDelta: 0.5,
+                wheelPxPerZoomLevel: 120,
+                preferCanvas: true,
+            }).setView([0, 0], 0);
 
-      map.createPane("overlayPane");
-      map.createPane("addPane");
-      map.createPane("basePane");
-      map.createPane("backgroundPane");
+            map.createPane("overlayPane");
+            map.createPane("addPane");
+            map.createPane("basePane");
+            map.createPane("backgroundPane");
 
-      map.getPane("overlayPane").style.zIndex = 300;
-      map.getPane("addPane").style.zIndex = 250;
-      map.getPane("basePane").style.zIndex = 220;
-      map.getPane("backgroundPane").style.zIndex = 150;
+            map.getPane("overlayPane").style.zIndex = 300;
+            map.getPane("addPane").style.zIndex = 250;
+            map.getPane("basePane").style.zIndex = 220;
+            map.getPane("backgroundPane").style.zIndex = 150;
 
-      // Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
-      var arathia = createMap(
-        "Main",
-        "arathia",
-        true,
-        2.75,
-        5.4,
-        "basePane",
-        true
-      );
-      var arathiaClean = createMap(
-        "Main",
-        "arathiaClean",
-        true,
-        2.75,
-        5.4,
-        "basePane",
-        false
-      );
-      var arathia1213BR = createMap(
-        "Main",
-        "arathia1213BR",
-        true,
-        2.75,
-        5.4,
-        "addPane",
-        false
-      );
-      var arathia1213BRClean = createMap(
-        "Main",
-        "arathia1213BRClean",
-        true,
-        2.75,
-        5.4,
-        "addPane",
-        false
-      );
-      var Test3 = createMap(
-        "Main",
-        "morturia",
-        true,
-        2.75,
-        5.4,
-        "addPane",
-        false
-      );
-      var Test4 = createMap(
-        "Main",
-        "morturia",
-        true,
-        2.75,
-        5.4,
-        "addPane",
-        false
-      );
-      var morturia = createMap(
-        "Main",
-        "morturia",
-        true,
-        2.75,
-        5.4,
-        "basePane",
-        false
-      );
-      var elysium = createMap(
-        "Main",
-        "elysium",
-        true,
-        2.5,
-        5.4,
-        "basePane",
-        false
-      );
-      var arathiaBackground = createMap(
-        "Main",
-        "arathiaBackground",
-        false,
-        2.75,
-        5.4,
-        "backgroundPane",
-        true
-      );
-      var morturiaBackground = createMap(
-        "Main",
-        "morturiaBackground",
-        false,
-        2.75,
-        5.4,
-        "backgroundPane",
-        false
-      );
-      var elysiumBackground = createMap(
-        "Main",
-        "elysiumBackground",
-        false,
-        2.5,
-        5.4,
-        "backgroundPane",
-        false
-      );
+            // Maps createMap(title, noWrap, minZoom, maxZoom, pane, add)
+            var arathia = createMap(
+                "Main",
+                "arathia",
+                true,
+                2.75,
+                5.4,
+                "basePane",
+                true
+            );
+            var arathiaClean = createMap(
+                "Main",
+                "arathiaClean",
+                true,
+                2.75,
+                5.4,
+                "basePane",
+                false
+            );
+            var arathia1213BR = createMap(
+                "Main",
+                "arathia1213BR",
+                true,
+                2.75,
+                5.4,
+                "addPane",
+                false
+            );
+            var arathia1213BRClean = createMap(
+                "Main",
+                "arathia1213BRClean",
+                true,
+                2.75,
+                5.4,
+                "addPane",
+                false
+            );
+            var Test3 = createMap(
+                "Main",
+                "morturia",
+                true,
+                2.75,
+                5.4,
+                "addPane",
+                false
+            );
+            var Test4 = createMap(
+                "Main",
+                "morturia",
+                true,
+                2.75,
+                5.4,
+                "addPane",
+                false
+            );
+            var morturia = createMap(
+                "Main",
+                "morturia",
+                true,
+                2.75,
+                5.4,
+                "basePane",
+                false
+            );
+            var elysium = createMap(
+                "Main",
+                "elysium",
+                true,
+                2.5,
+                5.4,
+                "basePane",
+                false
+            );
+            var arathiaBackground = createMap(
+                "Main",
+                "arathiaBackground",
+                false,
+                2.75,
+                5.4,
+                "backgroundPane",
+                true
+            );
+            var morturiaBackground = createMap(
+                "Main",
+                "morturiaBackground",
+                false,
+                2.75,
+                5.4,
+                "backgroundPane",
+                false
+            );
+            var elysiumBackground = createMap(
+                "Main",
+                "elysiumBackground",
+                false,
+                2.5,
+                5.4,
+                "backgroundPane",
+                false
+            );
 
-      const backgrounds = [arathiaBackground, morturiaBackground, elysiumBackground];
+            const backgrounds = [
+                arathiaBackground,
+                morturiaBackground,
+                elysiumBackground,
+            ];
 
-      // Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
-      var defaultIconSettings = {
-        size: [31, 41],
-        anchor: [15, 41],
-        popupAnchor: [1, -44],
-      };
-      var oldIconSettings = {
-        size: [31, 41],
-        anchor: [15, 41],
-        popupAnchor: [1, -44],
-      };
-      var simpleIconSettings = {
-        size: [31, 41],
-        anchor: [15, 25],
-        popupAnchor: [1, -22],
-      };
+            // Icons Settings: { size = image size, anchor = where on the image is on the coordinate, popupAnchor = where the popup will be anchored to the marker }
+            var defaultIconSettings = {
+                size: [31, 41],
+                anchor: [15, 41],
+                popupAnchor: [1, -44],
+            };
+            var oldIconSettings = {
+                size: [31, 41],
+                anchor: [15, 41],
+                popupAnchor: [1, -44],
+            };
+            var simpleIconSettings = {
+                size: [31, 41],
+                anchor: [15, 25],
+                popupAnchor: [1, -22],
+            };
 
-      // Icons
-      var icons = {
-        capital: createIcon(
-          "capital",
-          "defaultShadow",
-          defaultIconSettings.size,
-          defaultIconSettings.anchor,
-          defaultIconSettings.popupAnchor
-        ),
-        cityBig: createIcon(
-          "cityBig",
-          "defaultShadow",
-          defaultIconSettings.size,
-          defaultIconSettings.anchor,
-          defaultIconSettings.popupAnchor
-        ),
-        citySmall: createIcon(
-          "citySmall",
-          "defaultShadow",
-          defaultIconSettings.size,
-          defaultIconSettings.anchor,
-          defaultIconSettings.popupAnchor
-        ),
-        town: createIcon(
-          "town",
-          "defaultShadow",
-          defaultIconSettings.size,
-          defaultIconSettings.anchor,
-          defaultIconSettings.popupAnchor
-        ),
-        nature: createIcon(
-          "nature",
-          "defaultShadow",
-          defaultIconSettings.size,
-          defaultIconSettings.anchor,
-          defaultIconSettings.popupAnchor
-        ),
-        important: createIcon(
-          "important",
-          "defaultShadow",
-          defaultIconSettings.size,
-          defaultIconSettings.anchor,
-          defaultIconSettings.popupAnchor
-        ),
-        character: createIcon(
-          "character",
-          "defaultShadow",
-          defaultIconSettings.size,
-          defaultIconSettings.anchor,
-          defaultIconSettings.popupAnchor
-        ),
+            // Icons
+            var icons = {
+                capital: createIcon(
+                    "capital",
+                    "defaultShadow",
+                    defaultIconSettings.size,
+                    defaultIconSettings.anchor,
+                    defaultIconSettings.popupAnchor
+                ),
+                cityBig: createIcon(
+                    "cityBig",
+                    "defaultShadow",
+                    defaultIconSettings.size,
+                    defaultIconSettings.anchor,
+                    defaultIconSettings.popupAnchor
+                ),
+                citySmall: createIcon(
+                    "citySmall",
+                    "defaultShadow",
+                    defaultIconSettings.size,
+                    defaultIconSettings.anchor,
+                    defaultIconSettings.popupAnchor
+                ),
+                town: createIcon(
+                    "town",
+                    "defaultShadow",
+                    defaultIconSettings.size,
+                    defaultIconSettings.anchor,
+                    defaultIconSettings.popupAnchor
+                ),
+                nature: createIcon(
+                    "nature",
+                    "defaultShadow",
+                    defaultIconSettings.size,
+                    defaultIconSettings.anchor,
+                    defaultIconSettings.popupAnchor
+                ),
+                important: createIcon(
+                    "important",
+                    "defaultShadow",
+                    defaultIconSettings.size,
+                    defaultIconSettings.anchor,
+                    defaultIconSettings.popupAnchor
+                ),
+                character: createIcon(
+                    "character",
+                    "defaultShadow",
+                    defaultIconSettings.size,
+                    defaultIconSettings.anchor,
+                    defaultIconSettings.popupAnchor
+                ),
 
-        capitalOld: createIcon(
-          "capitalOld",
-          "defaultShadow",
-          oldIconSettings.size,
-          oldIconSettings.anchor,
-          oldIconSettings.popupAnchor
-        ),
-        cityBigOld: createIcon(
-          "cityBigOld",
-          "defaultShadow",
-          oldIconSettings.size,
-          oldIconSettings.anchor,
-          oldIconSettings.popupAnchor
-        ),
-        citySmallOld: createIcon(
-          "citySmallOld",
-          "defaultShadow",
-          oldIconSettings.size,
-          oldIconSettings.anchor,
-          oldIconSettings.popupAnchor
-        ),
-        townOld: createIcon(
-          "townOld",
-          "defaultShadow",
-          oldIconSettings.size,
-          oldIconSettings.anchor,
-          oldIconSettings.popupAnchor
-        ),
-        natureOld: createIcon(
-          "natureOld",
-          "defaultShadow",
-          oldIconSettings.size,
-          oldIconSettings.anchor,
-          oldIconSettings.popupAnchor
-        ),
-        importantOld: createIcon(
-          "importantOld",
-          "defaultShadow",
-          oldIconSettings.size,
-          oldIconSettings.anchor,
-          oldIconSettings.popupAnchor
-        ),
-        characterOld: createIcon(
-          "characterOld",
-          "defaultShadow",
-          oldIconSettings.size,
-          oldIconSettings.anchor,
-          oldIconSettings.popupAnchor
-        ),
+                capitalOld: createIcon(
+                    "capitalOld",
+                    "defaultShadow",
+                    oldIconSettings.size,
+                    oldIconSettings.anchor,
+                    oldIconSettings.popupAnchor
+                ),
+                cityBigOld: createIcon(
+                    "cityBigOld",
+                    "defaultShadow",
+                    oldIconSettings.size,
+                    oldIconSettings.anchor,
+                    oldIconSettings.popupAnchor
+                ),
+                citySmallOld: createIcon(
+                    "citySmallOld",
+                    "defaultShadow",
+                    oldIconSettings.size,
+                    oldIconSettings.anchor,
+                    oldIconSettings.popupAnchor
+                ),
+                townOld: createIcon(
+                    "townOld",
+                    "defaultShadow",
+                    oldIconSettings.size,
+                    oldIconSettings.anchor,
+                    oldIconSettings.popupAnchor
+                ),
+                natureOld: createIcon(
+                    "natureOld",
+                    "defaultShadow",
+                    oldIconSettings.size,
+                    oldIconSettings.anchor,
+                    oldIconSettings.popupAnchor
+                ),
+                importantOld: createIcon(
+                    "importantOld",
+                    "defaultShadow",
+                    oldIconSettings.size,
+                    oldIconSettings.anchor,
+                    oldIconSettings.popupAnchor
+                ),
+                characterOld: createIcon(
+                    "characterOld",
+                    "defaultShadow",
+                    oldIconSettings.size,
+                    oldIconSettings.anchor,
+                    oldIconSettings.popupAnchor
+                ),
 
-        capitalSimple: createIcon(
-          "capitalSimple",
-          "transparent",
-          simpleIconSettings.size,
-          simpleIconSettings.anchor,
-          adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] })
-            .popupAnchor
-        ),
-        cityBigSimple: createIcon(
-          "cityBigSimple",
-          "transparent",
-          simpleIconSettings.size,
-          simpleIconSettings.anchor,
-          simpleIconSettings.popupAnchor
-        ),
-        citySmallSimple: createIcon(
-          "citySmallSimple",
-          "transparent",
-          simpleIconSettings.size,
-          simpleIconSettings.anchor,
-          adjustSettings(simpleIconSettings, { popupAnchor: [0, 4] })
-            .popupAnchor
-        ),
-        townSimple: createIcon(
-          "townSimple",
-          "transparent",
-          simpleIconSettings.size,
-          simpleIconSettings.anchor,
-          adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] })
-            .popupAnchor
-        ),
-        natureSimple: createIcon(
-          "natureSimple",
-          "transparent",
-          simpleIconSettings.size,
-          simpleIconSettings.anchor,
-          adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] })
-            .popupAnchor
-        ),
-        importantSimple: createIcon(
-          "importantSimple",
-          "transparent",
-          simpleIconSettings.size,
-          simpleIconSettings.anchor,
-          adjustSettings(simpleIconSettings, { popupAnchor: [0.5, 0] })
-            .popupAnchor
-        ),
-        characterSimple: createIcon(
-          "characterSimple",
-          "transparent",
-          simpleIconSettings.size,
-          simpleIconSettings.anchor,
-          simpleIconSettings.popupAnchor
-        ),
+                capitalSimple: createIcon(
+                    "capitalSimple",
+                    "transparent",
+                    simpleIconSettings.size,
+                    simpleIconSettings.anchor,
+                    adjustSettings(simpleIconSettings, {
+                        popupAnchor: [0.5, 0],
+                    }).popupAnchor
+                ),
+                cityBigSimple: createIcon(
+                    "cityBigSimple",
+                    "transparent",
+                    simpleIconSettings.size,
+                    simpleIconSettings.anchor,
+                    simpleIconSettings.popupAnchor
+                ),
+                citySmallSimple: createIcon(
+                    "citySmallSimple",
+                    "transparent",
+                    simpleIconSettings.size,
+                    simpleIconSettings.anchor,
+                    adjustSettings(simpleIconSettings, { popupAnchor: [0, 4] })
+                        .popupAnchor
+                ),
+                townSimple: createIcon(
+                    "townSimple",
+                    "transparent",
+                    simpleIconSettings.size,
+                    simpleIconSettings.anchor,
+                    adjustSettings(simpleIconSettings, { popupAnchor: [0, 6] })
+                        .popupAnchor
+                ),
+                natureSimple: createIcon(
+                    "natureSimple",
+                    "transparent",
+                    simpleIconSettings.size,
+                    simpleIconSettings.anchor,
+                    adjustSettings(simpleIconSettings, { popupAnchor: [0, 8] })
+                        .popupAnchor
+                ),
+                importantSimple: createIcon(
+                    "importantSimple",
+                    "transparent",
+                    simpleIconSettings.size,
+                    simpleIconSettings.anchor,
+                    adjustSettings(simpleIconSettings, {
+                        popupAnchor: [0.5, 0],
+                    }).popupAnchor
+                ),
+                characterSimple: createIcon(
+                    "characterSimple",
+                    "transparent",
+                    simpleIconSettings.size,
+                    simpleIconSettings.anchor,
+                    simpleIconSettings.popupAnchor
+                ),
 
-        defaultIcon: createIcon(
-          "marker-icon",
-          "defaultShadow",
-          defaultIconSettings.size,
-          defaultIconSettings.anchor,
-          defaultIconSettings.popupAnchor
-        ),
-      };
+                defaultIcon: createIcon(
+                    "marker-icon",
+                    "defaultShadow",
+                    defaultIconSettings.size,
+                    defaultIconSettings.anchor,
+                    defaultIconSettings.popupAnchor
+                ),
+            };
 
-      var fileInput = createFileInput();
+            var fileInput = createFileInput();
 
-      var formHTML = `
+            var formHTML = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
 				<span class="custom-subtitle"><font size="-1">Coords</font></span>
@@ -699,7 +713,7 @@
 			</div>
 			`;
 
-      var formHTML1213BR = `
+            var formHTML1213BR = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Marker Maker</font></span>
 				<span class="custom-subtitle"><font size="-1">Coords</font></span>
@@ -745,7 +759,7 @@
 			</div>
 			`;
 
-      var polygonHTML = `
+            var polygonHTML = `
 			<div class="custom-container">
 				<span class="custom-title"><font size="+0.5">Polygon Maker</font></span>
 				<span class="custom-subtitle"><font size="-1">Coords</font></span>
@@ -757,460 +771,508 @@
 			</div>
 			`;
 
-      //Marker Maker
-      var marker = L.marker([0, 0], {
-        draggable: true,
-        id: "markerMaker",
-      })
-        .on("dragend", function () {
-          resetAndOpenPopup();
-          markerMaker(true);
-        })
-        .on("click", function () {
-          resetAndOpenPopup();
-          markerMaker(true);
-        });
+            //Marker Maker
+            var marker = L.marker([0, 0], {
+                draggable: true,
+                id: "markerMaker",
+            })
+                .on("dragend", function () {
+                    resetAndOpenPopup();
+                    markerMaker(true);
+                })
+                .on("click", function () {
+                    resetAndOpenPopup();
+                    markerMaker(true);
+                });
 
-      //Polygon Maker
-      var polygonMarker = L.marker([0, 0], {
-        draggable: true,
-        id: "markerMaker",
-      }).on("dragend", function () {
-        polygonMarker.openPopup();
-        polygonMaker(true);
-      });
+            //Polygon Maker
+            var polygonMarker = L.marker([0, 0], {
+                draggable: true,
+                id: "markerMaker",
+            }).on("dragend", function () {
+                polygonMarker.openPopup();
+                polygonMaker(true);
+            });
 
-      polygonMarker.bindPopup(polygonHTML).openPopup();
-      polygonMarker.on("click", function (e) {
-        polygonMaker();
-      });
+            polygonMarker.bindPopup(polygonHTML).openPopup();
+            polygonMarker.on("click", function (e) {
+                polygonMaker();
+            });
 
-      var regionLayerGroups = {
-        ar: {
-          capital: L.layerGroup().addTo(map),
-          cityBig: L.layerGroup().addTo(map),
-          citySmall: L.layerGroup().addTo(map),
-          town: L.layerGroup().addTo(map),
-          nature: L.layerGroup().addTo(map),
-          important: L.layerGroup().addTo(map),
-          character: L.layerGroup().addTo(map),
-        },
-        ar1213BR: {
-          capital: L.layerGroup(),
-          cityBig: L.layerGroup(),
-          citySmall: L.layerGroup(),
-          town: L.layerGroup(),
-          nature: L.layerGroup(),
-          important: L.layerGroup(),
-          character: L.layerGroup(),
-        },
-        mo: {
-          capital: L.layerGroup(),
-          cityBig: L.layerGroup(),
-          citySmall: L.layerGroup(),
-          town: L.layerGroup(),
-          nature: L.layerGroup(),
-          important: L.layerGroup(),
-          character: L.layerGroup(),
-        },
-        el: {
-          capital: L.layerGroup(),
-          cityBig: L.layerGroup(),
-          citySmall: L.layerGroup(),
-          town: L.layerGroup(),
-          nature: L.layerGroup(),
-          important: L.layerGroup(),
-          character: L.layerGroup(),
-        },
-      };
-
-      //Marker Groups
-      var dv_coord = L.layerGroup([marker, polygonMarker]);
-
-      const regionCodes = ["ar", "ar1213BR", "mo", "el"];
-      const layerTypes = [
-        "capital",
-        "cityBig",
-        "citySmall",
-        "town",
-        "nature",
-        "important",
-        "character",
-      ];
-
-      const layerGroups = [];
-
-      var ar_all_layers = createLayerGroup(regionCodes[0], layerTypes);
-      var ar1213BR_all_layers = createLayerGroup(regionCodes[1], layerTypes);
-      var mo_all_layers = createLayerGroup(regionCodes[2], layerTypes);
-      var el_all_layers = createLayerGroup(regionCodes[3], layerTypes);
-
-      //Marker Overlay
-      var overlays = {
-        Arathia: {
-          Capitals: regionLayerGroups["ar"]["capital"],
-          "Large Cities": regionLayerGroups["ar"]["cityBig"],
-          "Small Cities": regionLayerGroups["ar"]["citySmall"],
-          Towns: regionLayerGroups["ar"]["town"],
-          Nature: regionLayerGroups["ar"]["nature"],
-          Locations: regionLayerGroups["ar"]["important"],
-          Characters: regionLayerGroups["ar"]["character"],
-        },
-        Morturia: {
-          Capitals: regionLayerGroups["mo"]["capital"],
-          "Large Cities": regionLayerGroups["mo"]["cityBig"],
-          "Small Cities": regionLayerGroups["mo"]["citySmall"],
-          Towns: regionLayerGroups["mo"]["town"],
-          Nature: regionLayerGroups["mo"]["nature"],
-          Locations: regionLayerGroups["mo"]["important"],
-          Characters: regionLayerGroups["mo"]["character"],
-        },
-        Elysium: {
-          Capitals: regionLayerGroups["el"]["capital"],
-          "Large Cities": regionLayerGroups["el"]["cityBig"],
-          "Small Cities": regionLayerGroups["el"]["citySmall"],
-          Towns: regionLayerGroups["el"]["town"],
-          Nature: regionLayerGroups["el"]["nature"],
-          Locations: regionLayerGroups["el"]["important"],
-          Characters: regionLayerGroups["el"]["character"],
-        },
-        "Arathia 1213 B.R": {
-          Capitals: regionLayerGroups["ar1213BR"]["capital"],
-          "Large Cities": regionLayerGroups["ar1213BR"]["cityBig"],
-          "Small Cities": regionLayerGroups["ar1213BR"]["citySmall"],
-          Towns: regionLayerGroups["ar1213BR"]["town"],
-          Nature: regionLayerGroups["ar1213BR"]["nature"],
-          Locations: regionLayerGroups["ar1213BR"]["important"],
-          Characters: regionLayerGroups["ar1213BR"]["character"],
-        },
-        Developer: {
-          "Marker Maker": marker,
-          "Polygon Maker": polygonMarker,
-        },
-      };
-      var options = {
-        groupCheckboxes: true,
-      };
-      var mapLayers = {
-        Arathia: arathia,
-        "Arathia Clean": arathiaClean,
-        Morturia: morturia,
-        Elysium: elysium,
-      };
-
-      //GROUP CONTROLS
-      L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
-
-      var controlSearchAr = new L.Control.Search({
-        position: "topleft",
-        layer: ar_all_layers,
-        zoom: 5,
-        initial: false,
-        marker: false,
-      }).on("search:locationfound", function (e) {
-        if (e.layer._popup) e.layer.openPopup();
-      });
-
-      var controlSearchMo = new L.Control.Search({
-        position: "topleft",
-        layer: mo_all_layers,
-        zoom: 5,
-        initial: false,
-        marker: false,
-      }).on("search:locationfound", function (e) {
-        if (e.layer._popup) e.layer.openPopup();
-      });
-
-      var controlSearchEl = new L.Control.Search({
-        position: "topleft",
-        layer: el_all_layers,
-        zoom: 5,
-        initial: false,
-        marker: false,
-      }).on("search:locationfound", function (e) {
-        if (e.layer._popup) e.layer.openPopup();
-      });
-
-      var controlSearchAr1213BR = new L.Control.Search({
-        position: "topleft",
-        layer: ar1213BR_all_layers,
-        zoom: 5,
-        initial: false,
-        marker: false,
-      }).on("search:locationfound", function (e) {
-        if (e.layer._popup) e.layer.openPopup();
-      });
-
-      var allSearch = [controlSearchAr, controlSearchMo, controlSearchEl, controlSearchAr1213BR];
-
-      map.addControl(controlSearchAr);
-
-      // Background color and Search to use for map
-      var mapConfigurations = {
-        Arathia: {
-          color: "#31565a",
-          options: {
-            arOption1: {
-              search: { controlSearch1: controlSearchAr },
-              mapLayer: arathia,
-              show: [ar_all_layers, arathiaBackground],
-              checkboxIndex: 0,
-              checkboxState: true,
-              hideCheckboxes: [2, 3, 4],
-              form: formHTML,
-              defaultFormSelect: 0,
-            },
-            arOption2: {
-              search: { controlSearch1: controlSearchAr1213BR },
-              mapLayer: arathia1213BR,
-              show: [ar1213BR_all_layers, arathiaBackground],
-              checkboxIndex: 3,
-              checkboxState: true,
-              hideCheckboxes: [1, 2, 3],
-              form: formHTML1213BR,
-              defaultFormSelect: 0,
-            },
-          },
-          current: arathia,
-          defaultOptionId: "arOption1",
-          northPoleCorrection: 0.6437979938976461,
-          southPoleCorrection: 0.6934982662543344,
-          meterConversion: 1000,
-        },
-        "Arathia Clean": {
-          color: "#31565a",
-          options: {
-            arCleanOption1: {
-              search: { controlSearch1: controlSearchAr },
-              mapLayer: arathiaClean,
-              show: [arathiaBackground],
-              checkboxIndex: 0,
-              checkboxState: false,
-              hideCheckboxes: [2, 3, 4],
-              form: formHTML,
-              defaultFormSelect: 0,
-            },
-            arCleanOption2: {
-              search: { controlSearch1: controlSearchAr1213BR },
-              mapLayer: arathia1213BRClean,
-              show: [arathiaBackground],
-              checkboxIndex: 2,
-              checkboxState: false,
-              hideCheckboxes: [1, 2, 3],
-              form: formHTML1213BR,
-              defaultFormSelect: 0,
-            },
-          },
-          current: arathiaClean,
-          defaultOptionId: "arCleanOption1",
-          northPoleCorrection: 0.6437979938976461,
-          southPoleCorrection: 0.6934982662543344,
-          meterConversion: 1000,
-        },
-        Morturia: {
-          color: "#374539",
-          options: {
-            moOption1: {
-              search: { controlSearch1: controlSearchMo },
-              mapLayer: morturia,
-              show: [mo_all_layers, morturiaBackground],
-              checkboxIndex: 1,
-              checkboxState: true,
-              hideCheckboxes: [1, 3, 4],
-              form: formHTML,
-              defaultFormSelect: 0,
-            },
-            moOption2: {
-              search: { controlSearch1: controlSearchAr },
-              mapLayer: morturia,
-              show: [mo_all_layers, morturiaBackground],
-              checkboxIndex: 1,
-              checkboxState: true,
-              hideCheckboxes: [1, 3, 4],
-              form: formHTML1213BR,
-              defaultFormSelect: 0,
-            },
-          },
-          current: morturia,
-          defaultOptionId: "moOption1",
-          northPoleCorrection: 0.6437979938976461,
-          southPoleCorrection: 0.6934982662543344,
-          meterConversion: 1000,
-        },
-        "Morturia Clean": {
-          color: "#374539",
-          options: {
-            moCleanOption1: {
-              search: { controlSearch1: controlSearchMo },
-              mapLayer: morturia,
-              show: [mo_all_layers, morturiaBackground],
-              checkboxIndex: 1,
-              checkboxState: true,
-              hideCheckboxes: [1, 3, 4],
-              form: formHTML,
-              defaultFormSelect: 0,
-            },
-            moCleanOption2: {
-              search: { controlSearch1: controlSearchAr },
-              mapLayer: morturia,
-              show: [morturiaBackground],
-              checkboxIndex: 1,
-              checkboxState: true,
-              hideCheckboxes: [1, 3, 4],
-              form: formHTML1213BR,
-              defaultFormSelect: 0,
-            },
-          },
-          current: morturia,
-          defaultOptionId: "moCleanOption1",
-          northPoleCorrection: 0.6437979938976461,
-          southPoleCorrection: 0.6934982662543344,
-          meterConversion: 1000,
-        },
-        Elysium: {
-          color: "#31565a",
-          options: {
-            elOption1: {
-              search: { controlSearch1: controlSearchEl },
-              mapLayer: elysium,
-              show: [el_all_layers, elysiumBackground],
-              checkboxIndex: 2,
-              checkboxState: true,
-              hideCheckboxes: [1, 2, 4],
-              form: formHTML,
-              defaultFormSelect: 0,
-            },
-            elOption2: {
-              search: { controlSearch1: controlSearchEl },
-              mapLayer: elysium,
-              show: [el_all_layers, elysiumBackground],
-              checkboxIndex: 2,
-              checkboxState: true,
-              hideCheckboxes: [1, 2, 4],
-              form: formHTML,
-              defaultFormSelect: 0,
-            },
-          },
-          current: elysium,
-          defaultOptionId: "elOption1",
-          northPoleCorrection: 0.6437979938976461,
-          southPoleCorrection: 0.6934982662543344,
-          meterConversion: 1000,
-        },
-      };
-
-      function addYearSelect() {
-        var existingDropdown = document.getElementById("YearSelector");
-        if (existingDropdown) {
-          // If it exists, remove it before creating a new one
-          existingDropdown.remove();
-        }
-
-        // Find the checked radio button
-        var checkedRadioButton = document.querySelector(
-          '.leaflet-control-layers-base input[type="radio"]:checked'
-        );
-        if (checkedRadioButton) {
-          var label = checkedRadioButton.nextElementSibling;
-        } else {
-          console.error("No radiobutton found.");
-        }
-
-        // Create the dropdown box
-        var dropdown = document.createElement("select");
-        dropdown.name = "options";
-        dropdown.id = "YearSelector";
-        dropdown.className = "custom-select";
-
-        // Add options to the dropdown
-        switch (label && label.textContent.trim()) {
-          case "Arathia": {
-            createSelect("1257 A.A", "arOption1", dropdown);
-            createSelect("1213 B.R", "arOption2", dropdown);
-            break;
-          }
-          case "Arathia Clean": {
-            createSelect("1257 A.A", "arCleanOption1", dropdown);
-            createSelect("1213 B.R", "arCleanOption2", dropdown);
-            break;
-          }
-          case "Morturia": {
-            createSelect("1257 A.A", "moOption1", dropdown);
-            createSelect("???", "moOption2", dropdown);
-            break;
-          }
-          case "Elysium": {
-            createSelect("1257 A.A", "elOption1", dropdown);
-            createSelect("???", "elOption2", dropdown);
-            break;
-          }
-        }
-
-        // Insert the dropdown after the parent label of the checked radio button
-        if (checkedRadioButton) {
-          checkedRadioButton.closest("label").after(dropdown);
-        } else if (lastCheckedRadioButtonLabel) {
-          // Find the label with the text in lastCheckedRadioButtonLabel
-          var labels = document.getElementsByTagName("label");
-          for (var i = 0; i < labels.length; i++) {
-            var label = labels[i];
-            var span = label.querySelector("span");
-            if (
-              span &&
-              span.textContent.trim() === lastCheckedRadioButtonLabel
-            ) {
-              console.log("Found Label");
-              label.after(dropdown);
-              break;
-            }
-          }
-        } else {
-          console.log("No radiobutton found");
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        setUp("data/markers/markers.json");
-      });
-
-      const zoomControl = document.querySelector(
-        ".leaflet-control-zoom.leaflet-bar.leaflet-control"
-      );
-
-      if (zoomControl) {
-        buttonsConfig.forEach(({ href, tooltip, iconDefault, iconHover, action }) => {
-          const controlButton = createControlButton(href, tooltip, iconDefault, iconHover, action);
-          zoomControl.insertAdjacentElement("beforeend", controlButton);
-        });
-      } else {
-        console.error("Zoom control element not found");
-      }
-
-      document.getElementsByClassName(
-        "leaflet-control-attribution"
-      )[0].style.display = "none";
-
-      function createFileInput() {
-        var fileInput = document.createElement("input");
-        fileInput.type = "file";
-        fileInput.accept = ".json";
-        fileInput.style.display = "none";
-
-        fileInput.addEventListener("change", function (event) {
-          var file = event.target.files[0];
-          if (file) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-              var jsonData = JSON.parse(e.target.result);
-              processImportedData(jsonData);
+            var regionLayerGroups = {
+                ar: {
+                    capital: L.layerGroup().addTo(map),
+                    cityBig: L.layerGroup().addTo(map),
+                    citySmall: L.layerGroup().addTo(map),
+                    town: L.layerGroup().addTo(map),
+                    nature: L.layerGroup().addTo(map),
+                    important: L.layerGroup().addTo(map),
+                    character: L.layerGroup().addTo(map),
+                },
+                ar1213BR: {
+                    capital: L.layerGroup(),
+                    cityBig: L.layerGroup(),
+                    citySmall: L.layerGroup(),
+                    town: L.layerGroup(),
+                    nature: L.layerGroup(),
+                    important: L.layerGroup(),
+                    character: L.layerGroup(),
+                },
+                mo: {
+                    capital: L.layerGroup(),
+                    cityBig: L.layerGroup(),
+                    citySmall: L.layerGroup(),
+                    town: L.layerGroup(),
+                    nature: L.layerGroup(),
+                    important: L.layerGroup(),
+                    character: L.layerGroup(),
+                },
+                el: {
+                    capital: L.layerGroup(),
+                    cityBig: L.layerGroup(),
+                    citySmall: L.layerGroup(),
+                    town: L.layerGroup(),
+                    nature: L.layerGroup(),
+                    important: L.layerGroup(),
+                    character: L.layerGroup(),
+                },
             };
-            reader.readAsText(file);
-          }
-        });
 
-        document.body.appendChild(fileInput);
-        return fileInput;
-      }
-    </script>
-  </body>
+            //Marker Groups
+            var dv_coord = L.layerGroup([marker, polygonMarker]);
+
+            const regionCodes = ["ar", "ar1213BR", "mo", "el"];
+            const layerTypes = [
+                "capital",
+                "cityBig",
+                "citySmall",
+                "town",
+                "nature",
+                "important",
+                "character",
+            ];
+
+            const layerGroups = [];
+
+            var ar_all_layers = createLayerGroup(regionCodes[0], layerTypes);
+            var ar1213BR_all_layers = createLayerGroup(
+                regionCodes[1],
+                layerTypes
+            );
+            var mo_all_layers = createLayerGroup(regionCodes[2], layerTypes);
+            var el_all_layers = createLayerGroup(regionCodes[3], layerTypes);
+
+            //Marker Overlay
+            var overlays = {
+                Arathia: {
+                    Capitals: regionLayerGroups["ar"]["capital"],
+                    "Large Cities": regionLayerGroups["ar"]["cityBig"],
+                    "Small Cities": regionLayerGroups["ar"]["citySmall"],
+                    Towns: regionLayerGroups["ar"]["town"],
+                    Nature: regionLayerGroups["ar"]["nature"],
+                    Locations: regionLayerGroups["ar"]["important"],
+                    Characters: regionLayerGroups["ar"]["character"],
+                },
+                Morturia: {
+                    Capitals: regionLayerGroups["mo"]["capital"],
+                    "Large Cities": regionLayerGroups["mo"]["cityBig"],
+                    "Small Cities": regionLayerGroups["mo"]["citySmall"],
+                    Towns: regionLayerGroups["mo"]["town"],
+                    Nature: regionLayerGroups["mo"]["nature"],
+                    Locations: regionLayerGroups["mo"]["important"],
+                    Characters: regionLayerGroups["mo"]["character"],
+                },
+                Elysium: {
+                    Capitals: regionLayerGroups["el"]["capital"],
+                    "Large Cities": regionLayerGroups["el"]["cityBig"],
+                    "Small Cities": regionLayerGroups["el"]["citySmall"],
+                    Towns: regionLayerGroups["el"]["town"],
+                    Nature: regionLayerGroups["el"]["nature"],
+                    Locations: regionLayerGroups["el"]["important"],
+                    Characters: regionLayerGroups["el"]["character"],
+                },
+                "Arathia 1213 B.R": {
+                    Capitals: regionLayerGroups["ar1213BR"]["capital"],
+                    "Large Cities": regionLayerGroups["ar1213BR"]["cityBig"],
+                    "Small Cities": regionLayerGroups["ar1213BR"]["citySmall"],
+                    Towns: regionLayerGroups["ar1213BR"]["town"],
+                    Nature: regionLayerGroups["ar1213BR"]["nature"],
+                    Locations: regionLayerGroups["ar1213BR"]["important"],
+                    Characters: regionLayerGroups["ar1213BR"]["character"],
+                },
+                Developer: {
+                    "Marker Maker": marker,
+                    "Polygon Maker": polygonMarker,
+                },
+            };
+            var options = {
+                groupCheckboxes: true,
+            };
+            var mapLayers = {
+                Arathia: arathia,
+                "Arathia Clean": arathiaClean,
+                Morturia: morturia,
+                Elysium: elysium,
+            };
+
+            //GROUP CONTROLS
+            L.control.groupedLayers(mapLayers, overlays, options).addTo(map);
+
+            var controlSearchAr = new L.Control.Search({
+                position: "topleft",
+                layer: ar_all_layers,
+                zoom: 5,
+                initial: false,
+                marker: false,
+            }).on("search:locationfound", function (e) {
+                if (e.layer._popup) e.layer.openPopup();
+            });
+
+            var controlSearchMo = new L.Control.Search({
+                position: "topleft",
+                layer: mo_all_layers,
+                zoom: 5,
+                initial: false,
+                marker: false,
+            }).on("search:locationfound", function (e) {
+                if (e.layer._popup) e.layer.openPopup();
+            });
+
+            var controlSearchEl = new L.Control.Search({
+                position: "topleft",
+                layer: el_all_layers,
+                zoom: 5,
+                initial: false,
+                marker: false,
+            }).on("search:locationfound", function (e) {
+                if (e.layer._popup) e.layer.openPopup();
+            });
+
+            var controlSearchAr1213BR = new L.Control.Search({
+                position: "topleft",
+                layer: ar1213BR_all_layers,
+                zoom: 5,
+                initial: false,
+                marker: false,
+            }).on("search:locationfound", function (e) {
+                if (e.layer._popup) e.layer.openPopup();
+            });
+
+            var allSearch = [
+                controlSearchAr,
+                controlSearchMo,
+                controlSearchEl,
+                controlSearchAr1213BR,
+            ];
+
+            map.addControl(controlSearchAr);
+
+            // Background color and Search to use for map
+            var mapConfigurations = {
+                Arathia: {
+                    color: "#31565a",
+                    options: {
+                        arOption1: {
+                            search: { controlSearch1: controlSearchAr },
+                            mapLayer: arathia,
+                            show: [ar_all_layers, arathiaBackground],
+                            checkboxIndex: 0,
+                            checkboxState: true,
+                            hideCheckboxes: [2, 3, 4],
+                            form: formHTML,
+                            defaultFormSelect: 0,
+                        },
+                        arOption2: {
+                            search: { controlSearch1: controlSearchAr1213BR },
+                            mapLayer: arathia1213BR,
+                            show: [ar1213BR_all_layers, arathiaBackground],
+                            checkboxIndex: 3,
+                            checkboxState: true,
+                            hideCheckboxes: [1, 2, 3],
+                            form: formHTML1213BR,
+                            defaultFormSelect: 0,
+                        },
+                    },
+                    current: arathia,
+                    defaultOptionId: "arOption1",
+                    northPoleCorrection: 0.6437979938976461,
+                    southPoleCorrection: 0.6934982662543344,
+                    meterConversion: 1000,
+                },
+                "Arathia Clean": {
+                    color: "#31565a",
+                    options: {
+                        arCleanOption1: {
+                            search: { controlSearch1: controlSearchAr },
+                            mapLayer: arathiaClean,
+                            show: [arathiaBackground],
+                            checkboxIndex: 0,
+                            checkboxState: false,
+                            hideCheckboxes: [2, 3, 4],
+                            form: formHTML,
+                            defaultFormSelect: 0,
+                        },
+                        arCleanOption2: {
+                            search: { controlSearch1: controlSearchAr1213BR },
+                            mapLayer: arathia1213BRClean,
+                            show: [arathiaBackground],
+                            checkboxIndex: 2,
+                            checkboxState: false,
+                            hideCheckboxes: [1, 2, 3],
+                            form: formHTML1213BR,
+                            defaultFormSelect: 0,
+                        },
+                    },
+                    current: arathiaClean,
+                    defaultOptionId: "arCleanOption1",
+                    northPoleCorrection: 0.6437979938976461,
+                    southPoleCorrection: 0.6934982662543344,
+                    meterConversion: 1000,
+                },
+                Morturia: {
+                    color: "#374539",
+                    options: {
+                        moOption1: {
+                            search: { controlSearch1: controlSearchMo },
+                            mapLayer: morturia,
+                            show: [mo_all_layers, morturiaBackground],
+                            checkboxIndex: 1,
+                            checkboxState: true,
+                            hideCheckboxes: [1, 3, 4],
+                            form: formHTML,
+                            defaultFormSelect: 0,
+                        },
+                        moOption2: {
+                            search: { controlSearch1: controlSearchAr },
+                            mapLayer: morturia,
+                            show: [mo_all_layers, morturiaBackground],
+                            checkboxIndex: 1,
+                            checkboxState: true,
+                            hideCheckboxes: [1, 3, 4],
+                            form: formHTML1213BR,
+                            defaultFormSelect: 0,
+                        },
+                    },
+                    current: morturia,
+                    defaultOptionId: "moOption1",
+                    northPoleCorrection: 0.6437979938976461,
+                    southPoleCorrection: 0.6934982662543344,
+                    meterConversion: 1000,
+                },
+                "Morturia Clean": {
+                    color: "#374539",
+                    options: {
+                        moCleanOption1: {
+                            search: { controlSearch1: controlSearchMo },
+                            mapLayer: morturia,
+                            show: [mo_all_layers, morturiaBackground],
+                            checkboxIndex: 1,
+                            checkboxState: true,
+                            hideCheckboxes: [1, 3, 4],
+                            form: formHTML,
+                            defaultFormSelect: 0,
+                        },
+                        moCleanOption2: {
+                            search: { controlSearch1: controlSearchAr },
+                            mapLayer: morturia,
+                            show: [morturiaBackground],
+                            checkboxIndex: 1,
+                            checkboxState: true,
+                            hideCheckboxes: [1, 3, 4],
+                            form: formHTML1213BR,
+                            defaultFormSelect: 0,
+                        },
+                    },
+                    current: morturia,
+                    defaultOptionId: "moCleanOption1",
+                    northPoleCorrection: 0.6437979938976461,
+                    southPoleCorrection: 0.6934982662543344,
+                    meterConversion: 1000,
+                },
+                Elysium: {
+                    color: "#31565a",
+                    options: {
+                        elOption1: {
+                            search: { controlSearch1: controlSearchEl },
+                            mapLayer: elysium,
+                            show: [el_all_layers, elysiumBackground],
+                            checkboxIndex: 2,
+                            checkboxState: true,
+                            hideCheckboxes: [1, 2, 4],
+                            form: formHTML,
+                            defaultFormSelect: 0,
+                        },
+                        elOption2: {
+                            search: { controlSearch1: controlSearchEl },
+                            mapLayer: elysium,
+                            show: [el_all_layers, elysiumBackground],
+                            checkboxIndex: 2,
+                            checkboxState: true,
+                            hideCheckboxes: [1, 2, 4],
+                            form: formHTML,
+                            defaultFormSelect: 0,
+                        },
+                    },
+                    current: elysium,
+                    defaultOptionId: "elOption1",
+                    northPoleCorrection: 0.6437979938976461,
+                    southPoleCorrection: 0.6934982662543344,
+                    meterConversion: 1000,
+                },
+            };
+
+            function addYearSelect() {
+                // Remove existing dropdown if present
+                var existingDropdown = document.getElementById("YearSelector");
+                if (existingDropdown) {
+                    existingDropdown.remove();
+                }
+
+                // Find the checked radio button
+                var checkedRadioButton = document.querySelector(
+                    '.leaflet-control-layers-base input[type="radio"]:checked'
+                );
+
+                if (!checkedRadioButton) {
+                    console.error("No radiobutton found.");
+                    return;
+                }
+
+                var label = checkedRadioButton.nextElementSibling;
+                const { dropdownContainer, optionsContainer, selectedDisplay } =
+                    createYearSelector();
+
+                // Add options based on map type
+                switch (label && label.textContent.trim()) {
+                    case "Arathia": {
+                        createSelect(
+                            "1257 A.A",
+                            "arOption1",
+                            optionsContainer,
+                            dropdownContainer
+                        );
+                        createSelect(
+                            "1213 B.R",
+                            "arOption2",
+                            optionsContainer,
+                            dropdownContainer
+                        );
+                        break;
+                    }
+                    case "Arathia Clean": {
+                        createSelect(
+                            "1257 A.A",
+                            "arCleanOption1",
+                            optionsContainer,
+                            dropdownContainer
+                        );
+                        createSelect(
+                            "1213 B.R",
+                            "arCleanOption2",
+                            optionsContainer,
+                            dropdownContainer
+                        );
+                        break;
+                    }
+                    case "Morturia": {
+                        createSelect(
+                            "1257 A.A",
+                            "moOption1",
+                            optionsContainer,
+                            dropdownContainer
+                        );
+                        createSelect(
+                            "???",
+                            "moOption2",
+                            optionsContainer,
+                            dropdownContainer
+                        );
+                        break;
+                    }
+                    case "Elysium": {
+                        createSelect(
+                            "1257 A.A",
+                            "elOption1",
+                            optionsContainer,
+                            dropdownContainer
+                        );
+                        createSelect(
+                            "???",
+                            "elOption2",
+                            optionsContainer,
+                            dropdownContainer
+                        );
+                        break;
+                    }
+                }
+
+                setYearSelectorOption(
+                    dropdownContainer,
+                    optionsContainer,
+                    selectedDisplay
+                );
+
+                // Assemble dropdown
+                dropdownContainer.appendChild(selectedDisplay);
+                dropdownContainer.appendChild(optionsContainer);
+
+                // Insert after radio button
+                checkedRadioButton.closest("label").after(dropdownContainer);
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                setUp("data/markers/markers.json");
+            });
+
+            const zoomControl = document.querySelector(
+                ".leaflet-control-zoom.leaflet-bar.leaflet-control"
+            );
+
+            if (zoomControl) {
+                buttonsConfig.forEach(
+                    ({ href, tooltip, iconDefault, iconHover, action }) => {
+                        const controlButton = createControlButton(
+                            href,
+                            tooltip,
+                            iconDefault,
+                            iconHover,
+                            action
+                        );
+                        zoomControl.insertAdjacentElement(
+                            "beforeend",
+                            controlButton
+                        );
+                    }
+                );
+            } else {
+                console.error("Zoom control element not found");
+            }
+
+            document.getElementsByClassName(
+                "leaflet-control-attribution"
+            )[0].style.display = "none";
+
+            function createFileInput() {
+                var fileInput = document.createElement("input");
+                fileInput.type = "file";
+                fileInput.accept = ".json";
+                fileInput.style.display = "none";
+
+                fileInput.addEventListener("change", function (event) {
+                    var file = event.target.files[0];
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            var jsonData = JSON.parse(e.target.result);
+                            processImportedData(jsonData);
+                        };
+                        reader.readAsText(file);
+                    }
+                });
+
+                document.body.appendChild(fileInput);
+                return fileInput;
+            }
+        </script>
+    </body>
 </html>
