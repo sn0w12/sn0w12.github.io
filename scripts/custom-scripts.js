@@ -640,7 +640,7 @@ function markerMaker(isPolygon = false) {
     document.getElementById("Coords").value = coords;
 
     if (!isPolygon) setSelectValueFromCheckedRadioButton();
-    else {
+    else if (countryPolygons[currentMap]) {
         clearAllVectors();
         if (countryPolygons[currentMap][selectedOptionId]) {
             for (const region in countryPolygons[currentMap][
