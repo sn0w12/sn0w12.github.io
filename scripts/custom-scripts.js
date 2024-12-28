@@ -26,7 +26,9 @@ let firstPoint = null;
 let tempLine = null;
 let tempLineUpdate = function (e) {
     if (firstPoint && tempLine) {
-        tempLine.setLatLngs([firstPoint, e.latlng]);
+        requestAnimationFrame(() => {
+            tempLine.setLatLngs([firstPoint, e.latlng]);
+        });
     }
 };
 
