@@ -269,47 +269,13 @@ function switchToMarkerMap(markerId) {
 
     let fullRegionName = regionToFull[markerRegion][0];
     let submap = regionToFull[markerRegion][1];
+    const submapElement = document.getElementById(submap);
 
-    if (fullRegionName != currentMap.toLowerCase()) {
-        let labels = document.querySelectorAll("label span");
-        let targetLabel = Array.from(labels).find(
-            (span) => span.textContent.trim().toLowerCase() === fullRegionName
-        );
-
-        if (targetLabel) {
-            // Go up to the parent label element to find the input element (radio button)
-            let radioButton = targetLabel
-                .closest("label")
-                .querySelector(
-                    'input[type="radio"].leaflet-control-layers-selector'
-                );
-            if (radioButton) {
-                // Click the radio button
-                radioButton.click();
-            }
-        }
-    }
-
-    if (submap) {
-        const yearSelector = document.getElementById("YearSelector");
-
-        for (const option of yearSelector.options) {
-            if (option.id === submap) {
-                option.selected = true;
-                yearSelector.dispatchEvent(new Event("change"));
-                return true; // Exit the loop as we found our match
-            }
-        }
-    } else {
-        return true;
-    }
-    console.warn("Marker not found in any region:", markerId);
-    return false; // Marker not found or could not switch maps
+    openMap(fullRegionName, submapElement.textContent);
 }
 
 function openMapFromUrl(map) {
     const submap = getFromUrl("submap");
-
     openMap(map, submap);
 }
 
@@ -337,28 +303,23 @@ function openMap(map, submap) {
     }
 
     if (submap) {
-        submap = submap.toLowerCase();
+        submap = submap.replace(/[\s.]/g, "").toLowerCase();
         const yearSelector = document.getElementById("YearSelector");
 
-        for (const option of yearSelector.options) {
-            const normalizedOptionText = option.text.replace(/[\s.]/g, "");
-
-            if (normalizedOptionText.toLowerCase() === submap) {
-                option.selected = true;
-                yearSelector.dispatchEvent(new Event("change"));
-                break; // Exit the loop as we found our match
-            } else if (option.id === submap) {
-                option.selected = true;
-                yearSelector.dispatchEvent(new Event("change"));
-                break; // Exit the loop as we found our match
-            }
+        const index = yearSelector.options.findIndex(
+            (opt) => opt.text.replace(/[\s.]/g, "").toLowerCase() === submap
+        );
+        if (index >= 0) {
+            yearSelector.selectedIndex = index;
+            yearSelector.dispatchEvent(new Event("change"));
         }
     }
 }
 
 function openPopupFromUrl(markerId) {
-    const markerMap = switchToMarkerMap(markerId);
-    if (!markerMap) return; // Exit if the marker does not belong to any map
+    if (!getFromUrl("map") || !getFromUrl("submap")) {
+        switchToMarkerMap(markerId);
+    }
 
     for (let region in allMarkers) {
         if (allMarkers[region][markerId]) {
