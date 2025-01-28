@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Countries Timeline</title>
+        <link
+            href="https://fonts.googleapis.com/css?family=Roboto"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                background-color: #1f1b14;
+                color: #fcf6e8;
+                margin: 0;
+                font-family: "Roboto";
+            }
+            .timeline {
+                position: relative;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            .timeline::after {
+                content: "";
+                position: absolute;
+                width: 6px;
+                background-color: #2a2720;
+                top: 0;
+                bottom: 0;
+                left: 50%;
+                margin-left: 3px;
+                margin-bottom: 225px;
+            }
+            .timeline-row:last-child .timeline::after {
+                display: none;
+            }
+            .timeline-row {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                position: relative;
+                margin: 20px 0;
+            }
+            .entry {
+                padding: 0px 80px 20px 80px;
+                position: relative;
+                width: 50%;
+                box-sizing: border-box;
+            }
+            .left {
+                text-align: right;
+            }
+            .right {
+                text-align: left;
+            }
+            .year {
+                position: absolute;
+                width: 100px;
+                text-align: center;
+                left: 50%;
+                margin-left: -50px;
+                background: #2a2720;
+                border-radius: 5px;
+                padding: 5px;
+                z-index: 100;
+            }
+            .separator-year {
+                background: #463d2d !important;
+                color: #fcf6e8;
+                font-weight: bold;
+                padding: 10px !important;
+                margin-left: -55px;
+            }
+            .country-entry {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin: 5px 0;
+            }
+            .flag {
+                width: 30px;
+                height: 20px;
+                object-fit: cover;
+                border: 1px solid #2a2720;
+            }
+            .left .country-entry {
+                flex-direction: row-reverse;
+            }
+            .legend {
+                text-align: center;
+                font-size: x-large;
+                font-weight: bold;
+                margin: 10px 0;
+                padding: 10px 0;
+                display: flex;
+                justify-content: center;
+                gap: 120px;
+                border-bottom: 1px solid #2a2720;
+            }
+            .country-founding {
+                color: lightgreen;
+            }
+            .country-falling {
+                color: #ff6666;
+            }
+            .separator-row .entry {
+                opacity: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="legend">
+            <div>Minor Countries</div>
+            <div>Major Countries</div>
+        </div>
+        <div class="timeline" id="timeline"></div>
+
+        <script>
+            const currentYear = 2395;
+
+            function calculateAA(year) {
+                return year + 1136;
+            }
+
+            const timelineData = {
+                countries: {
+                    major: {
+                        Seraphyria: {
+                            years: [-8936, 42],
+                            flag: "https://www.arathia.net/w/images/thumb/e/e0/Seraphyria.png/300px-Seraphyria.png",
+                        },
+                        "Imperium of Aztrus": {
+                            years: [16, 105],
+                        },
+                        Yozora: {
+                            years: [87, 789],
+                            flag: "https://www.arathia.net/w/images/thumb/d/db/Yozora.png/299px-Yozora.png",
+                        },
+                        "Nashor Empire": {
+                            years: [679, 800],
+                        },
+                        "Tsuki Ōkoku": {
+                            years: [796, currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/e/e4/Tsuki.png/300px-Tsuki.png",
+                        },
+                        "Holy Antarian Empire": {
+                            years: [calculateAA(53), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/5/59/Antaria.png/299px-Antaria.png",
+                        },
+
+                        Azurith: {
+                            years: [calculateAA(500), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/1/16/Azurith.png/490px-Azurith.png",
+                        },
+                        Dryadalis: {
+                            years: [calculateAA(500), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/c/cc/Dryadalis.png/501px-Dryadalis.png",
+                        },
+                        Odrheimr: {
+                            years: [calculateAA(500), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/f/f3/Odrheimr.png/501px-Odrheimr.png",
+                        },
+                        Primoria: {
+                            years: [calculateAA(500), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/9/91/Primoria.png/490px-Primoria.png",
+                        },
+                        Rheinland: {
+                            years: [calculateAA(500), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/c/c5/Rheinland.png/501px-Rheinland.png",
+                        },
+                        Tunglheimr: {
+                            years: [calculateAA(500), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/3/38/Tunglheimr.png/490px-Tunglheimr.png",
+                        },
+                    },
+                    minor: {
+                        Drakoria: {
+                            years: [-5403, -1214],
+                        },
+                        "Central Arathian Gulf Co": {
+                            years: [calculateAA(1086), currentYear],
+                        },
+                        Arcarum: {
+                            years: [currentYear - 77, currentYear],
+                        },
+                        "Golden Order": {
+                            years: [calculateAA(1220), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/1/18/Goldenorder.png/299px-Goldenorder.png",
+                        },
+                        "Free People of Antaria": {
+                            years: [calculateAA(1254), currentYear],
+                            flag: "https://www.arathia.net/w/images/thumb/a/ac/FPA.png/299px-FPA.png",
+                        },
+                    },
+                },
+            };
+
+            function parseYear(year) {
+                if (year < 0) {
+                    return `${Math.abs(year)} B.R`;
+                } else if (year >= 1136) {
+                    return `${year - 1136} A.A`;
+                } else {
+                    return `${year} B.A`;
+                }
+            }
+
+            function getUniqueYears() {
+                const years = new Set([0, 1136]); // Add separator years
+                for (const category of ["major", "minor"]) {
+                    for (const [_, data] of Object.entries(
+                        timelineData.countries[category]
+                    )) {
+                        years.add(data.years[0]);
+                        years.add(data.years[1]);
+                    }
+                }
+                return Array.from(years).sort((a, b) => a - b);
+            }
+
+            function getCountriesForYear(year) {
+                // Return empty arrays for separator years
+                if (year === 0 || year === 1136) {
+                    return { major: [], minor: [] };
+                }
+
+                const result = { major: [], minor: [] };
+                for (const category of ["major", "minor"]) {
+                    for (const [country, data] of Object.entries(
+                        timelineData.countries[category]
+                    )) {
+                        if (year >= data.years[0] && year <= data.years[1]) {
+                            result[category].push({
+                                name: country,
+                                flag: data.flag,
+                                years: data.years,
+                            });
+                        }
+                    }
+                }
+                return result;
+            }
+
+            function createCountryEntry(country, year) {
+                const flagImage = country.flag
+                    ? `<img src="${country.flag}" alt="${country.name} flag" class="flag">`
+                    : `<img src="https://www.arathia.net/w/images/thumb/a/a3/Flag-placeholder.png/299px-Flag-placeholder.png" alt="Flag placeholder" class="flag">`;
+                const foundingClass =
+                    year === country.years[0] ? "country-founding" : "";
+                const fallingClass =
+                    year === country.years[1] &&
+                    country.years[1] !== currentYear
+                        ? "country-falling"
+                        : "";
+                const className = foundingClass || fallingClass;
+                return `<div class="country-entry ${className}">
+                    ${flagImage}
+                    <span>${country.name}</span>
+                </div>`;
+            }
+
+            function createTimeline() {
+                const timeline = document.getElementById("timeline");
+                const years = getUniqueYears();
+
+                years.forEach((year) => {
+                    const timelineRow = document.createElement("div");
+                    timelineRow.className = "timeline-row";
+                    if (year === 0 || year === 1136) {
+                        timelineRow.className += " separator-row";
+                    }
+
+                    const yearMarker = document.createElement("div");
+                    yearMarker.className = "year";
+                    if (year === 0 || year === 1136) {
+                        yearMarker.className += " separator-year";
+                    }
+                    yearMarker.textContent = parseYear(year);
+
+                    const countries = getCountriesForYear(year);
+
+                    const minorDiv = document.createElement("div");
+                    minorDiv.className = "entry left";
+                    minorDiv.innerHTML = countries.minor
+                        .map((country) => createCountryEntry(country, year))
+                        .join("");
+
+                    const majorDiv = document.createElement("div");
+                    majorDiv.className = "entry right";
+                    majorDiv.innerHTML = countries.major
+                        .map((country) => createCountryEntry(country, year))
+                        .join("");
+
+                    if (
+                        countries.minor.length === 0 &&
+                        countries.major.length === 0
+                    ) {
+                        majorDiv.style.marginBottom = "40px";
+                    }
+
+                    timelineRow.appendChild(minorDiv);
+                    timelineRow.appendChild(yearMarker);
+                    timelineRow.appendChild(majorDiv);
+
+                    timeline.appendChild(timelineRow);
+                });
+            }
+
+            window.onload = createTimeline;
+        </script>
+    </body>
+</html>
