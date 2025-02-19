@@ -1,46 +1,462 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="./images/arathia.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arathia</title>
-    <link rel="stylesheet" href="style/homepage.css">
-</head>
-<body>
-    <div class="background">
-        <picture>
-            <source media="(max-width: 1400px)" srcset="./images/home-background-25.webp" />
-            <source media="(max-width: 2800px)" srcset="./images/home-background-50.webp" />
-            <source media="(max-width: 4200px)" srcset="./images/home-background-75.webp" />
-            <source media="(min-width: 4201px)" srcset="./images/home-background-100.webp" />
-            <img src="./images/home-background-100.webp" alt="" loading="lazy" />
-        </picture>
-    </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content"
+        />
+        <title>Arathia</title>
+        <link rel="icon" href="./images/arathia.png" />
 
-    <div class="content top-mid-left">
-        <div class="text-content">
-            <h1 class="header">Arathia</h1>
-            <div class="separator"></div>
-            <!-- <div class="separator wide"></div>
-            <div class="separator wide"></div>
-            <div class="separator"></div> -->
-            <ul class="subheaders">
-                <li><a href="/wiki" class="subheader-link">Wiki</a></li>
-                <li><a href="/world" class="subheader-link">Map</a></li>
-                <li><a href="/timeline" class="subheader-link">Timeline</a></li>
-            </ul>
+        <link
+            rel="preload"
+            as="image"
+            href="./images/arathia.png"
+            type="image/png"
+        />
+        <link
+            rel="preload"
+            as="image"
+            href="./images/home-background-100.webp"
+            type="image/webp"
+        />
+        <link
+            rel="preload"
+            as="image"
+            href="./images/home-background-100-statue.webp"
+            type="image/webp"
+        />
+        <link
+            rel="preload"
+            as="image"
+            href="./images/home-background-100-overlay.webp"
+            type="image/webp"
+        />
+        <link
+            rel="preload"
+            as="image"
+            href="./images/home-background-100-middle.webp"
+            type="image/webp"
+        />
+        <link
+            rel="preload"
+            as="image"
+            href="https://arathia.net/w/images/a/a7/Sons_of_antares.png"
+            type="image/png"
+        />
+
+        <link rel="stylesheet" href="style/homepage.css" />
+        <link
+            rel="stylesheet"
+            href="https://arathia.net/diego/style/lines.css"
+        />
+        <script src="https://arathia.net/diego/script/ui.js"></script>
+        <script src="https://arathia.net/diego/script/badgeAnimator.js"></script>
+    </head>
+    <body>
+        <div class="background">
+            <img
+                src="./images/home-background-100.webp"
+                alt=""
+                loading="eager"
+            />
+            <img
+                src="./images/home-background-100-statue.webp"
+                alt=""
+                loading="eager"
+                class="silhouette"
+                id="statue"
+            />
+            <img
+                src="./images/home-background-100-overlay.webp"
+                alt=""
+                loading="eager"
+                style="z-index: 1"
+            />
+            <img
+                src="./images/home-background-100-middle.webp"
+                alt=""
+                loading="eager"
+                style="z-index: 4"
+            />
+            <img
+                src="./images/home-background-100-tree.webp"
+                alt=""
+                loading="eager"
+                style="z-index: 8"
+                id="tree"
+                class="silhouette"
+            />
+            <img
+                src="./images/home-background-100-foreground.webp"
+                alt=""
+                loading="eager"
+                style="z-index: 10"
+            />
+            <img
+                src="./images/home-background-100-birds.webp"
+                alt=""
+                loading="eager"
+                style="z-index: 12"
+                id="birds"
+                class="silhouette small"
+            />
+            <img
+                src="./images/home-background-100-birds.webp"
+                alt=""
+                loading="eager"
+                style="z-index: 14"
+            />
         </div>
 
-        <img src="./images/Antaria.svg" id="arathia-svg" alt="SVG Image" class="svg-image">
-    </div>
+        <div class="content top-mid-left">
+            <div class="text-content">
+                <h1 class="header">Arathia</h1>
+                <div class="separator"></div>
+                <!-- <div class="separator wide"></div>
+            <div class="separator wide"></div>
+            <div class="separator"></div> -->
+                <ul class="subheaders">
+                    <li>
+                        <a href="/wiki" class="subheader-link">
+                            <p class="subheader-text">Wiki</p>
+                            <div class="underline-2 subheader-underline"></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/world" class="subheader-link">
+                            <p class="subheader-text">Map</p>
+                            <div class="underline-2 subheader-underline"></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/timeline" class="subheader-link">
+                            <p class="subheader-text">Timeline</p>
+                            <div class="underline-2 subheader-underline"></div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-    <div class="footer bottom-left">
-        <p>&copy; 2024 Arathia Project. All rights reserved.</p>
-        <div class="separator med"></div>
-        <p>Art by <a href="https://www.artstation.com/winterkeep">Ben J</a></p>
-    </div>
+            <img
+                src="https://arathia.net/w/images/a/a7/Sons_of_antares.png"
+                id="arathia-svg"
+                alt="SVG Image"
+                class="svg-image"
+            />
+        </div>
 
-    <script src="scripts/homepage.js"></script>
-</body>
+        <div class="footer bottom-left">
+            <p>
+                Art by <a href="https://www.artstation.com/winterkeep">Ben J</a>
+            </p>
+        </div>
+
+        <div id="bg">
+            <div
+                class="upline-2 colored-upline clock-hand"
+                style="
+                    position: absolute;
+                    height: 200%;
+                    left: 20.5%;
+                    top: -47%;
+                    width: 0.4vh;
+                    background-image: linear-gradient(
+                        to bottom,
+                        var(--link-text-hover-color) 0%,
+                        var(--link-text-hover-color) 50%,
+                        transparent 65%,
+                        transparent 100%
+                    ) !important;
+                    transform: rotate(0deg);
+                    will-change: transform;
+                "
+                id="hour-hand"
+            ></div>
+            <div
+                class="upline-3 colored-upline clock-hand"
+                style="
+                    position: absolute;
+                    height: 200%;
+                    left: 20.5%;
+                    top: -47%;
+                    width: 0.2vh;
+                    background-image: linear-gradient(
+                        to bottom,
+                        white 0%,
+                        white 50%,
+                        transparent 65%,
+                        transparent 100%
+                    ) !important;
+                    transform: rotate(0deg);
+                    will-change: transform;
+                "
+                id="minute-hand"
+            ></div>
+            <div
+                class="upline-3 colored-upline clock-hand"
+                style="
+                    position: absolute;
+                    height: 200%;
+                    left: 20.5%;
+                    top: -47%;
+                    width: 0.1vh;
+                    background-image: linear-gradient(
+                        to bottom,
+                        white 0%,
+                        white 50%,
+                        transparent 65%,
+                        transparent 100%
+                    ) !important;
+                    transform: rotate(0deg);
+                    will-change: transform;
+                "
+                id="second-hand"
+            ></div>
+            <div
+                class="outline-circle lg"
+                style="
+                    width: 20vh;
+                    height: 20vh;
+                    transform: translate(-50%, -50%);
+                    left: 20.5%;
+                    top: 53%;
+                "
+                id="clock-body"
+            ></div>
+
+            <div
+                class="outline-circle lg hour-circle"
+                style="
+                    width: 4vh;
+                    height: 4vh;
+                    transform: translate(-50%, -50%);
+                    left: 20.5%;
+                    top: 53%;
+                    will-change: transform;
+                "
+                id="hour-circle"
+            ></div>
+            <div
+                class="outline-circle lg hour-circle"
+                style="
+                    width: 8vh;
+                    height: 8vh;
+                    transform: translate(-50%, -50%);
+                    left: 20.5%;
+                    top: 53%;
+                    will-change: transform;
+                "
+                id="minute-circle"
+            ></div>
+            <div
+                class="outline-circle hour-circle"
+                style="
+                    width: 12vh;
+                    height: 12vh;
+                    transform: translate(-50%, -50%);
+                    left: 20.5%;
+                    top: 53%;
+                    will-change: transform;
+                "
+                id="second-circle"
+            ></div>
+
+            <svg
+                viewBox="0 0 500 500"
+                style="
+                    position: fixed;
+                    width: 20vh;
+                    height: 20vh;
+                    transform: translate(-50%, -50%) rotate(-6.5deg);
+                    left: 20.5%;
+                    top: 53%;
+                    overflow: visible;
+                "
+            >
+                <defs>
+                    <filter id="noise">
+                        <feTurbulence
+                            type="fractalNoise"
+                            baseFrequency="0.1"
+                            numOctaves="4"
+                            stitchTiles="stitch"
+                        />
+                        <feComponentTransfer>
+                            <feFuncR type="linear" slope="0.05" />
+                            <feFuncG type="linear" slope="0.05" />
+                            <feFuncB type="linear" slope="0.05" />
+                        </feComponentTransfer>
+                        <feComposite operator="in" in2="SourceGraphic" />
+                        <feBlend mode="overlay" in2="SourceGraphic" />
+                    </filter>
+
+                    <radialGradient
+                        id="fade-gradient"
+                        cx="50%"
+                        cy="50%"
+                        r="50%"
+                    >
+                        <stop
+                            offset="0%"
+                            style="stop-color: black; stop-opacity: 0.5"
+                        />
+                        <stop
+                            offset="95%"
+                            style="stop-color: black; stop-opacity: 0"
+                        />
+                    </radialGradient>
+
+                    <mask id="hole">
+                        <rect
+                            x="-50%"
+                            y="-50%"
+                            width="200%"
+                            height="200%"
+                            fill="white"
+                        />
+                        <circle cx="250" cy="250" r="250" fill="black" />
+                    </mask>
+                </defs>
+
+                <circle
+                    cx="250"
+                    cy="250"
+                    r="350"
+                    fill="url(#fade-gradient)"
+                    mask="url(#hole)"
+                    filter="url(#noise)"
+                />
+            </svg>
+
+            <svg
+                viewBox="0 0 500 500"
+                style="
+                    position: fixed;
+                    width: 20vh;
+                    height: 20vh;
+                    transform: translate(-50%, -50%) rotate(-6.5deg);
+                    left: 20.5%;
+                    top: 53%;
+                    overflow: visible;
+                "
+            >
+                <path
+                    id="curve"
+                    d="M 250,250 m -250,0 a 250,250 0 1,1 500,0 a 250,250 0 1,1 -500,0"
+                />
+                <text width="500" style="fill: transparent; font-size: 3.5em">
+                    <textPath xlink:href="#curve" id="total-hours">
+                        <tspan id="bg-hour-9" class="bg-hour-number" dx="0">
+                            9
+                        </tspan>
+                        <tspan
+                            id="bg-hour-10"
+                            class="bg-hour-number"
+                            dx="1.5em"
+                        >
+                            10
+                        </tspan>
+                        <tspan
+                            id="bg-hour-11"
+                            class="bg-hour-number"
+                            dx="1.5em"
+                        >
+                            11
+                        </tspan>
+                        <tspan
+                            id="bg-hour-12"
+                            class="bg-hour-number"
+                            dx="1.5em"
+                        >
+                            12
+                        </tspan>
+                        <tspan id="bg-hour-1" class="bg-hour-number" dx="1.5em">
+                            1
+                        </tspan>
+                        <tspan id="bg-hour-2" class="bg-hour-number" dx="1.5em">
+                            2
+                        </tspan>
+                        <tspan id="bg-hour-3" class="bg-hour-number" dx="1.5em">
+                            3
+                        </tspan>
+                        <tspan id="bg-hour-4" class="bg-hour-number" dx="1.5em">
+                            4
+                        </tspan>
+                        <tspan id="bg-hour-5" class="bg-hour-number" dx="1.5em">
+                            5
+                        </tspan>
+                        <tspan id="bg-hour-6" class="bg-hour-number" dx="1.5em">
+                            6
+                        </tspan>
+                        <tspan id="bg-hour-7" class="bg-hour-number" dx="1.5em">
+                            7
+                        </tspan>
+                        <tspan id="bg-hour-8" class="bg-hour-number" dx="1.5em">
+                            8
+                        </tspan>
+                    </textPath>
+                </text>
+            </svg>
+
+            <svg
+                viewBox="0 0 500 500"
+                style="
+                    position: fixed;
+                    width: 20vh;
+                    height: 20vh;
+                    transform: translate(-50%, -50%) rotate(-6.5deg);
+                    left: 20.5%;
+                    top: 53%;
+                    overflow: visible;
+                "
+            >
+                <path
+                    id="curve"
+                    d="M 250,250 m -250,0 a 250,250 0 1,1 500,0 a 250,250 0 1,1 -500,0"
+                />
+                <text width="500" style="fill: transparent; font-size: 3em">
+                    <textPath xlink:href="#curve" id="total-hours">
+                        <tspan id="hour-9" class="hour-number" dx="0">9</tspan>
+                        <tspan id="hour-10" class="hour-number" dx="1.9em">
+                            10
+                        </tspan>
+                        <tspan id="hour-11" class="hour-number" dx="1.9em">
+                            11
+                        </tspan>
+                        <tspan id="hour-12" class="hour-number" dx="1.9em">
+                            12
+                        </tspan>
+                        <tspan id="hour-1" class="hour-number" dx="1.9em">
+                            1
+                        </tspan>
+                        <tspan id="hour-2" class="hour-number" dx="1.9em">
+                            2
+                        </tspan>
+                        <tspan id="hour-3" class="hour-number" dx="1.9em">
+                            3
+                        </tspan>
+                        <tspan id="hour-4" class="hour-number" dx="1.9em">
+                            4
+                        </tspan>
+                        <tspan id="hour-5" class="hour-number" dx="1.9em">
+                            5
+                        </tspan>
+                        <tspan id="hour-6" class="hour-number" dx="1.9em">
+                            6
+                        </tspan>
+                        <tspan id="hour-7" class="hour-number" dx="1.9em">
+                            7
+                        </tspan>
+                        <tspan id="hour-8" class="hour-number" dx="1.9em">
+                            8
+                        </tspan>
+                    </textPath>
+                </text>
+            </svg>
+        </div>
+
+        <script src="scripts/homepage.js"></script>
+    </body>
 </html>
