@@ -4,11 +4,13 @@
         <meta charset="UTF-8" />
         <meta
             name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
         />
         <title>Arathia</title>
         <link rel="icon" href="./images/arathia.png" />
 
+        <link rel="preconnect" href="https://arathia.net" crossorigin />
+        <link rel="dns-prefetch" href="//arathia.net" />
         <link
             rel="preload"
             as="image"
@@ -164,8 +166,8 @@
                     width: 0.4vh;
                     background-image: linear-gradient(
                         to bottom,
-                        var(--link-text-hover-color) 0%,
-                        var(--link-text-hover-color) 50%,
+                        var(--background-color) 0%,
+                        var(--background-color) 50%,
                         transparent 65%,
                         transparent 100%
                     ) !important;
@@ -215,7 +217,7 @@
                 id="second-hand"
             ></div>
             <div
-                class="outline-circle lg"
+                class="outline-circle lg clock-body"
                 style="
                     width: 20vh;
                     height: 20vh;
@@ -227,7 +229,7 @@
             ></div>
 
             <div
-                class="outline-circle lg hour-circle"
+                class="outline-circle colored-circle lg hour-circle"
                 style="
                     width: 4vh;
                     height: 4vh;
@@ -235,6 +237,7 @@
                     left: 20.5%;
                     top: 53%;
                     will-change: transform;
+                    background-color: var(--background-color);
                 "
                 id="hour-circle"
             ></div>
@@ -261,6 +264,100 @@
                     will-change: transform;
                 "
                 id="second-circle"
+            ></div>
+            <div
+                class="clock-fill"
+                style="
+                    width: 4vh;
+                    height: 4vh;
+                    left: 20.5%;
+                    top: 53%;
+                    background-color: black;
+                "
+                id="hour-fill"
+            ></div>
+            <div
+                class="clock-fill"
+                style="width: 8vh; height: 8vh; left: 20.5%; top: 53%"
+            ></div>
+            <div
+                class="clock-fill"
+                style="width: 12vh; height: 12vh; left: 20.5%; top: 53%"
+            ></div>
+
+            <div
+                class="outline-circle colored-circle lg cross"
+                style="
+                    width: 5vh;
+                    height: 5vh;
+                    transform: translate(-50%, -50%);
+                    left: 21.5%;
+                    top: 51%;
+                    will-change: transform;
+                    background-color: var(--negative-color);
+                    opacity: 0;
+                "
+                id="cross-circle"
+            ></div>
+            <div
+                class="upline-3 colored-upline cross cross-hand"
+                style="
+                    position: absolute;
+                    height: 6vh;
+                    left: 21.5%;
+                    top: calc(51% - 3vh);
+                    width: 0.1vh;
+                    background-color: var(--negative-color);
+                    transform: rotate(0deg);
+                    will-change: transform;
+                    opacity: 0;
+                "
+                id="cross-hand-1"
+            ></div>
+            <div
+                class="upline colored-upline cross cross-hand"
+                style="
+                    position: absolute;
+                    height: 6vh;
+                    left: 21.5%;
+                    top: calc(51% - 3vh);
+                    width: 0.1vh;
+                    background-color: var(--negative-color);
+                    transform: rotate(45deg);
+                    will-change: transform;
+                    opacity: 0;
+                "
+                id="cross-hand-2"
+            ></div>
+            <div
+                class="upline colored-upline cross cross-hand"
+                style="
+                    position: absolute;
+                    height: 6vh;
+                    left: 21.5%;
+                    top: calc(51% - 3vh);
+                    width: 0.1vh;
+                    background-color: var(--negative-color);
+                    transform: rotate(90deg);
+                    will-change: transform;
+                    opacity: 0;
+                "
+                id="cross-hand-3"
+            ></div>
+            <div
+                class="upline colored-upline cross cross-hand"
+                style="
+                    position: absolute;
+                    height: 6vh;
+                    left: 21.5%;
+                    top: calc(51% - 3vh);
+                    width: 0.1vh;
+                    background-color: var(--negative-color);
+                    transform: rotate(135deg);
+                    will-change: transform;
+                    opacity: 0;
+                "
+                id="cross-hand-4"
             ></div>
 
             <svg

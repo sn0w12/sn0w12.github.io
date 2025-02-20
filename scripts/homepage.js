@@ -147,12 +147,32 @@ function animateClock() {
     const hourHand = document.getElementById("hour-hand");
     const minuteHand = document.getElementById("minute-hand");
     const secondHand = document.getElementById("second-hand");
-    const clockNumbers = document.querySelectorAll(".hour-number");
-    const bgClockNumbers = document.querySelectorAll(".bg-hour-number");
 
     const hourCircle = document.getElementById("hour-circle");
     const minuteCircle = document.getElementById("minute-circle");
     const secondCircle = document.getElementById("second-circle");
+
+    const crossCircle = document.getElementById("cross-circle");
+    const crossHands = document.querySelectorAll(".cross-hand");
+    setTimeout(() => {
+        crossCircle.style.opacity = 1;
+        crossHands.forEach((hand, index) => {
+            setTimeout(() => {
+                hand.style.opacity = 1;
+            }, 150 * (index + 1));
+        });
+    }, 2000);
+
+    const clockFills = document.querySelectorAll(".clock-fill");
+    clockFills.forEach((fill, index) => {
+        setTimeout(() => {
+            if (fill.id === "hour-fill") {
+                fill.style.opacity = 0.4;
+                return;
+            }
+            fill.style.opacity = 0.2;
+        }, 1500 + 500 * (index + 1));
+    });
 
     const delay = 500;
     setTimeout(() => {
@@ -181,6 +201,9 @@ function dynamicClock() {
     const hourCircle = document.getElementById("hour-circle");
     const minuteCircle = document.getElementById("minute-circle");
     const secondCircle = document.getElementById("second-circle");
+
+    const crossCircle = document.getElementById("cross-circle");
+    const crossHands = document.querySelectorAll(".cross-hand");
 
     centerClockHands();
     window.addEventListener("resize", centerClockHands);
@@ -228,7 +251,7 @@ function dynamicClock() {
                     number.id === `hour-${hours}` ||
                     (hours === 0 && number.id === "hour-12")
                 ) {
-                    number.style.fill = "white";
+                    number.style.fill = "var(--background-color)";
                     number.style.opacity = 1;
                 } else if (
                     neighbors.includes(parseInt(number.id.split("-")[1]))
@@ -268,37 +291,72 @@ function dynamicClock() {
         });
     }
 
+    const crossOffset = 37;
+    function onSecondChange(seconds, totalSecondRotation) {
+        Ui.playSound("8", 0.2);
+        setTimeout(() => {
+            Ui.playSound("8", 0.1);
+            const crossRotation = totalSecondRotation + crossOffset;
+            crossCircle.style.transform = `translate(-50%, -50%) rotate(${crossRotation}deg)`;
+            crossHands.forEach((hand) => {
+                n = parseInt(hand.id.split("-")[2]);
+                hand.style.transform = `rotate(${crossRotation + 45 * n}deg)`;
+            });
+        }, 500);
+    }
+
+    function onMinuteChange(minutes) {
+        if (minutes % 15 === 0) {
+            Ui.playSound("5", 0.3);
+            return;
+        }
+        Ui.playSound("7", 0.3);
+    }
+
+    function onHourChange(hours) {
+        Ui.playSound("6", 0.4);
+    }
+
     function updateClock(setColors = true, animate = false) {
         const now = new Date();
         const hours = now.getHours() % 12;
         const minutes = now.getMinutes();
         const seconds = now.getSeconds();
 
-        if (setColors) {
-            updateClockColors(hours, minutes, animate);
-        }
-
-        // Update seconds rotation
+        // Make sure the clock hands rotate the shortest way around
         if (seconds < lastSeconds) {
             secondsRotation += 360;
         }
-        lastSeconds = seconds;
-
-        // Update minutes rotation
         if (minutes < lastMinutes) {
             minutesRotation += 360;
         }
-        lastMinutes = minutes;
-
-        // Update hours rotation
         if (hours < lastHours) {
             hoursRotation += 360;
         }
-        lastHours = hours;
 
         const totalSecondRotation = seconds * 6 + secondsRotation;
         const totalMinuteRotation = minutes * 6 + minutesRotation;
         const totalHourRotation = hours * 30 + minutes * 0.5 + hoursRotation;
+
+        if (setColors) {
+            updateClockColors(hours, minutes, animate);
+        } else {
+            const crossRotation = totalSecondRotation + crossOffset;
+            crossCircle.style.transform = `translate(-50%, -50%) rotate(${crossRotation}deg)`;
+            crossHands.forEach((hand) => {
+                n = parseInt(hand.id.split("-")[2]);
+                hand.style.transform = `rotate(${crossRotation + 45 * n}deg)`;
+            });
+        }
+
+        if (hours !== lastHours) {
+            onHourChange(hours);
+        } else if (minutes !== lastMinutes) {
+            onMinuteChange(minutes);
+        }
+        if (seconds !== lastSeconds) {
+            onSecondChange(seconds, totalSecondRotation);
+        }
 
         hourHand.style.transform = `rotate(${totalHourRotation}deg)`;
         hourCircle.style.transform = `translate(-50%, -50%) rotate(${totalHourRotation}deg)`;
@@ -306,6 +364,10 @@ function dynamicClock() {
         minuteCircle.style.transform = `translate(-50%, -50%) rotate(${totalMinuteRotation}deg)`;
         secondHand.style.transform = `rotate(${totalSecondRotation}deg)`;
         secondCircle.style.transform = `translate(-50%, -50%) rotate(${totalSecondRotation}deg)`;
+
+        lastSeconds = seconds;
+        lastMinutes = minutes;
+        lastHours = hours;
     }
 
     updateClock(false);
@@ -322,6 +384,12 @@ function dynamicClock() {
             "transform 0.1s ease-out, opacity 1s ease-in-out";
         secondCircle.style.transition =
             "transform 0.1s ease-out, opacity 1s ease-in-out";
+        crossCircle.style.transition =
+            "transform 0.1s ease-out, opacity 1s ease-in-out";
+        crossHands.forEach((hand) => {
+            hand.style.transition =
+                "transform 0.1s ease-out, opacity 1s ease-in-out";
+        });
         animateClock();
         updateClock(true, true);
     }, 10);
