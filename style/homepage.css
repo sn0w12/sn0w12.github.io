@@ -5,7 +5,10 @@
     --text-color: #fff;
     --link-text-color: hsl(40, 60%, 60%);
     --link-text-hover-color: hsl(40, 60%, calc(60% * 1.2));
+
     --negative-color: #851630;
+    --positive-color: #1f8a70;
+    --accent-color: #405386;
 
     --hover-color: #fff9ea;
 

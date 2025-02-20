@@ -1,5 +1,52 @@
 dynamicClock();
 
+function isSafari() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    return userAgent.includes("safari");
+}
+function adjustCirclesForSafari() {
+    const circles = document.querySelectorAll(".outline-circle");
+    circles.forEach((circle) => {
+        const computedStyle = window.getComputedStyle(circle);
+        const backgroundColor = computedStyle.backgroundColor;
+
+        let borderSize = 1;
+        circle.style.backgroundColor = "transparent";
+        circle.style.border = `${borderSize}px solid ${backgroundColor}`;
+        circle.style.borderRadius = "50%";
+
+        circle.style.maskImage = "unset";
+        circle.style["-webkit-mask-image"] = "unset";
+    });
+
+    // Set up observer for dynamically added circles
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (
+                    node.classList &&
+                    node.classList.contains("outline-circle")
+                ) {
+                    const computedStyle = window.getComputedStyle(node);
+                    const backgroundColor = computedStyle.backgroundColor;
+
+                    node.style.backgroundColor = "transparent";
+                    node.style.border = `1px solid ${backgroundColor}`;
+                    node.style.borderRadius = "50%";
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+}
+if (isSafari()) {
+    adjustCirclesForSafari();
+}
+
 window.onload = function () {
     shouldDrawDroplet = false;
     const header = document.querySelector(".header");
@@ -97,6 +144,74 @@ window.onload = function () {
     });
 };
 
+function createCog(
+    diameter,
+    teeth,
+    color,
+    position = { left: 0, top: 0 },
+    options = {}
+) {
+    const bg = document.getElementById("bg");
+    if (!bg) {
+        return;
+    }
+
+    // Create main circle
+    const cog = document.createElement("div");
+    cog.className = "outline-circle colored-circle lg cross";
+    cog.style.cssText = `
+        width: ${diameter}vh;
+        height: ${diameter}vh;
+        transform: translate(-50%, -50%);
+        left: ${position.left}%;
+        top: ${position.top}%;
+        will-change: transform;
+        background-color: ${color};
+        opacity: 0;
+    `;
+    if (options.cogId) {
+        cog.id = options.cogId;
+    }
+    bg.appendChild(cog);
+
+    // Create cross hands
+    const crossHands = [];
+    const angleStep = 360 / teeth; // Calculate uniform angle between teeth
+    for (let i = 1; i <= teeth; i++) {
+        const hand = document.createElement("div");
+        hand.className = `upline${
+            i === 1 ? "-3" : ""
+        } colored-upline cross cross-hand`;
+        hand.style.cssText = `
+            position: absolute;
+            height: ${diameter + 1}vh;
+            left: ${position.left}%;
+            top: calc(${position.top}% - ${(diameter + 1) / 2}vh);
+            width: 0.1vh;
+            background-color: ${color};
+            transform: rotate(${(i - 1) * angleStep}deg);
+            will-change: transform;
+            opacity: 0;
+        `;
+        if (options.handId) {
+            hand.id = `${options.handId}-${i}`;
+        }
+        crossHands.push(hand);
+        bg.appendChild(hand);
+    }
+
+    setTimeout(() => {
+        cog.style.transition =
+            "transform 0.1s ease-out, opacity 1s ease-in-out";
+        crossHands.forEach((hand) => {
+            hand.style.transition =
+                "transform 0.1s ease-out, opacity 1s ease-in-out";
+        });
+    }, 50);
+
+    return cog;
+}
+
 function setupAnimators() {
     const memberBackgrounds = document.querySelectorAll(".member-background");
     const animators = [];
@@ -153,7 +268,18 @@ function animateClock() {
     const secondCircle = document.getElementById("second-circle");
 
     const crossCircle = document.getElementById("cross-circle");
-    const crossHands = document.querySelectorAll(".cross-hand");
+    const allCrossHands = [...document.querySelectorAll(".cross-hand")];
+    const crossHands = allCrossHands.filter((hand) =>
+        hand.id.startsWith("cross-hand-")
+    );
+
+    const positiveCrossCircle = document.getElementById(
+        "positive-cross-circle"
+    );
+    const positiveCrossHands = allCrossHands.filter((hand) =>
+        hand.id.startsWith("positive-cross-hand-")
+    );
+
     setTimeout(() => {
         crossCircle.style.opacity = 1;
         crossHands.forEach((hand, index) => {
@@ -161,6 +287,25 @@ function animateClock() {
                 hand.style.opacity = 1;
             }, 150 * (index + 1));
         });
+    }, 2000);
+
+    setTimeout(() => {
+        positiveCrossCircle.style.opacity = 1;
+        positiveCrossHands.forEach((hand, index) => {
+            setTimeout(() => {
+                hand.style.opacity = 1;
+            }, 150 * (index + 1));
+        });
+    }, 2000);
+    setTimeout(() => {
+        let rotation = 0;
+        setInterval(() => {
+            rotation -= 5;
+            positiveCrossCircle.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+            positiveCrossHands.forEach((hand, index) => {
+                hand.style.transform = `rotate(${rotation + 36 * index}deg)`;
+            });
+        }, 1000 / 3);
     }, 2000);
 
     const clockFills = document.querySelectorAll(".clock-fill");
@@ -202,8 +347,35 @@ function dynamicClock() {
     const minuteCircle = document.getElementById("minute-circle");
     const secondCircle = document.getElementById("second-circle");
 
-    const crossCircle = document.getElementById("cross-circle");
-    const crossHands = document.querySelectorAll(".cross-hand");
+    const crossCircle = createCog(
+        5,
+        4,
+        "var(--negative-color)",
+        {
+            left: 21.5,
+            top: 51,
+        },
+        {
+            cogId: "cross-circle",
+            handId: "cross-hand",
+        }
+    );
+    createCog(
+        4,
+        10,
+        "var(--positive-color)",
+        {
+            left: 19,
+            top: 52,
+        },
+        {
+            cogId: "positive-cross-circle",
+            handId: "positive-cross-hand",
+        }
+    );
+    const crossHands = [...document.querySelectorAll(".cross-hand")].filter(
+        (hand) => hand.id.startsWith("cross-hand-")
+    );
 
     centerClockHands();
     window.addEventListener("resize", centerClockHands);
