@@ -1,0 +1,78 @@
+@import url("https://fonts.cdnfonts.com/css/albra-display-trial");
+
+:root {
+    --background-color: hsl(40, 20%, 10%);
+    --text-color: #fff;
+    --link-text-color: hsl(40, 60%, 60%);
+    --link-text-hover-color: hsl(40, 60%, calc(60% * 1.2));
+
+    --negative-color: #851630;
+    --positive-color: #1f8a70;
+    --accent-color: #405386;
+
+    --hover-color: #fff9ea;
+
+    --background-image: url("https://utfs.io/f/6F8KEtlhWjiD0PtPZUg86jGZzpUYR9oHlWSVrNP2ntDgFcuq");
+    --background-scale: 1;
+    --badge-color: var(--link-text-hover-color);
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    font-family: "Albra Display TRIAL", sans-serif;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+}
+
+.text {
+    font-size: 4vh;
+}
+.text.xxs {
+    font-size: 1.5vh;
+}
+.text.xs {
+    font-size: 2vh;
+}
+.text.sm {
+    font-size: 3vh;
+}
+.text.lg {
+    font-size: 6vh;
+}
+.text.xl {
+    font-size: 8vh;
+}
+.text.xxl {
+    font-size: 12vh;
+}
+
+.text.positive {
+    color: var(--positive-color);
+}
+.text.negative {
+    color: var(--negative-color);
+}
+.text.accent {
+    color: var(--accent-color);
+}
+.text.black {
+    color: #000;
+}
+.text.white {
+    color: #fff;
+}

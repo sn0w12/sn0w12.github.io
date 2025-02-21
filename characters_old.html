@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/arathia.png">
+    <title>Character Catalog</title>
+    <style>
+        :root {
+            --background: #100f0feb;
+            --foreground: #9f957e;
+            --highlight: #ffe7ab;
+            --highlight2: #ddbc6a;
+            --highlight-background: #ddbd6a50;
+        }
+        body {
+            color: var(--foreground);
+            font-family: Arial, sans-serif;
+            padding: 0px;
+            background-color: var(--background);
+        }
+        .main-container {
+            background-color: var(--background);
+            border: 9px solid transparent;
+            border-image-source: url(../images/border.png);
+            border-image-width: 20px 40px;
+            border-image-repeat: round;
+            border-image-slice: 30 50 fill;
+            padding: 10px;
+            border-radius: 6px;
+            margin: auto;
+            max-width: 800px;
+        }
+        details {
+            background: var(--background);
+            border-radius: 4px;
+            padding: 10px;
+            padding-left: 15px;
+            margin-bottom: 0px;
+        }
+        details[open] {
+            padding-bottom: 0;
+        }
+        summary {
+            background-color: var(--background);
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--highlight);
+            padding: 8px;
+        }
+        .open-summary {
+            position: sticky;
+            position: -webkit-sticky;
+            top: 0;
+            z-index: 500;
+        }
+        summary::-webkit-details-marker {
+            display: none;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-left: -15px;
+            margin-right: -10px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        h1 {
+            margin-bottom: 5px;
+        }
+        .header-container {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .header-container p {
+            margin: 5px;
+        }
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .search-box {
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid var(--foreground);
+            background-color: var(--background);
+            color: var(--highlight);
+        }
+        .search-results {
+            position: absolute;
+            background-color: var(--background);
+            color: var(--foreground);
+            border: 1px solid var(--highlight);
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+            display: none; /* Initially hidden */
+        }
+        .search-result-item {
+            padding: 5px;
+            cursor: pointer;
+        }
+        .search-result-item:hover {
+            background-color: var(--highlight-background);
+        }
+        .maincategory {
+            margin-bottom: 5px;
+        }
+        .character-entry {
+            margin-bottom: 20px;
+            list-style-type: none;
+        }
+        .character-container {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--background);
+            border: 1px solid var(--highlight);
+            border-radius: 6px;
+            padding: 15px;
+        }
+        .character-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .character-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--highlight);
+        }
+        .copy-btn {
+            margin-left: auto;
+            cursor: pointer;
+            background-color: var(--highlight);
+            color: var(--background);
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .copy-btn:hover {
+            background-color: var(--highlight2);
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid var(--highlight);
+            margin: 15px 0;
+        }
+        .character-summary {
+            color: var(--foreground);
+            font-size: 16px;
+            text-align: justify;
+        }
+        .character-image-container {
+            width: 35%;
+            max-width: 100%;
+            min-width: 250px;
+            float: right;
+            margin-left: 10px;
+            margin-bottom: 5px;
+            margin-top: 3px;
+            border: 1px solid var(--highlight);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .character-image {
+            width: 100%;
+            height: auto;
+        }
+        .character-image-container > div {
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 1px solid var(--foreground);
+        }
+        .info-item {
+            display: flex;
+            width: 100%;
+            text-align: left;
+        }
+        .info-label, .info-item div {
+            flex: 1;
+            padding: 5px;
+            box-sizing: border-box; /* Ensure padding is included in the width */
+        }
+        .info-label {
+            border-right: 1px solid var(--foreground);
+        }
+        /* Image Modal (background) */
+        .image-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            padding-top: 60px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+        }
+
+        /* Modal Content (image) */
+        .image-modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%; /* Adjusted to percentage */
+            max-height: 90%;
+            width: auto; /* Ensures width adapts to the image's aspect ratio */
+            height: auto; /* Ensures height adapts to the image's aspect ratio */
+        }
+
+        /* Close Button */
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 5px;
+                max-width: 100%;
+            }
+            .character-container {
+                flex-direction: column;
+            }
+            .character-name, .copy-btn {
+                font-size: 16px; /* Increase touch target size */
+            }
+            .search-box {
+                font-size: 16px; /* Easier to read and select */
+            }
+            .character-image-container {
+                width: 100%;
+                min-width: none;
+            }
+            .image-modal-content {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="search-container">
+        <input type="text" class="search-box" id="search-box" placeholder="Search characters or categories..." oninput="filterCharacters(this.value)">
+        <div id="search-results" class="search-results"></div>
+    </div>
+    <div class="header-container">
+        <h1>Arathia Character Catalog</h1>
+        <div>Total Characters: <span id="total-characters">0</span></div> 
+    </div>
+    <template id="character-template">
+        <li class="character-entry">
+          <div class="character-container">
+            <div class="character-header">
+                <span class="character-name">Character Name Here</span>
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copy Name</button>
+            </div>            
+            <hr class="divider">
+            <div class="character-content">
+                <div class="character-image-container">
+                    <img class="character-image" src="" alt="">
+                    <div class="info-item">
+                        <div class="info-label">Gender</div>
+                        <div class="gender">Unknown</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Race</div>
+                        <div class="race">Unknown</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="status">Unknown</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nationality</div>
+                        <div class="nationality">Unknown</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Age</div>
+                        <div class="age">Unknown</div>
+                    </div>
+                </div>
+                <div class="character-summary"></div>
+            </div>
+          </div>
+        </li>
+      </template>                
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/data/characters/characters.json')
+            .then(response => response.json())
+            .then(data => {
+                const headerContainer = document.querySelector('.header-container');
+                const container = document.querySelector('.main-container');
+                const template = document.getElementById('character-template').content;
+
+                let ages = [];
+                let highestAge = 0;
+                let lowestAge = Infinity;
+                let characterCount = 0;
+                const nationCounts = {};
+
+                Object.entries(data).forEach(([mainCategory, characters]) => {
+                    const mainDetailsElement = document.createElement('details');
+                    const mainSummaryElement = document.createElement('summary');
+                    mainSummaryElement.textContent = mainCategory;
+                    mainDetailsElement.appendChild(mainSummaryElement);
+
+                    characters.forEach(character => {
+                        // Age calculations
+                        const age = parseInt(character.age, 10);
+                        if (!isNaN(age)) {
+                            ages.push(age);
+                            highestAge = Math.max(highestAge, age);
+                            lowestAge = Math.min(lowestAge, age);
+                        }
+                        characterCount++;
+                        
+                        // Nation count calculations (skipping "Unknown")
+                        const nation = character.nationality;
+                        if (nation && nation !== "Unknown") {
+                            nationCounts[nation] = (nationCounts[nation] || 0) + 1;
+                        }
+
+                        const clone = document.importNode(template, true);
+                        clone.querySelector('.character-name').textContent = character.name;
+                        clone.querySelector('.character-summary').textContent = character.summary || "Unknown";
+
+                        if (typeof character.image != "undefined") {
+                            clone.querySelector('.character-image').src = character.image;
+                            clone.querySelector('.character-image').alt = character.name;
+                            clone.querySelector('.character-image').style.display = 'block';
+                        } else {
+                            clone.querySelector('.character-image').display = "none";
+                            clone.querySelector('.info-item .gender').parentElement.style.borderTop = "0";
+                        }
+
+                        // Set additional fields
+                        clone.querySelector('.info-item .gender').textContent = character.gender || "Unknown";
+                        clone.querySelector('.info-item .race').textContent = character.race || "Unknown";
+                        clone.querySelector('.info-item .status').textContent = character.status || "Unknown";
+                        clone.querySelector('.info-item .nationality').textContent = character.nationality || "Unknown";
+                        clone.querySelector('.info-item .age').textContent = character.age || "Unknown";
+
+                        if (character.category) {
+                            let subcategoryList = mainDetailsElement.querySelector(`[data-category="${character.category}"]`);
+                            if (!subcategoryList) {
+                                const subDetailsElement = document.createElement('details');
+                                const subSummaryElement = document.createElement('summary');
+                                subSummaryElement.textContent = character.category;
+                                subDetailsElement.appendChild(subSummaryElement);
+
+                                subcategoryList = document.createElement('ul');
+                                subcategoryList.setAttribute('data-category', character.category);
+                                subDetailsElement.appendChild(subcategoryList);
+                                mainDetailsElement.appendChild(subDetailsElement);
+                            }
+                            subcategoryList.appendChild(clone);
+                        } else {
+                            mainDetailsElement.appendChild(clone);
+                        }
+                    });
+
+                    container.appendChild(mainDetailsElement);
+                });
+                document.getElementById('total-characters').textContent = characterCount;
+
+                // Sort the ages array
+                ages.sort((a, b) => a - b);
+
+                // Calculate weights with more weight towards the center
+                const weights = ages.map((_, index, arr) => {
+                    const midIndex = (arr.length - 1) / 2;
+                    // Quadratic weight distribution
+                    return 1 - Math.pow((index - midIndex) / midIndex, 2);
+                });
+
+                // Calculate the weighted sum
+                const weightedSum = ages.reduce((acc, age, index) => acc + age * weights[index], 0);
+
+                // Calculate the sum of weights
+                const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
+
+                // Calculate the weighted average
+                const weightedAverageAge = weightedSum / totalWeight;
+
+                const mostCharactersNation = Object.entries(nationCounts).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+
+                // Find the minimum character count among the nations
+                const minCount = Math.min(...Object.values(nationCounts));
+                // Collect all nations that have this minimum count
+                const leastCharactersNations = Object.entries(nationCounts)
+                    .filter(([nation, count]) => count === minCount)
+                    .map(([nation, _]) => nation);
+
+                // Adjust label based on the number of nations
+                const leastNationsLabel = leastCharactersNations.length > 1 ? "Nations" : "Nation";
+
+                // Create an element to display the interesting information
+                const infoContainer = document.createElement('div');
+                infoContainer.innerHTML = `
+                    <p>Weighted Average Age: ${weightedAverageAge.toFixed(2)}</p>
+                    <p>Highest Age: ${highestAge}</p>
+                    <p>Lowest Age: ${lowestAge}</p>
+                    <p>Nation with the most characters: ${mostCharactersNation}</p>
+                    <p>${leastNationsLabel} with the least characters: ${leastCharactersNations.join(', ')}</p>
+                `;
+
+                // Insert the infoContainer right after the headerContainer
+                if (headerContainer) {
+                    headerContainer.insertAdjacentElement('beforeend', infoContainer);
+                } else {
+                    // Fallback if headerContainer is not found, prepend to the main container
+                    console.log("No headerContainer found");
+                    container.prepend(infoContainer);
+                }
+                })
+            .catch(error => console.error('Error loading character data:', error));
+    });
+
+    function copyToClipboard(btnElement) {
+        // Navigate to the sibling span containing the character name
+        const nameSpan = btnElement.previousElementSibling; // Assumes the span is directly before the button
+        const textToCopy = nameSpan.textContent;
+
+        // Use the Clipboard API to copy the text
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            console.log("Text copied to clipboard");
+            btnElement.textContent = "Copied!";
+            setTimeout(() => btnElement.textContent = "Copy Name", 2000); // Change back after 1.5s
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    }
+
+    window.addEventListener('load', function() {
+        document.querySelectorAll('details').forEach(function(details) {
+            details.addEventListener('toggle', function(event) {
+                const summary = details.querySelector('summary');
+                if (details.open) {
+                    // Add a class when the <summary> is opened
+                    summary.classList.add('open-summary');
+                } else {
+                    // Remove the class when the <summary> is closed
+                    summary.classList.remove('open-summary');
+                }
+            });
+        });
+    });
+
+    function filterCharacters(query) {
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = ''; // Clear previous results
+        let foundCharacters = new Map();
+        let foundCategories = new Map();
+
+        if(query.trim() === '') {
+            resultsContainer.style.display = 'none';
+            return;
+        }
+
+        // Lowercase query for case-insensitive comparison
+        const lowerQuery = query.toLowerCase();
+
+        // Collect characters and categories
+        document.querySelectorAll('details').forEach((detail) => {
+            const summary = detail.querySelector('summary');
+            if (summary && summary.textContent.toLowerCase().includes(lowerQuery)) {
+                // Use original text case for display
+                foundCategories.set(summary.textContent, detail);
+            }
+
+            detail.querySelectorAll('.character-name').forEach((character) => {
+                if (character.textContent.toLowerCase().includes(lowerQuery)) {
+                    // Use original text case for display
+                    foundCharacters.set(character.textContent, character.parentElement);
+                }
+            });
+        });
+
+        // Display characters first
+        foundCharacters.forEach((element, name) => {
+            addResultItem(name, element, resultsContainer);
+        });
+
+        // Add a divider if both characters and categories are found
+        if (foundCharacters.size > 0 && foundCategories.size > 0) {
+            addDivider(resultsContainer);
+        }
+
+        // Display categories next
+        foundCategories.forEach((element, name) => {
+            addResultItem(name, element, resultsContainer);
+        });
+
+        resultsContainer.style.display = (foundCharacters.size > 0 || foundCategories.size > 0) ? 'block' : 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBox = document.getElementById('search-box');
+        const resultsContainer = document.getElementById('search-results');
+        let hideResultsTimeout;
+
+        searchBox.addEventListener('blur', function() {
+            // Set a timeout to hide the results, allowing time for a click to register
+            hideResultsTimeout = setTimeout(() => {
+            resultsContainer.style.display = 'none';
+            }, 100);
+        });
+
+        // Prevent hiding if the search results are being interacted with
+        resultsContainer.addEventListener('mousedown', function(e) {
+            clearTimeout(hideResultsTimeout);
+        });
+    });
+
+    function addResultItem(text, targetElement, container) {
+        const item = document.createElement('div');
+        item.textContent = text;
+        item.classList.add('search-result-item');
+        item.onclick = () => {
+            // Open all parent <details> for the target element
+            let parent = targetElement.parentElement;
+            while (parent) {
+                if (parent.tagName.toLowerCase() === 'details') {
+                    parent.open = true;
+                }
+                parent = parent.parentElement;
+            }
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            container.style.display = 'none'; // Hide results
+        };
+        container.appendChild(item);
+    }
+
+    function addDivider(container) {
+        const divider = document.createElement('div');
+        divider.innerHTML = '───────────────────────────────────────────────────'; // Visual divider
+        divider.classList.add('search-result-divider');
+        container.appendChild(divider);
+    }
+
+    window.addEventListener('load', function() {
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('img01');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        // Function to disable pointer events on all interactive elements
+        const disablePointerEvents = () => {
+            document.querySelectorAll('a, button, .character-image').forEach(elem => {
+                if (!elem.closest('#imageModal')) { // Skip elements inside the modal
+                    elem.style.pointerEvents = 'none';
+                }
+            });
+        };
+
+        // Function to enable pointer events on all interactive elements
+        const enablePointerEvents = () => {
+            document.querySelectorAll('a, button, .character-image').forEach(elem => {
+                elem.style.pointerEvents = '';
+            });
+        };
+
+        // Show the modal and disable pointer events on other elements
+        const showModal = (src) => {
+            if (Math.abs(touchEndY - touchStartY) < 10) { // 10px threshold for movement to be considered a scroll
+                document.getElementById('imageModal').style.display = "block";
+                document.getElementById('img01').src = src;
+                disablePointerEvents(); 
+            }
+        };
+
+        // Close the modal and enable pointer events on other elements
+        const closeModal = () => {
+            modal.style.display = "none";
+            enablePointerEvents();
+        };
+        
+        // Close button event listener
+        closeBtn.addEventListener('click', closeModal);
+        
+        // Close modal when clicking outside the image
+        modal.addEventListener('click', function(event) {
+            if (event.target === modalImg) {
+                return;
+            }
+            closeModal();
+        });
+        
+        // Function to add event listeners to images
+        const applyImageListeners = (img) => {
+            img.addEventListener('click', function() {
+                showModal(this.src);
+            });
+            
+            img.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            img.addEventListener('touchend', function(e) {
+                touchEndY = e.changedTouches[0].clientY;
+                showModal(this.src);
+            }, { passive: true });
+
+            img.addEventListener('touchmove', function(e) {
+                touchEndY = e.changedTouches[0].clientY;
+            }, { passive: true });
+        };
+
+        // Add event listeners to all current images
+        document.querySelectorAll('.character-image').forEach(applyImageListeners);
+
+        // Event listeners for closing the modal
+        closeBtn.addEventListener('click', function(event) { 
+            event.stopPropagation();
+            event.preventDefault();
+            closeModal();
+        });
+        closeBtn.addEventListener('touchend', function(event) {
+            event.stopPropagation();
+            closeModal();
+        }, { passive: false });
+        modal.addEventListener('click', function(event) {
+            event.stopPropagation();
+            // Only close if the click is not on the modalImg itself
+            if (event.target === modalImg) {
+                event.preventDefault(); // Prevent default to stop any link navigation or other actions
+                return;
+            }
+            closeModal();
+        });
+        modal.addEventListener('touchend', function(event) {
+            event.stopPropagation();
+            if (event.target === modalImg) {
+                return;
+            }
+            closeModal();
+        }, { passive: false });
+
+        setTimeout(() => {
+            document.querySelectorAll('.character-image').forEach(img => {
+                if (!img.classList.contains('zoom-applied')) {
+                    applyImageListeners(img);
+                    img.classList.add('zoom-applied'); // Mark the image to avoid re-applying listeners
+                }
+            });
+        }, 1000); // Adjust the delay as needed
+    });
+
+</script>
+<!-- The Modal -->
+<div id="imageModal" class="image-modal">
+    <!-- The Close Button -->
+    <span class="close">&times;</span>
+    <!-- Modal Content (The Image) -->
+    <img class="image-modal-content" id="img01">
+  </div>  
+</body>
+</html>

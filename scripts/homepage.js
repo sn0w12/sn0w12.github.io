@@ -238,14 +238,17 @@ function setupAnimators() {
 }
 
 function insertBackgrounds(element, count = 5, whiteCount = 1) {
+    const backgrounds = [];
     for (let i = 0; i < count; i++) {
         const background = document.createElement("div");
         background.classList.add("member-background");
         if (i < whiteCount) {
             background.classList.add("white");
         }
+        backgrounds.push(background);
         element.appendChild(background);
     }
+    return backgrounds;
 }
 
 function getNeighboringNumbers(number, max) {
