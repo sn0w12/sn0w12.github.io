@@ -57,6 +57,7 @@ main {
     bottom: -2%;
     -webkit-mask: url(#noiseMaskIn);
     mask: url(#noiseMaskIn);
+    z-index: 10;
 }
 .character img.out {
     -webkit-mask: url(#noiseMaskOut);
@@ -64,6 +65,46 @@ main {
 }
 .character img.hidden {
     opacity: 0;
+}
+
+.character-number-container {
+    opacity: 1;
+    position: absolute;
+    right: -12.37vh;
+    bottom: 40%;
+    transform: rotate(-90deg) scaleX(1.5);
+    z-index: 5;
+}
+
+.number-back {
+    color: white;
+    z-index: 1;
+    -webkit-mask-image: url(https://utfs.io/f/6F8KEtlhWjiD6saCBWlhWjiD2yceq4pvK5GPwzCUdXtomQNu);
+    mask-image: url(https://utfs.io/f/6F8KEtlhWjiD6saCBWlhWjiD2yceq4pvK5GPwzCUdXtomQNu);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+.number-front {
+    color: black;
+    z-index: 2;
+    -webkit-clip-path: polygon(-150% 0%, 0% 0%, 0% 100%, 100% 70%);
+    clip-path: polygon(-150% 0%, 0% 0%, 0% 100%, 100% 70%);
+}
+
+.character-number {
+    opacity: 0;
+    font-size: 30vh;
+    font-weight: 900;
+    pointer-events: none;
+    position: absolute;
+    right: -45vh;
+    bottom: 0.6vh;
+    transition: opacity 0.25s ease-in-out;
 }
 
 .character-info {
@@ -147,9 +188,15 @@ main {
 
     .character img {
         width: 80vw;
+        bottom: 10vh;
     }
     .character-info {
         margin-left: 10vh;
+    }
+    .character-number {
+        font-size: 20vh;
+        bottom: 4.5vh;
+        right: -24vh;
     }
 }
 

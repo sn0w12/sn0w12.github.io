@@ -6,6 +6,7 @@ const characters = [
         wiki: "Ianara_Ustrina",
         imageUrl: "./images/character.gif",
         dataCharacter: "ianara",
+        accentColor: "var(--link-text-color)",
     },
     {
         name: "Adeline Cineres",
@@ -13,6 +14,7 @@ const characters = [
         wiki: "Adeline_Cineres",
         imageUrl: "./images/adeline.webp",
         dataCharacter: "adeline",
+        accentColor: "#e70900",
     },
     {
         name: "Miyamoto Reiko",
@@ -20,6 +22,7 @@ const characters = [
         wiki: "Miyamoto_Reiko",
         imageUrl: "./images/reiko.webp",
         dataCharacter: "reiko",
+        accentColor: "#050916",
     },
 ];
 
@@ -32,6 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const characterId = title.dataset.character;
         const image = document.querySelector(
             `img[data-character="${characterId}"]`
+        );
+        const numbers = document.querySelectorAll(
+            `.character-number[data-character="${characterId}"]`
         );
 
         const animators = insertBackgrounds(title, 5, 1);
@@ -55,6 +61,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 image.classList.remove("hidden");
                 image.classList.add("active");
                 setTimeout(() => {
+                    numbers.forEach((number) => {
+                        number.style.opacity = 1;
+                    });
                     image.classList.remove("active");
                 }, 1000);
                 document.getElementById("animateIn").beginElement();
@@ -70,6 +79,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             function animateOut() {
                 image.classList.add("out");
+                numbers.forEach((number) => {
+                    number.style.opacity = 0;
+                });
                 document.getElementById("animateOut").beginElement();
                 document.getElementById("animateOutIntercept").beginElement();
 
@@ -136,10 +148,16 @@ function createCharacterElement(character, index) {
     }
 
     characterDiv.innerHTML = `
-        <a class="character-info" data-character="${character.dataCharacter}" style="margin-left: ${margin}vh" href="https://arathia.net/wiki/${character.wiki}">
+        <a class="character-info" data-character="${
+            character.dataCharacter
+        }" style="margin-left: ${margin}vh" href="https://arathia.net/wiki/${
+        character.wiki
+    }">
             <h2 class="text sm">${character.name}</h2>
             <div class="underline-2" style="width: 120%; left: -8%; top: -1.2vh"></div>
-            <p class="text xxs" style="margin-top: -8%; padding-top: ${titlePadding}vh">${character.title}</p>
+            <p class="text xxs" style="margin-top: -8%; padding-top: ${titlePadding}vh">${
+        character.title
+    }</p>
         </a>
         <img
             src="${character.imageUrl}"
@@ -148,6 +166,18 @@ function createCharacterElement(character, index) {
             data-character="${character.dataCharacter}"
             loading="eager"
         />
+        <div class="character-number-container" data-character="${
+            character.dataCharacter
+        }">
+            <p class="character-number text number-back" data-character="${
+                character.dataCharacter
+            }">${String(index).padStart(3, "0")}</p>
+            <p class="character-number text number-front" style="color: ${
+                character.accentColor
+            }" data-character="${character.dataCharacter}">${String(
+        index
+    ).padStart(3, "0")}</p>
+        </div>
     `;
 
     return characterDiv;
