@@ -4,7 +4,7 @@ const characters = [
         name: "Ianara Ustrina",
         title: "Blade of Adeline",
         wiki: "Ianara_Ustrina",
-        imageUrl: "./images/character.gif",
+        imageUrl: "./images/lanara.webp",
         dataCharacter: "ianara",
         accentColor: "var(--link-text-color)",
     },
